@@ -7,10 +7,13 @@ set(CMAKE_CXX_STANDARD 11)
 # create project
 project(TactorFX)
 
+find_package(portaudio REQUIRED)
+
 # include directories
 include_directories(
     "include"
+    "C:/Program Files/portaudio/include"
 )
-
-add_executable(tfx examples/example1.cpp)
+add_executable(tfx examples/paex_saw.cpp)
+target_link_libraries(tfx portaudio_static)
 
