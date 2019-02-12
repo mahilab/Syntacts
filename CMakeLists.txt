@@ -13,17 +13,26 @@ find_package(portaudio REQUIRED)
 # include directories
 include_directories(
     "include"
-    "C:/Program Files/portaudio/include"
+    "/Git/MEL/include"
+    "/Program Files/portaudio/include"
+)
+
+link_directories(
+    "/Git/MEL/build-quanser/Release"
 )
 
 add_compile_definitions(PA_USE_ASIO) # needed for devs
 
-# executables
-add_executable(waveforms examples/waveforms.cpp)
-target_link_libraries(waveforms portaudio_static)
 
-add_executable(evan examples/evan.cpp)
-target_link_libraries(evan portaudio_static)
+set(INCLUDE_FILES "include/TactorFX/ADSR.hpp")
+set(SRC_FILES     "src/TactorFX/ADSR.cpp")
+
+# make library
+add_library(tfx ${INCLUDE_FILES} ${SRC_FILES})
+
+# executables
+add_executable(evan_testing tests/evan_testing.cpp)
+target_link_libraries(evan_testing portaudio_static MEL)
 
 add_executable(devs examples/devs.cpp)
 target_link_libraries(devs portaudio_static)
