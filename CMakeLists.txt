@@ -14,6 +14,11 @@ include_directories(
     "include"
     "C:/Program Files/portaudio/include"
 )
-add_executable(tfx examples/paex_saw.cpp)
-target_link_libraries(tfx portaudio_static)
+add_executable(sine examples/paex_sine_c++.cpp)
+target_link_libraries(sine portaudio_static)
 
+#add_executable(deviceList examples/pa_devs.c)
+#target_link_libraries(deviceList portaudio_static)
+
+#add_executable(mono examples/pa_saw_mono.cpp)
+#target_link_libraries(deviceList portaudio_static)
