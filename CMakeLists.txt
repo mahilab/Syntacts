@@ -16,19 +16,9 @@ include_directories(
     "/Git/MEL/include"
     "/Program Files/portaudio/include"
 )
-<<<<<<< HEAD
-add_executable(sine examples/paex_sine_c++.cpp)
-target_link_libraries(sine portaudio_static)
-
-#add_executable(deviceList examples/pa_devs.c)
-#target_link_libraries(deviceList portaudio_static)
-
-#add_executable(mono examples/pa_saw_mono.cpp)
-#target_link_libraries(deviceList portaudio_static)
-=======
 
 link_directories(
-    "/Git/MEL/build-quanser/Release"
+    "/Git/MEL/build/Release"
 )
 
 add_compile_definitions(PA_USE_ASIO) # needed for devs
@@ -46,4 +36,6 @@ target_link_libraries(evan_testing portaudio_static MEL)
 
 add_executable(devs examples/devs.cpp)
 target_link_libraries(devs portaudio_static)
->>>>>>> 005740cae4d30f499a401b5df02b28d3258c97bc
+
+add_executable(saw_mono examples/pa_saw_mono.cpp)
+target_link_libraries(saw_mono portaudio_static)
