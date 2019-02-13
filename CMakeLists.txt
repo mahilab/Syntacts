@@ -40,5 +40,14 @@ target_link_libraries(devs portaudio_static)
 add_executable(saw_mono examples/pa_saw_mono.cpp)
 target_link_libraries(saw_mono portaudio_static)
 
-add_executable(six_channel_testing tests/six_channel_testing.cpp)
-target_link_libraries(six_channel_testing portaudio_static MEL)
+add_executable(six_channel_testing_2 tests/six_channel_testing_2.cpp)
+target_link_libraries(six_channel_testing_2 portaudio_static MEL)
+
+add_executable(two_channel_testing tests/two_channel_testing.cpp)
+target_link_libraries(two_channel_testing portaudio_static MEL)
+
+add_executable(two_channel_testing_time tests/two_channel_testing_time.cpp)
+target_link_libraries(two_channel_testing_time portaudio_static MEL)
+
+add_executable(sine_cxx examples/paex_sine_c++.cpp)
+target_link_libraries(sine_cxx portaudio_static MEL)
