@@ -39,3 +39,6 @@ target_link_libraries(devs portaudio_static)
 
 add_executable(saw_mono examples/pa_saw_mono.cpp)
 target_link_libraries(saw_mono portaudio_static)
+
+add_executable(six_channel_testing tests/six_channel_testing.cpp)
+target_link_libraries(six_channel_testing portaudio_static MEL)

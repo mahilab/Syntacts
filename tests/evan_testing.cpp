@@ -7,6 +7,7 @@ struct MyData {
     float phase;
     float freq;
     float chan;
+    int ch; 
 };
 
 int sawCallback(const void *inputBuffer, void *outputBuffer,
@@ -21,10 +22,30 @@ int sawCallback(const void *inputBuffer, void *outputBuffer,
     unsigned int i;
     (void)inputBuffer; /* Prevent unused variable warning. */
 
+    int ch = data->ch;
+
     for (i = 0; i < framesPerBuffer; i++)
     {
-        *out++ = data->phase;  /* left */
-        *out++;
+        // *out++ = data->phase;  /* left */
+        // *out++;
+
+        if (ch == 0) {
+            out[6*i] = data->phase;
+            out[6*i+1] = 0.0;
+            out[6*i+2] = 0.0;
+            out[6*i+3] = 0.0;
+            out[6*i+4] = 0.0;
+            out[6*i+5] = 0.0;
+        }
+        else if (ch == 1) {
+            out[6*i]   = 0.0;
+            out[6*i+1] = data->phase;
+            out[6*i+2] = 0.0;
+            out[6*i+3] = 0.0;
+            out[6*i+4] = 0.0;
+            out[6*i+5] = 0.0;
+        }
+
         /* Generate simple sawtooth phaser that ranges between -1.0 and 1.0. */
 
         data->phase += 2.0f * data->freq / 44100.0f;
@@ -37,8 +58,12 @@ int sawCallback(const void *inputBuffer, void *outputBuffer,
 }
 
 /*******************************************************************/
+static MyData data0;
 static MyData data1;
 static MyData data2;
+static MyData data3;
+static MyData data4;
+static MyData data5;
 
 int main(void);
 int main(void)
@@ -49,9 +74,11 @@ int main(void)
     /* Initialize our data for use by callback. */
     data1.phase = 0.0f;
     data2.phase = 0.0f;
-
+    
     data1.freq  = 50;
     data2.freq  = 100;
+
+    data0.ch = 0;
 
     /* Initialize library before making any other calls. */
     Pa_Initialize();
