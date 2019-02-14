@@ -113,25 +113,25 @@ int sawCallback(const void *inputBuffer, void *outputBuffer,
     for (i = 0; i < framesPerBuffer; i++)
     {
         // zero all chan
-        out[6*i] =  0.0;
-        out[6*i+1] = 0.0;
-        out[6*i+2] = 0.0;
-        out[6*i+3] = 0.0;
-        out[6*i+4] = 0.0;
-        out[6*i+5] = 0.0;
+        out[2*i] =  0.0;
+        out[2*i+1] = 0.0;
+        // out[6*i+2] = 0.0;
+        // out[6*i+3] = 0.0;
+        // out[6*i+4] = 0.0;
+        // out[6*i+5] = 0.0;
 
         if (g_key1)
-            out[6*i]   = data->phase;
+            out[2*i]   = data->phase;
         if (g_key2)
-            out[6*i+1] = data->phase;
-        if (g_key3)
-            out[6*i+2] = data->phase;
-        if (g_key4)
-            out[6*i+3] = data->phase;
-        if (g_key5)
-            out[6*i+4] = data->phase;
-        if (g_key6)
-            out[6*i+5] = data->phase;
+            out[2*i+1] = data->phase;
+        // if (g_key3)
+        //     out[6*i+2] = data->phase;
+        // if (g_key4)
+        //     out[6*i+3] = data->phase;
+        // if (g_key5)
+        //     out[6*i+4] = data->phase;
+        // if (g_key6)
+        //     out[6*i+5] = data->phase;
 
         data->phase += 2.0f * data->freq / 44100.0f;
 
@@ -189,7 +189,7 @@ int main(void)
     std::cout << "Default Device Max Output Channels: " << info->maxOutputChannels << std::endl;
 
 
-    std::cout << Pa_GetErrorText(Pa_OpenOurStream(&stream0, 0, 6, paFloat32, 44100, 16, sawCallback, &data0)) << std::endl;
+    std::cout << Pa_GetErrorText(Pa_OpenOurStream(&stream0, 0, 2, paFloat32, 44100, 256, sawCallback, &data0)) << std::endl;
     // std::cout << Pa_GetErrorText(Pa_OpenOurStream(&stream1, 0, 2, paFloat32, 44100, 16, sawCallback, &data1)) << std::endl;
     // std::cout << Pa_GetErrorText(Pa_OpenOurStream(&stream2, 0, 6, paFloat32, 44100, 256, sawCallback, &data2)) << std::endl;
     // std::cout << Pa_GetErrorText(Pa_OpenOurStream(&stream3, 0, 6, paFloat32, 44100, 256, sawCallback, &data3)) << std::endl;
@@ -208,18 +208,18 @@ int main(void)
     Clock clock;
     while (clock.get_elapsed_time() < seconds(60)) {
         g_key1 = g_key2 = g_key3 = g_key4 = g_key5 = g_key6 = false;
-        if (Keyboard::is_key_pressed(Key::Num1))
+        if (true)
             g_key1 = true;
-        if (Keyboard::is_key_pressed(Key::Num2))
-            g_key2 = true;
-        if (Keyboard::is_key_pressed(Key::Num3))
-            g_key3 = true;
-        if (Keyboard::is_key_pressed(Key::Num4))
-            g_key4 = true;
-        if (Keyboard::is_key_pressed(Key::Num5))
-            g_key5 = true;
-        if (Keyboard::is_key_pressed(Key::Num6))
-            g_key6 = true;
+        // if (false)
+        //     g_key2 = true;
+        // if (false)
+        //     g_key3 = true;
+        // if (false)
+        //     g_key4 = true;
+        // if (false)
+        //     g_key5 = true;
+        // if (false)
+        //     g_key6 = true;
     }
 
     // Stop and close all streams 
