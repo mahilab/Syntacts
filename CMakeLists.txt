@@ -55,5 +55,5 @@ target_link_libraries(sine_cxx portaudio_static MEL)
 add_executable(sine tests/paex_sine.c)
 target_link_libraries(sine portaudio_static MEL)
 
-add_executable(six_ch_sine tests/sine_six_channel.c)
-target_link_libraries(six_ch_sine portaudio_static MEL)
+add_executable(saw_six_ch tests/saw_six_ch.cpp)
+target_link_libraries(saw_six_ch portaudio_static MEL)
