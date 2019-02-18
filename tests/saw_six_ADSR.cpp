@@ -5,6 +5,8 @@
 #include <atomic>
 #include <MEL/Core.hpp>
 #include <MEL/Devices/Windows/Keyboard.hpp>
+#include <TactorFX/ADSR.hpp>
+#include <cmath>
 
 struct MyData {
     float phase;
@@ -135,7 +137,10 @@ int main(void)
     auto info = Pa_GetDeviceInfo(defIdx);
     std::cout << "Default Device Name: " << info->name << std::endl;
     std::cout << "Default Device Max Output Channels: " << info->maxOutputChannels << std::endl;
+    std::atomic<char> flag;
 
+    if (flag.is_lock_free())
+        print("It's lock free"); 
 
     std::cout << Pa_GetErrorText(Pa_OpenOurStream(&stream0, 0, 6, paFloat32, 44100, 256, sawCallback, &data0)) << std::endl;
     

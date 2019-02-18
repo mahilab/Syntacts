@@ -1,6 +1,8 @@
 {
     "C_Cpp.default.configurationProvider": "vector-of-bool.cmake-tools",
     "files.associations": {
-        "cmath": "c"
+        "cmath": "c",
+        "atomic": "cpp",
+        "xxatomic": "cpp"
     }
 }

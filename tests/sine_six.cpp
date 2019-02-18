@@ -5,6 +5,10 @@
 #include <atomic>
 #include <MEL/Core.hpp>
 #include <MEL/Devices/Windows/Keyboard.hpp>
+// #include <TactorFX/ADSR.hpp>
+#define _USE_MATH_DEFINES
+#include <cmath>
+
 
 struct MyData {
     float phase;
@@ -97,18 +101,15 @@ int sawCallback(const void *inputBuffer, void *outputBuffer,
     for (i = 0; i < framesPerBuffer; i++)
     {
      
-        out[6*i]   = data->phase;
-        out[6*i+1] = data->phase;
-        out[6*i+2] = data->phase;
-        out[6*i+3] = data->phase;
-        out[6*i+4] = data->phase;
-        out[6*i+5] = data->phase;
+        out[6*i]   = sin(data->phase);
+        out[6*i+1] = sin(data->phase);
+        out[6*i+2] = sin(data->phase);
+        out[6*i+3] = sin(data->phase);
+        out[6*i+4] = sin(data->phase);
+        out[6*i+5] = sin(data->phase);
 
-        data->phase += 2.0f * data->freq / 44100.0f;
+        data->phase += 2.0f * 3.14159265358979323846f * data->freq / 44100.0f;
 
-        /* When signal reaches top, drop back down. */
-        if (data->phase >= 1.0f)
-            data->phase -= 2.0f;
     }
     return 0;
 }
@@ -135,7 +136,10 @@ int main(void)
     auto info = Pa_GetDeviceInfo(defIdx);
     std::cout << "Default Device Name: " << info->name << std::endl;
     std::cout << "Default Device Max Output Channels: " << info->maxOutputChannels << std::endl;
+    // std::atomic<char> flag;
 
+    // if (flag.is_lock_free())
+    //     print("It's lock free"); 
 
     std::cout << Pa_GetErrorText(Pa_OpenOurStream(&stream0, 0, 6, paFloat32, 44100, 256, sawCallback, &data0)) << std::endl;
     
