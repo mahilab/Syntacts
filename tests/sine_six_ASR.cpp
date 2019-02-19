@@ -8,11 +8,15 @@
 // #include <TactorFX/ADSR.hpp>
 #define _USE_MATH_DEFINES
 #include <cmath>
+#include <MEL/Utility/System.hpp>
 
 
 struct MyData {
     float phase;
     float freq;
+    float rise;
+    float rise_time;
+    float amp;
 };
 
 /* This is our own way of opening the stream to not a default. 
@@ -86,7 +90,7 @@ PaError Pa_OpenOurStream( PaStream** stream,
     return result;
 }
 
-int sawCallback(const void *inputBuffer, void *outputBuffer,
+int sineCallback(const void *inputBuffer, void *outputBuffer,
                        unsigned long framesPerBuffer,
                        const PaStreamCallbackTimeInfo *timeInfo,
                        PaStreamCallbackFlags statusFlags,
@@ -101,14 +105,16 @@ int sawCallback(const void *inputBuffer, void *outputBuffer,
     for (i = 0; i < framesPerBuffer; i++)
     {
      
-        out[6*i]   = sin(data->phase);
-        out[6*i+1] = sin(data->phase);
-        out[6*i+2] = sin(data->phase);
-        out[6*i+3] = sin(data->phase);
-        out[6*i+4] = sin(data->phase);
-        out[6*i+5] = sin(data->phase);
+        out[6*i]   = data->amp * (1-exp (-data->rise)) * sin(data->phase);
+        out[6*i+1] = data->amp * (1-exp (-data->rise)) * sin(data->phase);
+        out[6*i+2] = data->amp * (1-exp (-data->rise)) * sin(data->phase);
+        out[6*i+3] = data->amp * (1-exp (-data->rise)) * sin(data->phase);
+        out[6*i+4] = data->amp * (1-exp (-data->rise)) * sin(data->phase);
+        out[6*i+5] = data->amp * (1-exp (-data->rise)) * sin(data->phase);
 
         data->phase += 2.0f * 3.14159265358979323846f * data->freq / 44100.0f;
+        data->rise += data->rise_time/44100/3;
+
 
     }
     return 0;
@@ -126,22 +132,13 @@ int main(void)
     /* Initialize our data for use by callback. */
     data0.phase = 0.0f;
     data0.freq = 175;
+    data0.rise_time = 3;
+    data0.amp = 1.0f;
     
     /* Initialize library before making any other calls. */
     Pa_Initialize();
 
-    auto defIdx = Pa_GetDefaultOutputDevice();
-    std::cout << "Default Device Index: " << defIdx << std::endl;
-    
-    auto info = Pa_GetDeviceInfo(defIdx);
-    std::cout << "Default Device Name: " << info->name << std::endl;
-    std::cout << "Default Device Max Output Channels: " << info->maxOutputChannels << std::endl;
-    // std::atomic<char> flag;
-
-    // if (flag.is_lock_free())
-    //     print("It's lock free"); 
-
-    std::cout << Pa_GetErrorText(Pa_OpenOurStream(&stream0, 0, 6, paFloat32, 44100, 256, sawCallback, &data0)) << std::endl;
+    std::cout << Pa_GetErrorText(Pa_OpenOurStream(&stream0, 0, 6, paFloat32, 44100, 256, sineCallback, &data0)) << std::endl;
     
     /* Start stream */
     Pa_StartStream(stream0);
@@ -149,6 +146,7 @@ int main(void)
     /* Run for 10 seconds */
     Clock clock;
     while (clock.get_elapsed_time() < seconds(10)) {
+        mel::sleep(milliseconds(100));
     }
 
     // Stop and close stream 

@@ -86,7 +86,7 @@ PaError Pa_OpenOurStream( PaStream** stream,
     return result;
 }
 
-int sawCallback(const void *inputBuffer, void *outputBuffer,
+int sineCallback(const void *inputBuffer, void *outputBuffer,
                        unsigned long framesPerBuffer,
                        const PaStreamCallbackTimeInfo *timeInfo,
                        PaStreamCallbackFlags statusFlags,
@@ -130,18 +130,7 @@ int main(void)
     /* Initialize library before making any other calls. */
     Pa_Initialize();
 
-    auto defIdx = Pa_GetDefaultOutputDevice();
-    std::cout << "Default Device Index: " << defIdx << std::endl;
-    
-    auto info = Pa_GetDeviceInfo(defIdx);
-    std::cout << "Default Device Name: " << info->name << std::endl;
-    std::cout << "Default Device Max Output Channels: " << info->maxOutputChannels << std::endl;
-    // std::atomic<char> flag;
-
-    // if (flag.is_lock_free())
-    //     print("It's lock free"); 
-
-    std::cout << Pa_GetErrorText(Pa_OpenOurStream(&stream0, 0, 6, paFloat32, 44100, 256, sawCallback, &data0)) << std::endl;
+    std::cout << Pa_GetErrorText(Pa_OpenOurStream(&stream0, 0, 6, paFloat32, 44100, 256, sineCallback, &data0)) << std::endl;
     
     /* Start stream */
     Pa_StartStream(stream0);
