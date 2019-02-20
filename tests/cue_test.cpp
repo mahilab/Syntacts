@@ -36,6 +36,7 @@ public:
     } 
 };
 
+
 /// Sinavewave Cue Impl.
 class SinWave : public Cue {
 public:
@@ -51,6 +52,7 @@ public:
 private:
     float m_freq, m_amp, m_dur, m_cur;
 };
+
 
 /// Sawwave Cue Impl
 class SawWave : public Cue {
@@ -92,7 +94,7 @@ void audio_thread_func() {
     while (!g_stop) {
         // mutex protected scope
         {
-            // lock mutex using RA-II lockgaurd (unlocked when we exit scope)
+            // lock mutex using RA-II lockgaurd (unlocked when we exit scope b/c lock dies)
             std::lock_guard<std::mutex> lock(g_mutex);
             for (std::size_t i = 0; i < NUM_CH; ++i)
                 output_buffer[i] = g_cues[i]->nextSample();
@@ -106,21 +108,24 @@ void audio_thread_func() {
 }
 
 //=============================================================================
-// TACTORFX INTEFACE
+// TACTORFX USER INTEFACE?
 //=============================================================================
 
+// we wil want to namespace our interface
+namespace tfx {
+
 void play_cue(std::size_t chn, CuePtr cue) {
-    // lock mutex using RA-II lockgaurd (unlocked when function ends)
+    // lock mutex using RA-II lockgaurd (unlocked when function ends b/c lock dies)
     std::lock_guard<std::mutex> lock(g_mutex);
     g_cues[chn] = cue;
     print("Played a Cue!");
 }
 
+} // namespace tfx
+
 //=============================================================================
 // MAIN THREAD
 //=============================================================================
-
-
 
 int main(int argc, char const *argv[])
 {
@@ -145,15 +150,15 @@ int main(int argc, char const *argv[])
                 float dur  = (float)random(5, 10);
                 if (KB::is_key_pressed(Key::S)) {
                     CuePtr cue = std::make_shared<SinWave>(freq, amp, dur);
-                    play_cue(ch, cue);
+                    tfx::play_cue(ch, cue);
                 }                
                 else if (KB::is_key_pressed(Key::W)) {
                     CuePtr cue = std::make_shared<SawWave>(freq, amp, dur);
-                    play_cue(ch, cue);
+                    tfx::play_cue(ch, cue);
                 }
             }
         }
-        // sleep so key presses aren't spammed
+        // sleep so key presses aren't spammed (less than perfect)
         sleep(mel::milliseconds(100));
     }    
     audio_thread.join();
