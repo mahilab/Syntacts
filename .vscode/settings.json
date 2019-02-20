@@ -3,6 +3,7 @@
     "files.associations": {
         "cmath": "c",
         "atomic": "cpp",
-        "xxatomic": "cpp"
+        "xxatomic": "cpp",
+        "array": "cpp"
     }
 }

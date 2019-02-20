@@ -18,7 +18,7 @@ include_directories(
 )
 
 link_directories(
-    "/Git/MEL/build/Release"
+    "/Git/MEL/build-msvc-x64"
 )
 
 add_compile_definitions(PA_USE_ASIO) # needed for devs
@@ -72,3 +72,6 @@ target_link_libraries(christiansen portaudio_static MEL)
 
 add_executable(double_sin_six tests/double_sin_six.cpp)
 target_link_libraries(double_sin_six portaudio_static MEL)
+
+add_executable(cue_test tests/cue_test.cpp)
+target_link_libraries(cue_test MEL)
