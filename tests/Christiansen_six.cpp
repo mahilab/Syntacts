@@ -116,7 +116,7 @@ int sineCallback(const void *inputBuffer, void *outputBuffer,
         if (data->phase >= data->amp)
             data->phase -= 2.0f * data->amp;
 
-        data->rise += data->rise_time/44100/3;
+        data->rise += 3 / 44100 / data->rise_time; /*Check this. 20190219*/
 
 
     }
@@ -137,7 +137,6 @@ int main(void)
     data0.freq = 175;
     data0.rise_time = 1; /*fix to convert to seconds*/
     data0.amp = 1.0f;
-    data0.rise = 0.0f;
     
     /* Initialize library before making any other calls. */
     Pa_Initialize();
