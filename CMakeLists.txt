@@ -66,3 +66,9 @@ target_link_libraries(sine_six_ASR portaudio_static MEL)
 
 add_executable(saw_six_ASR tests/saw_six_ASR.cpp)
 target_link_libraries(saw_six_ASR portaudio_static MEL)
+
+add_executable(christiansen tests/Christiansen_six.cpp)
+target_link_libraries(christiansen portaudio_static MEL)
+
+add_executable(double_sin_six tests/double_sin_six.cpp)
+target_link_libraries(double_sin_six portaudio_static MEL)

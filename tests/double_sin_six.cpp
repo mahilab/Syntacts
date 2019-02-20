@@ -5,15 +5,15 @@
 #include <atomic>
 #include <MEL/Core.hpp>
 #include <MEL/Devices/Windows/Keyboard.hpp>
-// #include <TactorFX/ADSR.hpp>
-#define _USE_MATH_DEFINES
 #include <cmath>
 #include <MEL/Utility/System.hpp>
 
 
 struct MyData {
-    float phase;
-    float freq;
+    float sin_phase;
+    float sin_freq;
+    float saw_freq;
+    float saw_phase;
     float rise;
     float rise_time;
     float amp;
@@ -105,17 +105,16 @@ int sineCallback(const void *inputBuffer, void *outputBuffer,
     for (i = 0; i < framesPerBuffer; i++)
     {
      
-        out[6*i]   = data->amp * (1-exp (-data->rise)) * sin(data->phase);
-        out[6*i+1] = data->amp * (1-exp (-data->rise)) * sin(data->phase);
-        out[6*i+2] = data->amp * (1-exp (-data->rise)) * sin(data->phase);
-        out[6*i+3] = data->amp * (1-exp (-data->rise)) * sin(data->phase);
-        out[6*i+4] = data->amp * (1-exp (-data->rise)) * sin(data->phase);
-        out[6*i+5] = data->amp * (1-exp (-data->rise)) * sin(data->phase);
+        out[6*i]   = data->amp * sin(data->saw_phase) * sin(data->sin_phase) * (1-exp (-data->rise));
+        out[6*i+1] = data->amp * sin(data->saw_phase) * sin(data->sin_phase) * (1-exp (-data->rise));
+        out[6*i+2] = data->amp * sin(data->saw_phase) * sin(data->sin_phase) * (1-exp (-data->rise));
+        out[6*i+3] = data->amp * sin(data->saw_phase) * sin(data->sin_phase) * (1-exp (-data->rise));
+        out[6*i+4] = data->amp * sin(data->saw_phase) * sin(data->sin_phase) * (1-exp (-data->rise));
+        out[6*i+5] = data->amp * sin(data->saw_phase) * sin(data->sin_phase) * (1-exp (-data->rise));
 
-        data->phase += 2.0f * 3.14159265358979323846f * data->freq / 44100.0f;
         data->rise += data->rise_time/44100/3;
-
-
+        data->sin_phase += 2.0f * 3.14159265358979323846f * data->sin_freq / 44100.0f;
+        data->saw_phase += 2.0f * 3.14159265358979323846f * data->saw_freq / 44100.0f;
     }
     return 0;
 }
@@ -130,9 +129,11 @@ int main(void)
     PaStream* stream0;
 
     /* Initialize our data for use by callback. */
-    data0.phase = 0.0f;
-    data0.freq = 240;
-    data0.rise_time = 3;
+    data0.sin_phase = 0.0f;
+    data0.sin_freq = 175;
+    data0.saw_freq = 10;
+    data0.saw_phase = 0.0f;
+    data0.rise_time = 1; 
     data0.amp = 1.0f;
     
     /* Initialize library before making any other calls. */
