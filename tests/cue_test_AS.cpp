@@ -34,8 +34,7 @@ public:
     virtual float nextSample() { 
         return 0.0f; 
     } 
-protected:
-    int thing;
+
 };
 
 
@@ -43,16 +42,16 @@ protected:
 class SinWave : public Cue {
 public:
     /// Constructor
-    SinWave(float freq, float amp, float dur) : 
-        m_freq(freq), m_amp(amp), m_dur(dur), m_cur(0.0f) { }
+    SinWave(float freq, float amp, float dur, float a_time) : 
+        m_freq(freq), m_amp(amp), m_dur(dur), m_cur(0.0f), m_a_time(a_time) { }
     /// Gets the next sample
     float nextSample() override {
-        float sample = m_cur < m_dur ? m_amp * std::sin(TWO_PI * m_freq * m_cur) : 0.0f;
+        float sample = m_cur < m_dur ? m_amp * (1-std::exp(-3*m_cur / m_a_time)) * std::sin(TWO_PI * m_freq * m_cur) : 0.0f;
         m_cur += 0.001f; // 1ms window
         return sample;
     }
 private:
-    float m_freq, m_amp, m_dur, m_cur;
+    float m_freq, m_amp, m_dur, m_cur, m_a_time;
 };
 
 
@@ -60,16 +59,16 @@ private:
 class SawWave : public Cue {
 public:
     /// Constructor
-    SawWave(float freq, float amp, float dur) : 
-        m_freq(freq), m_amp(amp), m_dur(dur), m_cur(0.0f) { }
+    SawWave(float freq, float amp, float dur, float a_time) : 
+        m_freq(freq), m_amp(amp), m_dur(dur), m_cur(0.0f), m_a_time(a_time) { }
     /// Gets the next sample
     float nextSample() override {
-        float sample = m_cur < m_dur ? -2 / PI * m_amp * std::atan(std::cos(PI * m_freq * m_cur) / std::sin(PI * m_freq * m_cur)) : 0.0f;
+        float sample = m_cur < m_dur ? -2 / PI * m_amp * (1-std::exp(-3*m_cur / m_a_time)) * std::atan(std::cos(PI * m_freq * m_cur) / std::sin(PI * m_freq * m_cur)) : 0.0f;
         m_cur += 0.001f; // 1ms window
         return sample;
     }
 private:
-    float m_freq, m_amp, m_dur, m_cur;
+    float m_freq, m_amp, m_dur, m_cur, m_a_time;
 };
 
 //=============================================================================
@@ -150,12 +149,13 @@ int main(int argc, char const *argv[])
                 float freq = (float)random(1, 5);  // small so we can see it on melscope
                 float amp  = (float)random(0.5, 1.0); 
                 float dur  = (float)random(5, 10);
+                float a_time = (float)random(1,3);
                 if (KB::is_key_pressed(Key::S)) {
-                    CuePtr cue = std::make_shared<SinWave>(freq, amp, dur);
+                    CuePtr cue = std::make_shared<SinWave>(freq, amp, dur, a_time);
                     tfx::play_cue(ch, cue);
                 }                
                 else if (KB::is_key_pressed(Key::W)) {
-                    CuePtr cue = std::make_shared<SawWave>(freq, amp, dur);
+                    CuePtr cue = std::make_shared<SawWave>(freq, amp, dur, a_time);
                     tfx::play_cue(ch, cue);
                 }
             }

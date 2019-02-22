@@ -73,5 +73,11 @@ target_link_libraries(christiansen portaudio_static MEL)
 add_executable(double_sin_six tests/double_sin_six.cpp)
 target_link_libraries(double_sin_six portaudio_static MEL)
 
-add_executable(cue_test tests/cue_test.cpp)
-target_link_libraries(cue_test MEL)
+# add_executable(cue_test tests/cue_test.cpp)
+# target_link_libraries(cue_test MEL)
+
+add_executable(cue_test_PA tests/cue_test_PA.cpp)
+target_link_libraries(cue_test_PA MEL portaudio_static)
+
+add_executable(cue_test_AS tests/cue_test_AS.cpp)
+target_link_libraries(cue_test_AS MEL)
