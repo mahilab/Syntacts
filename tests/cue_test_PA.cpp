@@ -161,15 +161,16 @@ private:
     float m_dur, m_cur, m_a_time;
 };
 
-// SR Envelope Impl.
-class SR : public Envelope {
+// ASR Envelope Impl.
+class ASR : public Envelope {
 public:
     /// Constructor
-    SR(float dur, float a_time, float s_time) : 
-        m_dur(dur), m_cur(0.0f), m_a_time(a_time) { }
+    ASR(float dur, float a_time, float s_time) : 
+        m_dur(dur), m_cur(0.0f), m_a_time(a_time), m_s_time(s_time) { }
+        
     /// Gets the next sample
     float nextSample() override {
-        float sample = m_cur < m_dur ? (1-1/std::exp(-m_cur-m_dur))  : 0.0f; /*math is wrong, fix on Monday*/
+        float sample = m_cur < m_dur ? (1-std::exp(-3*m_cur / m_a_time)) * 1/(1+std::exp(10 / (m_dur - (m_a_time + m_s_time)) * (m_cur - ((m_dur - (m_a_time + m_s_time)) / 2)-(m_a_time+m_s_time)))) : 0.0f; 
         m_cur += 1.0f/44100.0f; /* steps forward one sample*/ 
         return sample;
     }
@@ -194,7 +195,7 @@ public:
         return sample;
     }
 private:
-    float m_freq, m_amp, m_dur, m_cur, m_a_time;
+    float m_freq, m_amp, m_dur, m_cur;
 };
 
 
@@ -214,6 +215,45 @@ private:
     float m_freq, m_amp, m_dur, m_cur;
 };
 
+
+
+/// Triangle wave Cue Impl
+class TriWave : public Oscillator {
+public:
+    /// Constructor
+    TriWave(float freq, float amp, float dur) : 
+        m_freq(freq), m_amp(amp), m_dur(dur), m_cur(0.0f) { }
+    /// Gets the next sample
+    float nextSample() override {
+        float sample = m_cur < m_dur ? 2 / PI * m_amp * std::asin(std::sin(2.0f * PI * m_freq * m_cur)) : 0.0f;
+        m_cur += 1.0f/44100.0f; /* steps forward one sample*/ 
+        return sample;
+    }
+private:
+    float m_freq, m_amp, m_dur, m_cur;
+};
+
+
+
+/// Square wave Cue Impl
+class SquareWave : public Oscillator {
+public:
+    /// Constructor
+    SquareWave(float freq, float amp, float dur) : 
+        m_freq(freq), m_amp(amp), m_dur(dur), m_cur(0.0f) { }
+    /// Creates sign (sgn) function for square wave 
+    int sign(float value) {
+        return (0 < value) - (value < 0);
+    }
+    /// Gets the next sample
+    float nextSample() override {
+        float sample = m_cur < m_dur ? m_amp * sign(std::sin(2 * PI * m_freq * m_cur)) : 0.0f;
+        m_cur += 1.0f/44100.0f; /* steps forward one sample*/ 
+        return sample;
+    }
+private:
+    float m_freq, m_amp, m_dur, m_cur;
+};
 
 class CompoundOsc : public Oscillator {
 public:
@@ -325,22 +365,34 @@ int main(int argc, char const *argv[])
 
         for (std::size_t ch = 0; ch < NUM_CH; ++ch) {
             if (KB::is_key_pressed(chn_keys[ch])) {
-                float freq = 175;  // for Evan's tactors
+                float freq = 240;  // for Evan's tactors
                 float amp  = 1.0f; 
                 float dur  = 0.5f;
-                float a_time = 0.25f;
-                float s_time = 0.75f;
+                float a_time = 0.1f;
+                float s_time = 0.3f;
                 float mod_freq = 5;
                 
                 if (KB::is_key_pressed(Key::S)) {
                     OscPtr osc = std::make_shared<SinWave>(freq, amp, dur);
-                    EnvPtr env = std::make_shared<AS>(dur, a_time);
+                    EnvPtr env = std::make_shared<ASR>(dur, a_time, s_time);
                     CuePtr cue = std::make_shared<CompoundCue>(osc,env);
                     tfx::play_cue(ch, cue);
                 }                
                 else if (KB::is_key_pressed(Key::W)) {
                     OscPtr osc = std::make_shared<SawWave>(freq, amp, dur);
-                    EnvPtr env = std::make_shared<AS>(dur, a_time);
+                    EnvPtr env = std::make_shared<ASR>(dur, a_time, s_time);
+                    CuePtr cue = std::make_shared<CompoundCue>(osc,env);
+                    tfx::play_cue(ch, cue);
+                }
+                else if (KB::is_key_pressed(Key::T)) {
+                    OscPtr osc = std::make_shared<TriWave>(freq, amp, dur);
+                    EnvPtr env = std::make_shared<ASR>(dur, a_time, s_time);
+                    CuePtr cue = std::make_shared<CompoundCue>(osc,env);
+                    tfx::play_cue(ch, cue);
+                }
+                else if (KB::is_key_pressed(Key::Q)) {
+                    OscPtr osc = std::make_shared<SquareWave>(freq, amp, dur);
+                    EnvPtr env = std::make_shared<ASR>(dur, a_time, s_time);
                     CuePtr cue = std::make_shared<CompoundCue>(osc,env);
                     tfx::play_cue(ch, cue);
                 }
@@ -348,7 +400,7 @@ int main(int argc, char const *argv[])
                     OscPtr osc1 = std::make_shared<SinWave>(freq, amp, dur);
                     OscPtr osc2 = std::make_shared<SinWave>(mod_freq, amp, dur);
                     OscPtr osc3 = std::make_shared<CompoundOsc>(osc1, osc2);
-                    EnvPtr env = std::make_shared<AS>(dur, a_time);
+                    EnvPtr env = std::make_shared<ASR>(dur, a_time, s_time);
                     CuePtr cue = std::make_shared<CompoundCue>(osc3,env);
                     tfx::play_cue(ch, cue);
                 }
