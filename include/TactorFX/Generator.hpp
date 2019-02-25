@@ -28,7 +28,7 @@ public:
 protected:
 
     /// Override to implement generator behavior
-    virtual float onSample(float t);
+    virtual float onSample(float t) = 0;
 
 private:
 

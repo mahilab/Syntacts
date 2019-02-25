@@ -1,21 +1,26 @@
 #include <TactorFX/TactorFX.hpp>
+#include "Helpers.hpp"
 #include "portaudio.h"
 #include <atomic>
 #include <mutex>
+#include <cassert>
 
+#define SAMPLE_RATE 44100
+#define BUFFER_SIZE 256
 
 namespace tfx {
 
 // private namespace
-namespace {
+namespace {    
 
 std::size_t g_num_ch;         ///< number of channels specified
 std::vector<Ptr<Cue>> g_cues; ///< cues
 std::mutex g_mutex;           ///< mutex
 PaStream* g_stream;           ///< portaudio stream
+bool g_initialized = false;   ///< tfx initialized?
 
 // portaudio callback method
-int callback(const void *inputBuffer, void *outputBuffer,
+int pa_callback(const void *inputBuffer, void *outputBuffer,
                        unsigned long framesPerBuffer,
                        const PaStreamCallbackTimeInfo *timeInfo,
                        PaStreamCallbackFlags statusFlags,
@@ -32,22 +37,47 @@ int callback(const void *inputBuffer, void *outputBuffer,
         }
     }
     return 0;
-}
-    
+}    
 
 } // private namespace
 
-
-bool initialize(std::size_t channelCount) {
-    return true;
+int initialize(std::size_t channelCount, std::size_t device) {
+    assert(!g_initialized);
+    // init g_cues with empty cues
+    g_cues.resize(channelCount);
+    for (auto& cue : g_cues)
+        cue = make<Cue>();  
+    Pa_Initialize();
+    PaStreamParameters hostApiOutputParameters;
+    PaStreamParameters* hostApiOutputParametersPtr;        
+    if (channelCount > 0) {
+        hostApiOutputParameters.device = (PaDeviceIndex)device;
+		if (hostApiOutputParameters.device == paNoDevice)
+			return paDeviceUnavailable;
+        hostApiOutputParameters.channelCount = (int)channelCount;
+        hostApiOutputParameters.sampleFormat = paFloat32;
+        hostApiOutputParameters.suggestedLatency = Pa_GetDeviceInfo( hostApiOutputParameters.device )->defaultHighOutputLatency;
+        hostApiOutputParameters.hostApiSpecificStreamInfo = NULL;
+        hostApiOutputParametersPtr = &hostApiOutputParameters;
+    }
+    else {
+        hostApiOutputParametersPtr = NULL;
+    }
+    return Pa_OpenStream(&g_stream, nullptr, hostApiOutputParametersPtr, SAMPLE_RATE, BUFFER_SIZE, paNoFlag, pa_callback, nullptr );
 }
 
-bool finalize() {
-    return true;
+void finalize() {
+    assert(g_initialized);
+    Pa_StopStream(g_stream); 
+    Pa_CloseStream(g_stream); 
+    Pa_Terminate();
 }
 
 void playCue(std::size_t channel, Ptr<Cue> cue) {
-
+    assert(g_initialized);
+    assert(channel < g_num_ch);
+    std::lock_guard<std::mutex> lock(g_mutex);
+    g_cues[channel] = cue;
 } 
 
 } // namespace tfx

@@ -278,7 +278,6 @@ int callback(const void *inputBuffer, void *outputBuffer,
     return 0;
 }
 
-/*******************************************************************/
 
 
 

@@ -7,18 +7,18 @@
 
 namespace tfx {    
 
-    /// Initializes TactorFX Library with a specified number of channels
-    bool initialize(std::size_t channelCount);
+/// Initializes TactorFX Library with a specified number of channels
+int initialize(std::size_t channelCount, std::size_t device);
 
-    /// Finalizes TactorFX Libary
-    bool finalize();
+/// Finalizes TactorFX Libary
+void finalize();
 
-    /// Plays a Cue on a specified channel asynchronously
-    void playCue(std::size_t channel, Ptr<Cue> cue);     
+/// Plays a Cue on a specified channel asynchronously
+void playCue(std::size_t channel, Ptr<Cue> cue);     
 
-    /// Makes a TactoFX type
-    template <typename T, typename ...Args>
-    Ptr<T> make(Args ... args);
+/// Makes a TactoFX type
+template <typename T, typename ...Args>
+Ptr<T> make(Args ... args);
     
 } // namespace tfx
 

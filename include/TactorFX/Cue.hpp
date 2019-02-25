@@ -26,12 +26,12 @@ public:
     /// Virtual destructor
     virtual ~Cue();
 
-    /// Adds an existing custom Generator to be processed
-    void addGenerator(Ptr<Generator> gen);
+    /// Chains an existing custom Generator to be processed
+    void chain(Ptr<Generator> gen);
 
-    /// Makes and then adds a custon Generator to be processed
+    /// Makes and then chains a custon Generator to be processed
     template <typename T, typename ...Args>
-    void addGenerator(Args ... args);
+    void chain(Args ... args);
 
     /// Compounds all Generators to compute the next sample
     float nextSample();
