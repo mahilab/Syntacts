@@ -288,7 +288,6 @@ private:
 //=============================================================================
 
 
-
 /// Global Cue Array (Indexed by Channel)
 std::array<CuePtr, NUM_CH> g_cues;
 
@@ -319,7 +318,6 @@ int callback(const void *inputBuffer, void *outputBuffer,
     return 0;
 }
 
-/*******************************************************************/
 
 
 
