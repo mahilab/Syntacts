@@ -67,7 +67,6 @@ static void StreamFinished( void* userData )
 }
 
 /*******************************************************************/
-int main(void);
 int main(void)
 {
     PaStreamParameters outputParameters;

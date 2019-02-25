@@ -248,7 +248,6 @@ private:
 //=============================================================================
 
 
-
 /// Global Cue Array (Indexed by Channel)
 std::array<CuePtr, NUM_CH> g_cues;
 
