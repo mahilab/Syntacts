@@ -30,26 +30,22 @@ protected:
 };
 
 
-class AttackSustain : public Envelope {
+class ASR : public Envelope {
 public:
 
-    /// Constructs AS Envelope with specified attack and sustain times
-    AttackSustain(float attackTime, float sustainTime);
+    /// Constructs ASR Envelope with specified attack and sustain times
+    ASR(float attackTime, float sustainTime, float releaseTime);
 
 protected:
 
-    /// AttackSustain implementatioin
+    /// ASR implementatioin
     virtual float onSample(float t) override;
     
 private:
 
-    float m_attackTime;
+    float m_attackTime, m_sustainTime, m_releaseTime;
 
 };
-
-//==============================================================================
-// SUSTAIN RELEASE
-//==============================================================================
 
 
     

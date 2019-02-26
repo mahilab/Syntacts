@@ -8,7 +8,7 @@
 namespace tfx {    
 
 /// Initializes TactorFX Library with a specified number of channels
-int initialize(std::size_t channelCount, std::size_t device);
+int initialize(std::size_t channelCount);
 
 /// Finalizes TactorFX Libary
 void finalize();

@@ -3,10 +3,14 @@
 #include "portaudio.h"
 #include <atomic>
 #include <mutex>
+#include <iostream>
 #include <cassert>
 
 #define SAMPLE_RATE 44100
 #define BUFFER_SIZE 256
+#ifndef PA_USE_ASIO
+    #define PA_USE_ASIO 1
+#endif
 
 namespace tfx {
 
@@ -33,25 +37,45 @@ int pa_callback(const void *inputBuffer, void *outputBuffer,
     // lock mutex using RA-II lockgaurd (unlocked when we exit scope b/c lock dies)
     for (unsigned long f = 0; f < framesPerBuffer; f++) {
         for (std::size_t c = 0; c < g_num_ch; ++c) {
-            out[g_num_ch * f + c] = g_cues[c]->nextSample();
+            auto sample =  g_cues[c]->nextSample();
+            out[g_num_ch * f + c] = sample;
         }
     }
     return 0;
-}    
+}  
+
+int getFirstAsioDevice() {
+    int numDevices = Pa_GetDeviceCount();
+    for (int i = 0; i < numDevices; ++i) {
+        auto info = Pa_GetDeviceInfo(i);
+        auto type = Pa_GetHostApiInfo(info->hostApi)->type;
+        if (type == paASIO)
+            return i;
+    }
+    return -1;
+}
+
 
 } // private namespace
 
-int initialize(std::size_t channelCount, std::size_t device) {
+int initialize(std::size_t channelCount) {
     assert(!g_initialized);
+    g_num_ch = channelCount;
     // init g_cues with empty cues
     g_cues.resize(channelCount);
     for (auto& cue : g_cues)
-        cue = make<Cue>();  
-    Pa_Initialize();
+        cue = make<Cue>();      
+
+    int result = Pa_Initialize();
+    if (result != paNoError)
+        return result;
+    int device =  getFirstAsioDevice();
+    if (device < 0)
+        return device;
     PaStreamParameters hostApiOutputParameters;
     PaStreamParameters* hostApiOutputParametersPtr;        
     if (channelCount > 0) {
-        hostApiOutputParameters.device = (PaDeviceIndex)device;
+        hostApiOutputParameters.device = device;
 		if (hostApiOutputParameters.device == paNoDevice)
 			return paDeviceUnavailable;
         hostApiOutputParameters.channelCount = (int)channelCount;
@@ -63,7 +87,11 @@ int initialize(std::size_t channelCount, std::size_t device) {
     else {
         hostApiOutputParametersPtr = NULL;
     }
-    return Pa_OpenStream(&g_stream, nullptr, hostApiOutputParametersPtr, SAMPLE_RATE, BUFFER_SIZE, paNoFlag, pa_callback, nullptr );
+    
+    result = Pa_OpenStream(&g_stream, nullptr, hostApiOutputParametersPtr, SAMPLE_RATE, BUFFER_SIZE, paNoFlag, pa_callback, nullptr );
+    if (result != paNoError)
+        return result;    
+    return Pa_StartStream(g_stream);
 }
 
 void finalize() {

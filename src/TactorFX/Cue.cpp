@@ -33,6 +33,8 @@ void Cue::chain(Ptr<Generator> gen) {
 }
 
 float Cue::nextSample() {
+    if (m_generators.empty())
+        return 0.0f;
     float sample = 1.0f;
     for (auto& g : m_generators)
         sample *= g->nextSample();
