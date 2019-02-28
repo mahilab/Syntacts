@@ -33,4 +33,8 @@ float SawWave::onSample(float t) {
     return -2.0f / PI * m_amplitude * std::atan(std::cos(PI * m_frequency * t) / std::sin(PI * m_frequency * t));
 }
 
+float TriWave::onSample(float t) {
+    return -2.0f / PI * m_amplitude * 2 / PI * m_amplitude * std::asin(std::sin(2.0f * PI * m_frequency * t));
+}
+
 } // namespace tfx

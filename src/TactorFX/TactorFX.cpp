@@ -94,6 +94,60 @@ int initialize(std::size_t channelCount) {
     return Pa_StartStream(g_stream);
 }
 
+int initialize(std::size_t channelCount, int device_num) {
+    assert(!g_initialized);
+    g_num_ch = channelCount;
+    // init g_cues with empty cues
+    g_cues.resize(channelCount);
+    for (auto& cue : g_cues)
+        cue = make<Cue>();      
+
+    int result = Pa_Initialize();
+    if (result != paNoError)
+        return result;
+    int device = device_num;
+    if (device < 0)
+        return device;
+    PaStreamParameters hostApiOutputParameters;
+    PaStreamParameters* hostApiOutputParametersPtr;        
+    if (channelCount > 0) {
+        hostApiOutputParameters.device = device;
+		if (hostApiOutputParameters.device == paNoDevice)
+			return paDeviceUnavailable;
+        hostApiOutputParameters.channelCount = (int)channelCount;
+        hostApiOutputParameters.sampleFormat = paFloat32;
+        hostApiOutputParameters.suggestedLatency = Pa_GetDeviceInfo( hostApiOutputParameters.device )->defaultHighOutputLatency;
+        hostApiOutputParameters.hostApiSpecificStreamInfo = NULL;
+        hostApiOutputParametersPtr = &hostApiOutputParameters;
+    }
+    else {
+        hostApiOutputParametersPtr = NULL;
+    }
+    
+    result = Pa_OpenStream(&g_stream, nullptr, hostApiOutputParametersPtr, SAMPLE_RATE, BUFFER_SIZE, paNoFlag, pa_callback, nullptr );
+    if (result != paNoError)
+        return result;    
+    return Pa_StartStream(g_stream);
+}
+
+void listDevices() {
+
+        int numAsioDevices = 0;
+        int numDevices = Pa_GetDeviceCount();
+    for (int i = 0; i < numDevices; ++i) {
+        auto info = Pa_GetDeviceInfo(i);
+        auto type = Pa_GetHostApiInfo(info->hostApi)->type;
+        if (type == paASIO){
+            numAsioDevices++;
+            printf( "Device #%d\n", i );
+            printf( "Name = %s\n", info->name );
+            printf( "Max outputs = %d\n", info->maxOutputChannels);
+        }   
+    }
+     printf( "Search Complete. Total ASIO devices: %d\n", numAsioDevices );
+     
+}
+
 void finalize() {
     assert(g_initialized);
     Pa_StopStream(g_stream); 

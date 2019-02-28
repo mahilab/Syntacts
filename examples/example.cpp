@@ -26,9 +26,15 @@ int main(int argc, char const *argv[])
 
     std::array<Key, NUM_CH> chn_keys = {Key::Num1, Key::Num2, Key::Num3, Key::Num4, Key::Num5, Key::Num6};    
     while (!KB::is_key_pressed(Key::Escape)) {
+        if (KB::is_key_pressed(Key::L)) {
+            if (kbClock.get_elapsed_time() > mel::milliseconds(250)) {
+                        tfx::listDevices();
+                        kbClock.restart();
+            }
+                    }
         for (std::size_t ch = 0; ch < NUM_CH; ++ch) {
             if (KB::is_key_pressed(chn_keys[ch])) {
-                float freq     = 50;  // for Evan's tactors
+                float freq     = 175;  // 175 for Evan's tactors
                 float amp      = 1.0f; 
                 float dur      = 0.5f;
                 float a_time   = 0.25f;
@@ -64,6 +70,14 @@ int main(int argc, char const *argv[])
                         cue->chain<ASR>(a_time, s_time, r_time);
                         tfx::playCue(ch, cue);
                     }
+                    else if (KB::is_key_pressed(Key::T)) {
+                        // chaining
+                        auto cue = make<Cue>();
+                        cue->chain<TriWave>(freq, amp);
+                        cue->chain<ASR>(a_time, s_time, r_time);
+                        tfx::playCue(ch, cue);
+                    }
+                    
                     kbClock.restart();
                 }
             }

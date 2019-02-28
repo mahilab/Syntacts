@@ -70,4 +70,18 @@ protected:
 
 };
 
+/// A triangle wave Oscillator
+class TriWave : public Oscillator {
+public:
+
+    // Inherited Constructor
+    using Oscillator::Oscillator;
+
+protected:
+
+    /// Implements saw wave oscillation
+    virtual float onSample(float t) override;
+
+};
+
 } // namespace tfx

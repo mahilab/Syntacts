@@ -10,6 +10,12 @@ namespace tfx {
 /// Initializes TactorFX Library with a specified number of channels
 int initialize(std::size_t channelCount);
 
+/// Initializes TactorFX Library with a specified number of channels and specific device number
+int initialize(std::size_t channelCount, int device_num);
+
+/// List ASIO device numbers, names, and max output channels
+void listDevices();
+
 /// Finalizes TactorFX Libary
 void finalize();
 
