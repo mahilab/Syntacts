@@ -15,7 +15,7 @@ public:
     /// Sets the oscillator frequency in Hz
     void setFrequency(float frequency);
 
-    /// Sets the oscillator amplitude and clamps value between 0 and 1
+    /// Sets the oscillator amplitude to the absolute value of amplitude
     void setAmplitude(float amplitude);
 
 protected:

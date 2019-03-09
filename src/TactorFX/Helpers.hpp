@@ -10,14 +10,14 @@
 namespace tfx
 {
 
-/// clampes value betweeen min and max
-inline float clamp(float value, float min, float max) {
-    return value <= min ? min : value >= max ? max : value;
-}
+// /// clampes value betweeen min and max
+// inline float clamp(float value, float min, float max) {
+//     return value <= min ? min : value >= max ? max : value;
+// }
 
 /// Clampes value between 0 and 1
-inline float clamp01(float value) {
-    return value <= 0.0f ? 0.0f : value >= 1.0f ? 1.0f : value;
-}
+// inline float clamp01(float value) {
+//     return value <= 0.0f ? 0.0f : value >= 1.0f ? 1.0f : value;
+// }
     
 } // namespace tfx

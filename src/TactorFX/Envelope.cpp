@@ -29,7 +29,7 @@ ASR::ASR(float attackTime, float sustainTime, float releaseTime) :
 }
 
 float ASR::onSample(float t) {
-    return playing() ? (1.0f - std::exp(-3.0f * t / m_attackTime)) * 1/(1+std::exp(10 / (m_duration - (m_attackTime + m_sustainTime)) * (t - ((m_duration - (m_attackTime + m_sustainTime)) / 2)-(m_attackTime+m_sustainTime)))) : 0.0f;
+    return playing() ? 1.0f / (1.0f + std::exp(10.0f/m_attackTime * (t-m_attackTime/2)) * 1.0f/(1.0f+std::exp(10.0f / (m_duration - (m_attackTime + m_sustainTime))) * (t - ((m_duration - (m_attackTime + m_sustainTime)) / 2.0f)-(m_attackTime+m_sustainTime)))) : 0.0f;
 }
-
+// (1.0f - std::exp(-3.0f * t / m_attackTime))
 } // namespae tfx

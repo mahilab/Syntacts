@@ -35,11 +35,11 @@ int main(int argc, char const *argv[])
         for (std::size_t ch = 0; ch < NUM_CH; ++ch) {
             if (KB::is_key_pressed(chn_keys[ch])) {
                 float freq     = 175;  // 175 for Evan's tactors
-                float amp      = 1.0f; 
+                float amp      = 0.15f; // Nominal values ~0.1ssss333443
                 float dur      = 0.5f;
-                float a_time   = 0.25f;
+                float a_time   = 0.0f;
                 float s_time   = 0.5f;
-                float r_time   = 0.25f;
+                float r_time   = 0.0f;
                 float mod_freq = 5;
                 if (kbClock.get_elapsed_time() > mel::milliseconds(250)) {
                     if (KB::is_key_pressed(Key::S)) {

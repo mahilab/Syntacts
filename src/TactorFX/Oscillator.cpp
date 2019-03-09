@@ -18,7 +18,7 @@ void Oscillator::setFrequency(float frequency) {
 }       
 
 void Oscillator::setAmplitude(float amplitude) {
-    m_amplitude = clamp01(amplitude);
+    m_amplitude = std::abs(amplitude);
 }
 
 float SineWave::onSample(float t) {
