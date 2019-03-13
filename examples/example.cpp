@@ -28,18 +28,31 @@ int main(int argc, char const *argv[])
     while (!KB::is_key_pressed(Key::Escape)) {
         if (KB::is_key_pressed(Key::L)) {
             if (kbClock.get_elapsed_time() > mel::milliseconds(250)) {
-                        tfx::listDevices();
-                        kbClock.restart();
+                    //tfx::listDevices();
+                    kbClock.restart();
             }
-                    }
-        for (std::size_t ch = 0; ch < NUM_CH; ++ch) {
+        }
+
+        else if (KB::is_key_pressed(Key::B) && kbClock.get_elapsed_time() > mel::milliseconds(250)) {
+            auto osc = make<SineWave>(175.0f, 0.05f);
+            // auto mod = make<SineWave>(25.0f,1.0f);
+            auto env = make<ASR>(1.f, 1.f, 1.f);
+            auto cue = make<Cue>(osc, env);
+
+            for (int i = 1; i < 2; ++i)
+                tfx::playCue(i, cue);
+
+            kbClock.restart();
+        }
+
+        for (int ch = 0; ch < NUM_CH; ++ch) {
             if (KB::is_key_pressed(chn_keys[ch])) {
                 float freq     = 175;  // 175 for Evan's tactors
-                float amp      = 1.0f; 
-                float dur      = 0.5f;
-                float a_time   = 0.25f;
-                float s_time   = 0.5f;
-                float r_time   = 0.25f;
+                float amp      = 0.05f; 
+                float dur      = 2.0f;
+                float a_time   = 1.0f;
+                float s_time   = 1.0f;
+                float r_time   = 1.0f;
                 float mod_freq = 5;
                 if (kbClock.get_elapsed_time() > mel::milliseconds(250)) {
                     if (KB::is_key_pressed(Key::S)) {
@@ -50,7 +63,7 @@ int main(int argc, char const *argv[])
                     }                
                     else if (KB::is_key_pressed(Key::W)) {
                         // a sawave with an AS envelope
-                        auto osc = make<SawWave>(freq, amp);
+                        auto osc = make<SineWave>(freq, amp);
                         auto env = make<ASR>(a_time, s_time, r_time); 
                         auto cue = make<Cue>(osc, env);                
                         tfx::playCue(ch, cue);
@@ -76,8 +89,7 @@ int main(int argc, char const *argv[])
                         cue->chain<TriWave>(freq, amp);
                         cue->chain<ASR>(a_time, s_time, r_time);
                         tfx::playCue(ch, cue);
-                    }
-                    
+                    }                    
                     kbClock.restart();
                 }
             }

@@ -17,11 +17,13 @@ namespace tfx {
 // private namespace
 namespace {    
 
-std::size_t g_num_ch;         ///< number of channels specified
-std::vector<Ptr<Cue>> g_cues; ///< cues
-std::mutex g_mutex;           ///< mutex
-PaStream* g_stream;           ///< portaudio stream
-bool g_initialized = false;   ///< tfx initialized?
+std::size_t g_num_ch;           ///< number of channels specified
+std::vector<Ptr<Cue>> g_cues;   ///< cues
+std::mutex g_mutex;             ///< mutex
+PaStream* g_stream;             ///< portaudio stream
+bool g_tfx_initialized = false; ///< tfx initialized?
+bool g_pa_initialized  = false; ///< portadio initialized? 
+DeviceInfo g_currentDevice = DeviceInfo({-1,"none",0});
 
 // portaudio callback method
 int pa_callback(const void *inputBuffer, void *outputBuffer,
@@ -44,122 +46,128 @@ int pa_callback(const void *inputBuffer, void *outputBuffer,
     return 0;
 }  
 
-int getFirstAsioDevice() {
-    int numDevices = Pa_GetDeviceCount();
-    for (int i = 0; i < numDevices; ++i) {
-        auto info = Pa_GetDeviceInfo(i);
-        auto type = Pa_GetHostApiInfo(info->hostApi)->type;
-        if (type == paASIO)
-            return i;
+int initPortaudio() {
+    if (!g_pa_initialized) {
+        int result = Pa_Initialize();
+        if (result != paNoError)
+            return result;
+        g_pa_initialized = true;
     }
-    return -1;
+    return paNoError;
 }
 
+DeviceInfo makeDeviceInfo(int device) {
+    auto pa_info = Pa_GetDeviceInfo(device);
+    auto pa_type = Pa_GetHostApiInfo(pa_info->hostApi)->type;
+
+    DeviceInfo info;
+    info.index = device;
+    info.name  = pa_info->name;
+    info.maxChannels = pa_info->maxOutputChannels;
+    return info;
+}
 
 } // private namespace
 
-int initialize(std::size_t channelCount) {
-    assert(!g_initialized);
-    g_num_ch = channelCount;
-    // init g_cues with empty cues
-    g_cues.resize(channelCount);
-    for (auto& cue : g_cues)
-        cue = make<Cue>();      
-
-    int result = Pa_Initialize();
-    if (result != paNoError)
-        return result;
-    int device =  getFirstAsioDevice();
-    if (device < 0)
-        return device;
-    PaStreamParameters hostApiOutputParameters;
-    PaStreamParameters* hostApiOutputParametersPtr;        
-    if (channelCount > 0) {
-        hostApiOutputParameters.device = device;
-		if (hostApiOutputParameters.device == paNoDevice)
-			return paDeviceUnavailable;
-        hostApiOutputParameters.channelCount = (int)channelCount;
-        hostApiOutputParameters.sampleFormat = paFloat32;
-        hostApiOutputParameters.suggestedLatency = Pa_GetDeviceInfo( hostApiOutputParameters.device )->defaultHighOutputLatency;
-        hostApiOutputParameters.hostApiSpecificStreamInfo = NULL;
-        hostApiOutputParametersPtr = &hostApiOutputParameters;
-    }
-    else {
-        hostApiOutputParametersPtr = NULL;
-    }
-    
-    result = Pa_OpenStream(&g_stream, nullptr, hostApiOutputParametersPtr, SAMPLE_RATE, BUFFER_SIZE, paNoFlag, pa_callback, nullptr );
-    if (result != paNoError)
-        return result;    
-    return Pa_StartStream(g_stream);
-}
-
-int initialize(std::size_t channelCount, int device_num) {
-    assert(!g_initialized);
-    g_num_ch = channelCount;
-    // init g_cues with empty cues
-    g_cues.resize(channelCount);
-    for (auto& cue : g_cues)
-        cue = make<Cue>();      
-
-    int result = Pa_Initialize();
-    if (result != paNoError)
-        return result;
-    int device = device_num;
-    if (device < 0)
-        return device;
-    PaStreamParameters hostApiOutputParameters;
-    PaStreamParameters* hostApiOutputParametersPtr;        
-    if (channelCount > 0) {
-        hostApiOutputParameters.device = device;
-		if (hostApiOutputParameters.device == paNoDevice)
-			return paDeviceUnavailable;
-        hostApiOutputParameters.channelCount = (int)channelCount;
-        hostApiOutputParameters.sampleFormat = paFloat32;
-        hostApiOutputParameters.suggestedLatency = Pa_GetDeviceInfo( hostApiOutputParameters.device )->defaultHighOutputLatency;
-        hostApiOutputParameters.hostApiSpecificStreamInfo = NULL;
-        hostApiOutputParametersPtr = &hostApiOutputParameters;
-    }
-    else {
-        hostApiOutputParametersPtr = NULL;
-    }
-    
-    result = Pa_OpenStream(&g_stream, nullptr, hostApiOutputParametersPtr, SAMPLE_RATE, BUFFER_SIZE, paNoFlag, pa_callback, nullptr );
-    if (result != paNoError)
-        return result;    
-    return Pa_StartStream(g_stream);
-}
-
-void listDevices() {
-
-        int numAsioDevices = 0;
-        int numDevices = Pa_GetDeviceCount();
-    for (int i = 0; i < numDevices; ++i) {
-        auto info = Pa_GetDeviceInfo(i);
-        auto type = Pa_GetHostApiInfo(info->hostApi)->type;
-        if (type == paASIO){
-            numAsioDevices++;
-            printf( "Device #%d\n", i );
-            printf( "Name = %s\n", info->name );
-            printf( "Max outputs = %d\n", info->maxOutputChannels);
+std::vector<DeviceInfo> getAvailableDevices() {
+    initPortaudio();
+    std::vector<DeviceInfo> infos;
+    for (int i = 0; i < Pa_GetDeviceCount(); ++i) {
+        if (Pa_GetHostApiInfo(Pa_GetDeviceInfo(i)->hostApi)->type == paASIO){            
+            infos.push_back(makeDeviceInfo(i));
         }   
     }
-     printf( "Search Complete. Total ASIO devices: %d\n", numAsioDevices );
-     
+    return infos;
+}
+
+DeviceInfo getDefaultDevice() {
+    auto infos = getAvailableDevices();
+    if (infos.empty()) {
+        DeviceInfo info;
+        info.index = -1;
+        info.name  = "none";
+        info.maxChannels = 0;
+        return info;
+    }
+    else {
+        return infos[0];
+    }
+}
+
+DeviceInfo getCurrentDevice() {
+    return g_currentDevice;
+}
+
+int initialize() {
+    auto deviceInfo = getDefaultDevice();
+    return initialize(deviceInfo.index, deviceInfo.maxChannels);
+}
+
+int initialize(int channelCount) {
+    auto deviceInfo = getDefaultDevice();
+    assert(channelCount <= deviceInfo.maxChannels);
+    return initialize(deviceInfo.index, channelCount);
+}
+
+
+int initialize(int device, int channelCount) {
+    assert(!g_tfx_initialized);
+    assert(device >= 0);
+
+    // intitialize portaudio
+    int result = initPortaudio();    
+    if (result != paNoError)
+        return result;
+
+    g_currentDevice = makeDeviceInfo(device);
+
+    g_num_ch = channelCount;
+
+    // init g_cues with empty cues
+    g_cues.resize(channelCount);
+    stopAllCues();       
+
+    PaStreamParameters hostApiOutputParameters;
+    PaStreamParameters* hostApiOutputParametersPtr;        
+    if (channelCount > 0) {
+        hostApiOutputParameters.device = device;
+		if (hostApiOutputParameters.device == paNoDevice)
+			return paDeviceUnavailable;
+        hostApiOutputParameters.channelCount = channelCount;
+        hostApiOutputParameters.sampleFormat = paFloat32;
+        hostApiOutputParameters.suggestedLatency = Pa_GetDeviceInfo( hostApiOutputParameters.device )->defaultHighOutputLatency;
+        hostApiOutputParameters.hostApiSpecificStreamInfo = NULL;
+        hostApiOutputParametersPtr = &hostApiOutputParameters;
+    }
+    else {
+        hostApiOutputParametersPtr = NULL;
+    }
+    
+    result = Pa_OpenStream(&g_stream, nullptr, hostApiOutputParametersPtr, SAMPLE_RATE, BUFFER_SIZE, paNoFlag, pa_callback, nullptr );
+    if (result != paNoError)
+        return result;    
+    return Pa_StartStream(g_stream);
 }
 
 void finalize() {
-    assert(g_initialized);
+    assert(g_tfx_initialized);
     Pa_StopStream(g_stream); 
     Pa_CloseStream(g_stream); 
     Pa_Terminate();
+    g_pa_initialized = false;
+    g_tfx_initialized = false;
 }
 
-void playCue(std::size_t channel, Ptr<Cue> cue) {
-    assert(g_initialized);
+void playCue(int channel, Ptr<Cue> cue) {
+    assert(g_tfx_initialized);
     assert(channel < g_num_ch);
     std::lock_guard<std::mutex> lock(g_mutex);
     g_cues[channel] = cue;
 } 
+
+void stopAllCues() {
+    for (auto& cue : g_cues)
+        cue = make<Cue>();    
+}
 
 } // namespace tfx

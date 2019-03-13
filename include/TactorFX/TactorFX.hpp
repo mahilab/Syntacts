@@ -5,22 +5,41 @@
 #include <TactorFX/Envelope.hpp>
 #include <TactorFX/Cue.hpp>
 
-namespace tfx {    
+namespace tfx {  
+
+/// Struct holding ASIO device information
+struct DeviceInfo {
+    int index;         ///< device index
+    std::string name;          ///< device name
+    int maxChannels;   ///< maximum number of output channels
+};
+
+/// Intializes TactorFX Library with default device and output max channels  
+int initialize();
 
 /// Initializes TactorFX Library with a specified number of channels
-int initialize(std::size_t channelCount);
+int initialize(int channelCount);
 
 /// Initializes TactorFX Library with a specified number of channels and specific device number
-int initialize(std::size_t channelCount, int device_num);
-
-/// List ASIO device numbers, names, and max output channels
-void listDevices();
+int initialize(int device, int channelCount);
 
 /// Finalizes TactorFX Libary
 void finalize();
 
+/// Gets list of avaialable ASIO devices
+std::vector<DeviceInfo> getAvailableDevices();
+
+/// Get the default device
+DeviceInfo getDefaultDevice();
+
+/// Get the current device
+DeviceInfo getCurrentDevice();
+
 /// Plays a Cue on a specified channel asynchronously
-void playCue(std::size_t channel, Ptr<Cue> cue);     
+void playCue(int channel, Ptr<Cue> cue);   
+
+/// Stops all running cues
+void stopAllCues();
 
 /// Makes a TactoFX type
 template <typename T, typename ...Args>
