@@ -89,7 +89,7 @@ public:
         ImGui::SetNextWindowSize(Vector2f(WIDTH-10,HEIGHT-10), ImGuiCond_Always);
         ImGui::Begin("TactorFX", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);   
         //------------------------------------------------------------------
-        if (ImGui::Button(ICON_FA_PLAY)) {
+        if (ImGui::Button(ICON_FA_PLAY) || Input::getKeyDown(Key::Space)) {
             for (std::size_t i = 0; i < NUM_CH; ++i) {
                 if (chCB[i])
                     play(i);
@@ -110,7 +110,7 @@ public:
         for (std::size_t i = 0; i < NUM_CH; ++i)
         {
             auto label = str("Ch",i+1);
-            if (ImGui::Button(label.c_str()))
+            if (ImGui::Button(label.c_str()) || Input::getKeyDown((Key)((int)Key::Num1 + i)))
                 play(i);
             ImGui::SameLine();
             ImGui::Checkbox(str("##",i).c_str(), &chCB[i]);
