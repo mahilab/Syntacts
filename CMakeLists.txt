@@ -14,7 +14,6 @@ get_filename_component(portaudio_INCLUDE_DIR ${portaudio_INCLUDE_DIR} DIRECTORY)
 get_filename_component(portaudio_INCLUDE_DIR ${portaudio_INCLUDE_DIR} DIRECTORY)
 set(portaudio_INCLUDE_DIR "${portaudio_INCLUDE_DIR}/include")
 
-
 # include directories
 include_directories("include" ${portaudio_INCLUDE_DIR})
 
@@ -31,6 +30,7 @@ set(INCLUDE_FILES
     "include/TactorFX/Envelope.hpp"
     "include/TactorFX/Oscillator.hpp"
     "include/TactorFX/Generator.hpp"
+    "include/TactorFX/Config.hpp"
 )
 
 # gather private sources
@@ -44,8 +44,9 @@ set(SRC_FILES
 )
 
 # make library
-add_library(tfx ${INCLUDE_FILES} ${SRC_FILES})
-
+add_library(tfx SHARED ${INCLUDE_FILES} ${SRC_FILES})
+target_link_libraries(tfx portaudio_static)
+target_compile_definitions(tfx PRIVATE TFX_EXPORTS)
 #===============================================================================
 # EXAMPLES
 #===============================================================================

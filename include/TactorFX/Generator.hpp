@@ -1,5 +1,6 @@
 #pragma once
 
+#include <TactorFX/Config.hpp>
 #include <memory>
 
 namespace tfx
@@ -9,7 +10,7 @@ namespace tfx
 class Cue;
 
 /// An abstract class which generates time variant samples
-class Generator {
+class TFX_API Generator {
 public:
 
     /// Default constructor

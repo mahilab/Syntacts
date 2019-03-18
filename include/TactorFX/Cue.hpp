@@ -1,5 +1,6 @@
 #pragma once
 
+#include <TactorFX/Config.hpp>
 #include <TactorFX/Oscillator.hpp>
 #include <TactorFX/Envelope.hpp>
 #include <vector>
@@ -8,7 +9,7 @@
 namespace tfx {
 
 /// Encapsulates a cue to be played on a single channel
-class Cue {
+class TFX_API Cue {
 public:
 
     /// Default constructor
@@ -41,5 +42,11 @@ private:
     std::vector<std::shared_ptr<Generator>> m_generators; ///< array of generators
 
 };
+
+template <typename T, typename ...Args>
+void Cue::chain(Args... args) {
+    auto g = std::make_shared<T>(std::forward<Args>(args)...);
+    chain(std::move(g));
+}
 
 } // namespace tfx
