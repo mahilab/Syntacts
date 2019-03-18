@@ -36,15 +36,11 @@ DeviceInfo getDefaultDevice();
 DeviceInfo getCurrentDevice();
 
 /// Plays a Cue on a specified channel asynchronously
-void playCue(int channel, Ptr<Cue> cue);   
+void playCue(int channel, std::shared_ptr<Cue> cue);   
 
 /// Stops all running cues
 void stopAllCues();
 
-/// Makes a TactoFX type
-template <typename T, typename ...Args>
-Ptr<T> make(Args ... args);
-    
 } // namespace tfx
 
 #include <TactorFX/Detail.inl>

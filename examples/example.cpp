@@ -34,10 +34,10 @@ int main(int argc, char const *argv[])
         }
 
         else if (KB::is_key_pressed(Key::B) && kbClock.get_elapsed_time() > mel::milliseconds(250)) {
-            auto osc = make<SineWave>(175.0f, 0.05f);
-            // auto mod = make<SineWave>(25.0f,1.0f);
-            auto env = make<ASR>(1.f, 1.f, 1.f);
-            auto cue = make<Cue>(osc, env);
+            auto osc = std::make_shared<SineWave>(175.0f, 0.05f);
+            // auto mod = std::make_shared<SineWave>(25.0f,1.0f);
+            auto env = std::make_shared<ASR>(1.f, 1.f, 1.f);
+            auto cue = std::make_shared<Cue>(osc, env);
 
             for (int i = 1; i < 2; ++i)
                 tfx::playCue(i, cue);
@@ -57,20 +57,20 @@ int main(int argc, char const *argv[])
                 if (kbClock.get_elapsed_time() > mel::milliseconds(250)) {
                     if (KB::is_key_pressed(Key::S)) {
                         // just a sinwave for dur time
-                        auto osc = make<SquareWave>(freq, amp);
-                        auto cue = make<Cue>(osc, dur);  
+                        auto osc = std::make_shared<SquareWave>(freq, amp);
+                        auto cue = std::make_shared<Cue>(osc, dur);  
                         tfx::playCue(ch, cue);
                     }                
                     else if (KB::is_key_pressed(Key::W)) {
                         // a sawave with an AS envelope
-                        auto osc = make<SineWave>(freq, amp);
-                        auto env = make<ASR>(a_time, s_time, r_time); 
-                        auto cue = make<Cue>(osc, env);                
+                        auto osc = std::make_shared<SineWave>(freq, amp);
+                        auto env = std::make_shared<ASR>(a_time, s_time, r_time); 
+                        auto cue = std::make_shared<Cue>(osc, env);                
                         tfx::playCue(ch, cue);
                     }
                     else if (KB::is_key_pressed(Key::C)) {
                         // chaining
-                        auto cue = make<Cue>();
+                        auto cue = std::make_shared<Cue>();
                         cue->chain<SquareWave>(freq, amp);
                         cue->chain<SineWave>(mod_freq, amp);
                         cue->chain<ASR>(a_time, s_time, r_time);
@@ -78,14 +78,14 @@ int main(int argc, char const *argv[])
                     }
                     else if (KB::is_key_pressed(Key::Q)) {
                         // chaining
-                        auto cue = make<Cue>();
+                        auto cue = std::make_shared<Cue>();
                         cue->chain<SquareWave>(freq, amp);
                         cue->chain<ASR>(a_time, s_time, r_time);
                         tfx::playCue(ch, cue);
                     }
                     else if (KB::is_key_pressed(Key::T)) {
                         // chaining
-                        auto cue = make<Cue>();
+                        auto cue = std::make_shared<Cue>();
                         cue->chain<TriWave>(freq, amp);
                         cue->chain<ASR>(a_time, s_time, r_time);
                         tfx::playCue(ch, cue);

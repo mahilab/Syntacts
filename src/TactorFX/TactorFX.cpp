@@ -18,7 +18,7 @@ namespace tfx {
 namespace {    
 
 std::size_t g_num_ch;           ///< number of channels specified
-std::vector<Ptr<Cue>> g_cues;   ///< cues
+std::vector<std::shared_ptr<Cue>> g_cues;   ///< cues
 std::mutex g_mutex;             ///< mutex
 PaStream* g_stream;             ///< portaudio stream
 bool g_tfx_initialized = false; ///< tfx initialized?
@@ -158,7 +158,7 @@ void finalize() {
     g_tfx_initialized = false;
 }
 
-void playCue(int channel, Ptr<Cue> cue) {
+void playCue(int channel, std::shared_ptr<Cue> cue) {
     assert(g_tfx_initialized);
     assert(channel < g_num_ch);
     std::lock_guard<std::mutex> lock(g_mutex);
@@ -167,7 +167,7 @@ void playCue(int channel, Ptr<Cue> cue) {
 
 void stopAllCues() {
     for (auto& cue : g_cues)
-        cue = make<Cue>();    
+        cue = std::make_shared<Cue>();    
 }
 
 } // namespace tfx

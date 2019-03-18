@@ -5,10 +5,6 @@
 namespace tfx
 {
 
-/// Alias std::shared_ptr for convenience
-template <typename T>
-using Ptr = std::shared_ptr<T>;
-
 // Forward declarations
 class Cue;
 

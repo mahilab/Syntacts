@@ -57,29 +57,29 @@ public:
     void play(std::size_t ch) {
         Ptr<tfx::Oscillator> osc;
         if (freq_wave == 0)
-            osc = tfx::make<tfx::SineWave>((float)freq, freq_amp);
+            osc = make<tfx::SineWave>((float)freq, freq_amp);
         else if (freq_wave == 1)
-            osc = tfx::make<tfx::SquareWave>((float)freq, freq_amp);
+            osc = make<tfx::SquareWave>((float)freq, freq_amp);
         else if (freq_wave == 2)
-            osc = tfx::make<tfx::SawWave>((float)freq, freq_amp);
+            osc = make<tfx::SawWave>((float)freq, freq_amp);
         else if (freq_wave == 3)
-            osc = tfx::make<tfx::TriWave>((float)freq, freq_amp);            
-        auto env = tfx::make<tfx::ASR>(a/1000.0f, s/1000.0f, r/1000.f);
-        tfx::Ptr<tfx::Cue> cue;
+            osc = make<tfx::TriWave>((float)freq, freq_amp);            
+        auto env = make<tfx::ASR>(a/1000.0f, s/1000.0f, r/1000.f);
+        Ptr<tfx::Cue> cue;
         if (mod > 0) {
             Ptr<tfx::Oscillator> modOsc;
             if (mod_wave == 0)
-                modOsc = tfx::make<tfx::SineWave>((float)mod, 1.0f);
+                modOsc = make<tfx::SineWave>((float)mod, 1.0f);
             else if (mod_wave == 1)
-                modOsc = tfx::make<tfx::SquareWave>((float)mod, mod_amp);
+                modOsc = make<tfx::SquareWave>((float)mod, mod_amp);
             else if (mod_wave == 2)
-                modOsc = tfx::make<tfx::SawWave>((float)mod, mod_amp);
+                modOsc = make<tfx::SawWave>((float)mod, mod_amp);
             else if (mod_wave == 3)
-                modOsc = tfx::make<tfx::TriWave>((float)mod, mod_amp);  
-            cue = tfx::make<tfx::Cue>(osc, modOsc, env);
+                modOsc = make<tfx::TriWave>((float)mod, mod_amp);  
+            cue = make<tfx::Cue>(osc, modOsc, env);
         }
         else
-            cue = tfx::make<tfx::Cue>(osc, env);
+            cue = make<tfx::Cue>(osc, env);
         tfx::playCue((int)ch, cue);
     }
 
