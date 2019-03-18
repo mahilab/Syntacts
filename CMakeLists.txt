@@ -44,9 +44,9 @@ set(SRC_FILES
 )
 
 # make library
-add_library(tfx SHARED ${INCLUDE_FILES} ${SRC_FILES})
+add_library(tfx ${INCLUDE_FILES} ${SRC_FILES})
 target_link_libraries(tfx portaudio_static)
-target_compile_definitions(tfx PRIVATE TFX_EXPORTS)
+target_compile_definitions(tfx PRIVATE TFX_STATIC)
 #===============================================================================
 # EXAMPLES
 #===============================================================================

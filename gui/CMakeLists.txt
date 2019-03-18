@@ -20,3 +20,4 @@ target_link_libraries(
     sfml-audio sfml-graphics sfml-window sfml-system sfml-network
     chipmunk
     )
+target_compile_definitions(tfx-gui PRIVATE TFX_STATIC)
