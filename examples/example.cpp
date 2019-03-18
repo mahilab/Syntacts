@@ -57,7 +57,7 @@ int main(int argc, char const *argv[])
                 if (kbClock.get_elapsed_time() > mel::milliseconds(250)) {
                     if (KB::is_key_pressed(Key::S)) {
                         // just a sinwave for dur time
-                        auto osc = make<SineWave>(freq, amp);
+                        auto osc = make<SquareWave>(freq, amp);
                         auto cue = make<Cue>(osc, dur);  
                         tfx::playCue(ch, cue);
                     }                

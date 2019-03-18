@@ -1,7 +1,7 @@
-#define SFVG_NO_CONSOLE
-#define SFVG_USE_DISCRETE_GPU
+#define CARNOT_NO_CONSOLE
+// #define CARNOT_USE_DISCRETE_GPU
 
-#include <SFVG/SFVG.hpp>
+#include <carnot>
 #include <TactorFX/TactorFX.hpp>
 #include <deque>
 #include <functional>
@@ -10,14 +10,14 @@
 #define WIDTH 640
 #define HEIGHT 480
 
-using namespace sfvg;
+using namespace carnot;
 
 //==============================================================================
 // WAVEFORM DRAWING FUNCTIONS
 //==============================================================================
 
 float sinWave(float f, float t) {
-    return std::sin(2.0f * PI * f *t);
+    return std::sin(2.0f * Math::PI * f *t);
 }
 
 float sqrWave(float f, float t) {
@@ -25,11 +25,11 @@ float sqrWave(float f, float t) {
 }
 
 float sawWave(float f, float t) {
-   return -2.0f / PI * std::atan(std::cos(PI * f * t) / std::sin(PI * f * t));
+   return -2.0f / Math::PI * std::atan(std::cos(Math::PI * f * t) / std::sin(Math::PI * f * t));
 }
 
 float triWave(float f, float t) {
-    return 2.0f / PI * std::asin(std::sin(2.0f * PI * f * t));
+    return 2.0f / Math::PI * std::asin(std::sin(2.0f * Math::PI * f * t));
 }
 
 std::vector<std::function<float(float,float)>> waveFuncs = {sinWave, sqrWave, sawWave, triWave};
@@ -159,9 +159,9 @@ public:
             // envelope
             float env = 1.0f;
             if (t < (float)a/1000.0f)
-                env = interp(t,0,(float)a/1000.0f,0.0f,1.0f);
+                env = Math::interp(t,0.0f,(float)a/1000.0f,0.0f,1.0f);
             else if (t > (float)(a+s)/1000.0f)
-                env = interp(t, (float)(a+s)/1000.0f, (float)(a+s+r)/1000.0f, 1.0f, 0.0f);
+                env = Math::interp(t, (float)(a+s)/1000.0f, (float)(a+s+r)/1000.0f, 1.0f, 0.0f);
             v *= env;
 
             plot.push_back(v);
@@ -187,9 +187,9 @@ private:
     float mod_amp = 1.0f;
     int   mod_wave = 0;
 
-    int a = 15;
-    int s = 150;
-    int r = 35;
+    int a = 50;
+    int s = 100;
+    int r = 25;
 
     std::deque<bool> chCB;
     std::vector<float> plot;
