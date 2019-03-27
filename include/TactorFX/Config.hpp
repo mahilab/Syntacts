@@ -1,7 +1,6 @@
 #pragma once
 
 #ifndef TFX_STATIC
-
     #ifdef TFX_EXPORTS
         #define TFX_API __declspec(dllexport)
     #else

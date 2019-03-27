@@ -6,8 +6,14 @@
 #include <iostream>
 #include <cassert>
 
-#define SAMPLE_RATE 44100
-#define BUFFER_SIZE 256
+#ifndef SAMPLE_RATE
+    #define SAMPLE_RATE 44100
+#endif
+
+#ifndef BUFFER_SIZE
+    #define BUFFER_SIZE 256
+#endif
+
 #ifndef PA_USE_ASIO
     #define PA_USE_ASIO 1
 #endif
@@ -39,8 +45,7 @@ int pa_callback(const void *inputBuffer, void *outputBuffer,
     // lock mutex using RA-II lockgaurd (unlocked when we exit scope b/c lock dies)
     for (unsigned long f = 0; f < framesPerBuffer; f++) {
         for (std::size_t c = 0; c < g_num_ch; ++c) {
-            auto sample =  g_cues[c]->nextSample();
-            out[g_num_ch * f + c] = sample;
+            out[g_num_ch * f + c] = g_cues[c]->nextSample();
         }
     }
     return 0;
@@ -105,27 +110,29 @@ int initialize() {
 
 int initialize(int channelCount) {
     auto deviceInfo = getDefaultDevice();
-    assert(channelCount <= deviceInfo.maxChannels);
+    if (channelCount > deviceInfo.maxChannels)
+        return TfxError_InvalidChannelCount;
     return initialize(deviceInfo.index, channelCount);
 }
 
 
 int initialize(int device, int channelCount) {
-    assert(!g_tfx_initialized);
-    assert(device >= 0);
-
+    if (g_tfx_initialized)
+        return TfxError_AlreadyIntialized;
+    if (device < 0)
+        return TfxError_InvalidDevice;
     // intitialize portaudio
     int result = initPortaudio();    
     if (result != paNoError)
         return result;
-
     g_currentDevice = makeDeviceInfo(device);
 
     g_num_ch = channelCount;
 
     // init g_cues with empty cues
     g_cues.resize(channelCount);
-    stopAllCues();       
+    for (auto& cue : g_cues)
+        cue = std::make_shared<Cue>();         
 
     PaStreamParameters hostApiOutputParameters;
     PaStreamParameters* hostApiOutputParametersPtr;        
@@ -141,33 +148,45 @@ int initialize(int device, int channelCount) {
     }
     else {
         hostApiOutputParametersPtr = NULL;
-    }
-    
+    }   
     result = Pa_OpenStream(&g_stream, nullptr, hostApiOutputParametersPtr, SAMPLE_RATE, BUFFER_SIZE, paNoFlag, pa_callback, nullptr );
     if (result != paNoError)
         return result;    
-    return Pa_StartStream(g_stream);
+    result = Pa_StartStream(g_stream);
+    if (result != paNoError)
+        return result;
+    g_tfx_initialized = true;
+    return 0;
 }
 
-void finalize() {
-    assert(g_tfx_initialized);
+int finalize() {
+    if (!g_tfx_initialized)
+        return TfxError_NotInitialized;
     Pa_StopStream(g_stream); 
     Pa_CloseStream(g_stream); 
     Pa_Terminate();
     g_pa_initialized = false;
     g_tfx_initialized = false;
+    return TfxError_NoError;
 }
 
-void playCue(int channel, std::shared_ptr<Cue> cue) {
-    assert(g_tfx_initialized);
-    assert(channel < g_num_ch);
+int playCue(int channel, std::shared_ptr<Cue> cue) {
+    // failture conditions
+    if(!g_tfx_initialized)
+        return TfxError_NotInitialized;
+    if(!(channel < g_num_ch))
+        return TfxError_InvalidChannel;
     std::lock_guard<std::mutex> lock(g_mutex);
     g_cues[channel] = cue;
+    return TfxError_NoError;
 } 
 
-void stopAllCues() {
+int stopAllCues() {
+    if(!g_tfx_initialized)
+        return TfxError_NotInitialized;
     for (auto& cue : g_cues)
         cue = std::make_shared<Cue>();    
+    return TfxError_NoError;
 }
 
 //==============================================================================
@@ -195,12 +214,12 @@ TFX_API int playCue(int channel,   // channel              [0 to N]
 {
     // failture conditions
     if(!g_tfx_initialized)
-        return -1;
+        return TfxError_NotInitialized;
     if(!(channel < g_num_ch))
-        return -2;
+        return TfxError_InvalidChannel;
     if (oscType == 0 && modType == 0)
-        return -3;    
-    /// make envelop
+        return TfxError_NoWaveform;    
+    /// make envelope
     std::shared_ptr<Envelope> env;
     if (A == 0.0f && R == 0.0f)
         env = std::make_shared<Envelope>(S);
@@ -224,21 +243,21 @@ TFX_API int playCue(int channel,   // channel              [0 to N]
         mod = std::make_shared<SquareWave>(modFreq, modAmp);
     else if (modType == 3)
         mod = std::make_shared<SawWave>(modFreq, modAmp);
-    else if (modType = 4)
+    else if (modType == 4)
         mod = std::make_shared<TriWave>(modFreq, modAmp);
     // generate cue
     std::shared_ptr<Cue> cue;
-    if (osc && mod)
+    if ((oscType > 0) && (modType > 0)) 
         cue = std::make_shared<Cue>(osc, mod, env);
-    else if (osc)
+    else if (oscType > 0) 
         cue = std::make_shared<Cue>(osc, env);
-    else if (mod)
+    else if (modType > 0)
         cue = std::make_shared<Cue>(mod, env);
     else
-        return -4;
+        return TfxError_NoWaveform;
     /// play the cue
-    playCue(channel,cue);
-    return 0; 
+    tfx::playCue(channel, cue);
+    return TfxError_NoError; 
 }
 
 

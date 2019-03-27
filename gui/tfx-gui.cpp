@@ -1,4 +1,4 @@
-#define CARNOT_NO_CONSOLE
+// #define CARNOT_NO_CONSOLE
 // #define CARNOT_USE_DISCRETE_GPU
 
 #include <carnot>
@@ -188,7 +188,7 @@ private:
     int   mod_wave = 0;
 
     int a = 50;
-    int s = 100;
+    int s = 75;
     int r = 25;
 
     std::deque<bool> chCB;
@@ -202,6 +202,6 @@ int main(int argc, char const *argv[])
     Engine::init(WIDTH, HEIGHT, WindowStyle::Close);
     Engine::window->setTitle("TactorFX");
     Engine::makeRoot<TfxDemo>();
-    Engine::run();    
+    Engine::run();  
     return 0;
 }

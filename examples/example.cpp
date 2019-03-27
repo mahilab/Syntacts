@@ -21,6 +21,10 @@ using namespace tfx;
 int main(int argc, char const *argv[])
 {
     tfx::initialize(NUM_CH);
+    DeviceInfo info = tfx::getCurrentDevice();
+    mel::print(info.name);
+    mel::print(info.index);
+    mel::print(info.maxChannels);
 
     mel::Clock kbClock;
 
@@ -42,6 +46,11 @@ int main(int argc, char const *argv[])
             for (int i = 1; i < 2; ++i)
                 tfx::playCue(i, cue);
 
+            kbClock.restart();
+        }
+
+        if (KB::is_key_pressed(Key::U) && kbClock.get_elapsed_time() > mel::milliseconds(250)) {
+            tfx::playCue(0, 1, 175, 1, 0, 0, 0, 0, 0.5f, 0);
             kbClock.restart();
         }
 
