@@ -1,4 +1,5 @@
 [Bb]uild/
+ipch/
 
 # Prerequisites
 *.d
