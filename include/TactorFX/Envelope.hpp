@@ -1,12 +1,13 @@
 #pragma once
 
+#include <TactorFX/Config.hpp>
 #include <TactorFX/Generator.hpp>
 
 namespace tfx
 {
 
 /// An object which gives a Cue a duration and/or shape
-class Envelope : public Generator {
+class TFX_API Envelope : public Generator {
 public:
 
     /// Constructs an Eveloope with a specified duration
@@ -30,7 +31,7 @@ protected:
 };
 
 
-class ASR : public Envelope {
+class TFX_API ASR : public Envelope {
 public:
 
     /// Constructs ASR Envelope with specified attack and sustain times

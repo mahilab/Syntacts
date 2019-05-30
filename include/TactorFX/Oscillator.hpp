@@ -1,12 +1,13 @@
 #pragma once
 
+#include <TactorFX/Config.hpp>
 #include <TactorFX/Generator.hpp>
 
 namespace tfx
 {
 
 /// Abstract base class for object which produces a periodic, oscillating signal
-class Oscillator : public Generator {
+class TFX_API Oscillator : public Generator {
 public:
 
     /// Constructs an Oscillator with specified frequency and amplitude
@@ -27,7 +28,7 @@ protected:
 
 
 /// A sine wave Oscillator
-class SineWave : public Oscillator {
+class TFX_API SineWave : public Oscillator {
 public:
 
     // Inherited Constructor
@@ -42,7 +43,7 @@ protected:
 
 
 /// A square wave Oscillator
-class SquareWave : public Oscillator {
+class TFX_API SquareWave : public Oscillator {
 public:
 
     // Inherited Constructor
@@ -57,7 +58,7 @@ protected:
 
 
 /// A saw wave Oscillator
-class SawWave : public Oscillator {
+class TFX_API SawWave : public Oscillator {
 public:
 
     // Inherited Constructor
@@ -71,7 +72,7 @@ protected:
 };
 
 /// A triangle wave Oscillator
-class TriWave : public Oscillator {
+class TFX_API TriWave : public Oscillator {
 public:
 
     // Inherited Constructor

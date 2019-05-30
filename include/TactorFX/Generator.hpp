@@ -1,19 +1,16 @@
 #pragma once
 
+#include <TactorFX/Config.hpp>
 #include <memory>
 
 namespace tfx
 {
 
-/// Alias std::shared_ptr for convenience
-template <typename T>
-using Ptr = std::shared_ptr<T>;
-
 // Forward declarations
 class Cue;
 
 /// An abstract class which generates time variant samples
-class Generator {
+class TFX_API Generator {
 public:
 
     /// Default constructor
