@@ -107,6 +107,5 @@ int main(int argc, char const *argv[])
     }      
 
     tfx::finalize();
-
     return 0;
 }

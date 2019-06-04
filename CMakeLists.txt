@@ -20,8 +20,9 @@ cmake_minimum_required(VERSION 3.13.0)
 # options
 option(TFX_STATIC   "Turn ON to build TFX as a static library"                  ON )
 option(TFX_ANSI_C   "Turn ON to build TFX DLL with ANSI C exports"              OFF)
-option(TFX_GUI      "Turn ON to build TFX GUI (Carnot Engine must be installed)" OFF )
+option(TFX_GUI      "Turn ON to build TFX GUI (Carnot Engine must be installed)" ON )
 option(TFX_EXAMPLES "Turn ON to build TFX example(s)"                           ON)
+option(TFX_TEST     "Turn ON to build TFX test(s)"                              ON)
 
 # check for incompatible options
 if (TFX_STATIC AND TFX_ANSI_C)

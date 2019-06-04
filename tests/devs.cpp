@@ -1,16 +1,18 @@
 #include <stdio.h>
 #include <math.h>
-#include "portaudio.h"
+#include "C:/Git/portaudio/include/portaudio.h"
 
 #ifdef WIN32
 #include <windows.h>
 
 #if PA_USE_ASIO
-#include "pa_asio.h"
+#include "C:/Git/portaudio/include/pa_asio.h"
 #endif
 #endif
 
 /*******************************************************************/
+
+
 static void PrintSupportedStandardSampleRates(
         const PaStreamParameters *inputParameters,
         const PaStreamParameters *outputParameters )

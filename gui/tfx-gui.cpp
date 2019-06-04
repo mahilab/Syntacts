@@ -6,7 +6,7 @@
 #include <deque>
 #include <functional>
 
-#define NUM_CH 8
+#define NUM_CH 24
 #define WIDTH 640
 #define HEIGHT 480
 
