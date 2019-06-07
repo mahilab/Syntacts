@@ -24,7 +24,7 @@ public:
 
 protected:
 
-    /// Override to implement generator behavior
+    /// Override to implement generator behavior. Do not lock m_mutex here.
     virtual float onSample(float t) = 0;
 
 private:
@@ -37,7 +37,7 @@ private:
 
 private:
 
-     float m_time;  ///< oscillator running time
+     float m_time;     ///< oscillator running time
 
 };
 

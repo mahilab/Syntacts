@@ -1,4 +1,4 @@
-// #define CARNOT_NO_CONSOLE
+#define CARNOT_NO_CONSOLE
 // #define CARNOT_USE_DISCRETE_GPU
 
 #include <carnot>
@@ -6,7 +6,7 @@
 #include <deque>
 #include <functional>
 
-#define NUM_CH 24
+#define NUM_CH 8
 #define WIDTH 640
 #define HEIGHT 480
 
