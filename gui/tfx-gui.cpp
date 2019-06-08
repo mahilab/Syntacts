@@ -1,4 +1,4 @@
-#define CARNOT_NO_CONSOLE
+// #define CARNOT_NO_CONSOLE
 // #define CARNOT_USE_DISCRETE_GPU
 
 #include <carnot>
@@ -6,9 +6,8 @@
 #include <deque>
 #include <functional>
 
-#define NUM_CH 8
-#define WIDTH 640
-#define HEIGHT 480
+#define WIDTH 720
+#define HEIGHT 540
 
 using namespace carnot;
 
@@ -42,10 +41,9 @@ class TfxDemo : public GameObject {
 public:
 
     /// Constructor
-    TfxDemo() : chCB(NUM_CH, false), plot() { 
+    TfxDemo() : plot(), chCB(2,false) { 
         plot.reserve(44100*10);
-        chCB[0] = true;
-        tfx::initialize(NUM_CH);
+        init();
     }
 
     /// Destructor
@@ -53,8 +51,26 @@ public:
         tfx::finalize();
     }
 
+    void init() {
+        tfx::initialize();
+        numCh = tfx::getCurrentDevice().maxChannels;
+        chCB = std::deque<bool>(numCh, false);
+        if (chCB.size()>0)
+            chCB[0] = true;
+        if (chCB.size()>1)
+            chCB[1] = true;
+        auto x = tfx::getAvailableDevices();
+        for (auto& i : x)
+            print(i.name);
+    }
+
+    void refresh() {
+        tfx::finalize();
+        init();
+    }
+
     /// Creats and plays the user's cue
-    void play(std::size_t ch) {
+    void playTfx(std::size_t ch) {
         Ptr<tfx::Oscillator> osc;
         if (freq_wave == 0)
             osc = make<tfx::SineWave>((float)freq);
@@ -83,6 +99,33 @@ public:
         tfx::playCue((int)ch, cue);
     }
 
+    void playSpeaker() {
+        // const unsigned SAMPLES = 44100;
+        // const unsigned SAMPLE_RATE = 44100;
+        // const unsigned AMPLITUDE = 30000;
+        
+        // sf::Int16 raw[SAMPLES];
+
+        // const double TWO_PI = 6.28318;
+        // const double increment = 440./44100;
+        // double x = 0;
+        // for (unsigned i = 0; i < SAMPLES; i++) {
+        //     raw[i] = AMPLITUDE * sin(x*TWO_PI);
+        //     x += increment;
+        // }
+        
+        // sf::SoundBuffer Buffer;
+        // if (!Buffer.loadFromSamples(raw, SAMPLES, 1, SAMPLE_RATE)) {
+        //     std::cerr << "Loading failed!" << std::endl;
+        //     return;
+        // }
+
+        // sf::Sound sound;
+        // sound.setBuffer(Buffer);
+        // sound.setLoop(true);
+        // sound.play(); 
+    }
+
     /// Overrides GameObject::update to draw GUI and get user inputs
     void update() override {    
         ImGui::SetNextWindowPos(Vector2f(5,5), ImGuiCond_Always);
@@ -90,34 +133,40 @@ public:
         ImGui::Begin("TactorFX", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);   
         //------------------------------------------------------------------
         if (ImGui::Button(ICON_FA_PLAY) || Input::getKeyDown(Key::Space)) {
-            for (std::size_t i = 0; i < NUM_CH; ++i) {
+            for (std::size_t i = 0; i < numCh; ++i) {
                 if (chCB[i])
-                    play(i);
+                    playTfx(i);
             }
         }
         ImGui::SameLine();
         if (ImGui::Button(ICON_FA_STOP))
             tfx::stopAllCues();
         ImGui::SameLine();
+        if (ImGui::Button(ICON_FA_VOLUME_UP))
+            playSpeaker();
+        ImGui::SameLine();
         if (ImGui::Button(ICON_FA_SYNC_ALT)) {
-            tfx::finalize();
-            tfx::initialize(NUM_CH);
+            refresh();
         }
         ImGui::SameLine();
         ImGui::Text(tfx::getCurrentDevice().name.c_str());
-        ImGui::Separator();
         //------------------------------------------------------------------
-        for (std::size_t i = 0; i < NUM_CH; ++i)
+        ImGui::Separator();
+        ImGui::PushStyleColor(ImGuiCol_Border, Color::Transparent);
+        ImGui::BeginChild("Channels", ImVec2(0, ImGui::GetFrameHeightWithSpacing()+27), true, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_NoBackground);
+        for (int i = 0; i < numCh; ++i)
         {
             auto label = str("Ch",i+1);
             if (ImGui::Button(label.c_str()) || Input::getKeyDown((Key)((int)Key::Num1 + i)))
-                play(i);
+                playTfx(i);
             ImGui::SameLine();
             ImGui::Checkbox(str("##",i).c_str(), &chCB[i]);
 
-            if (((i+1) % NUM_CH) != 0)
+            if (((i+1) % numCh) != 0)
                 ImGui::SameLine();
         }
+        ImGui::EndChild();
+        ImGui::PopStyleColor();        
         ImGui::Separator();
         //------------------------------------------------------------------
         ImGui::Text("Carrier");
@@ -165,11 +214,11 @@ public:
 
             plot.push_back(v);
         }
-        ImGui::PushItemWidth(615);
+        ImGui::PushItemWidth(WIDTH-25);
         ImGui::PushStyleColor(ImGuiCol_PlotLines, hexCode("cf94c2"));
         ImGui::PushStyleColor(ImGuiCol_PlotLinesHovered, hexCode("cf94c2"));
         auto title = str(durMs, "ms /", samples, " samples");
-        ImGui::PlotLines("", &plot[0], (int)plot.size(),  0, title.c_str(), -1.0f, 1.0f, ImVec2(0,129));
+        ImGui::PlotLines("", &plot[0], (int)plot.size(),  0, title.c_str(), -1.0f, 1.0f, ImVec2(0, ImGui::GetContentRegionAvail().y));
         ImGui::PopStyleColor();
         ImGui::PopStyleColor();
         ImGui::PopItemWidth();
@@ -178,7 +227,7 @@ public:
 
 private:
 
-    float amp  = 0.5f;
+    float amp  = 0.75f;
 
     int   freq = 175;
     int   freq_wave = 0;
@@ -189,6 +238,8 @@ private:
     int a = 50;
     int s = 75;
     int r = 25;
+
+    int numCh;
 
     std::deque<bool> chCB;
     std::vector<float> plot;

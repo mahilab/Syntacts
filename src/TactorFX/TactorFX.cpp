@@ -1,4 +1,5 @@
 #include <TactorFX/TactorFX.hpp>
+#include <TactorFX/Detail/SPSCQueue.hpp>
 #include "Helpers.hpp"
 #include "portaudio.h"
 #include <atomic>
@@ -18,18 +19,40 @@
     #define PA_USE_ASIO 1
 #endif
 
+#ifndef QUE_SIZE
+    #define QUE_SIZE 256
+#endif
+
+using namespace rigtorp;
+
 namespace tfx {
 
 // private namespace
 namespace {    
 
-std::size_t g_num_ch;           ///< number of channels specified
+/// Instruction to que a cue
+struct Instruction {
+    int channel;
+    std::shared_ptr<Cue> cue;
+};
+
+SPSCQueue<Instruction> g_que(QUE_SIZE);          
+std::size_t g_num_ch;                       ///< number of channels specified
 std::vector<std::shared_ptr<Cue>> g_cues;   ///< cues
-std::mutex g_mutex;             ///< mutex
-PaStream* g_stream;             ///< portaudio stream
-bool g_tfx_initialized = false; ///< tfx initialized?
-bool g_pa_initialized  = false; ///< portadio initialized? 
+std::mutex g_mutex;                         ///< mutex
+PaStream* g_stream;                         ///< portaudio stream
+bool g_tfx_initialized = false;             ///< tfx initialized?
+bool g_pa_initialized  = false;             ///< portadio initialized? 
 DeviceInfo g_currentDevice = DeviceInfo({-1,"none",0});
+
+/// Pops new instructions off the que into the cue vector
+void processQue() {
+    while (g_que.front()) {
+        auto i = *g_que.front();
+        g_cues[i.channel] = i.cue;
+        g_que.pop();
+    }
+}
 
 // portaudio callback method
 int pa_callback(const void *inputBuffer, void *outputBuffer,
@@ -38,7 +61,8 @@ int pa_callback(const void *inputBuffer, void *outputBuffer,
                        PaStreamCallbackFlags statusFlags,
                        void *userData)
 {
-    std::lock_guard<std::mutex> lock(g_mutex);
+    // std::lock_guard<std::mutex> lock(g_mutex);
+    processQue();
     /* Cast data passed through stream to our structure. */    
     float *out = (float *)outputBuffer;
     (void)inputBuffer; /* Prevent unused variable warning. */   
@@ -131,8 +155,9 @@ int initialize(int device, int channelCount) {
 
     // init g_cues with empty cues
     g_cues.resize(channelCount);
-    for (auto& cue : g_cues)
-        cue = std::make_shared<Cue>();         
+    for (auto& cue : g_cues) {
+        cue = std::make_shared<Cue>();      
+    }   
 
     PaStreamParameters hostApiOutputParameters;
     PaStreamParameters* hostApiOutputParametersPtr;        
@@ -176,8 +201,12 @@ int playCue(int channel, std::shared_ptr<Cue> cue) {
         return TfxError_NotInitialized;
     if(!(channel < g_num_ch))
         return TfxError_InvalidChannel;
-    std::lock_guard<std::mutex> lock(g_mutex);
-    g_cues[channel] = cue;
+    //std::lock_guard<std::mutex> lock(g_mutex);
+    //g_cues[channel] = cue;
+    Instruction x;
+    x.channel = channel;
+    x.cue = cue;
+    g_que.try_push(x);
     return TfxError_NoError;
 } 
 
