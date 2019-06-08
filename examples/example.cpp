@@ -38,9 +38,9 @@ int main(int argc, char const *argv[])
         }
 
         else if (KB::is_key_pressed(Key::B) && kbClock.get_elapsed_time() > mel::milliseconds(250)) {
-            auto osc = std::make_shared<SineWave>(175.0f, 0.05f);
+            auto osc = std::make_shared<SineWave>(175.0f);
             // auto mod = std::make_shared<SineWave>(25.0f,1.0f);
-            auto env = std::make_shared<ASR>(1.f, 1.f, 1.f);
+            auto env = std::make_shared<ASR>(1.f, 1.f, 1.f, 0.5f);
             auto cue = std::make_shared<Cue>(osc, env);
 
             for (int i = 1; i < 2; ++i)
@@ -50,14 +50,14 @@ int main(int argc, char const *argv[])
         }
 
         if (KB::is_key_pressed(Key::U) && kbClock.get_elapsed_time() > mel::milliseconds(250)) {
-            tfx::playCue(0, 1, 175, 1, 0, 0, 0, 0, 0.5f, 0);
+            tfx::playCue(0, 1, 175, 0, 0, 1.0f, 0, 0.5f, 0);
             kbClock.restart();
         }
 
         for (int ch = 0; ch < NUM_CH; ++ch) {
             if (KB::is_key_pressed(chn_keys[ch])) {
                 float freq     = 175;  // 175 for Evan's tactors
-                float amp      = 0.05f; 
+                float amp      = 0.5f; 
                 float dur      = 2.0f;
                 float a_time   = 1.0f;
                 float s_time   = 1.0f;
@@ -66,37 +66,37 @@ int main(int argc, char const *argv[])
                 if (kbClock.get_elapsed_time() > mel::milliseconds(250)) {
                     if (KB::is_key_pressed(Key::S)) {
                         // just a sinwave for dur time
-                        auto osc = std::make_shared<SquareWave>(freq, amp);
-                        auto cue = std::make_shared<Cue>(osc, dur);  
+                        auto osc = std::make_shared<SquareWave>(freq);
+                        auto cue = std::make_shared<Cue>(osc, dur, amp);  
                         tfx::playCue(ch, cue);
                     }                
                     else if (KB::is_key_pressed(Key::W)) {
                         // a sawave with an AS envelope
-                        auto osc = std::make_shared<SineWave>(freq, amp);
-                        auto env = std::make_shared<ASR>(a_time, s_time, r_time); 
+                        auto osc = std::make_shared<SineWave>(freq);
+                        auto env = std::make_shared<ASR>(a_time, s_time, r_time, amp); 
                         auto cue = std::make_shared<Cue>(osc, env);                
                         tfx::playCue(ch, cue);
                     }
                     else if (KB::is_key_pressed(Key::C)) {
                         // chaining
                         auto cue = std::make_shared<Cue>();
-                        cue->chain<SquareWave>(freq, amp);
-                        cue->chain<SineWave>(mod_freq, amp);
-                        cue->chain<ASR>(a_time, s_time, r_time);
+                        cue->chain<SquareWave>(freq);
+                        cue->chain<SineWave>(mod_freq);
+                        cue->chain<ASR>(a_time, s_time, r_time, amp);
                         tfx::playCue(ch, cue);
                     }
                     else if (KB::is_key_pressed(Key::Q)) {
                         // chaining
                         auto cue = std::make_shared<Cue>();
-                        cue->chain<SquareWave>(freq, amp);
-                        cue->chain<ASR>(a_time, s_time, r_time);
+                        cue->chain<SquareWave>(freq);
+                        cue->chain<ASR>(a_time, s_time, r_time, amp);
                         tfx::playCue(ch, cue);
                     }
                     else if (KB::is_key_pressed(Key::T)) {
                         // chaining
                         auto cue = std::make_shared<Cue>();
-                        cue->chain<TriWave>(freq, amp);
-                        cue->chain<ASR>(a_time, s_time, r_time);
+                        cue->chain<TriWave>(freq);
+                        cue->chain<ASR>(a_time, s_time, r_time, amp);
                         tfx::playCue(ch, cue);
                     }                    
                     kbClock.restart();

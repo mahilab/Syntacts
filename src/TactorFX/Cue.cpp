@@ -8,9 +8,9 @@ Cue::Cue() :
 
 }
 
-Cue::Cue(std::shared_ptr<Oscillator> osc, float duration) {
+Cue::Cue(std::shared_ptr<Oscillator> osc, float duration, float amplitude) {
     chain(std::move(osc));
-    chain(std::move(std::make_shared<Envelope>(duration)));
+    chain(std::move(std::make_shared<Envelope>(duration, amplitude)));
 }
 
 Cue::Cue(std::shared_ptr<Oscillator> osc, std::shared_ptr<Envelope> env) {

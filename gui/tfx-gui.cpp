@@ -57,25 +57,25 @@ public:
     void play(std::size_t ch) {
         Ptr<tfx::Oscillator> osc;
         if (freq_wave == 0)
-            osc = make<tfx::SineWave>((float)freq, freq_amp);
+            osc = make<tfx::SineWave>((float)freq);
         else if (freq_wave == 1)
-            osc = make<tfx::SquareWave>((float)freq, freq_amp);
+            osc = make<tfx::SquareWave>((float)freq);
         else if (freq_wave == 2)
-            osc = make<tfx::SawWave>((float)freq, freq_amp);
+            osc = make<tfx::SawWave>((float)freq);
         else if (freq_wave == 3)
-            osc = make<tfx::TriWave>((float)freq, freq_amp);            
-        auto env = make<tfx::ASR>(a/1000.0f, s/1000.0f, r/1000.f);
+            osc = make<tfx::TriWave>((float)freq);            
+        auto env = make<tfx::ASR>(a/1000.0f, s/1000.0f, r/1000.f, amp);
         Ptr<tfx::Cue> cue;
         if (mod > 0) {
             Ptr<tfx::Oscillator> modOsc;
             if (mod_wave == 0)
-                modOsc = make<tfx::SineWave>((float)mod, 1.0f);
+                modOsc = make<tfx::SineWave>((float)mod);
             else if (mod_wave == 1)
-                modOsc = make<tfx::SquareWave>((float)mod, mod_amp);
+                modOsc = make<tfx::SquareWave>((float)mod);
             else if (mod_wave == 2)
-                modOsc = make<tfx::SawWave>((float)mod, mod_amp);
+                modOsc = make<tfx::SawWave>((float)mod);
             else if (mod_wave == 3)
-                modOsc = make<tfx::TriWave>((float)mod, mod_amp);  
+                modOsc = make<tfx::TriWave>((float)mod);  
             cue = make<tfx::Cue>(osc, modOsc, env);
         }
         else
@@ -126,7 +126,6 @@ public:
         ImGui::RadioButton("Saw##C", &freq_wave, 2);    ImGui::SameLine();
         ImGui::RadioButton("Triangle##C", &freq_wave, 3);
         ImGui::DragInt("Frequency##C", &freq, 0.5f, 0, 250, "%i Hz");
-        ImGui::DragFloat("Amplitude##C", &freq_amp, 0.005f, 0.0f, 1.0f);
         ImGui::Separator();
         //------------------------------------------------------------------
         ImGui::Text("Modulation");
@@ -135,10 +134,10 @@ public:
         ImGui::RadioButton("Saw##M", &mod_wave, 2);    ImGui::SameLine();
         ImGui::RadioButton("Triangle##M", &mod_wave, 3);
         ImGui::DragInt("Frequency##M", &mod, 0.5f,  0, 250, "%i Hz");
-        ImGui::DragFloat("Amplitude##M", &mod_amp, 0.005f, 0.0f, 1.0f);
         ImGui::Separator();
         //------------------------------------------------------------------
         ImGui::Text("Envelope");
+        ImGui::DragFloat("Amplitude", &amp, 0.005f, 0.0f, 1.0f);
         ImGui::DragInt("Attack", &a, 0.5f,  0, 1000, "%i ms");
         ImGui::DragInt("Sustain", &s, 0.5f,  0, 1000, "%i ms");
         ImGui::DragInt("Release", &r, 0.5f,  0, 1000, "%i ms");
@@ -152,10 +151,10 @@ public:
         for (int i = 0; i < samples; ++i) {
             float t = durS / (float)samples * (float)i;
             float v = 1.0f;
-            v *= freq_amp * waveFuncs[freq_wave]((float)freq, t);
+            v *= amp * waveFuncs[freq_wave]((float)freq, t);
             // modulation
             if (mod > 0)
-                v*= mod_amp * waveFuncs[mod_wave]((float)mod, t);
+                v*= waveFuncs[mod_wave]((float)mod, t);
             // envelope
             float env = 1.0f;
             if (t < (float)a/1000.0f)
@@ -170,7 +169,7 @@ public:
         ImGui::PushStyleColor(ImGuiCol_PlotLines, hexCode("cf94c2"));
         ImGui::PushStyleColor(ImGuiCol_PlotLinesHovered, hexCode("cf94c2"));
         auto title = str(durMs, "ms /", samples, " samples");
-        ImGui::PlotLines("", &plot[0], (int)plot.size(),  0, title.c_str(), -1.0f, 1.0f, ImVec2(0,104));
+        ImGui::PlotLines("", &plot[0], (int)plot.size(),  0, title.c_str(), -1.0f, 1.0f, ImVec2(0,129));
         ImGui::PopStyleColor();
         ImGui::PopStyleColor();
         ImGui::PopItemWidth();
@@ -179,12 +178,12 @@ public:
 
 private:
 
+    float amp  = 0.5f;
+
     int   freq = 175;
-    float freq_amp  = 0.5f;
     int   freq_wave = 0;
 
     int   mod = 25;
-    float mod_amp = 1.0f;
     int   mod_wave = 0;
 
     int a = 50;

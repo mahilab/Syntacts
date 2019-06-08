@@ -16,7 +16,7 @@ public:
     Cue();
 
     /// Constructs a Cue with a Oscillator lasting a specified duration
-    Cue(std::shared_ptr<Oscillator> osc, float duration);
+    Cue(std::shared_ptr<Oscillator> osc, float duration, float amplitude = 1.0f);
 
     /// Constructs a Cue with a Oscillator and Envelope follower
     Cue(std::shared_ptr<Oscillator> osc, std::shared_ptr<Envelope> env);

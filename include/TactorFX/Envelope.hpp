@@ -11,10 +11,13 @@ class TFX_API Envelope : public Generator {
 public:
 
     /// Constructs an Eveloope with a specified duration
-    Envelope(float duration = 0.0f);
+    Envelope(float duration = 1.0f, float amplitude = 1.0f);
 
-    /// Sets the duration of an Enveloope
+    /// Sets the duration of an Envelope (default 1)
     void setDuration(float duration);
+
+    /// Sets the normalized amplitude of an Envelope (default 1)
+    void setAmplitude(float amplitude);
 
 protected:
 
@@ -26,7 +29,8 @@ protected:
 
 protected:
 
-    float m_duration; ///< duration of an Envelope in seconds
+    float m_duration;  ///< duration of an Envelope in seconds
+    float m_amplitude; ///< amplitude of the envelope normalized between 0 and 1
 
 };
 
@@ -35,7 +39,7 @@ class TFX_API ASR : public Envelope {
 public:
 
     /// Constructs ASR Envelope with specified attack and sustain times
-    ASR(float attackTime, float sustainTime, float releaseTime);
+    ASR(float attackTime, float sustainTime, float releaseTime, float amplitude = 1.0f);
 
 protected:
 

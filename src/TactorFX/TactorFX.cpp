@@ -201,13 +201,12 @@ int initializeCustom(int device, int channelCount) {
     return initialize(device, channelCount);
 }
 
-TFX_API int playCue(int channel,   // channel              [0 to N]
+TFX_API int playCue(int channel,    // channel              [0 to N]
                      int oscType,   // oscillator type      [0=none, 1=sin, 2=sqr, 3=saw, 4=tri]
                      float oscFreq, // oscillator frequency [Hz]
-                     float oscAmp,  // oscillator amplitude [0 to 1]
                      int modType,   // modulator type       [0=none, 1=sin, 2=sqr, 3=saw, 4=tri]
                      float modFreq, // modulator frequency  [Hz]
-                     float modAmp,  // modulator amplitude  [0 to 1]
+                     float amp,     // envelope amplitude   [0 to 1]
                      float A,       // attack time          [s]
                      float S,       // sustain time         [s]
                      float R)       // release time         [s]
@@ -222,29 +221,29 @@ TFX_API int playCue(int channel,   // channel              [0 to N]
     /// make envelope
     std::shared_ptr<Envelope> env;
     if (A == 0.0f && R == 0.0f)
-        env = std::make_shared<Envelope>(S);
+        env = std::make_shared<Envelope>(S, amp);
     else
-        env = std::make_shared<ASR>(A,S,R);
+        env = std::make_shared<ASR>(A,S,R, amp);
     // make oscillator
     std::shared_ptr<Oscillator> osc;
     if (oscType == 1)
-        osc = std::make_shared<SineWave>(oscFreq, oscAmp); 
+        osc = std::make_shared<SineWave>(oscFreq); 
     else if (oscType == 2)
-        osc = std::make_shared<SquareWave>(oscFreq, oscAmp);
+        osc = std::make_shared<SquareWave>(oscFreq);
     else if (oscType == 3)
-        osc = std::make_shared<SawWave>(oscFreq, oscAmp);
+        osc = std::make_shared<SawWave>(oscFreq);
     else if (oscType = 4)
-        osc = std::make_shared<TriWave>(oscFreq, oscAmp);
+        osc = std::make_shared<TriWave>(oscFreq);
     // make modulator
     std::shared_ptr<Oscillator> mod;
     if (modType == 1)
-        mod = std::make_shared<SineWave>(modFreq, modAmp); 
+        mod = std::make_shared<SineWave>(modFreq); 
     else if (modType == 2)
-        mod = std::make_shared<SquareWave>(modFreq, modAmp);
+        mod = std::make_shared<SquareWave>(modFreq);
     else if (modType == 3)
-        mod = std::make_shared<SawWave>(modFreq, modAmp);
+        mod = std::make_shared<SawWave>(modFreq);
     else if (modType == 4)
-        mod = std::make_shared<TriWave>(modFreq, modAmp);
+        mod = std::make_shared<TriWave>(modFreq);
     // generate cue
     std::shared_ptr<Cue> cue;
     if ((oscType > 0) && (modType > 0)) 

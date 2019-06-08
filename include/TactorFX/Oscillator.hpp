@@ -10,19 +10,15 @@ namespace tfx
 class TFX_API Oscillator : public Generator {
 public:
 
-    /// Constructs an Oscillator with specified frequency and amplitude
-    Oscillator(float frequency = 1.0f, float amplitude = 1.0f);
+    /// Constructs an Oscillator with specified frequency
+    Oscillator(float frequency = 1.0f);
 
     /// Sets the oscillator frequency in Hz
     void setFrequency(float frequency);
 
-    /// Sets the oscillator amplitude to the absolute value of amplitude
-    void setAmplitude(float amplitude);
-
 protected:
 
     float m_frequency;  ///< oscillator frequency
-    float m_amplitude;  ///< oscillator amplitude
 
 };
 
