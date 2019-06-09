@@ -1,5 +1,5 @@
 # Syntacts
-Vibrotactor Envelope Generation for ASIO Supported Sound Cards
+Tactor Sythesizer Software
 
 ## Dependencies
 
@@ -21,6 +21,6 @@ Vibrotactor Envelope Generation for ASIO Supported Sound Cards
 
 ## Building Syntacts
 
-Comming soon...
+Comming soon ...
 
 

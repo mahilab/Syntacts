@@ -83,6 +83,34 @@ public:
         return cue;
     }
 
+    /// Exports current UI configuration to Syntacts C++
+    void exportCpp() {
+        std::string code;
+        code += "auto osc = std::make_shared<syntacts::";
+        if (modMode != 2) {
+            code += freq_wave == 0 ? "SineWave" : freq_wave == 1 ? "SquareWave" : freq_wave == 2 ? "SawWave" : freq_wave == 3 ? "TriWave" : "";
+            code += ">(" + str((float)freq) + ");\n";
+        }
+        else
+            code += "SineWaveFM>(" + str((float)freq) + ", " + str((float)mod) + ", " + str(fmIdx) + ");\n";     
+        if (a == 0 && r == 0)
+            code += "auto env = std::make_shared<syntacts::Envelope>(" + str(s/1000.0f) + ", " + str(amp) + ");\n";
+        else  
+            code += "auto env = std::make_shared<syntacts::ASR>(" + str(a/1000.0f) + ", " + str(s/1000.0f) + ", " + str(r/1000.0f) + ", " + str(amp) + ");\n";
+        if (modMode == 1 && mod > 0) {
+            code += "auto mod = std::make_shared<syntacts::";
+            code += mod_wave == 0 ? "SineWave" : mod_wave == 1 ? "SquareWave" : mod_wave == 2 ? "SawWave" : mod_wave == 3 ? "TriWave" : "";
+            code += ">(" + str((float)mod) + ");\n";
+            code += "auto cue = std::make_shared<syntacts::Cue>(osc, mod, env);\n";
+        }
+        else {
+            code += "auto cue = std::make_shared<syntacts::Cue>(osc, env);\n";
+        }
+        Clipboard::setString(code);
+
+
+    }
+
     /// Creats and plays the user's cue
     void playSyntacts(std::size_t ch) {
         syntacts::play((int)ch, buildCue());
@@ -105,7 +133,7 @@ public:
         auto currSize = Engine::window->getSize();
         ImGui::SetNextWindowSize(Vector2f(currSize.x-10,currSize.y-10), ImGuiCond_Always);
         ImGui::Begin("Syntacts", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);   
-        //------------------------------------------------------------------
+        //====================================================================
         if (ImGui::Button(ICON_FA_PLAY) || Input::getKeyDown(Key::Space)) {
             for (std::size_t i = 0; i < numCh; ++i) {
                 if (checkBoxes[i])
@@ -119,9 +147,12 @@ public:
         if (ImGui::Button(ICON_FA_VOLUME_UP))
             playSpeaker();
         ImGui::SameLine();
-        if (ImGui::Button(ICON_FA_SYNC_ALT)) {
+        if (ImGui::Button(ICON_FA_FILE_EXPORT))
+            exportCpp();
+        //====================================================================
+        ImGui::SameLine();
+        if (ImGui::Button(ICON_FA_SYNC_ALT)) 
             refresh();
-        }
         ImGui::SameLine();
         auto devName = syntacts::getCurrentDevice().name;
         if (devName != "none")
@@ -131,19 +162,18 @@ public:
             tooltip("Connect an ASIO sound device and then press " ICON_FA_SYNC_ALT ".\nAlternately, install the ASIO4ALL driver to \nenable your non-ASIO device.");
         }
         ImGui::SameLine(ImGui::GetWindowWidth()-30);
-        //------------------------------------------------------------------
+        //====================================================================
         if (ImGui::Button(ICON_FA_INFO)) {
-            ImGui::OpenPopup("Info");
+            ImGui::OpenPopup("Syntacts v1.0");
         }
-        if (ImGui::BeginPopupModal("Info", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove))
+        if (ImGui::BeginPopupModal("Syntacts v1.0", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove))
         {
-            ImGui::Text("Welcome to Syntacts");
             if (ImGui::Button("Got It!"))
                 ImGui::CloseCurrentPopup(); 
             ImGui::EndPopup();
         }
 
-        //------------------------------------------------------------------
+        //====================================================================
         ImGui::Separator();
         ImGui::PushStyleColor(ImGuiCol_Border, Color::Transparent);
         ImGui::BeginChild("Channels", ImVec2(0, ImGui::GetFrameHeightWithSpacing()+27), true, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_NoBackground);
@@ -161,7 +191,7 @@ public:
         ImGui::EndChild();
         ImGui::PopStyleColor();        
         ImGui::Separator();
-        //------------------------------------------------------------------
+        //====================================================================
         ImGui::Text("Carrier");
         ImGui::DragInt("Frequency##C", &freq, 0.5f, 0, 250, "%i Hz");
         ImGui::RadioButton("Sine##C", &freq_wave, 0);   
@@ -175,7 +205,7 @@ public:
             freq_wave = 0;
         }
         ImGui::Separator();
-        //------------------------------------------------------------------
+        //====================================================================
         ImGui::Text("Modulation"); ImGui::SameLine();
         ImGui::RadioButton("Off",&modMode, 0); ImGui::SameLine();
         ImGui::RadioButton("AM",&modMode, 1); ImGui::SameLine();
@@ -197,14 +227,14 @@ public:
             ImGui::DragFloat("Modulation Index", &fmIdx, 0.01f, 0.0f, 12.0f);
         }
         ImGui::Separator();
-        //------------------------------------------------------------------
+        //====================================================================
         ImGui::Text("Envelope");
         ImGui::DragFloat("Amplitude", &amp, 0.005f, 0.0f, 1.0f);
         ImGui::DragInt("Attack", &a, 0.5f,  0, 1000, "%i ms");
         ImGui::DragInt("Sustain", &s, 0.5f,  0, 1000, "%i ms");
         ImGui::DragInt("Release", &r, 0.5f,  0, 1000, "%i ms");
         ImGui::Separator();
-        //------------------------------------------------------------------
+        //====================================================================
         plot.clear();
         int durMs = a+s+r;
         float durS = (float)durMs / 1000.0f;
@@ -228,7 +258,7 @@ public:
 private:
      
     int   numCh      = 2;
-    float amp       = 1.0f;
+    float amp       = 0.75f;
     int   freq      = 175;
     int   freq_wave = 0;
     int   modMode     = 1;
