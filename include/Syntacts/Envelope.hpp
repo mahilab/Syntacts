@@ -50,12 +50,33 @@ public:
 
 protected:
 
-    /// ASR implementatioin
+    /// ASR implementation
     virtual float onSample(float t) override;
     
-private:
+protected:
 
-    float m_attackTime, m_sustainTime, m_releaseTime;
+    float m_attackTime;
+    float m_sustainTime;
+    float m_releaseTime;
+
+};
+
+/// Linear Attack-Decay-Sustain-Release Envelope
+class SYNTACTS_API ADSR : public ASR {
+public:
+
+    /// Constructs ASR Envelope with specified attack, sustain, and release times
+    ADSR(float attackTime, float decayTime, float sustainTime, float releaseTime, float amplitude1 = 1.0f, float amplitude2 = 0.5f);
+
+protected:
+
+    /// ADSR implementation
+    virtual float onSample(float t) override;
+
+protected:
+
+    float m_decayTime;
+    float m_amplitude2;
 
 };
 

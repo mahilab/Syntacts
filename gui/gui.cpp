@@ -50,7 +50,13 @@ public:
 
     /// Builds a Syntacts Cue from the user's UI configuration
     Ptr<syntacts::Cue> buildCue() {
-        auto env = make<syntacts::ASR>(a/1000.0f, s/1000.0f, r/1000.f, amp);
+        Ptr<syntacts::Envelope> env;
+        if (envMode == 0)
+            env = make<syntacts::Envelope>(dur/1000.0f, amp[0]);    
+        else if (envMode == 1)
+            env = make<syntacts::ASR>(asr[0]/1000.0f, asr[1]/1000.0f, asr[2]/1000.f, amp[0]);
+        else if (envMode == 2) 
+            env = make<syntacts::ADSR>(adsr[0]/1000.0f, adsr[1]/1000.0f, adsr[2]/1000.0f, adsr[3]/1000.f, amp[0], amp[1]);
         Ptr<syntacts::Oscillator> osc;
         if (modMode != 2) {
             if (freq_wave == 0)
@@ -93,10 +99,15 @@ public:
         }
         else
             code += "SineWaveFM>(" + str((float)freq) + ", " + str((float)mod) + ", " + str(fmIdx) + ");\n";     
-        if (a == 0 && r == 0)
-            code += "auto env = std::make_shared<syntacts::Envelope>(" + str(s/1000.0f) + ", " + str(amp) + ");\n";
-        else  
-            code += "auto env = std::make_shared<syntacts::ASR>(" + str(a/1000.0f) + ", " + str(s/1000.0f) + ", " + str(r/1000.0f) + ", " + str(amp) + ");\n";
+
+        if (envMode == 0)
+            code += "auto env = std::make_shared<syntacts::Envelope>(" + str(dur/1000.0f) + ", " + str(amp[0]) + ");\n";
+        else if (envMode == 1)
+            code += "auto env = std::make_shared<syntacts::ASR>(" + str(asr[0]/1000.0f) + ", " + str(asr[1]/1000.0f) + ", " + str(asr[2]/1000.0f) + ", " + str(amp[0]) + ");\n";
+        else if (envMode == 2)
+            code += "auto env = std::make_shared<syntacts::ADSR>(" + str(adsr[0]/1000.0f) + ", " + str(adsr[1]/1000.0f) + ", " + str(adsr[2]/1000.0f) + ", " + str(adsr[3]/1000.0f) + ", " + str(amp[0]) + ", " + str(amp[1]) + ");\n";
+
+        
         if (modMode == 1 && mod > 0) {
             code += "auto mod = std::make_shared<syntacts::";
             code += mod_wave == 0 ? "SineWave" : mod_wave == 1 ? "SquareWave" : mod_wave == 2 ? "SawWave" : mod_wave == 3 ? "TriWave" : "";
@@ -124,6 +135,7 @@ public:
             sample = (signed short)(cue->nextSample() * 32768);        
         speakerBuffer.loadFromSamples(&samples[0], samples.size(), 1, 44100);
         speakerSound.setBuffer(speakerBuffer);
+        speakerSound.setVolume(100);
         speakerSound.play();
     }
 
@@ -229,18 +241,37 @@ public:
         ImGui::Separator();
         //====================================================================
         ImGui::Text("Envelope");
-        ImGui::DragFloat("Amplitude", &amp, 0.005f, 0.0f, 1.0f);
-        ImGui::DragInt("Attack", &a, 0.5f,  0, 1000, "%i ms");
-        ImGui::DragInt("Sustain", &s, 0.5f,  0, 1000, "%i ms");
-        ImGui::DragInt("Release", &r, 0.5f,  0, 1000, "%i ms");
+        ImGui::SameLine();
+        ImGui::RadioButton("Basic",&envMode, 0); ImGui::SameLine();
+        ImGui::RadioButton("ASR",&envMode,  1); ImGui::SameLine();
+        ImGui::RadioButton("ADSR",&envMode, 2);
+        if (envMode == 0) {
+            ImGui::DragFloat("Amplitude", amp, 0.005f, 0.0f, 1.0f);
+            ImGui::DragInt("Duration", &dur, 0.5f, 0, 5000, "%i ms");
+        }
+        if (envMode == 1) {
+            ImGui::DragFloat("Amplitude", amp, 0.005f, 0.0f, 1.0f);
+            ImGui::DragInt3("ASR##",asr, 0.5f, 0, 1000, "%i ms");
+            adsr[0] = asr[0];
+            adsr[2] = asr[1];
+            adsr[3] = asr[2];
+            dur = asr[0] + asr[1] + asr[2];
+        }
+        else if (envMode == 2) {
+            ImGui::DragFloat2("Amplitudes", amp, 0.005f, 0.0f, 1.0f);
+            ImGui::DragInt4("ADSR##",adsr, 0.5f, 0, 1000, "%i ms");
+            asr[0] = adsr[0];
+            asr[1] = adsr[2];
+            asr[2] = adsr[3];
+            dur = adsr[0] + adsr[1] + adsr[2] + adsr[3];
+        }
         ImGui::Separator();
         //====================================================================
         plot.clear();
-        int durMs = a+s+r;
-        float durS = (float)durMs / 1000.0f;
 
         auto cue = buildCue();
-        plot.resize(cue->sampleCount());       
+        plot.resize(cue->sampleCount());    
+        float durMs = cue->sampleCount() * 1000.0f/44100.0f;  
         for (auto& point : plot)
             point = cue->nextSample();  
 
@@ -258,16 +289,18 @@ public:
 private:
      
     int   numCh      = 2;
-    float amp       = 0.75f;
+    float amp[2]      = {0.75f, 0.5f};
     int   freq      = 175;
     int   freq_wave = 0;
     int   modMode     = 1;
     int   mod       = 25;
     int   mod_wave  = 0;
-    int   a         = 50;
-    int   s         = 75;
-    int   r         = 25;
-    float fmIdx      = 2;
+    float fmIdx     = 2;
+    int envMode     = 1;
+
+    int dur     = 150;
+    int asr[3]  = {50, 75, 25};
+    int adsr[4] = {50,50,75,25};
 
     std::deque<bool> checkBoxes;
     std::vector<float> plot;
