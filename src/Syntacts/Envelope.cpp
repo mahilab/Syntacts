@@ -1,7 +1,7 @@
-#include <TactorFX/Envelope.hpp>
+#include <Syntacts/Envelope.hpp>
 #include "Helpers.hpp"
 
-namespace tfx {
+namespace syntacts {
 
 Envelope::Envelope(float duration, float amplitude) :
     Generator(),
@@ -15,8 +15,16 @@ void Envelope::setDuration(float duration) {
     m_duration = std::abs(duration);
 }
 
+float Envelope::getDuration() const {
+    return m_duration;
+}
+
 void Envelope::setAmplitude(float amplitude) {
     m_amplitude = clamp01(amplitude);
+}
+
+float Envelope::getAmplitude() const {
+    return m_amplitude;
 }
 
 bool Envelope::playing() const {
@@ -51,4 +59,4 @@ float ASR::onSample(float t) {
         return 0.0f;        
 }
 
-} // namespae tfx
+} // namespace syntacts

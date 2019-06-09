@@ -1,5 +1,5 @@
-#include <TactorFX/TactorFX.hpp>
-#include <TactorFX/Detail/SPSCQueue.hpp>
+#include <Syntacts/Syntacts.hpp>
+#include <Syntacts/Detail/SPSCQueue.hpp>
 #include "Helpers.hpp"
 #include "portaudio.h"
 #include <atomic>
@@ -25,7 +25,7 @@
 
 using namespace rigtorp;
 
-namespace tfx {
+namespace syntacts {
 
 // private namespace
 namespace {    
@@ -37,11 +37,10 @@ struct Instruction {
 };
 
 SPSCQueue<Instruction> g_que(QUE_SIZE);          
-std::size_t g_num_ch;                       ///< number of channels specified
+std::size_t g_numCh;                        ///< number of channels specified
 std::vector<std::shared_ptr<Cue>> g_cues;   ///< cues
-std::mutex g_mutex;                         ///< mutex
 PaStream* g_stream;                         ///< portaudio stream
-bool g_tfx_initialized = false;             ///< tfx initialized?
+bool g_syntacts_initialized = false;        ///< syntacts initialized?
 bool g_pa_initialized  = false;             ///< portadio initialized? 
 DeviceInfo g_currentDevice = DeviceInfo({-1,"none",0});
 
@@ -68,8 +67,8 @@ int pa_callback(const void *inputBuffer, void *outputBuffer,
     (void)inputBuffer; /* Prevent unused variable warning. */   
     // lock mutex using RA-II lockgaurd (unlocked when we exit scope b/c lock dies)
     for (unsigned long f = 0; f < framesPerBuffer; f++) {
-        for (std::size_t c = 0; c < g_num_ch; ++c) {
-            out[g_num_ch * f + c] = g_cues[c]->nextSample();
+        for (std::size_t c = 0; c < g_numCh; ++c) {
+            out[g_numCh * f + c] = g_cues[c]->nextSample();
         }
     }
     return 0;
@@ -97,6 +96,10 @@ DeviceInfo makeDeviceInfo(int device) {
 }
 
 } // private namespace
+
+//==============================================================================
+// C++11 INTERFACE
+//==============================================================================
 
 std::vector<DeviceInfo> getAvailableDevices() {
     initPortaudio();
@@ -135,23 +138,23 @@ int initialize() {
 int initialize(int channelCount) {
     auto deviceInfo = getDefaultDevice();
     if (channelCount > deviceInfo.maxChannels)
-        return TfxError_InvalidChannelCount;
+        return SyntactsError_InvalidChannelCount;
     return initialize(deviceInfo.index, channelCount);
 }
 
 
 int initialize(int device, int channelCount) {
-    if (g_tfx_initialized)
-        return TfxError_AlreadyIntialized;
+    if (g_syntacts_initialized)
+        return SyntactsError_AlreadyIntialized;
     if (device < 0)
-        return TfxError_InvalidDevice;
+        return SyntactsError_InvalidDevice;
     // intitialize portaudio
     int result = initPortaudio();    
     if (result != paNoError)
         return result;
     g_currentDevice = makeDeviceInfo(device);
 
-    g_num_ch = channelCount;
+    g_numCh = channelCount;
 
     // init g_cues with empty cues
     g_cues.resize(channelCount);
@@ -180,42 +183,49 @@ int initialize(int device, int channelCount) {
     result = Pa_StartStream(g_stream);
     if (result != paNoError)
         return result;
-    g_tfx_initialized = true;
+    g_syntacts_initialized = true;
     return 0;
 }
 
 int finalize() {
-    if (!g_tfx_initialized)
-        return TfxError_NotInitialized;
+    if (!g_syntacts_initialized)
+        return SyntactsError_NotInitialized;
     Pa_StopStream(g_stream); 
     Pa_CloseStream(g_stream); 
     Pa_Terminate();
     g_pa_initialized = false;
-    g_tfx_initialized = false;
-    return TfxError_NoError;
+    g_syntacts_initialized = false;
+    return SyntactsError_NoError;
 }
 
-int playCue(int channel, std::shared_ptr<Cue> cue) {
+int play(int channel, std::shared_ptr<Cue> cue) {
     // failture conditions
-    if(!g_tfx_initialized)
-        return TfxError_NotInitialized;
-    if(!(channel < g_num_ch))
-        return TfxError_InvalidChannel;
-    //std::lock_guard<std::mutex> lock(g_mutex);
-    //g_cues[channel] = cue;
+    if(!g_syntacts_initialized)
+        return SyntactsError_NotInitialized;
+    if(!(channel < g_numCh))
+        return SyntactsError_InvalidChannel;
     Instruction x;
     x.channel = channel;
     x.cue = cue;
     g_que.try_push(x);
-    return TfxError_NoError;
+    return SyntactsError_NoError;
 } 
 
-int stopAllCues() {
-    if(!g_tfx_initialized)
-        return TfxError_NotInitialized;
-    for (auto& cue : g_cues)
-        cue = std::make_shared<Cue>();    
-    return TfxError_NoError;
+int playAll(std::shared_ptr<Cue> cue) {
+    for (int i = 0; i < g_numCh; ++i) {
+        auto ret = play(i, cue);
+        if (ret != SyntactsError_NoError)
+            return ret;
+    }
+    return SyntactsError_NoError;
+}
+
+int stop(int channel) {
+    return play(channel, std::make_shared<Cue>());
+}
+
+int stopAll() {
+    return playAll(std::make_shared<Cue>());
 }
 
 //==============================================================================
@@ -230,23 +240,23 @@ int initializeCustom(int device, int channelCount) {
     return initialize(device, channelCount);
 }
 
-TFX_API int playCue(int channel,    // channel              [0 to N]
-                     int oscType,   // oscillator type      [0=none, 1=sin, 2=sqr, 3=saw, 4=tri]
-                     float oscFreq, // oscillator frequency [Hz]
-                     int modType,   // modulator type       [0=none, 1=sin, 2=sqr, 3=saw, 4=tri]
-                     float modFreq, // modulator frequency  [Hz]
-                     float amp,     // envelope amplitude   [0 to 1]
-                     float A,       // attack time          [s]
-                     float S,       // sustain time         [s]
-                     float R)       // release time         [s]
+SYNTACTS_API int play(int channel,    // channel              [0 to N]
+                 int oscType,   // oscillator type      [0=none, 1=sin, 2=sqr, 3=saw, 4=tri]
+                 float oscFreq, // oscillator frequency [Hz]
+                 int modType,   // modulator type       [0=none, 1=sin, 2=sqr, 3=saw, 4=tri]
+                 float modFreq, // modulator frequency  [Hz]
+                 float amp,     // envelope amplitude   [0 to 1]
+                 float A,       // attack time          [s]
+                 float S,       // sustain time         [s]
+                 float R)       // release time         [s]
 {
     // failture conditions
-    if(!g_tfx_initialized)
-        return TfxError_NotInitialized;
-    if(!(channel < g_num_ch))
-        return TfxError_InvalidChannel;
+    if(!g_syntacts_initialized)
+        return SyntactsError_NotInitialized;
+    if(!(channel < g_numCh))
+        return SyntactsError_InvalidChannel;
     if (oscType == 0 && modType == 0)
-        return TfxError_NoWaveform;    
+        return SyntactsError_NoWaveform;    
     /// make envelope
     std::shared_ptr<Envelope> env;
     if (A == 0.0f && R == 0.0f)
@@ -282,11 +292,11 @@ TFX_API int playCue(int channel,    // channel              [0 to N]
     else if (modType > 0)
         cue = std::make_shared<Cue>(mod, env);
     else
-        return TfxError_NoWaveform;
+        return SyntactsError_NoWaveform;
     /// play the cue
-    tfx::playCue(channel, cue);
-    return TfxError_NoError; 
+    syntacts::play(channel, cue);
+    return SyntactsError_NoError; 
 }
 
 
-} // namespace tfx
+} // namespace syntacts

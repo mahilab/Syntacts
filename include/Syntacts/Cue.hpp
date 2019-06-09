@@ -1,15 +1,15 @@
 #pragma once
 
-#include <TactorFX/Config.hpp>
-#include <TactorFX/Oscillator.hpp>
-#include <TactorFX/Envelope.hpp>
+#include <Syntacts/Config.hpp>
+#include <Syntacts/Oscillator.hpp>
+#include <Syntacts/Envelope.hpp>
 #include <vector>
 #include <utility>
 
-namespace tfx {
+namespace syntacts {
 
 /// Encapsulates a cue to be played on a single channel
-class TFX_API Cue {
+class SYNTACTS_API Cue {
 public:
 
     /// Default constructor
@@ -27,6 +27,9 @@ public:
     /// Virtual destructor
     virtual ~Cue();
 
+    /// Sets the pimrary Envelope of a Cue
+    void setEnvelope(std::shared_ptr<Envelope> env);
+
     /// Chains an existing custom Generator to be processed
     void chain(std::shared_ptr<Generator> gen);
 
@@ -37,10 +40,13 @@ public:
     /// Compounds all Generators to compute the next sample
     float nextSample();
 
+    /// Returns the number of samples this Cue generates
+    int sampleCount();
+
 private:
 
     std::vector<std::shared_ptr<Generator>> m_generators; ///< array of generators
-
+    std::shared_ptr<Envelope> m_env;                      ///< the Cue's primary envelope
 };
 
 template <typename T, typename ...Args>
@@ -49,4 +55,4 @@ void Cue::chain(Args... args) {
     chain(std::move(g));
 }
 
-} // namespace tfx
+} // namespace syntacts

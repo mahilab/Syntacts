@@ -1,7 +1,7 @@
-#include <TactorFX/Generator.hpp>
+#include <Syntacts/Generator.hpp>
 #include "Helpers.hpp"
 
-namespace tfx {
+namespace syntacts {
 
 Generator::Generator() :
     m_time(0.0f)
@@ -23,4 +23,4 @@ float Generator::nextSample() {
     return sample;
 }
 
-} // namespace tfx
+} // namespace syntacts

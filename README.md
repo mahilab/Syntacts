@@ -1,4 +1,4 @@
-# TactorFX
+# Syntacts
 Vibrotactor Envelope Generation for ASIO Supported Sound Cards
 
 ## Dependencies
@@ -19,7 +19,7 @@ Vibrotactor Envelope Generation for ASIO Supported Sound Cards
 ```
 3. This will build `portaudio` with `ASIO` enabled and install it in `C:/Program Files/portaudio`
 
-## Building TactorFX
+## Building Syntacts
 
 Comming soon...
 

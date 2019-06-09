@@ -1,16 +1,16 @@
 #pragma once
 
-#include <TactorFX/Config.hpp>
+#include <Syntacts/Config.hpp>
 #include <memory>
 
-namespace tfx
+namespace syntacts
 {
 
 // Forward declarations
 class Cue;
 
 /// An abstract class which generates time variant samples
-class TFX_API Generator {
+class SYNTACTS_API Generator {
 public:
 
     /// Default constructor
@@ -42,4 +42,4 @@ private:
 };
 
     
-} // namespace tfx
+} // namespace syntacts

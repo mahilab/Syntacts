@@ -1,8 +1,8 @@
-#include <TactorFX/Oscillator.hpp>
+#include <Syntacts/Oscillator.hpp>
 #include "Helpers.hpp"
 #include <cmath>
 
-namespace tfx
+namespace syntacts
 {
 
 Oscillator::Oscillator(float frequency) :
@@ -32,4 +32,17 @@ float TriWave::onSample(float t) {
     return -2.0f / PI * std::asin(std::sin(2.0f * PI * m_frequency * t));
 }
 
-} // namespace tfx
+SineWaveFM::SineWaveFM(float frequency, float modulation, float index) :
+    Oscillator(frequency),
+    m_modulation(modulation),
+    m_index(index) 
+{
+
+}
+
+float SineWaveFM::onSample(float t) {
+    return std::cos(2.0f * PI * m_frequency * t + m_index * std::sin(2.0f * PI * m_modulation * t));
+}
+
+
+} // namespace syntacts

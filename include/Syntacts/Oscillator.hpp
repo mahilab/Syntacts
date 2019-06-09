@@ -1,13 +1,13 @@
 #pragma once
 
-#include <TactorFX/Config.hpp>
-#include <TactorFX/Generator.hpp>
+#include <Syntacts/Config.hpp>
+#include <Syntacts/Generator.hpp>
 
-namespace tfx
+namespace syntacts
 {
 
 /// Abstract base class for object which produces a periodic, oscillating signal
-class TFX_API Oscillator : public Generator {
+class SYNTACTS_API Oscillator : public Generator {
 public:
 
     /// Constructs an Oscillator with specified frequency
@@ -24,7 +24,7 @@ protected:
 
 
 /// A sine wave Oscillator
-class TFX_API SineWave : public Oscillator {
+class SYNTACTS_API SineWave : public Oscillator {
 public:
 
     // Inherited Constructor
@@ -39,7 +39,7 @@ protected:
 
 
 /// A square wave Oscillator
-class TFX_API SquareWave : public Oscillator {
+class SYNTACTS_API SquareWave : public Oscillator {
 public:
 
     // Inherited Constructor
@@ -54,7 +54,7 @@ protected:
 
 
 /// A saw wave Oscillator
-class TFX_API SawWave : public Oscillator {
+class SYNTACTS_API SawWave : public Oscillator {
 public:
 
     // Inherited Constructor
@@ -68,7 +68,7 @@ protected:
 };
 
 /// A triangle wave Oscillator
-class TFX_API TriWave : public Oscillator {
+class SYNTACTS_API TriWave : public Oscillator {
 public:
 
     // Inherited Constructor
@@ -81,4 +81,21 @@ protected:
 
 };
 
-} // namespace tfx
+class SYNTACTS_API SineWaveFM : public Oscillator {
+public:
+
+    /// Constructs a frequency modulated sinewave
+    SineWaveFM(float frequency, float modulation, float index);
+
+protected:
+
+    virtual float onSample(float t) override;
+
+private:
+
+    float m_modulation;
+    float m_index;
+
+};
+
+} // namespace syntacts

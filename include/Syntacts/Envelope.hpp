@@ -1,13 +1,13 @@
 #pragma once
 
-#include <TactorFX/Config.hpp>
-#include <TactorFX/Generator.hpp>
+#include <Syntacts/Config.hpp>
+#include <Syntacts/Generator.hpp>
 
-namespace tfx
+namespace syntacts
 {
 
 /// An object which gives a Cue a duration and/or shape
-class TFX_API Envelope : public Generator {
+class SYNTACTS_API Envelope : public Generator {
 public:
 
     /// Constructs an Eveloope with a specified duration
@@ -16,8 +16,14 @@ public:
     /// Sets the duration of an Envelope (default 1)
     void setDuration(float duration);
 
-    /// Sets the normalized amplitude of an Envelope (default 1)
+    /// Gets the duration of an Envelope
+    float getDuration() const;
+
+    /// Sets the normalized amplitude of the Envelope (default 1)
     void setAmplitude(float amplitude);
+
+    /// Gets the normalized amlitude of the Envelope
+    float getAmplitude() const;
 
 protected:
 
@@ -35,10 +41,11 @@ protected:
 };
 
 
-class TFX_API ASR : public Envelope {
+/// Linear Attack-Sustain-Release Envelope
+class SYNTACTS_API ASR : public Envelope {
 public:
 
-    /// Constructs ASR Envelope with specified attack and sustain times
+    /// Constructs ASR Envelope with specified attack, sustain, and release times
     ASR(float attackTime, float sustainTime, float releaseTime, float amplitude = 1.0f);
 
 protected:
@@ -52,6 +59,5 @@ private:
 
 };
 
-
     
-} // namespace tfx
+} // namespace syntacts
