@@ -127,6 +127,13 @@ public:
         syntacts::play((int)ch, buildCue());
     }
 
+    void playSelected() {
+        for (std::size_t i = 0; i < numCh; ++i) {
+            if (checkBoxes[i])
+                playSyntacts(i);
+        }
+    }
+
     /// Plays the Cue over the user's speakers
     void playSpeaker() {
         auto cue = buildCue();
@@ -146,18 +153,18 @@ public:
         ImGui::SetNextWindowSize(Vector2f(currSize.x-10,currSize.y-10), ImGuiCond_Always);
         ImGui::Begin("Syntacts", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);   
         //====================================================================
-        if (ImGui::Button(ICON_FA_PLAY) || Input::getKeyDown(Key::Space)) {
-            for (std::size_t i = 0; i < numCh; ++i) {
-                if (checkBoxes[i])
-                    playSyntacts(i);
-            }
+        if (ImGui::Button(ICON_FA_PLAY) || Input::getKeyDown(Key::Space)) 
+            playSelected();
+        ImGui::SameLine();
+        if (ImGui::Button(ICON_FA_VOLUME_UP)) {
+            playSpeaker();
+            playSelected();
         }
         ImGui::SameLine();
-        if (ImGui::Button(ICON_FA_STOP))
+        if (ImGui::Button(ICON_FA_STOP)) {
             syntacts::stopAll();
-        ImGui::SameLine();
-        if (ImGui::Button(ICON_FA_VOLUME_UP))
-            playSpeaker();
+            speakerSound.stop();
+        }
         ImGui::SameLine();
         if (ImGui::Button(ICON_FA_FILE_EXPORT))
             exportCpp();
