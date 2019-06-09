@@ -142,7 +142,7 @@ public:
     /// Overrides GameObject::update to draw GUI and get user inputs
     void update() override {    
         ImGui::SetNextWindowPos(Vector2f(5,5), ImGuiCond_Always);
-        auto currSize = Engine::window->getSize();
+        auto currSize = Engine::getWindowSize();
         ImGui::SetNextWindowSize(Vector2f(currSize.x-10,currSize.y-10), ImGuiCond_Always);
         ImGui::Begin("Syntacts", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);   
         //====================================================================
