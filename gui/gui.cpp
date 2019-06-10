@@ -1,4 +1,4 @@
-#define CARNOT_NO_CONSOLE
+// #define CARNOT_NO_CONSOLE
 // #define CARNOT_USE_DISCRETE_GPU
 
 #include <carnot>
@@ -7,6 +7,7 @@
 #include <functional>
 #include <chrono>
 #include <ctime>  
+#include <string>
 
 using namespace carnot;
 
@@ -19,6 +20,17 @@ void tooltip(const std::string& tip) {
     if (ImGui::IsItemHovered()) 
         ImGui::SetTooltip(tip.c_str());
 }
+
+struct FuncHolder { 
+    static bool ItemGetter(void* data, int idx, const char** out_str) { 
+        auto devices = *(std::vector<syntacts::DeviceInfo>*)data;
+        std::vector<const char*> strs(devices.size());
+        for (std::size_t i = 0; i < devices.size(); ++i)
+            strs[i] = devices[i].name.c_str();
+        out_str = &strs[idx];
+    } 
+};
+
 
 //==============================================================================
 // DEMO GAMEOBJECT
@@ -35,8 +47,8 @@ public:
 
     /// Gets number of channels from current Syntacts device and resizes accordingly
     void rechannel() {
-        numCh = syntacts::getCurrentDevice().maxChannels;
-        checkBoxes = std::deque<bool>(numCh, false);
+        curDev = syntacts::getCurrentDevice();
+        checkBoxes = std::deque<bool>(curDev.maxChannels, false);
         if (checkBoxes.size()>0)
             checkBoxes[0] = true;
         if (checkBoxes.size()>1)
@@ -44,9 +56,10 @@ public:
     }
 
     /// Restarts Syntacts (useful if device connected mid usage)
-    void refresh() {
+    void reconnect(syntacts::DeviceInfo dev) {
+        curDev = dev;
         syntacts::finalize();
-        syntacts::initialize();
+        syntacts::initialize(dev.index, dev.maxChannels);
         rechannel();
     }
 
@@ -129,11 +142,13 @@ public:
     }
 
     void playSelected() {
-        for (std::size_t i = 0; i < numCh; ++i) {
+        for (std::size_t i = 0; i < curDev.maxChannels; ++i) {
             if (checkBoxes[i])
                 playSyntacts(i);
         }
     }
+
+
 
     /// Plays the Cue over the user's speakers
     void playSpeaker() {
@@ -176,16 +191,36 @@ public:
         }
         //====================================================================
         ImGui::SameLine();
-        if (ImGui::Button(ICON_FA_SYNC_ALT)) 
-            refresh();
+        // if (ImGui::Button(ICON_FA_SYNC_ALT)) 
+        //     refresh();
+        // ImGui::SameLine();
+        // auto devName = syntacts::getCurrentDevice().name;
+        // if (devName != "none")
+        //     ImGui::Text(devName.c_str());
+        // else {
+        //     ImGui::TextColored(Yellows::Gold, "ASIO Device Not Found");
+        //     tooltip("Connect an ASIO sound device and then press " ICON_FA_SYNC_ALT ".\nAlternately, install the ASIO4ALL driver to \nenable your non-ASIO device.");
+        // }
+
+
+        auto devs = syntacts::getAvailableDevices();
         ImGui::SameLine();
-        auto devName = syntacts::getCurrentDevice().name;
-        if (devName != "none")
-            ImGui::Text(devName.c_str());
-        else {
-            ImGui::TextColored(Yellows::Gold, "ASIO Device Not Found");
-            tooltip("Connect an ASIO sound device and then press " ICON_FA_SYNC_ALT ".\nAlternately, install the ASIO4ALL driver to \nenable your non-ASIO device.");
+        ImGui::PushItemWidth(200);
+        if (ImGui::BeginCombo("##Devices", curDev.name.c_str())) // The second parameter is the label previewed before opening the combo.
+        {
+            for (int i = 0; i < devs.size(); i++)
+            {
+                bool is_selected = (curDev.index == devs[i].index);
+                if (ImGui::Selectable(devs[i].name.c_str(), is_selected))
+                    reconnect(devs[i]);
+                if (is_selected)
+                    ImGui::SetItemDefaultFocus();   // Set the initial focus when opening the combo (scrolling + for keyboard navigation support in the upcoming navigation branch)
+            }
+            ImGui::EndCombo();
         }
+        ImGui::PopItemWidth();
+
+
         ImGui::SameLine(ImGui::GetWindowWidth()-30);
         //====================================================================
         if (ImGui::Button(ICON_FA_INFO)) {
@@ -202,7 +237,7 @@ public:
         ImGui::Separator();
         ImGui::PushStyleColor(ImGuiCol_Border, Color::Transparent);
         ImGui::BeginChild("Channels", ImVec2(0, ImGui::GetFrameHeightWithSpacing()+27), true, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_NoBackground);
-        for (int i = 0; i < numCh; ++i)
+        for (int i = 0; i < curDev.maxChannels; ++i)
         {
             auto label = str("Ch",i+1);
             if (ImGui::Button(label.c_str()) || Input::getKeyDown((Key)((int)Key::Num1 + i)))
@@ -210,7 +245,7 @@ public:
             ImGui::SameLine();
             ImGui::Checkbox(str("##",i).c_str(), &checkBoxes[i]);
 
-            if (((i+1) % numCh) != 0)
+            if (((i+1) % curDev.maxChannels) != 0)
                 ImGui::SameLine();
         }
         ImGui::EndChild();
@@ -301,7 +336,6 @@ public:
 
 private:
      
-    int   numCh      = 2;
     float amp[2]      = {0.75f, 0.5f};
     int   freq      = 175;
     int   freq_wave = 0;
@@ -310,6 +344,9 @@ private:
     int   mod_wave  = 0;
     float fmIdx     = 2;
     int envMode     = 1;
+
+    int curIdx = 0;
+    syntacts::DeviceInfo curDev;
 
     int dur     = 150;
     int asr[3]  = {50, 75, 25};
