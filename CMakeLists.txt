@@ -48,6 +48,7 @@ set(INCLUDE_FILES
     "include/Syntacts/Oscillator.hpp"
     "include/Syntacts/Generator.hpp"
     "include/Syntacts/Config.hpp"
+    "include/Syntacts/AudioFile.hpp"
 )
 
 # gather private sources
@@ -58,6 +59,7 @@ set(SRC_FILES
     "src/Syntacts/Oscillator.cpp"
     "src/Syntacts/Helpers.hpp"
     "src/Syntacts/Generator.cpp"
+    "src/Syntacts/AudioFile.cpp"
 )
 
 # find packages
@@ -87,7 +89,7 @@ target_include_directories(syntacts PRIVATE  ${portaudio_INCLUDE_DIR})
 target_include_directories(syntacts PUBLIC "include")
 
 # link to portaudio
-target_compile_definitions(syntacts PUBLIC PA_USE_ASIO)
+target_compile_definitions(syntacts PUBLIC PA_USE_ASIO PRIVATE NOMINMAX)
 target_link_libraries(syntacts PUBLIC portaudio_static)
 
 #===============================================================================

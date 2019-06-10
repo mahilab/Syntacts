@@ -228,6 +228,22 @@ int stopAll() {
     return playAll(std::make_shared<Cue>());
 }
 
+int save(std::shared_ptr<Cue> cue, std::string filePath, AudioFileFormat format) {
+    AudioFile<float> file;
+    AudioFile<float>::AudioBuffer buffer;
+    buffer.resize(1);
+    buffer[0].resize(cue->sampleCount());
+    for (auto& sample : buffer[0])
+        sample = cue->nextSample();
+    if (!file.setAudioBuffer(buffer))
+        return SyntactsError_AudioFileBufferFail;
+    file.setBitDepth(24);
+    file.setSampleRate(44100);
+    if (!file.save(filePath, format))
+        return SyntactsError_AudioFileSaveFail;
+    return SyntactsError_NoError;
+}
+
 //==============================================================================
 // ANSI C INTEFACE (DLL BINDINGS)
 //==============================================================================

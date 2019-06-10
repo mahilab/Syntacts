@@ -5,6 +5,7 @@
 #include <Syntacts/Oscillator.hpp>
 #include <Syntacts/Envelope.hpp>
 #include <Syntacts/Cue.hpp>
+#include <Syntacts/AudioFile.hpp>
 #include <string>
 
 namespace syntacts {  
@@ -24,7 +25,9 @@ enum SyntactsError : int {
     SyntactsError_AlreadyIntialized   = -3,
     SyntactsError_InvalidChannel      = -4,
     SyntactsError_InvalidChannelCount = -5,
-    SyntactsError_NoWaveform          = -6
+    SyntactsError_NoWaveform          = -6,
+    SyntactsError_AudioFileBufferFail = -7,
+    SyntactsError_AudioFileSaveFail   = -8
 };
 
 #ifndef SYNTACTS_ANSI_C    
@@ -76,6 +79,9 @@ SYNTACTS_API int stop(int channel);
 
 /// Stops all running cues
 SYNTACTS_API int stopAll();
+
+/// Saves a Cue to an audio file
+SYNTACTS_API int save(std::shared_ptr<Cue> cue, std::string filePath, AudioFileFormat format = AudioFileFormat::Wave);
 
 #else
 

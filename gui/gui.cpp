@@ -5,6 +5,8 @@
 #include <Syntacts/Syntacts.hpp>
 #include <deque>
 #include <functional>
+#include <chrono>
+#include <ctime>  
 
 using namespace carnot;
 
@@ -118,9 +120,8 @@ public:
             code += "auto cue = std::make_shared<syntacts::Cue>(osc, env);\n";
         }
         Clipboard::setString(code);
-
-
     }
+
 
     /// Creats and plays the user's cue
     void playSyntacts(std::size_t ch) {
@@ -150,7 +151,7 @@ public:
     void update() override {    
         ImGui::SetNextWindowPos(Vector2f(5,5), ImGuiCond_Always);
         auto currSize = Engine::getWindowSize();
-        ImGui::SetNextWindowSize(Vector2f(currSize.x-10,currSize.y-10), ImGuiCond_Always);
+        ImGui::SetNextWindowSize((Vector2f)Vector2u(currSize.x - 10, currSize.y - 10), ImGuiCond_Always);
         ImGui::Begin("Syntacts", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);   
         //====================================================================
         if (ImGui::Button(ICON_FA_PLAY) || Input::getKeyDown(Key::Space)) 
@@ -166,8 +167,13 @@ public:
             speakerSound.stop();
         }
         ImGui::SameLine();
-        if (ImGui::Button(ICON_FA_FILE_EXPORT))
+        if (ImGui::Button(ICON_FA_PASTE))
             exportCpp();
+        ImGui::SameLine();
+        if (ImGui::Button(ICON_FA_FILE_AUDIO)) {
+            std::string filePath = "syntacts_" + str(rand() % 900000 + 100000) + ".wav";
+            syntacts::save(buildCue(), filePath);
+        }
         //====================================================================
         ImGui::SameLine();
         if (ImGui::Button(ICON_FA_SYNC_ALT)) 
