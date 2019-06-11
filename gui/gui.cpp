@@ -16,8 +16,11 @@
 #include <string>
 #include <windows.h>
 #include <Engine/ImGui/imgui_internal.h>
+#include <Common/Tween.hpp>
 
 using namespace carnot;
+
+const std::vector<const char*> g_tweenStrings = {"Linear", "Smoothstep", "Smootherstep", "Smootheststep"};
 
 //==============================================================================
 // IMGUI CUSTOM PLOTTING
@@ -489,11 +492,17 @@ public:
         ImGui::RadioButton("Basic",&m_envMode, EnvMode::Basic); ImGui::SameLine();
         ImGui::RadioButton("ASR",&m_envMode,   EnvMode::ASR);   ImGui::SameLine();
         ImGui::RadioButton("ADSR",&m_envMode,  EnvMode::ADSR);
+        int numTweens;
+        int skip;
         if (m_envMode == EnvMode::Basic) {
+            numTweens = 1;
+            skip = 0;
             ImGui::DragFloat("Amplitude", m_amps, 0.005f, 0.0f, 1.0f);
             ImGui::DragInt("Duration", &m_duration, 0.5f, 0, 5000, "%i ms");
         }
         if (m_envMode == EnvMode::ASR) {
+            numTweens = 3;
+            skip = 1;
             ImGui::DragFloat("Amplitude", m_amps, 0.005f, 0.0f, 1.0f);
             ImGui::DragInt3("ASR##",m_asr, 0.5f, 0, 1000, "%i ms");
             m_adsr[0] = m_asr[0];
@@ -502,6 +511,8 @@ public:
             m_duration = m_asr[0] + m_asr[1] + m_asr[2];
         }
         else if (m_envMode == EnvMode::ADSR) {
+            numTweens = 4;
+            skip = 2;
             ImGui::DragFloat2("Amplitudes", m_amps, 0.005f, 0.0f, 1.0f);
             ImGui::DragInt4("ADSR##",m_adsr, 0.5f, 0, 1000, "%i ms");
             m_asr[0] = m_adsr[0];
@@ -509,6 +520,24 @@ public:
             m_asr[2] = m_adsr[3];
             m_duration = m_adsr[0] + m_adsr[1] + m_adsr[2] + m_adsr[3];
         }
+        ImGui::BeginGroup();
+        ImGui::PushID("Tweens");
+        ImGui::PushMultiItemsWidths(numTweens);
+        ImGuiContext& g = *GImGui;
+        for (int i = 0; i < numTweens; ++i) {
+            ImGui::PushID(i);
+            
+            if (i == skip)
+                ImGui::Dummy(ImGui::GetItemRectSize());
+            else
+                ImGui::Combo("##i", &m_tweenModes[i], &g_tweenStrings[0], (int)g_tweenStrings.size());
+            ImGui::SameLine(0, g.Style.ItemInnerSpacing.x);
+            ImGui::PopID();
+            ImGui::PopItemWidth();
+        }
+        ImGui::PopID();
+        ImGui::EndGroup();
+
     }
 
     /// Updates the waveform plot
@@ -582,6 +611,7 @@ private:
     int   m_duration = 150;
     int   m_asr[3]   = {50, 75, 25};    
     int   m_adsr[4]  = {50,50,75,25};
+    std::vector<int> m_tweenModes = {0,0,0,0};
 
     Vector2u           m_windowSize;
     std::deque<bool>   m_checkBoxes;
