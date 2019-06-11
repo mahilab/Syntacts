@@ -277,6 +277,7 @@ public:
         }
         else
             return make<tact::Cue>(osc, env);
+            
     }
 
     /// Exports current UI configuration to Syntacts C++
@@ -290,12 +291,12 @@ public:
         else
             code += "SineWaveFM>(" + str((float)m_carFreq) + ", " + str((float)m_modFreq) + ", " + str(m_modIdx) + ");\n";     
 
-        if (m_envMode == 0)
+        if (m_envMode == EnvMode::Basic)
             code += "auto env = std::make_shared<tact::Envelope>(" + str(m_duration/1000.0f) + ", " + str(m_amps[0]) + ");\n";
-        else if (m_envMode == 1)
-            code += "auto env = std::make_shared<tact::ASR>(" + str(m_asr[0]/1000.0f) + ", " + str(m_asr[1]/1000.0f) + ", " + str(m_asr[2]/1000.0f) + ", " + str(m_amps[0]) + ");\n";
-        else if (m_envMode == 2)
-            code += "auto env = std::make_shared<tact::ADSR>(" + str(m_adsr[0]/1000.0f) + ", " + str(m_adsr[1]/1000.0f) + ", " + str(m_adsr[2]/1000.0f) + ", " + str(m_adsr[3]/1000.0f) + ", " + str(m_amps[0]) + ", " + str(m_amps[1]) + ");\n";
+        else if (m_envMode == EnvMode::ASR)
+            code += "auto env = std::make_shared<tact::ASR>(" + str(m_asr[0]/1000.0f) + ", " + str(m_asr[1]/1000.0f) + ", " + str(m_asr[2]/1000.0f) + ", " + str(m_amps[0]) + ", tact::Tween::" + g_tweenStrings[m_tweenModes[0]] + ", tact::Tween::" + g_tweenStrings[m_tweenModes[2]] + ");\n";
+        else if (m_envMode == EnvMode::ADSR)
+            code += "auto env = std::make_shared<tact::ADSR>(" + str(m_adsr[0]/1000.0f) + ", " + str(m_adsr[1]/1000.0f) + ", " + str(m_adsr[2]/1000.0f) + ", " + str(m_adsr[3]/1000.0f) + ", " + str(m_amps[0]) + ", " + str(m_amps[1]) + ", tact::Tween::" + g_tweenStrings[m_tweenModes[0]] + ", tact::Tween::" + g_tweenStrings[m_tweenModes[1]] + ", tact::Tween::" + g_tweenStrings[m_tweenModes[3]] + ");\n";
 
         
         if (m_modMode == 1 && m_modFreq > 0) {
