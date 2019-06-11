@@ -2,7 +2,7 @@
 #include "Helpers.hpp"
 #include <cmath>
 
-namespace syntacts
+namespace tact
 {
 
 Oscillator::Oscillator(float frequency) :
@@ -45,4 +45,4 @@ float SineWaveFM::onSample(float t) {
 }
 
 
-} // namespace syntacts
+} // namespace tact

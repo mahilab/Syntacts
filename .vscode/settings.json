@@ -70,7 +70,8 @@
         "xlocmes": "cpp",
         "xlocmon": "cpp",
         "xloctime": "cpp",
-        "fstream": "cpp"
+        "fstream": "cpp",
+        "carnot": "cpp"
     },
     "C_Cpp.default.configurationProvider": "vector-of-bool.cmake-tools"
 }

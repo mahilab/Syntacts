@@ -8,7 +8,7 @@
 #include <Syntacts/AudioFile.hpp>
 #include <string>
 
-namespace syntacts {  
+namespace tact {  
 
 /// Struct holding ASIO device information
 struct SYNTACTS_API DeviceInfo {
@@ -120,4 +120,4 @@ SYNTACTS_API int stopAll();
 
 #endif // SYNTACTS_ANSI_C
 
-} // namespace syntacts
+} // namespace tact

@@ -3,7 +3,7 @@
 #include <Syntacts/Config.hpp>
 #include <Syntacts/Generator.hpp>
 
-namespace syntacts
+namespace tact
 {
 
 /// An object which gives a Cue a duration and/or shape
@@ -81,4 +81,4 @@ protected:
 };
 
     
-} // namespace syntacts
+} // namespace tact

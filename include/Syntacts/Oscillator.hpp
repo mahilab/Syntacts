@@ -3,7 +3,7 @@
 #include <Syntacts/Config.hpp>
 #include <Syntacts/Generator.hpp>
 
-namespace syntacts
+namespace tact
 {
 
 /// Abstract base class for object which produces a periodic, oscillating signal
@@ -98,4 +98,4 @@ private:
 
 };
 
-} // namespace syntacts
+} // namespace tact
