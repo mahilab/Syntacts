@@ -6,6 +6,7 @@
 #include <MEL/Core/Console.hpp>             // for print
 #include <MEL/Core/Clock.hpp>
 #include <array>
+#include <functional>
 
 typedef mel::Keyboard KB;
 using mel::Key;
@@ -18,6 +19,24 @@ using mel::random;
 
 using namespace syntacts;
 
+inline float Linear(float a, float b, float t) {
+    return a + (b - a) * t;
+}
+
+inline float Smoothstep(float a, float b, float t) {
+    t = t * t * (3.0f - 2.0f * t);
+    return Linear(a, b, t);
+}
+
+float needsATween(std::function<float(float,float,float)> f = Linear) {
+    return f(0,1,0.5);
+}
+
+inline float Smootherstep(float a, float b, float t) {
+    t = t * t * t * (t * (t * 6.0f - 15.0f) + 10.0f);
+    return Linear(a, b, t);
+}
+
 int main(int argc, char const *argv[])
 {
     syntacts::initialize(NUM_CH);
@@ -25,6 +44,8 @@ int main(int argc, char const *argv[])
     mel::print(info.name);
     mel::print(info.index);
     mel::print(info.maxChannels);
+
+    auto x = needsATween(Smootherstep);
 
     mel::Clock kbClock;
 
