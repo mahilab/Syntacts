@@ -27,6 +27,11 @@ SOFTWARE.
 #include <stdexcept>
 #include <type_traits>
 
+#if defined(_MSC_VER)
+#include <BaseTsd.h>
+typedef SSIZE_T ssize_t;
+#endif
+
 namespace rigtorp {
 
 template <typename T> class SPSCQueue {

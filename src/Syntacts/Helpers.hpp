@@ -7,7 +7,7 @@
 #define HALFPI        1.57079632679e+0f
 #define SAMPLE_LENGTH 2.26757369614512e-5f
 
-namespace syntacts {
+namespace tact {
 namespace {
 
 /// clampes value betweeen min and max
@@ -25,4 +25,4 @@ inline float interp(float x, float x0, float x1, float y0, float y1) {
 }
 
 } // namespace anonymous   
-} // namespace syntacts
+} // namespace tact

@@ -1,7 +1,7 @@
 #include <Syntacts/Generator.hpp>
 #include "Helpers.hpp"
 
-namespace syntacts {
+namespace tact {
 
 Generator::Generator() :
     m_time(0.0f)
@@ -23,4 +23,8 @@ float Generator::nextSample() {
     return sample;
 }
 
-} // namespace syntacts
+void Generator::reset() {
+    m_time = 0.0f;
+}
+
+} // namespace tact

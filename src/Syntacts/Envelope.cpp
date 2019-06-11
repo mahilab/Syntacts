@@ -3,7 +3,7 @@
 #include "Helpers.hpp"
 #include <functional>
 
-namespace syntacts {
+namespace tact {
 
 Envelope::Envelope(float duration, float amplitude) :
     Generator(),
@@ -92,4 +92,4 @@ float ADSR::onSample(float t) {
         return 0.0f;
 }
 
-} // namespace syntacts
+} // namespace tact

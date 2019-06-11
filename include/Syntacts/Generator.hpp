@@ -3,7 +3,7 @@
 #include <Syntacts/Config.hpp>
 #include <memory>
 
-namespace syntacts
+namespace tact
 {
 
 // Forward declarations
@@ -22,18 +22,16 @@ public:
     /// Returns the current Generator time
     float getTime() const;
 
+    /// Returns the next sample of the Oscillator
+    float nextSample();
+
+    /// Resets a Generator to its beginning
+    void reset();
+
 protected:
 
     /// Override to implement generator behavior. Do not lock m_mutex here.
     virtual float onSample(float t) = 0;
-
-private:
-
-    // Friend class Cue so it can sample this
-    friend class Cue;
-
-    /// Returns the next sample of the Oscillator
-    float nextSample();
 
 private:
 
@@ -42,4 +40,4 @@ private:
 };
 
     
-} // namespace syntacts
+} // namespace tact
