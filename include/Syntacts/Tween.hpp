@@ -1,5 +1,10 @@
 #pragma once
 
+#include <functional>
+
+namespace tact {
+
+typedef std::function<float(float,float,float)> TweenFunc;
 
 namespace Tween
 {
@@ -97,6 +102,6 @@ namespace Tween
     }
 
 } // namespace Tween
-
+} // namespace tact
 
 #include "Detail/Tween.inl"

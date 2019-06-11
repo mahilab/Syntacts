@@ -5,8 +5,6 @@
 #include <Syntacts/Tween.hpp>
 #include <functional>
 
-
-
 namespace tact
 {
 
@@ -50,7 +48,8 @@ class SYNTACTS_API ASR : public Envelope {
 public:
 
     /// Constructs ASR Envelope with specified attack, sustain, and release times
-    ASR(float attackTime, float sustainTime, float releaseTime, float amplitude = 1.0f, std::function<float(float, float, float)> tweenUp = Tween::Linear, std::function<float(float, float, float)> tweenDown = Tween::Linear);
+    ASR(float attackTime, float sustainTime, float releaseTime, float amplitude = 1.0f, 
+        TweenFunc tweenUp = Tween::Linear, TweenFunc tweenDown = Tween::Linear);
 
 protected:
 
@@ -63,6 +62,8 @@ protected:
     float m_sustainTime;
     float m_releaseTime;
 
+    TweenFunc m_tweenUp, m_tweenDown;
+
 };
 
 /// Linear Attack-Decay-Sustain-Release Envelope
@@ -70,7 +71,8 @@ class SYNTACTS_API ADSR : public ASR {
 public:
 
     /// Constructs ASR Envelope with specified attack, sustain, and release times
-    ADSR(float attackTime, float decayTime, float sustainTime, float releaseTime, float amplitude1 = 1.0f, float amplitude2 = 0.5f, std::function<float(float, float, float)> tweenUp = Tween::Linear, std::function<float(float, float, float)> tweenDown1 = Tween::Linear, std::function<float(float, float, float)> tweenDown2 = Tween::Linear);
+    ADSR(float attackTime, float decayTime, float sustainTime, float releaseTime, float amplitude1 = 1.0f, float amplitude2 = 0.5f, 
+         TweenFunc tweenUp = Tween::Linear, TweenFunc tweenDown1 = Tween::Linear, TweenFunc tweenDown2 = Tween::Linear);
 
 protected:
 
@@ -81,6 +83,8 @@ protected:
 
     float m_decayTime;
     float m_amplitude2;
+
+    TweenFunc m_tweenDown2;
 
 };
 

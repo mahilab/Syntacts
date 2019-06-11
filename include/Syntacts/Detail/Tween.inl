@@ -6,6 +6,7 @@
 #define PI            3.14159265358979e+0f
 #define HALFPI        1.57079632679e+0f
 
+namespace tact {
 namespace Tween {
 
 //==============================================================================
@@ -26,16 +27,6 @@ inline float Delayed(float a, float b, float t) {
 
 inline float Linear(float a, float b, float t) {
     return a + (b - a) * t;
-}
-
-
-inline std::vector<float> Linear(const std::vector<float>& a, const std::vector<float>& b, float t) {
-    std::size_t n = std::min(a.size(), b.size());
-    std::vector<float> out(n);
-    for (std::size_t i = 0; i < n; ++i) {
-        out[i] = Linear(a[i], b[i], t);
-    }
-    return out;
 }
 
 
@@ -380,4 +371,4 @@ inline float InOut(float a, float b, float t) {
 
 }  // namespace Tween
 
-
+} // namespace tact

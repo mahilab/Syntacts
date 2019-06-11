@@ -20,7 +20,8 @@
 
 using namespace carnot;
 
-const std::vector<const char*> g_tweenStrings = {"Linear", "Smoothstep", "Smootherstep", "Smootheststep"};
+const std::vector<const char*>     g_tweenStrings = {"Linear",            "Smoothstep",            "Smootherstep",            "Smootheststep",            "Sinusoidal::In",            "Sinusoidal::Out",            "Sinusoidal::InOut"           , "Exponential::In",            "Exponential::Out",            "Exponential::InOut"           };
+const std::vector<tact::TweenFunc> g_tweenFuncs   = {tact::Tween::Linear, tact::Tween::Smoothstep, tact::Tween::Smootherstep, tact::Tween::Smootheststep, tact::Tween::Sinusoidal::In, tact::Tween::Sinusoidal::Out, tact::Tween::Sinusoidal::InOut, tact::Tween::Exponential::In, tact::Tween::Exponential::Out, tact::Tween::Exponential::InOut};
 
 //==============================================================================
 // IMGUI CUSTOM PLOTTING
@@ -114,7 +115,7 @@ void PlotEx2(ImGuiPlotType plot_type, const char* label, float (*values_getter)(
         ImVec2 tp0 = ImVec2( t0, 1.0f - ImSaturate((v0 - scale_min) * inv_scale) );                       // Point in the normalized space of our target rectangle
         float histogram_zero_line_t = (scale_min * scale_max < 0.0f) ? (-scale_min * inv_scale) : (scale_min < 0.0f ? 0.0f : 1.0f);   // Where does the zero line stands
 
-        const ImU32 col_base = GetColorU32(withAlpha(Whites::White,0.05f));
+        const ImU32 col_base = GetColorU32(withAlpha(Whites::White,0.1f));
         for (int n = 0; n < res_w; n++)
         {
             const float t1 = t0 + t_step;
@@ -225,16 +226,6 @@ public:
         rechannel();
     }
 
-    /// Builds the Syntacts Envelope
-    Ptr<tact::Envelope> buildEnv() {
-        if (m_envMode == EnvMode::Basic)
-            return make<tact::Envelope>(m_duration/1000.0f, m_amps[0]);    
-        else if (m_envMode == EnvMode::ASR)
-            return make<tact::ASR>(m_asr[0]/1000.0f, m_asr[1]/1000.0f, m_asr[2]/1000.f, m_amps[0]);
-        else 
-            return make<tact::ADSR>(m_adsr[0]/1000.0f, m_adsr[1]/1000.0f, m_adsr[2]/1000.0f, m_adsr[3]/1000.f, m_amps[0], m_amps[1]);
-    }
-
     /// Builds the carrier oscillator
     Ptr<tact::Oscillator> buildCarOsc() {
         if (m_modMode != ModMode::FM) {
@@ -264,6 +255,16 @@ public:
         else if (m_modType == OscType::Triangle)
             modOsc = make<tact::TriWave>((float)m_modFreq);  
         return modOsc;
+    }
+
+    /// Builds the Syntacts Envelope
+    Ptr<tact::Envelope> buildEnv() {
+        if (m_envMode == EnvMode::Basic)
+            return make<tact::Envelope>(m_duration/1000.0f, m_amps[0]);    
+        else if (m_envMode == EnvMode::ASR)
+            return make<tact::ASR>(m_asr[0]/1000.0f, m_asr[1]/1000.0f, m_asr[2]/1000.f, m_amps[0], g_tweenFuncs[m_tweenModes[0]], g_tweenFuncs[m_tweenModes[2]]);
+        else 
+            return make<tact::ADSR>(m_adsr[0]/1000.0f, m_adsr[1]/1000.0f, m_adsr[2]/1000.0f, m_adsr[3]/1000.f, m_amps[0], m_amps[1], g_tweenFuncs[m_tweenModes[0]], g_tweenFuncs[m_tweenModes[1]], g_tweenFuncs[m_tweenModes[3]]);
     }
 
     /// Builds a Syntacts Cue from the user's GUI configuration
