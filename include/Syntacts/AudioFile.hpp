@@ -26,6 +26,7 @@
 #include <vector>
 #include <assert.h>
 #include <string>
+#include <Syntacts/Config.hpp>
 
 namespace syntacts {
 

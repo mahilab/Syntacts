@@ -1,8 +1,5 @@
 #include <Syntacts/Cue.hpp>
-
-#ifndef SAMPLE_RATE
-    #define SAMPLE_RATE 44100
-#endif
+#include "Helpers.hpp"
 
 namespace syntacts {
 

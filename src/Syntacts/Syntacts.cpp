@@ -7,10 +7,6 @@
 #include <iostream>
 #include <cassert>
 
-#ifndef SAMPLE_RATE
-    #define SAMPLE_RATE 44100
-#endif
-
 #ifndef BUFFER_SIZE
     #define BUFFER_SIZE 256
 #endif
@@ -238,7 +234,7 @@ int save(std::shared_ptr<Cue> cue, std::string filePath, AudioFileFormat format)
     if (!file.setAudioBuffer(buffer))
         return SyntactsError_AudioFileBufferFail;
     file.setBitDepth(24);
-    file.setSampleRate(44100);
+    file.setSampleRate(SAMPLE_RATE);
     if (!file.save(filePath, format))
         return SyntactsError_AudioFileSaveFail;
     return SyntactsError_NoError;

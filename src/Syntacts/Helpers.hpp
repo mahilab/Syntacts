@@ -4,7 +4,7 @@
 
 #define PI            3.14159265358979e+0f
 #define TWO_PI        6.28318530717959e+0f
-#define SAMPLE_LENGTH 2.26757369614512e-5f
+
 
 namespace syntacts {
 namespace {

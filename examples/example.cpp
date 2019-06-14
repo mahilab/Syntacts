@@ -6,6 +6,7 @@
 #include <MEL/Core/Console.hpp>             // for print
 #include <MEL/Core/Clock.hpp>
 #include <array>
+#include <iostream>
 
 typedef mel::Keyboard KB;
 using mel::Key;
@@ -20,7 +21,8 @@ using namespace syntacts;
 
 int main(int argc, char const *argv[])
 {
-    syntacts::initialize(NUM_CH);
+    int x = syntacts::initialize(25, NUM_CH);
+    std::cout << x ;
     DeviceInfo info = syntacts::getCurrentDevice();
     mel::print(info.name);
     mel::print(info.index);

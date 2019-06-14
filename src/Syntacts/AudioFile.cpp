@@ -57,7 +57,7 @@ template <class T>
 AudioFile<T>::AudioFile()
 {
     bitDepth = 16;
-    sampleRate = 44100;
+    sampleRate = SAMPLE_RATE;
     samples.resize (1);
     samples[0].resize (0);
     audioFileFormat = AudioFileFormat::NotLoaded;

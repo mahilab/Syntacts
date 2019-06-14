@@ -8,6 +8,7 @@
 #include <chrono>
 #include <ctime>  
 #include <string>
+#include <Syntacts/Config.hpp>
 
 using namespace carnot;
 
@@ -41,7 +42,7 @@ public:
 
     /// Constructor
     SyntactsGui() : plot(), checkBoxes(2,false) { 
-        plot.reserve(44100*10);
+        plot.reserve(SAMPLE_RATE * 10);
         rechannel();
     }
 
@@ -156,7 +157,7 @@ public:
         std::vector<signed short> samples(cue->sampleCount());       
         for (auto& sample : samples)
             sample = (signed short)(cue->nextSample() * 32768);        
-        speakerBuffer.loadFromSamples(&samples[0], samples.size(), 1, 44100);
+        speakerBuffer.loadFromSamples(&samples[0], samples.size(), 1, SAMPLE_RATE);
         speakerSound.setBuffer(speakerBuffer);
         speakerSound.setVolume(100);
         speakerSound.play();
@@ -319,11 +320,11 @@ public:
 
         auto cue = buildCue();
         plot.resize(cue->sampleCount());    
-        float durMs = cue->sampleCount() * 1000.0f/44100.0f;  
+        float durMs = cue->sampleCount() * 1000.0f / SAMPLE_RATE;  
         for (auto& point : plot)
             point = cue->nextSample();  
 
-        ImGui::PushItemWidth(currSize.x - 25);
+        ImGui::PushItemWidth(currSize.x - 25.0f);
         ImGui::PushStyleColor(ImGuiCol_PlotLines, hexCode("cf94c2"));
         ImGui::PushStyleColor(ImGuiCol_PlotLinesHovered, hexCode("cf94c2"));
         auto title = str(durMs, "ms /", plot.size(), " samples");
