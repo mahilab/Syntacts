@@ -6,7 +6,7 @@
 #include <vector>
 #include <utility>
 
-namespace syntacts {
+namespace tact {
 
 /// Encapsulates a cue to be played on a single channel
 class SYNTACTS_API Cue {
@@ -27,8 +27,11 @@ public:
     /// Virtual destructor
     virtual ~Cue();
 
-    /// Sets the pimrary Envelope of a Cue
+    /// Sets the primary Envelope of a Cue
     void setEnvelope(std::shared_ptr<Envelope> env);
+
+    /// Gets the primary Envelope of a Cue
+    std::shared_ptr<Envelope> getEnvelope() const;
 
     /// Chains an existing custom Generator to be processed
     void chain(std::shared_ptr<Generator> gen);
@@ -39,6 +42,9 @@ public:
 
     /// Compounds all Generators to compute the next sample
     float nextSample();
+
+    /// Resets a Cue to its beggining
+    void reset();
 
     /// Returns the number of samples this Cue generates
     int sampleCount();
@@ -55,4 +61,4 @@ void Cue::chain(Args... args) {
     chain(std::move(g));
 }
 
-} // namespace syntacts
+} // namespace tact

@@ -6,7 +6,11 @@
 #include <MEL/Core/Console.hpp>             // for print
 #include <MEL/Core/Clock.hpp>
 #include <array>
+<<<<<<< HEAD
 #include <iostream>
+=======
+#include <functional>
+>>>>>>> 06af7baa1473e76b8c65d274a95fbec32ad39d6f
 
 typedef mel::Keyboard KB;
 using mel::Key;
@@ -17,16 +21,41 @@ using mel::random;
 
 #define NUM_CH 6
 
-using namespace syntacts;
+using namespace tact;
+
+inline float Linear(float a, float b, float t) {
+    return a + (b - a) * t;
+}
+
+inline float Smoothstep(float a, float b, float t) {
+    t = t * t * (3.0f - 2.0f * t);
+    return Linear(a, b, t);
+}
+
+float needsATween(std::function<float(float,float,float)> f = Linear) {
+    return f(0,1,0.5);
+}
+
+inline float Smootherstep(float a, float b, float t) {
+    t = t * t * t * (t * (t * 6.0f - 15.0f) + 10.0f);
+    return Linear(a, b, t);
+}
 
 int main(int argc, char const *argv[])
 {
+<<<<<<< HEAD
     int x = syntacts::initialize(25, NUM_CH);
     std::cout << x ;
     DeviceInfo info = syntacts::getCurrentDevice();
+=======
+    tact::initialize(NUM_CH);
+    DeviceInfo info = tact::getCurrentDevice();
+>>>>>>> 06af7baa1473e76b8c65d274a95fbec32ad39d6f
     mel::print(info.name);
     mel::print(info.index);
     mel::print(info.maxChannels);
+
+    auto x = needsATween(Smootherstep);
 
     mel::Clock kbClock;
 
@@ -34,7 +63,7 @@ int main(int argc, char const *argv[])
     while (!KB::is_key_pressed(Key::Escape)) {
         if (KB::is_key_pressed(Key::L)) {
             if (kbClock.get_elapsed_time() > mel::milliseconds(250)) {
-                    //syntacts::listDevices();
+                    //tact::listDevices();
                     kbClock.restart();
             }
         }
@@ -46,13 +75,13 @@ int main(int argc, char const *argv[])
             auto cue = std::make_shared<Cue>(osc, env);
 
             for (int i = 1; i < 2; ++i)
-                syntacts::play(i, cue);
+                tact::play(i, cue);
 
             kbClock.restart();
         }
 
         if (KB::is_key_pressed(Key::U) && kbClock.get_elapsed_time() > mel::milliseconds(250)) {
-            syntacts::play(0, 1, 175, 0, 0, 1.0f, 0, 0.5f, 0);
+            tact::play(0, 1, 175, 0, 0, 1.0f, 0, 0.5f, 0);
             kbClock.restart();
         }
 
@@ -70,14 +99,14 @@ int main(int argc, char const *argv[])
                         // just a sinwave for dur time
                         auto osc = std::make_shared<SquareWave>(freq);
                         auto cue = std::make_shared<Cue>(osc, dur, amp);  
-                        syntacts::play(ch, cue);
+                        tact::play(ch, cue);
                     }                
                     else if (KB::is_key_pressed(Key::W)) {
                         // a sawave with an AS envelope
                         auto osc = std::make_shared<SineWave>(freq);
                         auto env = std::make_shared<ASR>(a_time, s_time, r_time, amp); 
                         auto cue = std::make_shared<Cue>(osc, env);                
-                        syntacts::play(ch, cue);
+                        tact::play(ch, cue);
                     }
                     else if (KB::is_key_pressed(Key::C)) {
                         // chaining
@@ -85,21 +114,21 @@ int main(int argc, char const *argv[])
                         cue->chain<SquareWave>(freq);
                         cue->chain<SineWave>(mod_freq);
                         cue->chain<ASR>(a_time, s_time, r_time, amp);
-                        syntacts::play(ch, cue);
+                        tact::play(ch, cue);
                     }
                     else if (KB::is_key_pressed(Key::Q)) {
                         // chaining
                         auto cue = std::make_shared<Cue>();
                         cue->chain<SquareWave>(freq);
                         cue->chain<ASR>(a_time, s_time, r_time, amp);
-                        syntacts::play(ch, cue);
+                        tact::play(ch, cue);
                     }
                     else if (KB::is_key_pressed(Key::T)) {
                         // chaining
                         auto cue = std::make_shared<Cue>();
                         cue->chain<TriWave>(freq);
                         cue->chain<ASR>(a_time, s_time, r_time, amp);
-                        syntacts::play(ch, cue);
+                        tact::play(ch, cue);
                     }                    
                     kbClock.restart();
                 }
@@ -107,7 +136,7 @@ int main(int argc, char const *argv[])
         }
     }      
 
-    syntacts::finalize();
+    tact::finalize();
 
     return 0;
 }

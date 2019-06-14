@@ -1,7 +1,7 @@
 #include <Syntacts/Cue.hpp>
 #include "Helpers.hpp"
 
-namespace syntacts {
+namespace tact {
 
 Cue::Cue() :
     m_generators(0)
@@ -36,6 +36,10 @@ void Cue::setEnvelope(std::shared_ptr<Envelope> env) {
     m_env = env;
 }
 
+std::shared_ptr<Envelope> Cue::getEnvelope() const {
+    return m_env;
+}
+
 void Cue::chain(std::shared_ptr<Generator> gen) {
     m_generators.push_back(std::move(gen));
 }
@@ -48,6 +52,12 @@ float Cue::nextSample() {
         sample *= g->nextSample();
     sample *= m_env->nextSample();
     return sample;
+}
+
+void Cue::reset() {
+    m_env->reset();
+    for (auto& g : m_generators)
+        g->reset();
 }
 
 int Cue::sampleCount() {

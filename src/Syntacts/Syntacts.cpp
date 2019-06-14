@@ -21,7 +21,7 @@
 
 using namespace rigtorp;
 
-namespace syntacts {
+namespace tact {
 
 // private namespace
 namespace {    
@@ -306,9 +306,9 @@ SYNTACTS_API int play(int channel,    // channel              [0 to N]
     else
         return SyntactsError_NoWaveform;
     /// play the cue
-    syntacts::play(channel, cue);
+    tact::play(channel, cue);
     return SyntactsError_NoError; 
 }
 
 
-} // namespace syntacts
+} // namespace tact

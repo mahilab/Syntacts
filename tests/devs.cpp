@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <math.h>
-#include "C:/Git/portaudio/include/portaudio.h"
+#include "C:/Git/portaudio/include/portaudio.h" /*Update this path to find your file*/
 
 #ifdef WIN32
 #include <windows.h>
 
 #if PA_USE_ASIO
-#include "C:/Git/portaudio/include/pa_asio.h"
+#include "C:/Git/portaudio/include/pa_asio.h" /*Update this path to find your file*/
 #endif
 #endif
 

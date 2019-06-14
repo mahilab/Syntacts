@@ -26,7 +26,7 @@
 #include <iterator>
 #include <algorithm>
 
-namespace syntacts {
+namespace tact {
 
 //=============================================================
 // Pre-defined 10-byte representations of common sample rates
@@ -904,4 +904,4 @@ T AudioFile<T>::clamp (T value, T minValue, T maxValue)
 template class AudioFile<float>;
 template class AudioFile<double>;
 
-} // namespace syntacts
+} // namespace tact

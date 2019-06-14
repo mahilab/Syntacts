@@ -28,7 +28,7 @@
 #include <string>
 #include <Syntacts/Config.hpp>
 
-namespace syntacts {
+namespace tact {
 
 //=============================================================
 /** The different types of audio file, plus some other types to 
@@ -179,4 +179,4 @@ private:
     int bitDepth;
 };
 
-} // namespace syntacts
+} // namespace tact

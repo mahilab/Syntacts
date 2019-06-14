@@ -4,9 +4,14 @@
 
 #define PI            3.14159265358979e+0f
 #define TWO_PI        6.28318530717959e+0f
+<<<<<<< HEAD
 
+=======
+#define HALFPI        1.57079632679e+0f
+#define SAMPLE_LENGTH 2.26757369614512e-5f
+>>>>>>> 06af7baa1473e76b8c65d274a95fbec32ad39d6f
 
-namespace syntacts {
+namespace tact {
 namespace {
 
 /// clampes value betweeen min and max
@@ -24,4 +29,4 @@ inline float interp(float x, float x0, float x1, float y0, float y1) {
 }
 
 } // namespace anonymous   
-} // namespace syntacts
+} // namespace tact
