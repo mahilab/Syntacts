@@ -85,7 +85,7 @@ class SYNTACTS_API SineWaveFM : public Oscillator {
 public:
 
     /// Constructs a frequency modulated sinewave
-    SineWaveFM(float frequency, float modulation, float index);
+    SineWaveFM(float frequency, float modulation, float index = 2.0f);
 
 protected:
 

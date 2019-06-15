@@ -274,9 +274,9 @@ SYNTACTS_API int play(int channel,    // channel              [0 to N]
     if (oscType == 0 && modType == 0)
         return SyntactsError_NoWaveform;    
     /// make envelope
-    std::shared_ptr<Envelope> env;
+    std::shared_ptr<BasicEnvelope> env;
     if (A == 0.0f && R == 0.0f)
-        env = std::make_shared<Envelope>(S, amp);
+        env = std::make_shared<BasicEnvelope>(S, amp);
     else
         env = std::make_shared<ASR>(A,S,R, amp);
     // make oscillator

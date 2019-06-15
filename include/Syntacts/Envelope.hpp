@@ -4,16 +4,42 @@
 #include <Syntacts/Generator.hpp>
 #include <Syntacts/Tween.hpp>
 #include <functional>
+#include <map>
+#include <utility>
 
 namespace tact
 {
 
-/// An object which gives a Cue a duration and/or shape
+
+/// Base Envelope
 class SYNTACTS_API Envelope : public Generator {
 public:
 
+    /// Constucts Envelope with initial amplitude
+    Envelope(float amplitude0 = 0.0f);
+
+    /// Adds a new key at time t seconds with amplitude. Uses tween to interpolate from previous value.
+    void addKey(float t, float amplitude, TweenFunc tween = Tween::Linear);
+
+    /// Gets the duration of an Envelope
+    float getDuration() const;
+
+private:
+
+    virtual float onSample(float t) override;
+
+private:
+
+    std::map<float, std::pair<float, TweenFunc>> m_keys;
+    float m_duration;
+};
+
+/// An object which gives a Cue a duration and/or shape
+class SYNTACTS_API BasicEnvelope : public Generator {
+public:
+
     /// Constructs an Eveloope with a specified duration
-    Envelope(float duration = 1.0f, float amplitude = 1.0f);
+    BasicEnvelope(float duration = 1.0f, float amplitude = 1.0f);
 
     /// Sets the duration of an Envelope (default 1)
     void setDuration(float duration);
@@ -44,7 +70,7 @@ protected:
 
 
 /// Linear Attack-Sustain-Release Envelope
-class SYNTACTS_API ASR : public Envelope {
+class SYNTACTS_API ASR : public BasicEnvelope {
 public:
 
     /// Constructs ASR Envelope with specified attack, sustain, and release times

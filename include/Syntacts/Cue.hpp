@@ -19,19 +19,19 @@ public:
     Cue(std::shared_ptr<Oscillator> osc, float duration, float amplitude = 1.0f);
 
     /// Constructs a Cue with a Oscillator and Envelope follower
-    Cue(std::shared_ptr<Oscillator> osc, std::shared_ptr<Envelope> env);
+    Cue(std::shared_ptr<Oscillator> osc, std::shared_ptr<BasicEnvelope> env);
 
     /// Constructs a Cue with a Oscillator, modulating Oscillator, and Envelope follower
-    Cue(std::shared_ptr<Oscillator> osc, std::shared_ptr<Oscillator> mod, std::shared_ptr<Envelope> env);
+    Cue(std::shared_ptr<Oscillator> osc, std::shared_ptr<Oscillator> mod, std::shared_ptr<BasicEnvelope> env);
 
     /// Virtual destructor
     virtual ~Cue();
 
     /// Sets the primary Envelope of a Cue
-    void setEnvelope(std::shared_ptr<Envelope> env);
+    void setEnvelope(std::shared_ptr<BasicEnvelope> env);
 
     /// Gets the primary Envelope of a Cue
-    std::shared_ptr<Envelope> getEnvelope() const;
+    std::shared_ptr<BasicEnvelope> getEnvelope() const;
 
     /// Chains an existing custom Generator to be processed
     void chain(std::shared_ptr<Generator> gen);
@@ -52,7 +52,7 @@ public:
 private:
 
     std::vector<std::shared_ptr<Generator>> m_generators; ///< array of generators
-    std::shared_ptr<Envelope> m_env;                      ///< the Cue's primary envelope
+    std::shared_ptr<BasicEnvelope> m_env;                      ///< the Cue's primary envelope
 };
 
 template <typename T, typename ...Args>

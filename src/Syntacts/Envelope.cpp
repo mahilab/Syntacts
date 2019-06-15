@@ -5,7 +5,32 @@
 
 namespace tact {
 
-Envelope::Envelope(float duration, float amplitude) :
+Envelope::Envelope(float amplitude0) :
+    Generator()
+{
+   addKey(0.0f, amplitude0);
+}
+
+void Envelope::addKey(float t, float amplitude, TweenFunc tween) {
+    m_keys[t] = std::make_pair(amplitude, tween);
+}
+
+float Envelope::getDuration() const {
+    return m_keys.rbegin()->first;
+}
+
+float Envelope::onSample(float t) {
+    if (t > getDuration())
+        return 0.0f;
+    auto b = m_keys.lower_bound(t);
+    if (b->first == t)
+        return b->second.first;
+    auto a = std::prev(b);
+    t = (t - a->first) / (b->first - a->first);
+    return b->second.second(a->second.first, b->second.first, t);    
+}
+
+BasicEnvelope::BasicEnvelope(float duration, float amplitude) :
     Generator(),
     m_duration(std::abs(duration)),
     m_amplitude(clamp01(amplitude))
@@ -13,32 +38,32 @@ Envelope::Envelope(float duration, float amplitude) :
 
 }
 
-void Envelope::setDuration(float duration) {
+void BasicEnvelope::setDuration(float duration) {
     m_duration = std::abs(duration);
 }
 
-float Envelope::getDuration() const {
+float BasicEnvelope::getDuration() const {
     return m_duration;
 }
 
-void Envelope::setAmplitude(float amplitude) {
+void BasicEnvelope::setAmplitude(float amplitude) {
     m_amplitude = clamp01(amplitude);
 }
 
-float Envelope::getAmplitude() const {
+float BasicEnvelope::getAmplitude() const {
     return m_amplitude;
 }
 
-bool Envelope::playing() const {
+bool BasicEnvelope::playing() const {
     return getTime() < m_duration;
 }
 
-float Envelope::onSample(float t) {
+float BasicEnvelope::onSample(float t) {
     return playing() ? m_amplitude : 0.0f;
 }
 
 ASR::ASR(float attackTime, float sustainTime, float releaseTime, float amplitude, std::function<float(float, float, float)> tweenUp, std::function<float(float, float, float)> tweenDown) :
-    Envelope(attackTime + sustainTime + releaseTime, amplitude),
+    BasicEnvelope(attackTime + sustainTime + releaseTime, amplitude),
     m_attackTime(attackTime), 
     m_sustainTime(sustainTime), 
     m_releaseTime(releaseTime),
