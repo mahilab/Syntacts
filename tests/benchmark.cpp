@@ -6,8 +6,8 @@ using namespace tact;
 
 int main(int argc, char const *argv[])
 {
-    auto osc = std::make_shared<SawWave>(175);
-    auto mod = std::make_shared<SawWave>(25);
+    auto osc = std::make_shared<SineWave>(175);
+    auto mod = std::make_shared<SineWave>(25);
     auto env = std::make_shared<ADSR>(20,20,20,20);
     auto cue = std::make_shared<Cue>(osc, mod, env);
     volatile float x;

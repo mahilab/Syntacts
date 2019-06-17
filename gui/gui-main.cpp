@@ -23,9 +23,9 @@ public:
     // Enums
     //--------------------------------------------------------------------------
 
-    enum EnvMode : int { Basic = 0, ASR = 1, ADSR = 2 };
-    enum ModMode : int { Off = 0, AM = 1, FM = 2 };
     enum OscType : int { Sine = 0, Square = 1, Saw = 2, Triangle = 3 };
+    enum ModMode : int { Off = 0, AM = 1, FM = 2 };
+    enum EnvMode : int { Basic = 0, ASR = 1, ADSR = 2, Custom = 3 };
 
     //--------------------------------------------------------------------------
     // Generic Functions
@@ -84,7 +84,7 @@ public:
     }
 
     /// Builds the Syntacts Envelope
-    Ptr<tact::BasicEnvelope> buildEnv() {
+    Ptr<tact::Envelope> buildEnv() {
         if (m_envMode == EnvMode::Basic)
             return make<tact::BasicEnvelope>(m_duration/1000.0f, m_amps[0]);    
         else if (m_envMode == EnvMode::ASR)
@@ -317,21 +317,22 @@ public:
         ImGui::Text("Envelope");
         ImGui::SameLine();
         ImGui::RadioButton("Basic",&m_envMode, EnvMode::Basic); ImGui::SameLine();
-        ImGui::RadioButton("ASR",&m_envMode,   EnvMode::ASR);   ImGui::SameLine();
-        ImGui::RadioButton("ADSR",&m_envMode,  EnvMode::ADSR);
-        int numTweens;
-        int skip;
+        ImGui::RadioButton("ASR",  &m_envMode, EnvMode::ASR);   ImGui::SameLine();
+        ImGui::RadioButton("ADSR", &m_envMode, EnvMode::ADSR);  // ImGui::SameLine();
+        // ImGui::RadioButton("Custom", &m_envMode, EnvMode::Custom);
+        int numTweens = 0;
+        int skip = 0;
         if (m_envMode == EnvMode::Basic) {
             numTweens = 1;
             skip = 0;
-            ImGui::DragFloat("Amplitude", m_amps, 0.005f, 0.0f, 1.0f);
+            ImGui::DragFloat("Amplitude", &m_amps[0], 0.005f, 0.0f, 1.0f);
             ImGui::DragInt("Duration", &m_duration, 0.5f, 0, 5000, "%i ms");
         }
         if (m_envMode == EnvMode::ASR) {
             numTweens = 3;
             skip = 1;
-            ImGui::DragFloat("Amplitude", m_amps, 0.005f, 0.0f, 1.0f);
-            ImGui::DragInt3("ASR##",m_asr, 0.5f, 0, 1000, "%i ms");
+            ImGui::DragFloat("Amplitude", &m_amps[0], 0.005f, 0.0f, 1.0f);
+            ImGui::DragInt3("ASR##",&m_asr[0], 0.5f, 0, 1000, "%i ms");
             m_adsr[0] = m_asr[0];
             m_adsr[2] = m_asr[1];
             m_adsr[3] = m_asr[2];
@@ -340,12 +341,24 @@ public:
         else if (m_envMode == EnvMode::ADSR) {
             numTweens = 4;
             skip = 2;
-            ImGui::DragFloat2("Amplitudes", m_amps, 0.005f, 0.0f, 1.0f);
-            ImGui::DragInt4("ADSR##",m_adsr, 0.5f, 0, 1000, "%i ms");
+            ImGui::DragFloat2("Amplitudes", &m_amps[0], 0.005f, 0.0f, 1.0f);
+            ImGui::DragInt4("ADSR##",&m_adsr[0], 0.5f, 0, 1000, "%i ms");
             m_asr[0] = m_adsr[0];
             m_asr[1] = m_adsr[2];
             m_asr[2] = m_adsr[3];
             m_duration = m_adsr[0] + m_adsr[1] + m_adsr[2] + m_adsr[3];
+        }
+        else if (m_envMode == EnvMode::Custom) {
+            numTweens = 4;
+            skip = 0;
+            m_amps.resize(5);
+            // float amin = 0.0f;
+            // float amax = 1.0f;
+            // float tmin = 0.0f;
+            // float tmax = 10.0f;
+            ImGui::DragFloat4("Amplitudes", &m_amps[0], 0.005f, 0.0f, 1.0f);
+            ImGui::DragInt4("Times##",&m_adsr[0], 0.5f, 0, 1000, "%i ms");
+
         }
         ImGui::BeginGroup();
         ImGui::PushID("Tweens");
@@ -417,6 +430,7 @@ public:
         ImGui::Separator();
         updateEnvelope();
         ImGui::Separator();
+        // ImGui::ShowBezierDemo();
         updatePlot();
         ImGui::End();
     }
@@ -438,10 +452,10 @@ private:
     float m_modIdx  = 2.0f;
 
     int   m_envMode  = EnvMode::ASR;
-    float m_amps[2] = {0.75f, 0.5f};
+    std::vector<float> m_amps = {0.75f, 0.5f};
     int   m_duration = 150;
-    int   m_asr[3]   = {50, 75, 25};    
-    int   m_adsr[4]  = {50,50,75,25};
+    std::vector<int> m_asr   = {50, 75, 25};    
+    std::vector<int> m_adsr  = {50,50,75,25};
     std::vector<int> m_tweenModes = {0,0,0,0};
 
     Vector2u           m_windowSize;

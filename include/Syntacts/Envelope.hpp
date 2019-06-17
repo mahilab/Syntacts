@@ -10,7 +10,6 @@
 namespace tact
 {
 
-
 /// Base Envelope
 class SYNTACTS_API Envelope : public Generator {
 public:
@@ -18,99 +17,54 @@ public:
     /// Constucts Envelope with initial amplitude
     Envelope(float amplitude0 = 0.0f);
 
-    /// Adds a new key at time t seconds with amplitude. Uses tween to interpolate from previous value.
+    /// Adds a new amplitude at time t seconds. Uses tween to interpolate from previous amplitude.
     void addKey(float t, float amplitude, TweenFunc tween = Tween::Linear);
 
     /// Gets the duration of an Envelope
     float getDuration() const;
 
-private:
+protected:
 
     virtual float onSample(float t) override;
 
-private:
+protected:
 
     std::map<float, std::pair<float, TweenFunc>> m_keys;
     float m_duration;
 };
 
+
 /// An object which gives a Cue a duration and/or shape
-class SYNTACTS_API BasicEnvelope : public Generator {
+class SYNTACTS_API BasicEnvelope : public Envelope {
 public:
 
     /// Constructs an Eveloope with a specified duration
     BasicEnvelope(float duration = 1.0f, float amplitude = 1.0f);
 
-    /// Sets the duration of an Envelope (default 1)
-    void setDuration(float duration);
-
-    /// Gets the duration of an Envelope
-    float getDuration() const;
-
-    /// Sets the normalized amplitude of the Envelope (default 1)
-    void setAmplitude(float amplitude);
-
     /// Gets the normalized amlitude of the Envelope
     float getAmplitude() const;
 
-protected:
+};
 
-    /// Returns true as long as current time less than duration
-    bool playing() const;
 
-    /// Default Envelope implementation (returns 1 for full duration)
-    virtual float onSample(float t) override;
+/// Attack-Sustain-Release Envelope
+class SYNTACTS_API ASR : public Envelope {
+public:
 
-protected:
-
-    float m_duration;  ///< duration of an Envelope in seconds
-    float m_amplitude; ///< amplitude of the envelope normalized between 0 and 1
+    /// Constructs ASR Envelope with specified attack, sustain, and release times
+    ASR(float attackTime, float sustainTime, float releaseTime, float attackAmlitude = 1.0f, 
+        TweenFunc attackTween = Tween::Linear, TweenFunc releaseTween = Tween::Linear);
 
 };
 
 
-/// Linear Attack-Sustain-Release Envelope
-class SYNTACTS_API ASR : public BasicEnvelope {
+/// Attack-Decay-Sustain-Release Envelope
+class SYNTACTS_API ADSR : public Envelope {
 public:
 
     /// Constructs ASR Envelope with specified attack, sustain, and release times
-    ASR(float attackTime, float sustainTime, float releaseTime, float amplitude = 1.0f, 
-        TweenFunc tweenUp = Tween::Linear, TweenFunc tweenDown = Tween::Linear);
-
-protected:
-
-    /// ASR implementation
-    virtual float onSample(float t) override;
-    
-protected:
-
-    float m_attackTime;
-    float m_sustainTime;
-    float m_releaseTime;
-
-    TweenFunc m_tweenUp, m_tweenDown;
-
-};
-
-/// Linear Attack-Decay-Sustain-Release Envelope
-class SYNTACTS_API ADSR : public ASR {
-public:
-
-    /// Constructs ASR Envelope with specified attack, sustain, and release times
-    ADSR(float attackTime, float decayTime, float sustainTime, float releaseTime, float amplitude1 = 1.0f, float amplitude2 = 0.5f, 
-         TweenFunc tweenUp = Tween::Linear, TweenFunc tweenDown1 = Tween::Linear, TweenFunc tweenDown2 = Tween::Linear);
-
-protected:
-
-    /// ADSR implementation
-    virtual float onSample(float t) override;
-
-protected:
-
-    float m_decayTime;
-    float m_amplitude2;
-
-    TweenFunc m_tweenDown2;
+    ADSR(float attackTime, float decayTime, float sustainTime, float releaseTime, float attackAmplitude = 1.0f, float decayAplitude = 0.5f, 
+         TweenFunc attackTween = Tween::Linear, TweenFunc decayTween = Tween::Linear, TweenFunc releaseTween = Tween::Linear);
 
 };
 
