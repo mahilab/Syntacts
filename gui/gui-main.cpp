@@ -1,189 +1,16 @@
 #define CARNOT_NO_CONSOLE
 // #define CARNOT_USE_DISCRETE_GPU
-#ifndef IMGUI_DEFINE_MATH_OPERATORS
-    #define IMGUI_DEFINE_MATH_OPERATORS
+
+#ifndef SAMPLE_RATE
+    #define SAMPLE_RATE 44100
 #endif
 
-
-#include <carnot>
-#include <Syntacts/Syntacts.hpp>
-#include <deque>
-#include <functional>
-#include <chrono>
-#include <ctime>  
-#include <string>
-#include <Syntacts/Config.hpp>
-#include <windows.h>
-#include <Engine/ImGui/imgui_internal.h>
-#include <Common/Tween.hpp>
+#include "gui-detail.hpp"
 
 using namespace carnot;
 
 const std::vector<const char*>     g_tweenStrings = {"Linear",            "Smoothstep",            "Smootherstep",            "Smootheststep",            "Sinusoidal::In",            "Sinusoidal::Out",            "Sinusoidal::InOut"           , "Exponential::In",            "Exponential::Out",            "Exponential::InOut"           };
 const std::vector<tact::TweenFunc> g_tweenFuncs   = {tact::Tween::Linear, tact::Tween::Smoothstep, tact::Tween::Smootherstep, tact::Tween::Smootheststep, tact::Tween::Sinusoidal::In, tact::Tween::Sinusoidal::Out, tact::Tween::Sinusoidal::InOut, tact::Tween::Exponential::In, tact::Tween::Exponential::Out, tact::Tween::Exponential::InOut};
-
-//==============================================================================
-// IMGUI CUSTOM PLOTTING
-//==============================================================================
-
-namespace ImGui {
-
-void PlotEx2(ImGuiPlotType plot_type, const char* label, float (*values_getter)(void* data, int idx), void* data1, void* data2, int values_count, int values_offset, const char* overlay_text, float scale_min, float scale_max, ImVec2 graph_size)
-{
-    ImGuiWindow* window = GetCurrentWindow();
-    if (window->SkipItems)
-        return;
-
-    ImGuiContext& g = *GImGui;
-    const ImGuiStyle& style = g.Style;
-
-    const ImVec2 label_size = CalcTextSize(label, NULL, true);
-    if (graph_size.x == 0.0f)
-        graph_size.x = CalcItemWidth();
-    if (graph_size.y == 0.0f)
-        graph_size.y = label_size.y + (style.FramePadding.y * 2);
-
-    const ImRect frame_bb(window->DC.CursorPos, window->DC.CursorPos + ImVec2(graph_size.x, graph_size.y));
-    const ImRect inner_bb(frame_bb.Min + style.FramePadding, frame_bb.Max - style.FramePadding);
-    const ImRect total_bb(frame_bb.Min, frame_bb.Max + ImVec2(label_size.x > 0.0f ? style.ItemInnerSpacing.x + label_size.x : 0.0f, 0));
-    ItemSize(total_bb, style.FramePadding.y);
-    if (!ItemAdd(total_bb, 0, &frame_bb))
-        return;
-
-    // Determine scale from values if not specified
-    if (scale_min == FLT_MAX || scale_max == FLT_MAX)
-    {
-        float v_min = FLT_MAX;
-        float v_max = -FLT_MAX;
-        for (int i = 0; i < values_count; i++)
-        {
-            const float v = values_getter(data1, i);
-            v_min = ImMin(v_min, v);
-            v_max = ImMax(v_max, v);
-        }
-        if (scale_min == FLT_MAX)
-            scale_min = v_min;
-        if (scale_max == FLT_MAX)
-            scale_max = v_max;
-    }
-
-    RenderFrame(frame_bb.Min, frame_bb.Max, GetColorU32(ImGuiCol_FrameBg), true, style.FrameRounding);
-
-    if (values_count > 0)
-    {
-        int res_w = ImMin((int)graph_size.x, values_count) + ((plot_type == ImGuiPlotType_Lines) ? -1 : 0);
-        int item_count = values_count + ((plot_type == ImGuiPlotType_Lines) ? -1 : 0);
-
-        const float t_step = 1.0f / (float)res_w;
-        const float inv_scale = (scale_min == scale_max) ? 0.0f : (1.0f / (scale_max - scale_min));
-
-        float v0 = values_getter(data1, (0 + values_offset) % values_count);
-        float t0 = 0.0f;
-        ImVec2 tp0 = ImVec2( t0, 1.0f - ImSaturate((v0 - scale_min) * inv_scale) );                       // Point in the normalized space of our target rectangle
-        float histogram_zero_line_t = (scale_min * scale_max < 0.0f) ? (-scale_min * inv_scale) : (scale_min < 0.0f ? 0.0f : 1.0f);   // Where does the zero line stands
-
-        const ImU32 col_base = GetColorU32(ImGuiCol_PlotLines);
-        for (int n = 0; n < res_w; n++)
-        {
-            const float t1 = t0 + t_step;
-            const int v1_idx = (int)(t0 * item_count + 0.5f);
-            IM_ASSERT(v1_idx >= 0 && v1_idx < values_count);
-            const float v1 = values_getter(data1, (v1_idx + values_offset + 1) % values_count);
-            const ImVec2 tp1 = ImVec2( t1, 1.0f - ImSaturate((v1 - scale_min) * inv_scale) );
-
-            // NB: Draw calls are merged together by the DrawList system. Still, we should render our batch are lower level to save a bit of CPU.
-            ImVec2 pos0 = ImLerp(inner_bb.Min, inner_bb.Max, tp0);
-            ImVec2 pos1 = ImLerp(inner_bb.Min, inner_bb.Max, tp1);
-            window->DrawList->AddLine(pos0, pos1, col_base); 
-
-            t0 = t1;
-            tp0 = tp1;
-        }
-    }
-
-    if (values_count > 0)
-    {
-        int res_w = ImMin((int)graph_size.x, values_count) + ((plot_type == ImGuiPlotType_Lines) ? -1 : 0);
-        int item_count = values_count + ((plot_type == ImGuiPlotType_Lines) ? -1 : 0);
-
-        const float t_step = 1.0f / (float)res_w;
-        const float inv_scale = (scale_min == scale_max) ? 0.0f : (1.0f / (scale_max - scale_min));
-
-        float v0 = values_getter(data2, (0 + values_offset) % values_count);
-        float t0 = 0.0f;
-        ImVec2 tp0 = ImVec2( t0, 1.0f - ImSaturate((v0 - scale_min) * inv_scale) );                       // Point in the normalized space of our target rectangle
-        float histogram_zero_line_t = (scale_min * scale_max < 0.0f) ? (-scale_min * inv_scale) : (scale_min < 0.0f ? 0.0f : 1.0f);   // Where does the zero line stands
-
-        const ImU32 col_base = GetColorU32(withAlpha(Whites::White,0.1f));
-        for (int n = 0; n < res_w; n++)
-        {
-            const float t1 = t0 + t_step;
-            const int v1_idx = (int)(t0 * item_count + 0.5f);
-            IM_ASSERT(v1_idx >= 0 && v1_idx < values_count);
-            const float v1 = values_getter(data2, (v1_idx + values_offset + 1) % values_count);
-            const ImVec2 tp1 = ImVec2( t1, 1.0f - ImSaturate((v1 - scale_min) * inv_scale) );
-
-            // NB: Draw calls are merged together by the DrawList system. Still, we should render our batch are lower level to save a bit of CPU.
-            ImVec2 pos0 = ImLerp(inner_bb.Min, inner_bb.Max, tp0);
-            ImVec2 pos1 = ImLerp(inner_bb.Min, inner_bb.Max, tp1);
-            window->DrawList->AddLine(pos0, pos1, col_base); 
-
-            t0 = t1;
-            tp0 = tp1;
-        }
-    }
-
-    // Text overlay
-    if (overlay_text)
-        RenderTextClipped(ImVec2(frame_bb.Min.x, frame_bb.Min.y + style.FramePadding.y), frame_bb.Max, overlay_text, NULL, NULL, ImVec2(0.5f,0.0f));
-
-    if (label_size.x > 0.0f)
-        RenderText(ImVec2(frame_bb.Max.x + style.ItemInnerSpacing.x, inner_bb.Min.y), label);
-}
-
-struct ImGuiPlotArrayGetterData2
-{
-    const float* Values;
-    int Stride;
-    ImGuiPlotArrayGetterData2(const float* values, int stride) { Values = values; Stride = stride; }
-};
-
-static float Plot_ArrayGetter2(void* data, int idx)
-{
-    ImGuiPlotArrayGetterData2* plot_data = (ImGuiPlotArrayGetterData2*)data;
-    const float v = *(const float*)(const void*)((const unsigned char*)plot_data->Values + (size_t)idx * plot_data->Stride);
-    return v;
-}
-
-void PlotLines2(const char* label, const float* values1, const float* values2, int values_count, int values_offset = 0, const char* overlay_text = NULL, float scale_min = FLT_MAX, float scale_max = FLT_MAX, ImVec2 graph_size = ImVec2(0, 0), int stride = sizeof(float)) {
-    ImGuiPlotArrayGetterData2 data1(values1, stride);
-    ImGuiPlotArrayGetterData2 data2(values2, stride);
-    PlotEx2(ImGuiPlotType_Lines, label, &Plot_ArrayGetter2, (void*)&data1, (void*)&data2, values_count, values_offset, overlay_text, scale_min, scale_max, graph_size);
-}
-
-}
-
-
-//==============================================================================
-// HELPER FUNCTIONS
-//==============================================================================
-
-// renders an ImGui tooltip
-void tooltip(const std::string& tip) {
-    if (ImGui::IsItemHovered()) 
-        ImGui::SetTooltip(tip.c_str());
-}
-
-struct FuncHolder { 
-    static bool ItemGetter(void* data, int idx, const char** out_str) { 
-        auto devices = *(std::vector<tact::DeviceInfo>*)data;
-        std::vector<const char*> strs(devices.size());
-        for (std::size_t i = 0; i < devices.size(); ++i)
-            strs[i] = devices[i].name.c_str();
-        out_str = &strs[idx];
-    } 
-};
-
 
 //==============================================================================
 // GUI GAMEOBJECT
@@ -196,9 +23,9 @@ public:
     // Enums
     //--------------------------------------------------------------------------
 
-    enum EnvMode : int { Basic = 0, ASR = 1, ADSR = 2 };
-    enum ModMode : int { Off = 0, AM = 1, FM = 2 };
     enum OscType : int { Sine = 0, Square = 1, Saw = 2, Triangle = 3 };
+    enum ModMode : int { Off = 0, AM = 1, FM = 2 };
+    enum EnvMode : int { Basic = 0, ASR = 1, ADSR = 2, Custom = 3 };
 
     //--------------------------------------------------------------------------
     // Generic Functions
@@ -259,7 +86,7 @@ public:
     /// Builds the Syntacts Envelope
     Ptr<tact::Envelope> buildEnv() {
         if (m_envMode == EnvMode::Basic)
-            return make<tact::Envelope>(m_duration/1000.0f, m_amps[0]);    
+            return make<tact::BasicEnvelope>(m_duration/1000.0f, m_amps[0]);    
         else if (m_envMode == EnvMode::ASR)
             return make<tact::ASR>(m_asr[0]/1000.0f, m_asr[1]/1000.0f, m_asr[2]/1000.f, m_amps[0], g_tweenFuncs[m_tweenModes[0]], g_tweenFuncs[m_tweenModes[2]]);
         else 
@@ -379,7 +206,6 @@ public:
             ImGui::EndCombo();
         }
         ImGui::PopItemWidth();
-
     }
 
     // Updates the help/info icons and contents
@@ -416,13 +242,13 @@ public:
         {
             ImGui::Text("Evan Pezent"); ImGui::SameLine(150);
             if (ImGui::Button(ICON_FA_ENVELOPE))
-                ShellExecuteA(0, 0, "mailto:epezent@rice.edu?subject=Syntacts", 0, 0 , 5);
+                openEmail("epezent@rice.edu","Syntacts");
             ImGui::SameLine();
             if (ImGui::Button(ICON_FA_HOME))
-                ShellExecuteA(0, 0, "http://www.evanpezent.com", 0, 0 , 5);
+                openUrl("http://www.evanpezent.com");
             ImGui::Text("Brandon Cambio"); ImGui::SameLine(150);
             if (ImGui::Button(ICON_FA_ENVELOPE))
-                ShellExecuteA(0, 0, "mailto:Brandon.T.Cambio@rice.edu?subject=Syntacts", 0, 0 , 5);
+                openEmail("Brandon.T.Cambio@rice.edu","Syntacts");
             if (ImGui::Button("Close"))
                 ImGui::CloseCurrentPopup(); 
             ImGui::EndPopup();
@@ -491,21 +317,22 @@ public:
         ImGui::Text("Envelope");
         ImGui::SameLine();
         ImGui::RadioButton("Basic",&m_envMode, EnvMode::Basic); ImGui::SameLine();
-        ImGui::RadioButton("ASR",&m_envMode,   EnvMode::ASR);   ImGui::SameLine();
-        ImGui::RadioButton("ADSR",&m_envMode,  EnvMode::ADSR);
-        int numTweens;
-        int skip;
+        ImGui::RadioButton("ASR",  &m_envMode, EnvMode::ASR);   ImGui::SameLine();
+        ImGui::RadioButton("ADSR", &m_envMode, EnvMode::ADSR);  // ImGui::SameLine();
+        // ImGui::RadioButton("Custom", &m_envMode, EnvMode::Custom);
+        int numTweens = 0;
+        int skip = 0;
         if (m_envMode == EnvMode::Basic) {
             numTweens = 1;
             skip = 0;
-            ImGui::DragFloat("Amplitude", m_amps, 0.005f, 0.0f, 1.0f);
+            ImGui::DragFloat("Amplitude", &m_amps[0], 0.005f, 0.0f, 1.0f);
             ImGui::DragInt("Duration", &m_duration, 0.5f, 0, 5000, "%i ms");
         }
         if (m_envMode == EnvMode::ASR) {
             numTweens = 3;
             skip = 1;
-            ImGui::DragFloat("Amplitude", m_amps, 0.005f, 0.0f, 1.0f);
-            ImGui::DragInt3("ASR##",m_asr, 0.5f, 0, 1000, "%i ms");
+            ImGui::DragFloat("Amplitude", &m_amps[0], 0.005f, 0.0f, 1.0f);
+            ImGui::DragInt3("ASR##",&m_asr[0], 0.5f, 0, 1000, "%i ms");
             m_adsr[0] = m_asr[0];
             m_adsr[2] = m_asr[1];
             m_adsr[3] = m_asr[2];
@@ -514,12 +341,24 @@ public:
         else if (m_envMode == EnvMode::ADSR) {
             numTweens = 4;
             skip = 2;
-            ImGui::DragFloat2("Amplitudes", m_amps, 0.005f, 0.0f, 1.0f);
-            ImGui::DragInt4("ADSR##",m_adsr, 0.5f, 0, 1000, "%i ms");
+            ImGui::DragFloat2("Amplitudes", &m_amps[0], 0.005f, 0.0f, 1.0f);
+            ImGui::DragInt4("ADSR##",&m_adsr[0], 0.5f, 0, 1000, "%i ms");
             m_asr[0] = m_adsr[0];
             m_asr[1] = m_adsr[2];
             m_asr[2] = m_adsr[3];
             m_duration = m_adsr[0] + m_adsr[1] + m_adsr[2] + m_adsr[3];
+        }
+        else if (m_envMode == EnvMode::Custom) {
+            numTweens = 4;
+            skip = 0;
+            m_amps.resize(5);
+            // float amin = 0.0f;
+            // float amax = 1.0f;
+            // float tmin = 0.0f;
+            // float tmax = 10.0f;
+            ImGui::DragFloat4("Amplitudes", &m_amps[0], 0.005f, 0.0f, 1.0f);
+            ImGui::DragInt4("Times##",&m_adsr[0], 0.5f, 0, 1000, "%i ms");
+
         }
         ImGui::BeginGroup();
         ImGui::PushID("Tweens");
@@ -530,8 +369,12 @@ public:
             
             if (i == skip)
                 ImGui::Dummy(ImGui::GetItemRectSize());
-            else
-                ImGui::Combo("##i", &m_tweenModes[i], &g_tweenStrings[0], (int)g_tweenStrings.size());
+            else {
+                if (i == numTweens - 1)
+                    ImGui::Combo("Tween Modes", &m_tweenModes[i], &g_tweenStrings[0], (int)g_tweenStrings.size());
+                else
+                    ImGui::Combo("##i", &m_tweenModes[i], &g_tweenStrings[0], (int)g_tweenStrings.size());
+            }
             ImGui::SameLine(0, g.Style.ItemInnerSpacing.x);
             ImGui::PopID();
             ImGui::PopItemWidth();
@@ -587,6 +430,7 @@ public:
         ImGui::Separator();
         updateEnvelope();
         ImGui::Separator();
+        // ImGui::ShowBezierDemo();
         updatePlot();
         ImGui::End();
     }
@@ -608,10 +452,10 @@ private:
     float m_modIdx  = 2.0f;
 
     int   m_envMode  = EnvMode::ASR;
-    float m_amps[2] = {0.75f, 0.5f};
+    std::vector<float> m_amps = {0.75f, 0.5f};
     int   m_duration = 150;
-    int   m_asr[3]   = {50, 75, 25};    
-    int   m_adsr[4]  = {50,50,75,25};
+    std::vector<int> m_asr   = {50, 75, 25};    
+    std::vector<int> m_adsr  = {50,50,75,25};
     std::vector<int> m_tweenModes = {0,0,0,0};
 
     Vector2u           m_windowSize;
@@ -623,6 +467,9 @@ private:
     Sound       m_speakerSound;
 };
 
+//==============================================================================
+// MAIN
+//==============================================================================
 
 int main(int argc, char const *argv[])
 {
