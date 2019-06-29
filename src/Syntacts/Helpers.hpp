@@ -4,12 +4,6 @@
 
 #define PI            3.14159265358979e+0f
 #define TWO_PI        6.28318530717959e+0f
-<<<<<<< HEAD
-
-=======
-#define HALFPI        1.57079632679e+0f
-#define SAMPLE_LENGTH 2.26757369614512e-5f
->>>>>>> 06af7baa1473e76b8c65d274a95fbec32ad39d6f
 
 namespace tact {
 namespace {

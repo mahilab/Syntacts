@@ -6,11 +6,7 @@
 #include <MEL/Core/Console.hpp>             // for print
 #include <MEL/Core/Clock.hpp>
 #include <array>
-<<<<<<< HEAD
-#include <iostream>
-=======
 #include <functional>
->>>>>>> 06af7baa1473e76b8c65d274a95fbec32ad39d6f
 
 typedef mel::Keyboard KB;
 using mel::Key;
@@ -43,14 +39,8 @@ inline float Smootherstep(float a, float b, float t) {
 
 int main(int argc, char const *argv[])
 {
-<<<<<<< HEAD
-    int x = syntacts::initialize(25, NUM_CH);
-    std::cout << x ;
-    DeviceInfo info = syntacts::getCurrentDevice();
-=======
     tact::initialize(NUM_CH);
     DeviceInfo info = tact::getCurrentDevice();
->>>>>>> 06af7baa1473e76b8c65d274a95fbec32ad39d6f
     mel::print(info.name);
     mel::print(info.index);
     mel::print(info.maxChannels);

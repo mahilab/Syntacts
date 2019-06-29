@@ -3,9 +3,7 @@
 #ifndef IMGUI_DEFINE_MATH_OPERATORS
     #define IMGUI_DEFINE_MATH_OPERATORS
 #endif
-#ifndef SAMPLE_RATE
-    #define SAMPLE_RATE 44100
-#endif
+
 
 #include <carnot>
 #include <Syntacts/Syntacts.hpp>
@@ -14,13 +12,10 @@
 #include <chrono>
 #include <ctime>  
 #include <string>
-<<<<<<< HEAD
 #include <Syntacts/Config.hpp>
-=======
 #include <windows.h>
 #include <Engine/ImGui/imgui_internal.h>
 #include <Common/Tween.hpp>
->>>>>>> 06af7baa1473e76b8c65d274a95fbec32ad39d6f
 
 using namespace carnot;
 
@@ -210,12 +205,7 @@ public:
     //--------------------------------------------------------------------------
 
     /// Constructor
-<<<<<<< HEAD
-    SyntactsGui() : plot(), checkBoxes(2,false) { 
-        plot.reserve(SAMPLE_RATE * 10);
-=======
-    SyntactsGui() : m_checkBoxes(2, false) { 
->>>>>>> 06af7baa1473e76b8c65d274a95fbec32ad39d6f
+    SyntactsGui() : m_checkBoxes(2,false) { 
         rechannel();
     }
 
@@ -339,17 +329,10 @@ public:
         std::vector<signed short> samples(cue->sampleCount());       
         for (auto& sample : samples)
             sample = (signed short)(cue->nextSample() * 32768);        
-<<<<<<< HEAD
-        speakerBuffer.loadFromSamples(&samples[0], samples.size(), 1, SAMPLE_RATE);
-        speakerSound.setBuffer(speakerBuffer);
-        speakerSound.setVolume(100);
-        speakerSound.play();
-=======
-        m_speakerBuffer.loadFromSamples(&samples[0], samples.size(), 1, 44100);
+        m_speakerBuffer.loadFromSamples(&samples[0], samples.size(), 1, SAMPLE_RATE);
         m_speakerSound.setBuffer(m_speakerBuffer);
         m_speakerSound.setVolume(100);
         m_speakerSound.play();
->>>>>>> 06af7baa1473e76b8c65d274a95fbec32ad39d6f
     }
 
     //--------------------------------------------------------------------------
@@ -556,15 +539,6 @@ public:
         ImGui::PopID();
         ImGui::EndGroup();
 
-<<<<<<< HEAD
-        auto cue = buildCue();
-        plot.resize(cue->sampleCount());    
-        float durMs = cue->sampleCount() * 1000.0f / SAMPLE_RATE;  
-        for (auto& point : plot)
-            point = cue->nextSample();  
-
-        ImGui::PushItemWidth(currSize.x - 25.0f);
-=======
     }
 
     /// Updates the waveform plot
@@ -580,7 +554,6 @@ public:
         for (auto& point : m_envPlot)
             point = env->nextSample();
         ImGui::PushItemWidth(m_windowSize.x - 25.0f);
->>>>>>> 06af7baa1473e76b8c65d274a95fbec32ad39d6f
         ImGui::PushStyleColor(ImGuiCol_PlotLines, hexCode("cf94c2"));
         ImGui::PushStyleColor(ImGuiCol_PlotLinesHovered, hexCode("cf94c2"));
         auto title = str(m_duration, "ms /", m_cuePlot.size(), " samples");
