@@ -1,9 +1,9 @@
 #define CARNOT_NO_CONSOLE
 // #define CARNOT_USE_DISCRETE_GPU
 
-#ifndef SAMPLE_RATE
-    #define SAMPLE_RATE 44100
-#endif
+// #ifndef SAMPLE_RATE
+//     #define SAMPLE_RATE 44100
+// #endif
 
 #include "gui-detail.hpp"
 
@@ -25,7 +25,7 @@ public:
 
     enum OscType : int { Sine = 0, Square = 1, Saw = 2, Triangle = 3 };
     enum ModMode : int { Off = 0, AM = 1, FM = 2 };
-    enum EnvMode : int { Basic = 0, ASR = 1, ADSR = 2, Custom = 3 };
+    enum EnvMode : int { Basic = 0, ASR = 1, ADSR = 2, PulseTrain = 3, Custom = 4 };
 
     //--------------------------------------------------------------------------
     // Generic Functions
@@ -89,8 +89,12 @@ public:
             return make<tact::BasicEnvelope>(m_duration/1000.0f, m_amps[0]);    
         else if (m_envMode == EnvMode::ASR)
             return make<tact::ASR>(m_asr[0]/1000.0f, m_asr[1]/1000.0f, m_asr[2]/1000.f, m_amps[0], g_tweenFuncs[m_tweenModes[0]], g_tweenFuncs[m_tweenModes[2]]);
-        else 
+        else if (m_envMode == EnvMode::ADSR)
             return make<tact::ADSR>(m_adsr[0]/1000.0f, m_adsr[1]/1000.0f, m_adsr[2]/1000.0f, m_adsr[3]/1000.f, m_amps[0], m_amps[1], g_tweenFuncs[m_tweenModes[0]], g_tweenFuncs[m_tweenModes[1]], g_tweenFuncs[m_tweenModes[3]]);
+        else {
+            auto pulse = make<tact::PulseTrain>((float)m_pwmValues[0], (float)m_pwmValues[1] / 100.0f);
+            return make<tact::OscillatingEnvelope>(m_duration/1000.0f, m_amps[0], pulse);
+        }
     }
 
     /// Builds a Syntacts Cue from the user's GUI configuration
@@ -269,6 +273,9 @@ public:
             ImGui::SameLine();
         }
         ImGui::EndChild();
+        ImGui::Button("Select All");
+        ImGui::SameLine();
+        ImGui::Button("Deselect All");
         ImGui::PopStyleColor(); 
     }
 
@@ -318,8 +325,8 @@ public:
         ImGui::SameLine();
         ImGui::RadioButton("Basic",&m_envMode, EnvMode::Basic); ImGui::SameLine();
         ImGui::RadioButton("ASR",  &m_envMode, EnvMode::ASR);   ImGui::SameLine();
-        ImGui::RadioButton("ADSR", &m_envMode, EnvMode::ADSR);  // ImGui::SameLine();
-        // ImGui::RadioButton("Custom", &m_envMode, EnvMode::Custom);
+        ImGui::RadioButton("ADSR", &m_envMode, EnvMode::ADSR);  ImGui::SameLine();
+        ImGui::RadioButton("Pulse Train", &m_envMode, EnvMode::PulseTrain);
         int numTweens = 0;
         int skip = 0;
         if (m_envMode == EnvMode::Basic) {
@@ -348,6 +355,13 @@ public:
             m_asr[2] = m_adsr[3];
             m_duration = m_adsr[0] + m_adsr[1] + m_adsr[2] + m_adsr[3];
         }
+        else if (m_envMode == EnvMode::PulseTrain) {
+            numTweens = -1;
+            skip = 0;
+            ImGui::DragFloat("Amplitude", &m_amps[0], 0.005f, 0.0f, 1.0f);
+            ImGui::DragInt("Duration", &m_duration, 0.5f, 0, 5000, "%i ms");
+            ImGui::DragInt2("Frequency (Hz) / Duty Cycle (%)", &m_pwmValues[0], 0.5f, 0, 100);
+        }
         else if (m_envMode == EnvMode::Custom) {
             numTweens = 4;
             skip = 0;
@@ -360,28 +374,29 @@ public:
             ImGui::DragInt4("Times##",&m_adsr[0], 0.5f, 0, 1000, "%i ms");
 
         }
-        ImGui::BeginGroup();
-        ImGui::PushID("Tweens");
-        ImGui::PushMultiItemsWidths(numTweens);
-        ImGuiContext& g = *GImGui;
-        for (int i = 0; i < numTweens; ++i) {
-            ImGui::PushID(i);
-            
-            if (i == skip)
-                ImGui::Dummy(ImGui::GetItemRectSize());
-            else {
-                if (i == numTweens - 1)
-                    ImGui::Combo("Tween Modes", &m_tweenModes[i], &g_tweenStrings[0], (int)g_tweenStrings.size());
-                else
-                    ImGui::Combo("##i", &m_tweenModes[i], &g_tweenStrings[0], (int)g_tweenStrings.size());
+        if (numTweens != -1){
+            ImGui::BeginGroup();
+            ImGui::PushID("Tweens");
+            ImGui::PushMultiItemsWidths(numTweens);
+            ImGuiContext& g = *GImGui;
+            for (int i = 0; i < numTweens; ++i) {
+                ImGui::PushID(i);
+                
+                if (i == skip)
+                    ImGui::Dummy(ImGui::GetItemRectSize());
+                else {
+                    if (i == numTweens - 1)
+                        ImGui::Combo("Tween Modes", &m_tweenModes[i], &g_tweenStrings[0], (int)g_tweenStrings.size());
+                    else
+                        ImGui::Combo("##i", &m_tweenModes[i], &g_tweenStrings[0], (int)g_tweenStrings.size());
+                }
+                ImGui::SameLine(0, g.Style.ItemInnerSpacing.x);
+                ImGui::PopID();
+                ImGui::PopItemWidth();
             }
-            ImGui::SameLine(0, g.Style.ItemInnerSpacing.x);
             ImGui::PopID();
-            ImGui::PopItemWidth();
+            ImGui::EndGroup();
         }
-        ImGui::PopID();
-        ImGui::EndGroup();
-
     }
 
     /// Updates the waveform plot
@@ -452,8 +467,9 @@ private:
     float m_modIdx  = 2.0f;
 
     int   m_envMode  = EnvMode::ASR;
-    std::vector<float> m_amps = {0.75f, 0.5f};
+    std::vector<float> m_amps = {0.25f, 0.5f};
     int   m_duration = 150;
+    std::vector<int> m_pwmValues = {10, 25};
     std::vector<int> m_asr   = {50, 75, 25};    
     std::vector<int> m_adsr  = {50,50,75,25};
     std::vector<int> m_tweenModes = {0,0,0,0};

@@ -1,25 +1,36 @@
 #include <Syntacts/Envelope.hpp>
 #include <Syntacts/Tween.hpp>
+#include <Syntacts/Oscillator.hpp>
 #include "Helpers.hpp"
 #include <functional>
 
 namespace tact {
 
-Envelope::Envelope(float amplitude0) :
-    Generator()
+Envelope::Envelope(float duration) :
+    Generator(), m_duration(duration)
+{
+    
+}
+
+float Envelope::getDuration() const {
+    return m_duration;
+}
+
+KeyedEnvelope::KeyedEnvelope(float amplitude0) :
+    Envelope()
 {
    addKey(0.0f, amplitude0);
 }
 
-void Envelope::addKey(float t, float amplitude, TweenFunc tween) {
+void KeyedEnvelope::addKey(float t, float amplitude, TweenFunc tween) {
     m_keys[t] = std::make_pair(amplitude, tween);
 }
 
-float Envelope::getDuration() const {
+float KeyedEnvelope::getDuration() const {
     return m_keys.rbegin()->first;
 }
 
-float Envelope::onSample(float t) {
+float KeyedEnvelope::onSample(float t) {
     if (t > getDuration())
         return 0.0f;
     auto b = m_keys.lower_bound(t);
@@ -32,7 +43,7 @@ float Envelope::onSample(float t) {
 
 
 BasicEnvelope::BasicEnvelope(float duration, float amplitude) :
-    Envelope(amplitude)
+    KeyedEnvelope(amplitude)
 {
     addKey(duration, amplitude, Tween::Instant);
 }
@@ -43,7 +54,7 @@ float BasicEnvelope::getAmplitude() const {
 
 
 ASR::ASR(float attackTime, float sustainTime, float releaseTime, float attackAmplitude, std::function<float(float, float, float)> attackTween, std::function<float(float, float, float)> releaseTween) :
-    Envelope(0.0f)
+    KeyedEnvelope(0.0f)
 {
     addKey(attackTime, attackAmplitude, attackTween);
     addKey(attackTime + sustainTime, attackAmplitude, Tween::Instant);
@@ -52,7 +63,7 @@ ASR::ASR(float attackTime, float sustainTime, float releaseTime, float attackAmp
 
 
 ADSR::ADSR(float attackTime, float decayTime, float sustainTime, float releaseTime, float attackAmplitude, float decayAmplitude, std::function<float(float, float, float)> attackTween, std::function<float(float, float, float)> decayTween, std::function<float(float, float, float)> releaseTween) :
-    Envelope(0.0f)
+    KeyedEnvelope(0.0f)
 {
     addKey(attackTime, attackAmplitude, attackTween);
     addKey(attackTime + decayTime, decayAmplitude, decayTween);
@@ -60,6 +71,17 @@ ADSR::ADSR(float attackTime, float decayTime, float sustainTime, float releaseTi
     addKey(attackTime + decayTime + sustainTime + releaseTime, 0.0f, releaseTween);
 }
 
+OscillatingEnvelope::OscillatingEnvelope(float duration , float amplitude , std::shared_ptr<Oscillator> osc) :
+    Envelope(duration), m_amplitude(amplitude), m_osc(std::move(osc))
+{
+    
+}
 
-
+float OscillatingEnvelope::onSample(float t) {
+    if (t > getDuration())
+        return 0.0f;
+    float value = m_osc->nextSample();  
+    value = interp(value, -1, 1 , 0 , m_amplitude);
+    return value;
+}
 } // namespace tact

@@ -98,4 +98,19 @@ private:
 
 };
 
+class SYNTACTS_API PulseTrain : public Oscillator {
+public:
+    PulseTrain(float frequency, float dutyCycle = 0.5f);
+
+protected:
+
+    virtual float onSample(float t) override;
+
+private:
+
+    float m_dutyCycle;
+    float m_period;
+
+};
+
 } // namespace tact

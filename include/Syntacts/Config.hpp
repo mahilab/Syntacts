@@ -1,6 +1,6 @@
 #pragma once
 
-constexpr int   SAMPLE_RATE = 48000;
+constexpr int   SAMPLE_RATE   = 44100;
 constexpr float SAMPLE_LENGTH = 1.0f / SAMPLE_RATE;
 
 #ifndef SYNTACTS_STATIC

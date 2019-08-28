@@ -3,25 +3,37 @@
 #include <Syntacts/Config.hpp>
 #include <Syntacts/Generator.hpp>
 #include <Syntacts/Tween.hpp>
+#include <Syntacts/Oscillator.hpp>
 #include <functional>
 #include <map>
 #include <utility>
 
 namespace tact
 {
+/// Base Envelope 
+class SYNTACTS_API Envelope : public Generator{
+public:
+    Envelope(float duration = 1.0f);
+
+    /// Gets the duration of an Envelope
+    virtual float getDuration() const;
+
+protected:
+
+    float m_duration;
+};
 
 /// Base Envelope
-class SYNTACTS_API Envelope : public Generator {
+class SYNTACTS_API KeyedEnvelope : public Envelope {
 public:
 
     /// Constucts Envelope with initial amplitude
-    Envelope(float amplitude0 = 0.0f);
+    KeyedEnvelope(float amplitude0 = 0.0f);
 
     /// Adds a new amplitude at time t seconds. Uses tween to interpolate from previous amplitude.
     void addKey(float t, float amplitude, TweenFunc tween = Tween::Linear);
 
-    /// Gets the duration of an Envelope
-    float getDuration() const;
+    float getDuration() const override;
 
 protected:
 
@@ -30,12 +42,12 @@ protected:
 protected:
 
     std::map<float, std::pair<float, TweenFunc>> m_keys;
-    float m_duration;
+    
 };
 
 
 /// An object which gives a Cue a duration and/or shape
-class SYNTACTS_API BasicEnvelope : public Envelope {
+class SYNTACTS_API BasicEnvelope : public KeyedEnvelope {
 public:
 
     /// Constructs an Eveloope with a specified duration
@@ -48,7 +60,7 @@ public:
 
 
 /// Attack-Sustain-Release Envelope
-class SYNTACTS_API ASR : public Envelope {
+class SYNTACTS_API ASR : public KeyedEnvelope {
 public:
 
     /// Constructs ASR Envelope with specified attack, sustain, and release times
@@ -59,7 +71,7 @@ public:
 
 
 /// Attack-Decay-Sustain-Release Envelope
-class SYNTACTS_API ADSR : public Envelope {
+class SYNTACTS_API ADSR : public KeyedEnvelope {
 public:
 
     /// Constructs ASR Envelope with specified attack, sustain, and release times
@@ -68,5 +80,19 @@ public:
 
 };
 
-    
+/// An object which gives a Cue a duration and/or shape
+class SYNTACTS_API OscillatingEnvelope : public Envelope {
+public:
+
+    /// Constructs an Envelope with a specified duration, positive oscillator type and frequency
+    OscillatingEnvelope(float duration , float amplitude, std::shared_ptr<Oscillator> osc);
+
+protected:
+
+    virtual float onSample(float t) override;
+
+    std::shared_ptr<Oscillator> m_osc;
+    float m_amplitude;
+};
+
 } // namespace tact

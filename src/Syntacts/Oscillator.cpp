@@ -44,5 +44,20 @@ float SineWaveFM::onSample(float t) {
     return std::cos(2.0f * PI * m_frequency * t + m_index * std::sin(2.0f * PI * m_modulation * t));
 }
 
+PulseTrain::PulseTrain(float frequency, float dutyCycle) :
+    Oscillator(frequency), 
+    m_dutyCycle(dutyCycle),
+    m_period(1.0f / frequency)
+{
+
+}
+
+float PulseTrain::onSample(float t) {
+    float percentWithinPeriod = std::fmod(t, m_period) / m_period;
+    if (percentWithinPeriod < m_dutyCycle ) 
+        return 1;
+    else 
+        return -1;
+}
 
 } // namespace tact
