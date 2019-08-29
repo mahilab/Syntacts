@@ -52,6 +52,18 @@ public:
         rechannel();
     }
 
+    /// Selects all available channels
+    void selectAll() {
+        for (int i = 0; i < m_checkBoxes.size(); i++)
+            m_checkBoxes[i] = true;
+    }
+
+    /// Deselects all available channels
+    void deselectAll() {
+        for (int i = 0; i < m_checkBoxes.size(); i++)
+            m_checkBoxes[i] = false;
+    }
+
     /// Builds the carrier oscillator
     Ptr<tact::Oscillator> buildCarOsc() {
         if (m_modMode != ModMode::FM) {
@@ -273,9 +285,11 @@ public:
             ImGui::SameLine();
         }
         ImGui::EndChild();
-        ImGui::Button("Select All");
+        if (ImGui::Button("Select All"))
+            selectAll();
         ImGui::SameLine();
-        ImGui::Button("Deselect All");
+        if(ImGui::Button("Deselect All"))
+            deselectAll();
         ImGui::PopStyleColor(); 
     }
 
