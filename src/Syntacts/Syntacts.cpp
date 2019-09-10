@@ -1,3 +1,7 @@
+#ifndef PA_USE_ASIO
+    #define PA_USE_ASIO 1
+#endif
+
 #include <Syntacts/Syntacts.hpp>
 #include <Syntacts/Detail/SPSCQueue.hpp>
 #include "Helpers.hpp"
@@ -6,18 +10,7 @@
 #include <mutex>
 #include <iostream>
 #include <cassert>
-
-#ifndef BUFFER_SIZE
-    #define BUFFER_SIZE 256
-#endif
-
-#ifndef PA_USE_ASIO
-    #define PA_USE_ASIO 1
-#endif
-
-#ifndef QUE_SIZE
-    #define QUE_SIZE 256
-#endif
+#include <utility>
 
 using namespace rigtorp;
 
@@ -32,20 +25,29 @@ struct Instruction {
     std::shared_ptr<Cue> cue;
 };
 
-SPSCQueue<Instruction> g_que(QUE_SIZE);          
-std::size_t g_numCh;                        ///< number of channels specified
-std::vector<std::shared_ptr<Cue>> g_cues;   ///< cues
+/// A Cue and its current time
+struct CueAndTime {
+    std::shared_ptr<Cue> cue;
+    float time = 0.0f;
+};
+
+// Globals
+SPSCQueue<Instruction> g_queue(DEFAULT_QUEUE_SIZE);          
+int g_channelCount;                         ///< number of channels specified
+std::vector<CueAndTime> g_cues;             ///< cues and times
 PaStream* g_stream;                         ///< portaudio stream
 bool g_syntacts_initialized = false;        ///< syntacts initialized?
 bool g_pa_initialized  = false;             ///< portadio initialized? 
 DeviceInfo g_currentDevice = DeviceInfo({-1,"none",0});
+float g_sampleLength = DEFAULT_SAMPLE_LENGTH;
 
-/// Pops new instructions off the que into the cue vector
-void processQue() {
-    while (g_que.front()) {
-        auto i = *g_que.front();
-        g_cues[i.channel] = i.cue;
-        g_que.pop();
+/// Pops new instructions off the queue into the cue vector
+void processQueue() {
+    while (g_queue.front()) {
+        auto i = *g_queue.front();
+        g_cues[i.channel].cue = i.cue;
+        g_cues[i.channel].time = 0.0f;
+        g_queue.pop();
     }
 }
 
@@ -56,15 +58,15 @@ int pa_callback(const void *inputBuffer, void *outputBuffer,
                        PaStreamCallbackFlags statusFlags,
                        void *userData)
 {
-    // std::lock_guard<std::mutex> lock(g_mutex);
-    processQue();
+    processQueue();
     /* Cast data passed through stream to our structure. */    
     float *out = (float *)outputBuffer;
     (void)inputBuffer; /* Prevent unused variable warning. */   
-    // lock mutex using RA-II lockgaurd (unlocked when we exit scope b/c lock dies)
     for (unsigned long f = 0; f < framesPerBuffer; f++) {
-        for (std::size_t c = 0; c < g_numCh; ++c) {
-            out[g_numCh * f + c] = g_cues[c]->nextSample();
+        for (std::size_t c = 0; c < g_channelCount; ++c) {
+            // out[g_channelCount * f + c] = g_cues[c].first->nextSample();
+            out[g_channelCount * f + c] = g_cues[c].cue->sample(g_cues[c].time);
+            g_cues[c].time += g_sampleLength;
         }
     }
     return 0;
@@ -80,12 +82,12 @@ int initPortaudio() {
     return paNoError;
 }
 
-DeviceInfo makeDeviceInfo(int device) {
-    auto pa_info = Pa_GetDeviceInfo(device);
+DeviceInfo makeDeviceInfo(int deviceIndex) {
+    auto pa_info = Pa_GetDeviceInfo(deviceIndex);
     auto pa_type = Pa_GetHostApiInfo(pa_info->hostApi)->type;
 
     DeviceInfo info;
-    info.index = device;
+    info.index = deviceIndex;
     info.name  = pa_info->name;
     info.maxChannels = pa_info->maxOutputChannels;
     return info;
@@ -126,54 +128,50 @@ DeviceInfo getCurrentDevice() {
     return g_currentDevice;
 }
 
-int initialize() {
-    auto deviceInfo = getDefaultDevice();
-    return initialize(deviceInfo.index, deviceInfo.maxChannels);
-}
-
-int initialize(int channelCount) {
-    auto deviceInfo = getDefaultDevice();
-    if (channelCount > deviceInfo.maxChannels)
-        return SyntactsError_InvalidChannelCount;
-    return initialize(deviceInfo.index, channelCount);
-}
-
-
-int initialize(int device, int channelCount) {
+int initialize(int device, int channelCount, int sampleRate) {
+    // return if syntacts already initialized
     if (g_syntacts_initialized)
         return SyntactsError_AlreadyIntialized;
-    if (device < 0)
-        return SyntactsError_InvalidDevice;
     // intitialize portaudio
     int result = initPortaudio();    
     if (result != paNoError)
         return result;
-    g_currentDevice = makeDeviceInfo(device);
-
-    g_numCh = channelCount;
-
+    // set current device
+    if (device < 0) 
+        g_currentDevice = getDefaultDevice();
+    else 
+        g_currentDevice = makeDeviceInfo(device);
+    // set channel count
+    if (channelCount < 0) 
+        g_channelCount = g_currentDevice.maxChannels;
+    else if (channelCount <= g_currentDevice.maxChannels) 
+        g_channelCount = channelCount;
+    else 
+        return SyntactsError_InvalidChannelCount;
+    // set sample length
+    g_sampleLength = 1.0f / sampleRate;
     // init g_cues with empty cues
-    g_cues.resize(channelCount);
+    g_cues.resize(g_channelCount);
     for (auto& cue : g_cues) {
-        cue = std::make_shared<Cue>();      
+        cue.cue = std::make_shared<Cue>();      
     }   
-
+    // open portaudio stream
     PaStreamParameters hostApiOutputParameters;
     PaStreamParameters* hostApiOutputParametersPtr;        
-    if (channelCount > 0) {
-        hostApiOutputParameters.device = device;
+    if (g_channelCount > 0) {
+        hostApiOutputParameters.device = g_currentDevice.index;
 		if (hostApiOutputParameters.device == paNoDevice)
 			return paDeviceUnavailable;
-        hostApiOutputParameters.channelCount = channelCount;
+        hostApiOutputParameters.channelCount = g_channelCount;
         hostApiOutputParameters.sampleFormat = paFloat32;
-        hostApiOutputParameters.suggestedLatency = Pa_GetDeviceInfo( hostApiOutputParameters.device )->defaultHighOutputLatency;
+        hostApiOutputParameters.suggestedLatency = Pa_GetDeviceInfo( hostApiOutputParameters.device )->defaultLowInputLatency;
         hostApiOutputParameters.hostApiSpecificStreamInfo = NULL;
         hostApiOutputParametersPtr = &hostApiOutputParameters;
     }
     else {
         hostApiOutputParametersPtr = NULL;
     }   
-    result = Pa_OpenStream(&g_stream, nullptr, hostApiOutputParametersPtr, SAMPLE_RATE, BUFFER_SIZE, paNoFlag, pa_callback, nullptr );
+    result = Pa_OpenStream(&g_stream, nullptr, hostApiOutputParametersPtr, sampleRate, 0, paNoFlag, pa_callback, nullptr );
     if (result != paNoError)
         return result;    
     result = Pa_StartStream(g_stream);
@@ -198,17 +196,17 @@ int play(int channel, std::shared_ptr<Cue> cue) {
     // failture conditions
     if(!g_syntacts_initialized)
         return SyntactsError_NotInitialized;
-    if(!(channel < g_numCh))
+    if(!(channel < g_channelCount))
         return SyntactsError_InvalidChannel;
     Instruction x;
     x.channel = channel;
     x.cue = cue;
-    g_que.try_push(x);
+    g_queue.try_push(x);
     return SyntactsError_NoError;
 } 
 
 int playAll(std::shared_ptr<Cue> cue) {
-    for (int i = 0; i < g_numCh; ++i) {
+    for (int i = 0; i < g_channelCount; ++i) {
         auto ret = play(i, cue);
         if (ret != SyntactsError_NoError)
             return ret;
@@ -224,17 +222,21 @@ int stopAll() {
     return playAll(std::make_shared<Cue>());
 }
 
-int save(std::shared_ptr<Cue> cue, std::string filePath, AudioFileFormat format) {
+int save(std::shared_ptr<Cue> cue, std::string filePath, AudioFileFormat format, int sampleRate) {
     AudioFile<float> file;
     AudioFile<float>::AudioBuffer buffer;
     buffer.resize(1);
-    buffer[0].resize(cue->sampleCount());
-    for (auto& sample : buffer[0])
-        sample = cue->nextSample();
+    buffer[0].resize(cue->sampleCount(sampleRate));
+    float sampleLength = 1.0f / sampleRate;
+    float t = 0;
+    for (auto& sample : buffer[0]) {
+        sample = cue->sample(t);  
+        t += sampleLength;
+    }
     if (!file.setAudioBuffer(buffer))
         return SyntactsError_AudioFileBufferFail;
     file.setBitDepth(24);
-    file.setSampleRate(SAMPLE_RATE);
+    file.setSampleRate(sampleRate);
     if (!file.save(filePath, format))
         return SyntactsError_AudioFileSaveFail;
     return SyntactsError_NoError;
@@ -265,7 +267,7 @@ SYNTACTS_API int play(int channel,    // channel              [0 to N]
     // failture conditions
     if(!g_syntacts_initialized)
         return SyntactsError_NotInitialized;
-    if(!(channel < g_numCh))
+    if(!(channel < g_channelCount))
         return SyntactsError_InvalidChannel;
     if (oscType == 0 && modType == 0)
         return SyntactsError_NoWaveform;    

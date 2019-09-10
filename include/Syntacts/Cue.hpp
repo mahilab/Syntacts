@@ -40,14 +40,11 @@ public:
     template <typename T, typename ...Args>
     void chain(Args ... args);
 
-    /// Compounds all Generators to compute the next sample
-    float nextSample();
+    /// Compounds all Generators to compute a sample at time t
+    float sample(float t);
 
-    /// Resets a Cue to its beggining
-    void reset();
-
-    /// Returns the number of samples this Cue generates
-    int sampleCount();
+    /// Returns the number of samples this Cue generates for a particular sample rate
+    int sampleCount(int sampleRate);
 
 private:
 

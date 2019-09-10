@@ -1,4 +1,4 @@
-#include <Syntacts/Cue.hpp>
+#include <Syntacts/Syntacts.hpp>
 #include "Helpers.hpp"
 
 namespace tact {
@@ -44,24 +44,18 @@ void Cue::chain(std::shared_ptr<Generator> gen) {
     m_generators.push_back(std::move(gen));
 }
 
-float Cue::nextSample() {
+float Cue::sample(float t) {
     if (m_generators.empty())
         return 0.0f;
-    float sample = 1.0f;
+    float compoundSample = 1.0f;
     for (auto& g : m_generators)
-        sample *= g->nextSample();
-    sample *= m_env->nextSample();
-    return sample;
+        compoundSample *= g->sample(t);
+    compoundSample *= m_env->sample(t);
+    return compoundSample;
 }
 
-void Cue::reset() {
-    m_env->reset();
-    for (auto& g : m_generators)
-        g->reset();
-}
-
-int Cue::sampleCount() {
-    return (int)(m_env->getDuration() * SAMPLE_RATE);
+int Cue::sampleCount(int sampleRate) {
+    return (int)(m_env->getDuration() * sampleRate);
 }
 
 };

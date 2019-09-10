@@ -10,12 +10,9 @@
 
 namespace tact {  
 
-/// Struct holding ASIO device information
-struct SYNTACTS_API DeviceInfo {
-    int index;         ///< device index
-    std::string name;  ///< device name
-    int maxChannels;   ///< maximum number of output channels
-};    
+constexpr int   DEFAULT_QUEUE_SIZE    = 256;
+constexpr int   DEFAULT_SAMPLE_RATE   = 44100;
+constexpr float DEFAULT_SAMPLE_LENGTH = 1.0f / DEFAULT_SAMPLE_RATE;
 
 /// Return errors
 enum SyntactsError : int {
@@ -30,20 +27,21 @@ enum SyntactsError : int {
     SyntactsError_AudioFileSaveFail   = -8
 };
 
+/// Struct holding ASIO device information
+struct SYNTACTS_API DeviceInfo {
+    int index;         ///< device index
+    std::string name;  ///< device name
+    int maxChannels;   ///< maximum number of output channels
+};    
+
 #ifndef SYNTACTS_ANSI_C    
 
 //==============================================================================
 // C++11 INTERFACE
 //==============================================================================
 
-/// Intializes Syntacts Library with default device and output max channels  
-SYNTACTS_API int initialize();
-
-/// Initializes Syntacts Library with a specified number of channels
-SYNTACTS_API int initialize(int channelCount);
-
-/// Initializes Syntacts Library with a specified number of channels and specific device number
-SYNTACTS_API int initialize(int device, int channelCount);
+/// Intializes Syntacts
+SYNTACTS_API int initialize(int deviceIndex = -1, int channelCount = -1, int sampleRate = DEFAULT_SAMPLE_RATE);
 
 /// Finalizes Syntacts Libary
 SYNTACTS_API int finalize();
@@ -62,14 +60,14 @@ SYNTACTS_API int play(int channel, std::shared_ptr<Cue> cue);
 
 /// Plays a Cue on a specified channel asynchronously
 SYNTACTS_API int play(int channel,   // channel              [0 to N]
-                 int oscType,   // oscillator type      [0=none, 1=sin, 2=sqr, 3=saw, 4=tri]
-                 float oscFreq, // oscillator frequency [Hz]
-                 int modType,   // modulator type       [0=none, 1=sin, 2=sqr, 3=saw, 4=tri]
-                 float modFreq, // modulator frequency  [Hz]
-                 float amp,     // envelope amplitude  [0 to 1]
-                 float A,       // attack time          [s]
-                 float S,       // sustain time         [s]
-                 float R);      // release time         [s]
+                      int oscType,   // oscillator type      [0=none, 1=sin, 2=sqr, 3=saw, 4=tri]
+                      float oscFreq, // oscillator frequency [Hz]
+                      int modType,   // modulator type       [0=none, 1=sin, 2=sqr, 3=saw, 4=tri]
+                      float modFreq, // modulator frequency  [Hz]
+                      float amp,     // envelope amplitude   [0 to 1]
+                      float A,       // attack time          [s]
+                      float S,       // sustain time         [s]
+                      float R);      // release time         [s]
 
 /// Plays a Cue on all channels
 SYNTACTS_API int playAll(std::shared_ptr<Cue> cue);
@@ -81,7 +79,7 @@ SYNTACTS_API int stop(int channel);
 SYNTACTS_API int stopAll();
 
 /// Saves a Cue to an audio file
-SYNTACTS_API int save(std::shared_ptr<Cue> cue, std::string filePath, AudioFileFormat format = AudioFileFormat::Wave);
+SYNTACTS_API int save(std::shared_ptr<Cue> cue, std::string filePath, AudioFileFormat format = AudioFileFormat::Wave, int sampleRate = DEFAULT_SAMPLE_RATE);
 
 #else
 

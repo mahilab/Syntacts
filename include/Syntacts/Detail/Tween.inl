@@ -2,18 +2,18 @@
 #include <vector>
 #include <algorithm>
 #include <cmath>
-// #include <../src/Syntacts/Helpers.hpp>
 
-#define PI            3.14159265358979e+0f
-#define HALFPI        1.57079632679e+0f
+
 
 namespace tact {
 namespace Tween {
 
+constexpr float PI     = 3.14159265358979f;
+constexpr float HALFPI = PI * 0.5f;
+
 //==============================================================================
 // BASIC TWEENS
 //==============================================================================
-
 
 inline float Instant(float a, float b, float t) {
     return b;

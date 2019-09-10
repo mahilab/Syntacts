@@ -20,7 +20,7 @@
  */
 //=======================================================================
 
-#include <Syntacts/AudioFile.hpp>
+#include <Syntacts/Syntacts.hpp>
 #include <fstream>
 #include <unordered_map>
 #include <iterator>
@@ -57,7 +57,7 @@ template <class T>
 AudioFile<T>::AudioFile()
 {
     bitDepth = 16;
-    sampleRate = SAMPLE_RATE;
+    sampleRate = DEFAULT_SAMPLE_RATE;
     samples.resize (1);
     samples[0].resize (0);
     audioFileFormat = AudioFileFormat::NotLoaded;

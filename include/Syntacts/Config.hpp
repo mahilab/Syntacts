@@ -1,8 +1,5 @@
 #pragma once
 
-constexpr int   SAMPLE_RATE   = 44100;
-constexpr float SAMPLE_LENGTH = 1.0f / SAMPLE_RATE;
-
 #ifndef SYNTACTS_STATIC
     #ifdef SYNTACTS_EXPORTS
         #define SYNTACTS_API __declspec(dllexport)

@@ -10,9 +10,14 @@
 
 namespace tact
 {
-/// Base Envelope 
+
+//=============================================================================
+
+/// Abstract Base Envelope 
 class SYNTACTS_API Envelope : public Generator{
 public:
+
+    /// Constructor
     Envelope(float duration = 1.0f);
 
     /// Gets the duration of an Envelope
@@ -23,7 +28,9 @@ protected:
     float m_duration;
 };
 
-/// Base Envelope
+//=============================================================================
+
+/// Envelope with time sequenced amplitudes and tweening functions
 class SYNTACTS_API KeyedEnvelope : public Envelope {
 public:
 
@@ -35,9 +42,7 @@ public:
 
     float getDuration() const override;
 
-protected:
-
-    virtual float onSample(float t) override;
+    virtual float sample(float t) override;
 
 protected:
 
@@ -45,6 +50,7 @@ protected:
     
 };
 
+//=============================================================================
 
 /// An object which gives a Cue a duration and/or shape
 class SYNTACTS_API BasicEnvelope : public KeyedEnvelope {
@@ -58,6 +64,7 @@ public:
 
 };
 
+//=============================================================================
 
 /// Attack-Sustain-Release Envelope
 class SYNTACTS_API ASR : public KeyedEnvelope {
@@ -69,6 +76,7 @@ public:
 
 };
 
+//=============================================================================
 
 /// Attack-Decay-Sustain-Release Envelope
 class SYNTACTS_API ADSR : public KeyedEnvelope {
@@ -80,6 +88,8 @@ public:
 
 };
 
+//=============================================================================
+
 /// An object which gives a Cue a duration and/or shape
 class SYNTACTS_API OscillatingEnvelope : public Envelope {
 public:
@@ -87,9 +97,9 @@ public:
     /// Constructs an Envelope with a specified duration, positive oscillator type and frequency
     OscillatingEnvelope(float duration , float amplitude, std::shared_ptr<Oscillator> osc);
 
-protected:
+    virtual float sample(float t) override;
 
-    virtual float onSample(float t) override;
+protected:
 
     std::shared_ptr<Oscillator> m_osc;
     float m_amplitude;

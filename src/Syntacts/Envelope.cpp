@@ -30,7 +30,7 @@ float KeyedEnvelope::getDuration() const {
     return m_keys.rbegin()->first;
 }
 
-float KeyedEnvelope::onSample(float t) {
+float KeyedEnvelope::sample(float t) {
     if (t > getDuration())
         return 0.0f;
     auto b = m_keys.lower_bound(t);
@@ -77,11 +77,12 @@ OscillatingEnvelope::OscillatingEnvelope(float duration , float amplitude , std:
     
 }
 
-float OscillatingEnvelope::onSample(float t) {
+float OscillatingEnvelope::sample(float t) {
     if (t > getDuration())
         return 0.0f;
-    float value = m_osc->nextSample();  
+    float value = m_osc->sample(t);  
     value = interp(value, -1, 1 , 0 , m_amplitude);
     return value;
 }
+
 } // namespace tact

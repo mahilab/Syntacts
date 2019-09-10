@@ -36,6 +36,9 @@ endif()
 # create project
 project(Syntacts VERSION 0.1.0 LANGUAGES CXX)
 
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /permissive-")
+
 #===============================================================================
 # Syntacts LIBRARY
 #===============================================================================
@@ -58,7 +61,6 @@ set(SRC_FILES
     "src/Syntacts/Envelope.cpp"
     "src/Syntacts/Oscillator.cpp"
     "src/Syntacts/Helpers.hpp"
-    "src/Syntacts/Generator.cpp"
     "src/Syntacts/AudioFile.cpp"
 )
 

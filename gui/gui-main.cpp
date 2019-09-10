@@ -1,9 +1,5 @@
-#define CARNOT_NO_CONSOLE
+// #define CARNOT_NO_CONSOLE
 // #define CARNOT_USE_DISCRETE_GPU
-
-// #ifndef SAMPLE_RATE
-//     #define SAMPLE_RATE 44100
-// #endif
 
 #include "gui-detail.hpp"
 
@@ -23,7 +19,7 @@ public:
     // Enums
     //--------------------------------------------------------------------------
 
-    enum OscType : int { Sine = 0, Square = 1, Saw = 2, Triangle = 3 };
+    enum OscType : int { Sine = 0, Square = 1, Saw = 2, Triangle = 3, Chirp = 4 };
     enum ModMode : int { Off = 0, AM = 1, FM = 2 };
     enum EnvMode : int { Basic = 0, ASR = 1, ADSR = 2, PulseTrain = 3, Custom = 4 };
 
@@ -67,8 +63,10 @@ public:
                 return make<tact::SquareWave>((float)m_carFreq);
             else if (m_carType == OscType::Saw)
                 return make<tact::SawWave>((float)m_carFreq);
-            else
-                return make<tact::TriWave>((float)m_carFreq);   
+            else if (m_carType == OscType::Triangle)
+                return make<tact::TriWave>((float)m_carFreq);  
+            else 
+                return make<tact::Chirp>((float)m_carFreq, m_chirp);
         }       
         else {
             return make<tact::SineWaveFM>((float)m_carFreq, (float)m_modFreq, m_modIdx);
@@ -166,10 +164,13 @@ public:
     /// Plays the Cue over the user's speakers
     void playSpeaker() {
         auto cue = buildCue();
-        std::vector<signed short> samples(cue->sampleCount());       
-        for (auto& sample : samples)
-            sample = (signed short)(cue->nextSample() * 32768);        
-        m_speakerBuffer.loadFromSamples(&samples[0], samples.size(), 1, SAMPLE_RATE);
+        std::vector<signed short> samples(cue->sampleCount(tact::DEFAULT_SAMPLE_RATE)); 
+        float t = 0;      
+        for (auto& sample : samples) {
+            sample = (signed short)(cue->sample(t) * 32768);    
+            t += tact::DEFAULT_SAMPLE_LENGTH;
+        }    
+        m_speakerBuffer.loadFromSamples(&samples[0], samples.size(), 1, tact::DEFAULT_SAMPLE_RATE);
         m_speakerSound.setBuffer(m_speakerBuffer);
         m_speakerSound.setVolume(100);
         m_speakerSound.play();
@@ -197,7 +198,7 @@ public:
             exportCpp();
         ImGui::SameLine();
         if (ImGui::Button(ICON_FA_FILE_AUDIO)) {
-            std::string filePath = "syntacts_" + str(rand() % 900000 + 100000) + ".wav";
+            std::string filePath = "syntacts_" + str(Random::range(0,std::numeric_limits<int>::max())) + ".wav";
             tact::save(buildCue(), filePath);
         }
         ImGui::SameLine();
@@ -300,7 +301,11 @@ public:
             ImGui::SameLine();
             ImGui::RadioButton("Square##C",   &m_carType, OscType::Square);   ImGui::SameLine();
             ImGui::RadioButton("Saw##C",      &m_carType, OscType::Saw);      ImGui::SameLine();
-            ImGui::RadioButton("Triangle##C", &m_carType, OscType::Triangle);
+            ImGui::RadioButton("Triangle##C", &m_carType, OscType::Triangle); ImGui::SameLine();
+            ImGui::RadioButton("Chirp##C",    &m_carType, OscType::Chirp);
+            if (m_carType == OscType::Chirp) {
+                ImGui::DragFloat("Chirpyness", &m_chirp, 1.0f, 0.0f, 500.0f);
+            }
         }
         else {
             m_carType = OscType::Sine;
@@ -415,14 +420,20 @@ public:
     void updatePlot() {
         m_cuePlot.clear();
         auto cue = buildCue();
-        auto nPoints = cue->sampleCount();
+        auto nPoints = cue->sampleCount(10000);
         m_cuePlot.resize(nPoints);    
-        for (auto& point : m_cuePlot)
-            point = cue->nextSample();
+        float t = 0;
+        for (auto& point : m_cuePlot) {
+            point = cue->sample(t);
+            t += 0.0001f;
+        }
         auto env = buildEnv();
         m_envPlot.resize(nPoints);
-        for (auto& point : m_envPlot)
-            point = env->nextSample();
+        t = 0;
+        for (auto& point : m_envPlot) {
+            point = env->sample(t);
+            t += 0.0001f;
+        }
         ImGui::PushItemWidth(m_windowSize.x - 25.0f);
         ImGui::PushStyleColor(ImGuiCol_PlotLines, hexCode("cf94c2"));
         ImGui::PushStyleColor(ImGuiCol_PlotLinesHovered, hexCode("cf94c2"));
@@ -477,6 +488,8 @@ private:
     int   m_modFreq = 25;
     int   m_modType = OscType::Sine;
     float m_modIdx  = 2.0f;
+
+    float m_chirp = 200;
 
     int   m_envMode  = EnvMode::ASR;
     std::vector<float> m_amps = {1.0f, 0.5f};
