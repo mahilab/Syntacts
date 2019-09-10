@@ -1,6 +1,7 @@
 
 #include <vector>
 #include <algorithm>
+#include <cmath>
 // #include <../src/Syntacts/Helpers.hpp>
 
 #define PI            3.14159265358979e+0f

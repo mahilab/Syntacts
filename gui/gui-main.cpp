@@ -52,16 +52,10 @@ public:
         rechannel();
     }
 
-    /// Selects all available channels
-    void selectAll() {
+    /// Selects/deselects all available channels
+    void selectAllChannels(bool select) {
         for (int i = 0; i < m_checkBoxes.size(); i++)
-            m_checkBoxes[i] = true;
-    }
-
-    /// Deselects all available channels
-    void deselectAll() {
-        for (int i = 0; i < m_checkBoxes.size(); i++)
-            m_checkBoxes[i] = false;
+            m_checkBoxes[i] = select;
     }
 
     /// Builds the carrier oscillator
@@ -139,7 +133,10 @@ public:
             code += "auto env = std::make_shared<tact::ASR>(" + str(m_asr[0]/1000.0f) + ", " + str(m_asr[1]/1000.0f) + ", " + str(m_asr[2]/1000.0f) + ", " + str(m_amps[0]) + ", tact::Tween::" + g_tweenStrings[m_tweenModes[0]] + ", tact::Tween::" + g_tweenStrings[m_tweenModes[2]] + ");\n";
         else if (m_envMode == EnvMode::ADSR)
             code += "auto env = std::make_shared<tact::ADSR>(" + str(m_adsr[0]/1000.0f) + ", " + str(m_adsr[1]/1000.0f) + ", " + str(m_adsr[2]/1000.0f) + ", " + str(m_adsr[3]/1000.0f) + ", " + str(m_amps[0]) + ", " + str(m_amps[1]) + ", tact::Tween::" + g_tweenStrings[m_tweenModes[0]] + ", tact::Tween::" + g_tweenStrings[m_tweenModes[1]] + ", tact::Tween::" + g_tweenStrings[m_tweenModes[3]] + ");\n";
-
+        else if (m_envMode == EnvMode::PulseTrain) {
+            code += "auto pulse = std::make_shared<tact::PulseTrain>(" + str(m_pwmValues[0]) + ", "  + str(m_pwmValues[1] / 100.0f) + ");\n";
+            code += "auto env = std::make_shared<tact::Envelope>(" + str(m_duration/1000.0f) + ", " + str(m_amps[0]) + ", pulse);\n";
+        }
         
         if (m_modMode == 1 && m_modFreq > 0) {
             code += "auto mod = std::make_shared<tact::";
@@ -150,7 +147,7 @@ public:
         else {
             code += "auto cue = std::make_shared<tact::Cue>(osc, env);\n";
         }
-        Clipboard::setString(code);
+        Clipboard::setString(code);        
     }
 
     /// Creats and plays the user's cue
@@ -286,11 +283,12 @@ public:
         }
         ImGui::EndChild();
         if (ImGui::Button("Select All"))
-            selectAll();
+            selectAllChannels(true);
         ImGui::SameLine();
         if(ImGui::Button("Deselect All"))
-            deselectAll();
+            selectAllChannels(false);
         ImGui::PopStyleColor(); 
+
     }
 
     /// Updates the carrier section
@@ -481,7 +479,7 @@ private:
     float m_modIdx  = 2.0f;
 
     int   m_envMode  = EnvMode::ASR;
-    std::vector<float> m_amps = {0.25f, 0.5f};
+    std::vector<float> m_amps = {1.0f, 0.5f};
     int   m_duration = 150;
     std::vector<int> m_pwmValues = {10, 25};
     std::vector<int> m_asr   = {50, 75, 25};    
