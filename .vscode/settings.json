@@ -71,7 +71,8 @@
         "xlocmon": "cpp",
         "xloctime": "cpp",
         "fstream": "cpp",
-        "carnot": "cpp"
+        "carnot": "cpp",
+        "typeindex": "cpp"
     },
     "C_Cpp.default.configurationProvider": "vector-of-bool.cmake-tools"
 }
