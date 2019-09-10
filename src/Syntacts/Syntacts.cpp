@@ -164,7 +164,7 @@ int initialize(int device, int channelCount, int sampleRate) {
 			return paDeviceUnavailable;
         hostApiOutputParameters.channelCount = g_channelCount;
         hostApiOutputParameters.sampleFormat = paFloat32;
-        hostApiOutputParameters.suggestedLatency = Pa_GetDeviceInfo( hostApiOutputParameters.device )->defaultLowInputLatency;
+        hostApiOutputParameters.suggestedLatency = Pa_GetDeviceInfo( hostApiOutputParameters.device )->defaultLowOutputLatency;
         hostApiOutputParameters.hostApiSpecificStreamInfo = NULL;
         hostApiOutputParametersPtr = &hostApiOutputParameters;
     }

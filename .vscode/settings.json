@@ -72,17 +72,7 @@
         "xloctime": "cpp",
         "fstream": "cpp",
         "carnot": "cpp",
-        "clocale": "cpp",
-        "condition_variable": "cpp",
-        "cstdarg": "cpp",
-        "cwctype": "cpp",
-        "optional": "cpp",
-        "queue": "cpp",
-        "random": "cpp",
-        "*.tcc": "cpp",
-        "memory_resource": "cpp",
-        "string_view": "cpp",
-        "cinttypes": "cpp"
+        "typeindex": "cpp"
     },
     "C_Cpp.default.configurationProvider": "vector-of-bool.cmake-tools"
 }
