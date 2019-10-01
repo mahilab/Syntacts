@@ -61,7 +61,7 @@ int main(int argc, char* argv[]) {
     int ch          = 1;        // Channel
     float dur       = 1.0f;     // Signal duration 
     float freq      = 175.0f;   // Signal frequency
-    float amp       = 0.085f;     // Signal amplitude
+    float amp       = 0.04f;     // Signal amplitude
     float mod_freq  = 5.0f;    // Modulation Frequency
     float a_time    = 0.2f;     // Attack time
     float d_time    = 0.1f;     // Decay time
