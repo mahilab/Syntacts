@@ -40,19 +40,19 @@ struct SYNTACTS_API DeviceInfo {
 // C++11 INTERFACE
 //==============================================================================
 
-/// Intializes Syntacts
+/// Initializes Syntacts Library
 SYNTACTS_API int initialize(int deviceIndex = -1, int channelCount = -1, int sampleRate = DEFAULT_SAMPLE_RATE);
 
-/// Finalizes Syntacts Libary
+/// Finalizes Syntacts Library
 SYNTACTS_API int finalize();
 
-/// Get the default device
+/// Get the default ASIO device
 SYNTACTS_API DeviceInfo getDefaultDevice();
 
-/// Get the current device
+/// Get the current ASIO device
 SYNTACTS_API DeviceInfo getCurrentDevice();
 
-/// Gets list of avaialable ASIO devices
+/// Gets list of available ASIO devices
 SYNTACTS_API std::vector<DeviceInfo> getAvailableDevices();
 
 /// Plays a Cue on a specified channel asynchronously
@@ -87,17 +87,15 @@ SYNTACTS_API int save(std::shared_ptr<Cue> cue, std::string filePath, AudioFileF
 // ANSI C INTEFACE (FOR DLL BASED BINDINGS)
 //==============================================================================
 
-SYNTACTS_API int initialize(int channelCount);
-SYNTACTS_API int initialize(int device, int channelCount);
 SYNTACTS_API DeviceInfo getDefaultDevice();
 SYNTACTS_API DeviceInfo getCurrentDevice();
 SYNTACTS_API std::vector<DeviceInfo> getAvailableDevices();
 
 extern "C" {
 
-SYNTACTS_API int initialize();
+SYNTACTS_API int initialize(int deviceIndex, int channelCount, int sampleRate);
 SYNTACTS_API int initializeChannels(int channelCount);
-SYNTACTS_API int initializeCustom(int device, int channelCount);
+SYNTACTS_API int initializeDefault();
 SYNTACTS_API int finalize();
 
 SYNTACTS_API int play(int channel,   // channel              [0 to N]

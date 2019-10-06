@@ -247,11 +247,11 @@ int save(std::shared_ptr<Cue> cue, std::string filePath, AudioFileFormat format,
 //==============================================================================
 
 int initializeChannels(int channelCount) {
-    return initialize(channelCount);
+    return initialize(-1, channelCount, DEFAULT_SAMPLE_RATE);
 }
 
-int initializeCustom(int device, int channelCount) {
-    return initialize(device, channelCount);
+int initializeDefault() {
+    return initialize(-1,-1, DEFAULT_SAMPLE_RATE);
 }
 
 SYNTACTS_API int play(int channel,    // channel              [0 to N]
@@ -264,7 +264,7 @@ SYNTACTS_API int play(int channel,    // channel              [0 to N]
                  float S,       // sustain time         [s]
                  float R)       // release time         [s]
 {
-    // failture conditions
+    // failure conditions
     if(!g_syntacts_initialized)
         return SyntactsError_NotInitialized;
     if(!(channel < g_channelCount))
