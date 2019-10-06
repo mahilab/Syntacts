@@ -1,5 +1,5 @@
-# Syntacts
-Tactor Sythesizer Software
+![Syntacts Logo](https://raw.githubusercontent.com/mahilab/Syntacts/master/logo/logo_text.png)
+
 
 ## Dependencies
 
