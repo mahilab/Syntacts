@@ -23,10 +23,11 @@
 > cd portaudio
 > mkdir build
 > cd build
-> cmake .. -A x64 -DPA_USE_ASIO=ON -DPA_DLL_LINK_WITH_STATIC_RUNTIME=OFF
+> cmake .. -A x64 -DPA_USE_ASIO=ON -DPA_DLL_LINK_WITH_STATIC_RUNTIME=OFF -DCMAKE_DEBUG_POSTFIX=-d
 > cmake --build . --target install --config Release
+> cmake --build . --target install --config Debug
 ```
-3. This will build `portaudio` with `ASIO` enabled and install it in `C:/Program Files/portaudio`
+3. This will build Release and Debug variants of `portaudio` with `ASIO` enabled and install them in `C:/Program Files/portaudio`.
 
 ### Building Syntacts
 
@@ -38,9 +39,10 @@
 > cd build
 > cmake .. -A x64
 > cmake --build . --target install --config Release
+> cmake --build . --target install --config Debug
 ```
 
-2. This will build `Syntacts` and install it in `C:/Program Files/syntacts`.
+2. This will build Release and Debug variants of `Syntacts` and install them in `C:/Program Files/syntacts`.
 
 ### Building Syntacts GUI
 
