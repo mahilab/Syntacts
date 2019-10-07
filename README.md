@@ -41,4 +41,7 @@
 
 2. This will build `Syntacts` and install it in `C:/Program Files/syntacts`.
 
+### Building Syntacts GUI
 
+1. Compile and install the [carnot](https://github.com/epezent/carnot) engine using the README.
+2. Recompile and install Syntacts. CMake will detect the precense of `carnot` and build the GUI automatically.
