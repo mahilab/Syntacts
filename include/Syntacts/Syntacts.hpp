@@ -31,6 +31,7 @@ enum SyntactsError : int {
 struct SYNTACTS_API DeviceInfo {
     int index;         ///< device index
     std::string name;  ///< device name
+    std::string api;   ///< device API
     int maxChannels;   ///< maximum number of output channels
 };    
 

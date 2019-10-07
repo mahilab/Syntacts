@@ -38,7 +38,7 @@ std::vector<CueAndTime> g_cues;             ///< cues and times
 PaStream* g_stream;                         ///< portaudio stream
 bool g_syntacts_initialized = false;        ///< syntacts initialized?
 bool g_pa_initialized  = false;             ///< portadio initialized? 
-DeviceInfo g_currentDevice = DeviceInfo({-1,"none",0});
+DeviceInfo g_currentDevice = DeviceInfo({-1,"none","none",0});
 float g_sampleLength = DEFAULT_SAMPLE_LENGTH;
 
 /// Pops new instructions off the queue into the cue vector
@@ -83,13 +83,13 @@ int initPortaudio() {
 }
 
 DeviceInfo makeDeviceInfo(int deviceIndex) {
-    auto pa_info = Pa_GetDeviceInfo(deviceIndex);
-    auto pa_type = Pa_GetHostApiInfo(pa_info->hostApi)->type;
-
+    auto pa_dev_info = Pa_GetDeviceInfo(deviceIndex);
+    auto pa_api_info = Pa_GetHostApiInfo(pa_dev_info->hostApi);
     DeviceInfo info;
-    info.index = deviceIndex;
-    info.name  = pa_info->name;
-    info.maxChannels = pa_info->maxOutputChannels;
+    info.index       = deviceIndex;
+    info.name        = pa_dev_info->name;
+    info.api         = pa_api_info->name;
+    info.maxChannels = pa_dev_info->maxOutputChannels;
     return info;
 }
 
@@ -116,6 +116,7 @@ DeviceInfo getDefaultDevice() {
         DeviceInfo info;
         info.index = -1;
         info.name  = "none";
+        info.api   = "none";
         info.maxChannels = 0;
         return info;
     }
