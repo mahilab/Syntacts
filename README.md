@@ -16,7 +16,8 @@
 
 ### Building portaudio with ASIO
 1. Download the `ASIO` SDK from [here](https://www.steinberg.net/en/company/developers.html) and unzip it to a location of your choice
-2. In the directory that *contains the ASIOSDK2.3.2 folder*, run the following commands from an **administrator** Command Prompt or PowerShell:
+2. In the directory that *contains the ASIOSDK2.3.2 folder*, open Command Prompt or PowerShell **as an administrator** and run the following commands:
+
 ```shell
 > git clone https://git.assembla.com/portaudio.git 
 > cd portaudio
