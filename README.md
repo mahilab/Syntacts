@@ -44,5 +44,5 @@
 
 ### Building Syntacts GUI
 
-1. Compile and install the [carnot](https://github.com/epezent/carnot) engine using the README.
+1. Compile and install the [carnot](https://github.com/epezent/carnot) engine using its README instructioins.
 2. Recompile and install Syntacts. CMake will detect the precense of `carnot` and build the GUI automatically.
