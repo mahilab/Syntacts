@@ -22,7 +22,7 @@
 > cd portaudio
 > mkdir build
 > cd build
-> cmake .. -DPA_USE_ASIO=ON -DPA_DLL_LINK_WITH_STATIC_RUNTIME=OFF
+> cmake .. -A x64 -DPA_USE_ASIO=ON -DPA_DLL_LINK_WITH_STATIC_RUNTIME=OFF
 > cmake --build . --target install --config Release
 ```
 3. This will build `portaudio` with `ASIO` enabled and install it in `C:/Program Files/portaudio`
@@ -35,7 +35,7 @@
 > git clone https://github.com/mahilab/Syntacts
 > mkdir build
 > cd build
-> cmake .. 
+> cmake .. -A x64
 > cmake --build . --target install --config Release
 ```
 
