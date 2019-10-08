@@ -31,6 +31,10 @@
 
 2. This will build Release and Debug variants of `portaudio` with `ASIO` enabled and install them in `C:/Program Files/portaudio`.
 
+### Building carnot (Optional)
+
+1. If you want to build the **Syntacts GUI**, first compile and install the [carnot](https://github.com/epezent/carnot) engine using its README instructions.
+
 ### Building Syntacts
 
 1. Open PowerShell **as an administrator** in a directory of your choice and run the following commands:
@@ -45,8 +49,6 @@
 ```
 
 2. This will build Release and Debug variants of `Syntacts` and install them in `C:/Program Files/Syntacts`.
+3. If you chose to build `carnot`, the Syntacts GUI will be built and installd to `C:/Program Files/Syntacts/bin'.
 
-### Building Syntacts GUI
 
-1. Compile and install the [carnot](https://github.com/epezent/carnot) engine using its README instructions.
-2. Recompile and install Syntacts. CMake will detect the presence of `carnot` and build the GUI automatically.
