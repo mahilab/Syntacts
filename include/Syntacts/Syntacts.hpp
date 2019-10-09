@@ -24,15 +24,20 @@ enum SyntactsError : int {
     SyntactsError_InvalidChannelCount = -5,
     SyntactsError_NoWaveform          = -6,
     SyntactsError_AudioFileBufferFail = -7,
-    SyntactsError_AudioFileSaveFail   = -8
+    SyntactsError_AudioFileSaveFail   = -8,
+    SyntactsError_ControlPanelFail    = -9
 };
 
 /// Struct holding ASIO device information
 struct SYNTACTS_API DeviceInfo {
+    DeviceInfo();
+    DeviceInfo(int, std::string, std::string, int, bool, bool);
     int index;         ///< device index
     std::string name;  ///< device name
     std::string api;   ///< device API
     int maxChannels;   ///< maximum number of output channels
+    bool default;      ///< is the device the default output device of all APIs?
+    bool defaultApi;   ///< is the device the default output device for its API?
 };    
 
 #ifndef SYNTACTS_ANSI_C    
@@ -81,6 +86,9 @@ SYNTACTS_API int stopAll();
 
 /// Saves a Cue to an audio file
 SYNTACTS_API int save(std::shared_ptr<Cue> cue, std::string filePath, AudioFileFormat format = AudioFileFormat::Wave, int sampleRate = DEFAULT_SAMPLE_RATE);
+
+/// Opens the ASIO Control Panel
+SYNTACTS_API int openControlPanel(int deviceIndex, void* windowHandle = nullptr);
 
 #else
 
