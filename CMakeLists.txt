@@ -35,7 +35,7 @@ set(SYNTACTS_INCLUDE
     "include/Syntacts/Cue.hpp"
     "include/Syntacts/Envelope.hpp"
     "include/Syntacts/Oscillator.hpp"
-    "include/Syntacts/Generator.hpp"
+    "include/Syntacts/Source.hpp"
     "include/Syntacts/Config.hpp"
     "include/Syntacts/AudioFile.hpp"
 )

@@ -40,7 +40,7 @@ std::shared_ptr<Envelope> Cue::getEnvelope() const {
     return m_env;
 }
 
-void Cue::chain(std::shared_ptr<Generator> gen) {
+void Cue::chain(std::shared_ptr<Source> gen) {
     m_generators.push_back(std::move(gen));
 }
 

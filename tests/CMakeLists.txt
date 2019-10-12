@@ -18,3 +18,7 @@ target_link_libraries(devs portaudio_static)
 
 # add_executable(testLoop testLoop.cpp)
 # target_link_libraries(testLoop MEL::quanser syntacts)
+
+add_executable(serial serial.cpp)
+target_include_directories(serial PUBLIC "../3rdparty/")
+target_link_libraries(serial carnot)

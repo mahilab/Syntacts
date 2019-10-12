@@ -6,7 +6,7 @@ namespace tact
 {
 
 Oscillator::Oscillator(float frequency) :
-    Generator(),
+    Source(),
     m_frequency(std::abs(frequency))
 {
 

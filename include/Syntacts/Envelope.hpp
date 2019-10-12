@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Syntacts/Config.hpp>
-#include <Syntacts/Generator.hpp>
+#include <Syntacts/Source.hpp>
 #include <Syntacts/Tween.hpp>
 #include <Syntacts/Oscillator.hpp>
 #include <functional>
@@ -14,7 +14,7 @@ namespace tact
 //=============================================================================
 
 /// Abstract Base Envelope 
-class SYNTACTS_API Envelope : public Generator{
+class SYNTACTS_API Envelope : public Source {
 public:
 
     /// Constructor
