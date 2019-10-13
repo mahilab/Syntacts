@@ -13,14 +13,17 @@ namespace tact
 class SYNTACTS_API Oscillator : public Source
 {
 public:
-    /// Constructs an Oscillator with specified frequency
+    /// Constructs an Oscillator with a scalar frequency
     Oscillator(float frequency = 1.0f);
 
+    /// Constructs an Oscillator with a variable frequency
+    Oscillator(std::shared_ptr<Source> frequency);
+
     /// Sets the oscillator frequency in Hz
-    void setFrequency(float frequency);
+    // void setFrequency(float frequency);
 
 protected:
-    float m_frequency; ///< oscillator frequency
+    std::shared_ptr<Source> m_frequency;    
 };
 
 //=============================================================================

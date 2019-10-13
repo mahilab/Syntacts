@@ -244,7 +244,7 @@ int save(std::shared_ptr<Cue> cue, std::string filePath, AudioFileFormat format,
     }
     if (!file.setAudioBuffer(buffer))
         return SyntactsError_AudioFileBufferFail;
-    file.setBitDepth(24);
+    file.setBitDepth(16);
     file.setSampleRate(sampleRate);
     if (!file.save(filePath, format))
         return SyntactsError_AudioFileSaveFail;

@@ -11,8 +11,6 @@
 #include <carnot>
 #include <filesystem>
 
-
-
 struct MyStruct
 {
     int x, y, z;
@@ -97,14 +95,20 @@ int main()
     j->x = 33; j->y = 99; j->z = 55;
     j->doIt();
     j->vals = {1,2,3,4,5,6,7,8,9,10};
-    save(j, appDataFolder + "test.json", true);
+    save(j, appDataFolder + "test.cue");
     std::shared_ptr<MyStruct> z;
-    load(z, appDataFolder + "test.json", true);
+    load(z, appDataFolder + "test.cue");
     z->doIt();
     z->doIt();
-    std::shared_ptr<MyStruct> y;
-    load(y, appDataFolder + "test.json", true);
-    y->doIt();
+
+    carnot::Clock clock;
+    for (int i = 0; i < 1000; ++i) {
+        std::shared_ptr<MyStruct> y;
+        load(y, appDataFolder + "test.cue");
+    }
+    carnot::print(clock.getElapsedTime().asMicroseconds() / 1000);
+
+    // y->doIt();
     z->doIt();
     return 0;
 }
