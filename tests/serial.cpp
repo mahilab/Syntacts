@@ -4,9 +4,14 @@
 #include <cereal/archives/json.hpp>
 #include <cereal/types/base_class.hpp>
 #include <cereal/types/polymorphic.hpp>
+#include <cereal/types/vector.hpp>
+#include <cereal/types/functional.hpp>
 #include <fstream>
 #include <iostream>
 #include <carnot>
+#include <filesystem>
+
+
 
 struct MyStruct
 {
@@ -19,8 +24,10 @@ struct MyStruct
     template <class Archive>
     void serialize(Archive &arch)
     {
-        arch(CEREAL_NVP(x), CEREAL_NVP(y), CEREAL_NVP(z));
+        arch(CEREAL_NVP(x), CEREAL_NVP(y), CEREAL_NVP(z), CEREAL_NVP(vals));
     }
+
+    std::vector<double> vals;
 };
 
 struct MyChildStruct : public MyStruct {
@@ -37,7 +44,7 @@ struct MyChildStruct : public MyStruct {
 struct MyGrandchildStruct : public MyChildStruct {
     int b = 69;
         virtual void doIt() override {
-        carnot::print("MyGrandchildStruct", b, a, x, y, z);
+        carnot::print("MyGrandchildStruct", ++b, ++a, ++x, ++y, ++z);
     }
     template <class Archive>
     void serialize(Archive &arch) {
@@ -77,20 +84,27 @@ void load(Loadable& loadable, const std::string& filename, bool json = false) {
     }
 }
 
+namespace fs = std::filesystem;
+
 int main()
 {
+    std::string appDataFolder = getenv("APPDATA");
+    appDataFolder += "/Syntacts/";
+
+    fs::create_directories(appDataFolder);
 
     std::shared_ptr<MyStruct> j = std::make_shared<MyGrandchildStruct>();
     j->x = 33; j->y = 99; j->z = 55;
-
     j->doIt();
-
-    save(j, "evan.json", true);
-
+    j->vals = {1,2,3,4,5,6,7,8,9,10};
+    save(j, appDataFolder + "test.json", true);
     std::shared_ptr<MyStruct> z;
-    load(z, "evan.json", true);
-
+    load(z, appDataFolder + "test.json", true);
     z->doIt();
-
+    z->doIt();
+    std::shared_ptr<MyStruct> y;
+    load(y, appDataFolder + "test.json", true);
+    y->doIt();
+    z->doIt();
     return 0;
 }
