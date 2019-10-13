@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Syntacts/Config.hpp>
-#include <Syntacts/Generator.hpp>
+#include <Syntacts/Source.hpp>
 
 namespace tact
 {
@@ -9,7 +9,7 @@ namespace tact
 //=============================================================================
 
 /// Abstract base class for objects which produce a periodic, oscillating signal
-class SYNTACTS_API Oscillator : public Generator {
+class SYNTACTS_API Oscillator : public Source {
 public:
 
     /// Constructs an Oscillator with specified frequency

@@ -6,6 +6,7 @@
 #include <Syntacts/Detail/SPSCQueue.hpp>
 #include "Helpers.hpp"
 #include "portaudio.h"
+#include "pa_asio.h"
 #include <atomic>
 #include <mutex>
 #include <iostream>
@@ -38,7 +39,7 @@ std::vector<CueAndTime> g_cues;             ///< cues and times
 PaStream* g_stream;                         ///< portaudio stream
 bool g_syntacts_initialized = false;        ///< syntacts initialized?
 bool g_pa_initialized  = false;             ///< portadio initialized? 
-DeviceInfo g_currentDevice = DeviceInfo({-1,"none",0});
+DeviceInfo g_currentDevice = DeviceInfo();
 float g_sampleLength = DEFAULT_SAMPLE_LENGTH;
 
 /// Pops new instructions off the queue into the cue vector
@@ -51,7 +52,7 @@ void processQueue() {
     }
 }
 
-// portaudio callback method
+// portaudio callback method (where the magic happens!)
 int pa_callback(const void *inputBuffer, void *outputBuffer,
                        unsigned long framesPerBuffer,
                        const PaStreamCallbackTimeInfo *timeInfo,
@@ -72,7 +73,7 @@ int pa_callback(const void *inputBuffer, void *outputBuffer,
     return 0;
 }  
 
-int initPortaudio() {
+int tryInitPortaudio() {
     if (!g_pa_initialized) {
         int result = Pa_Initialize();
         if (result != paNoError)
@@ -82,28 +83,41 @@ int initPortaudio() {
     return paNoError;
 }
 
-DeviceInfo makeDeviceInfo(int deviceIndex) {
-    auto pa_info = Pa_GetDeviceInfo(deviceIndex);
-    auto pa_type = Pa_GetHostApiInfo(pa_info->hostApi)->type;
 
-    DeviceInfo info;
-    info.index = deviceIndex;
-    info.name  = pa_info->name;
-    info.maxChannels = pa_info->maxOutputChannels;
-    return info;
+DeviceInfo makeDeviceInfo(int deviceIndex) {
+    auto pa_dev_info = Pa_GetDeviceInfo(deviceIndex);
+    auto pa_api_info = Pa_GetHostApiInfo(pa_dev_info->hostApi);
+    return DeviceInfo(deviceIndex, 
+                    pa_dev_info->name, 
+                    pa_api_info->name, 
+                    pa_dev_info->maxOutputChannels, 
+                    deviceIndex == Pa_GetDefaultOutputDevice(),
+                    deviceIndex == Pa_GetHostApiInfo( pa_dev_info->hostApi )->defaultOutputDevice);
 }
 
 } // private namespace
+
+DeviceInfo::DeviceInfo() :
+    DeviceInfo(-1, "none", "none", 0, false, false)
+{
+
+}
+
+DeviceInfo::DeviceInfo(int _index, std::string _name, std::string _api, int _maxChannels, bool _default, bool _defaultApi) :
+    index(_index), name(_name), api(_api), maxChannels(_maxChannels), default(_default), defaultApi(_defaultApi)
+{
+
+}
 
 //==============================================================================
 // C++11 INTERFACE
 //==============================================================================
 
 std::vector<DeviceInfo> getAvailableDevices() {
-    initPortaudio();
+    tryInitPortaudio();
     std::vector<DeviceInfo> infos;
     for (int i = 0; i < Pa_GetDeviceCount(); ++i) {
-        if (Pa_GetHostApiInfo(Pa_GetDeviceInfo(i)->hostApi)->type == paASIO){            
+        if (Pa_GetDeviceInfo(i)->maxOutputChannels > 0) {            
             infos.push_back(makeDeviceInfo(i));
         }   
     }
@@ -112,13 +126,8 @@ std::vector<DeviceInfo> getAvailableDevices() {
 
 DeviceInfo getDefaultDevice() {
     auto infos = getAvailableDevices();
-    if (infos.empty()) {
-        DeviceInfo info;
-        info.index = -1;
-        info.name  = "none";
-        info.maxChannels = 0;
-        return info;
-    }
+    if (infos.empty()) 
+        return DeviceInfo();
     else {
         return infos[0];
     }
@@ -133,7 +142,7 @@ int initialize(int device, int channelCount, int sampleRate) {
     if (g_syntacts_initialized)
         return SyntactsError_AlreadyIntialized;
     // intitialize portaudio
-    int result = initPortaudio();    
+    int result = tryInitPortaudio();    
     if (result != paNoError)
         return result;
     // set current device
@@ -242,16 +251,25 @@ int save(std::shared_ptr<Cue> cue, std::string filePath, AudioFileFormat format,
     return SyntactsError_NoError;
 }
 
+int openControlPanel(int deviceIndex, void* windowHandle) {
+    PaError result = PaAsio_ShowControlPanel(deviceIndex, windowHandle);
+    if (result == paNoError)
+        return SyntactsError_NoError;
+    else {
+        return SyntactsError_ControlPanelFail;
+    }
+}
+
 //==============================================================================
 // ANSI C INTEFACE (DLL BINDINGS)
 //==============================================================================
 
 int initializeChannels(int channelCount) {
-    return initialize(channelCount);
+    return initialize(-1, channelCount, DEFAULT_SAMPLE_RATE);
 }
 
-int initializeCustom(int device, int channelCount) {
-    return initialize(device, channelCount);
+int initializeDefault() {
+    return initialize(-1,-1, DEFAULT_SAMPLE_RATE);
 }
 
 SYNTACTS_API int play(int channel,    // channel              [0 to N]
@@ -264,7 +282,7 @@ SYNTACTS_API int play(int channel,    // channel              [0 to N]
                  float S,       // sustain time         [s]
                  float R)       // release time         [s]
 {
-    // failture conditions
+    // failure conditions
     if(!g_syntacts_initialized)
         return SyntactsError_NotInitialized;
     if(!(channel < g_channelCount))

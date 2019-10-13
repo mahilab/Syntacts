@@ -7,19 +7,18 @@ namespace tact
 {
 
 /// An abstract class which generates time variant samples
-class SYNTACTS_API Generator {
+class SYNTACTS_API Source {
 public:
 
     /// Default constructor
-    Generator() = default;
+    Source() = default;
 
     /// Virtual destructor
-    virtual ~Generator() = default;
+    virtual ~Source() = default;
 
     /// Override to implement generator sampling behavior (required).
     virtual float sample(float t) = 0;
-
+    
 };
-
     
 } // namespace tact

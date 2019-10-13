@@ -220,14 +220,49 @@ public:
             ImGui::EndCombo();
         }
         ImGui::PopItemWidth();
+        // detail dev info
+        ImGui::SameLine();
+        if (ImGui::Button("...")) {
+            ImGui::OpenPopup("Device Details");
+        }
+        bool modalOpen = true;
+        if (ImGui::BeginPopupModal("Device Details", &modalOpen, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove))
+        {
+            ImGui::Text("ID"); ImGui::SameLine(40);
+            ImGui::Text("Name");  ImGui::SameLine(500);
+            ImGui::Text("API");  
+            
+
+            for (auto& d : devs) {
+                auto api = d.api;
+                if (api.find("Windows ") == 0)
+                    api.erase(0, 8);
+                if (d.defaultApi)
+                    api += "*";
+                std::string id = str(d.index);
+                if (d.default)
+                    id += "*";
+                ImGui::Separator();
+
+                ImGui::Text(id.c_str());   ImGui::SameLine(40);
+                ImGui::Text(d.name.c_str()); ImGui::SameLine(500);
+                ImGui::Text(api.c_str()); 
+            }
+
+            // if (ImGui::Button("Close")) {
+            //     ImGui::CloseCurrentPopup();
+            // } 
+            ImGui::EndPopup();
+        }
     }
 
     // Updates the help/info icons and contents
     void updateHelpInfo() {
+        bool modalOpen = true;
         ImGui::SameLine(ImGui::GetWindowWidth()-60);
         if (ImGui::Button(ICON_FA_QUESTION)) 
             ImGui::OpenPopup("Help");
-        if (ImGui::BeginPopupModal("Help", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove))
+        if (ImGui::BeginPopupModal("Help", &modalOpen, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove))
         {
             ImGui::BulletText("Buttons");
                 ImGui::Indent();
@@ -245,14 +280,12 @@ public:
             ImGui::Spacing();
             ImGui::BulletText("Build cues by changing parameters in the Carrier, Modulation, and Envelope dialogs.\nYou can change values by dragging or double clicking the numeric entries.");
             ImGui::Spacing();
-            if (ImGui::Button("Got It!"))
-                ImGui::CloseCurrentPopup(); 
             ImGui::EndPopup();
         }
         ImGui::SameLine();
         if (ImGui::Button(ICON_FA_INFO)) 
             ImGui::OpenPopup("Syntacts v1.0.0");
-        if (ImGui::BeginPopupModal("Syntacts v1.0.0", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove))
+        if (ImGui::BeginPopupModal("Syntacts v1.0.0", &modalOpen, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove))
         {
             ImGui::Text("Evan Pezent"); ImGui::SameLine(150);
             if (ImGui::Button(ICON_FA_ENVELOPE))
@@ -263,8 +296,6 @@ public:
             ImGui::Text("Brandon Cambio"); ImGui::SameLine(150);
             if (ImGui::Button(ICON_FA_ENVELOPE))
                 openEmail("Brandon.T.Cambio@rice.edu","Syntacts");
-            if (ImGui::Button("Close"))
-                ImGui::CloseCurrentPopup(); 
             ImGui::EndPopup();
         }
     }
@@ -490,6 +521,8 @@ private:
     float m_modIdx  = 2.0f;
 
     float m_chirp = 200;
+
+    bool m_deviceDetailsOpen = false;
 
     int   m_envMode  = EnvMode::ASR;
     std::vector<float> m_amps = {1.0f, 0.5f};

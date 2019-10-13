@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Syntacts/Config.hpp>
-#include <Syntacts/Generator.hpp>
+#include <Syntacts/Source.hpp>
 #include <Syntacts/Oscillator.hpp>
 #include <Syntacts/Envelope.hpp>
 #include <Syntacts/Cue.hpp>
@@ -24,14 +24,20 @@ enum SyntactsError : int {
     SyntactsError_InvalidChannelCount = -5,
     SyntactsError_NoWaveform          = -6,
     SyntactsError_AudioFileBufferFail = -7,
-    SyntactsError_AudioFileSaveFail   = -8
+    SyntactsError_AudioFileSaveFail   = -8,
+    SyntactsError_ControlPanelFail    = -9
 };
 
 /// Struct holding ASIO device information
 struct SYNTACTS_API DeviceInfo {
+    DeviceInfo();
+    DeviceInfo(int, std::string, std::string, int, bool, bool);
     int index;         ///< device index
     std::string name;  ///< device name
+    std::string api;   ///< device API
     int maxChannels;   ///< maximum number of output channels
+    bool default;      ///< is the device the default output device of all APIs?
+    bool defaultApi;   ///< is the device the default output device for its API?
 };    
 
 #ifndef SYNTACTS_ANSI_C    
@@ -40,19 +46,19 @@ struct SYNTACTS_API DeviceInfo {
 // C++11 INTERFACE
 //==============================================================================
 
-/// Intializes Syntacts
+/// Initializes Syntacts Library
 SYNTACTS_API int initialize(int deviceIndex = -1, int channelCount = -1, int sampleRate = DEFAULT_SAMPLE_RATE);
 
-/// Finalizes Syntacts Libary
+/// Finalizes Syntacts Library
 SYNTACTS_API int finalize();
 
-/// Get the default device
+/// Get the default ASIO device
 SYNTACTS_API DeviceInfo getDefaultDevice();
 
-/// Get the current device
+/// Get the current ASIO device
 SYNTACTS_API DeviceInfo getCurrentDevice();
 
-/// Gets list of avaialable ASIO devices
+/// Gets list of available ASIO devices
 SYNTACTS_API std::vector<DeviceInfo> getAvailableDevices();
 
 /// Plays a Cue on a specified channel asynchronously
@@ -81,23 +87,24 @@ SYNTACTS_API int stopAll();
 /// Saves a Cue to an audio file
 SYNTACTS_API int save(std::shared_ptr<Cue> cue, std::string filePath, AudioFileFormat format = AudioFileFormat::Wave, int sampleRate = DEFAULT_SAMPLE_RATE);
 
+/// Opens the ASIO Control Panel
+SYNTACTS_API int openControlPanel(int deviceIndex, void* windowHandle = nullptr);
+
 #else
 
 //==============================================================================
 // ANSI C INTEFACE (FOR DLL BASED BINDINGS)
 //==============================================================================
 
-SYNTACTS_API int initialize(int channelCount);
-SYNTACTS_API int initialize(int device, int channelCount);
 SYNTACTS_API DeviceInfo getDefaultDevice();
 SYNTACTS_API DeviceInfo getCurrentDevice();
 SYNTACTS_API std::vector<DeviceInfo> getAvailableDevices();
 
 extern "C" {
 
-SYNTACTS_API int initialize();
+SYNTACTS_API int initialize(int deviceIndex, int channelCount, int sampleRate);
 SYNTACTS_API int initializeChannels(int channelCount);
-SYNTACTS_API int initializeCustom(int device, int channelCount);
+SYNTACTS_API int initializeDefault();
 SYNTACTS_API int finalize();
 
 SYNTACTS_API int play(int channel,   // channel              [0 to N]
