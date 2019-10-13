@@ -1,4 +1,4 @@
-// #define CARNOT_NO_CONSOLE
+#define CARNOT_NO_CONSOLE
 // #define CARNOT_USE_DISCRETE_GPU
 
 #include "gui-detail.hpp"
