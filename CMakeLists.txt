@@ -36,6 +36,7 @@ set(SYNTACTS_INCLUDE
     "include/Syntacts/Envelope.hpp"
     "include/Syntacts/Oscillator.hpp"
     "include/Syntacts/Source.hpp"
+    "include/Syntacts/Scalar.hpp"
     "include/Syntacts/Config.hpp"
     "include/Syntacts/AudioFile.hpp"
 )
@@ -48,6 +49,7 @@ set(SYNTACTS_SRC
     "src/Syntacts/Oscillator.cpp"
     "src/Syntacts/Helpers.hpp"
     "src/Syntacts/AudioFile.cpp"
+    "src/Syntacts/Scalar.cpp"
     # "src/Syntacts/Detail/pink_noise.hpp"
     # "src/Syntacts/Detail/pink_noise.cpp"
 )
