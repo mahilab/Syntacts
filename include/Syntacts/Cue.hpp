@@ -50,6 +50,8 @@ private:
 
     std::vector<std::shared_ptr<Source>> m_generators; ///< array of generators
     std::shared_ptr<Envelope> m_env;                      ///< the Cue's primary envelope
+
+    SERIALIZE(MEMBER(m_generators), MEMBER(m_env))
 };
 
 template <typename T, typename ...Args>

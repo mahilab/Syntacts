@@ -20,12 +20,16 @@ public:
     /// Constructor
     Envelope(float duration = 1.0f);
 
+    /// Implements 
+    virtual float sample(float t) override;
+
     /// Gets the duration of an Envelope
     virtual float getDuration() const;
 
 protected:
-
     float m_duration;
+private:
+    SERIALIZE(PARENT(Source), MEMBER(m_duration))
 };
 
 //=============================================================================
@@ -53,11 +57,11 @@ protected:
 //=============================================================================
 
 /// An object which gives a Cue a duration and/or shape
-class SYNTACTS_API BasicEnvelope : public KeyedEnvelope {
+class SYNTACTS_API AmplitudeEnvelope : public KeyedEnvelope {
 public:
 
     /// Constructs an Eveloope with a specified duration
-    BasicEnvelope(float duration = 1.0f, float amplitude = 1.0f);
+    AmplitudeEnvelope(float duration = 1.0f, float amplitude = 1.0f);
 
     /// Gets the normalized amlitude of the Envelope
     float getAmplitude() const;

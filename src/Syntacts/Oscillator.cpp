@@ -18,10 +18,6 @@ Oscillator::Oscillator(std::shared_ptr<Source> frequency) :
 
 }
 
-// void Oscillator::setFrequency(float frequency) {
-//     m_frequency = std::abs(frequency);
-// }       
-
 float SineWave::sample(float t) {
     return std::sin(TWO_PI * m_frequency->sample(t) * t);
 }

@@ -231,7 +231,8 @@ int stopAll() {
     return playAll(std::make_shared<Cue>());
 }
 
-int save(std::shared_ptr<Cue> cue, std::string filePath, AudioFileFormat format, int sampleRate) {
+int exportToWave(std::shared_ptr<Cue> cue, std::string filePath, int sampleRate) {
+    AudioFileFormat format = AudioFileFormat::Wave;
     AudioFile<float> file;
     AudioFile<float>::AudioBuffer buffer;
     buffer.resize(1);
@@ -292,7 +293,7 @@ SYNTACTS_API int play(int channel,    // channel              [0 to N]
     /// make envelope
     std::shared_ptr<Envelope> env;
     if (A == 0.0f && R == 0.0f)
-        env = std::make_shared<BasicEnvelope>(S, amp);
+        env = std::make_shared<AmplitudeEnvelope>(S, amp);
     else
         env = std::make_shared<ASR>(A,S,R, amp);
     // make oscillator

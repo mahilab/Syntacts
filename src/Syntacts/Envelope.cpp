@@ -12,9 +12,14 @@ Envelope::Envelope(float duration) :
     
 }
 
+float Envelope::sample(float t) {
+    return t > m_duration ? 0.0f : 1.0f;
+}
+
 float Envelope::getDuration() const {
     return m_duration;
 }
+
 
 KeyedEnvelope::KeyedEnvelope(float amplitude0) :
     Envelope()
@@ -42,13 +47,13 @@ float KeyedEnvelope::sample(float t) {
 }
 
 
-BasicEnvelope::BasicEnvelope(float duration, float amplitude) :
+AmplitudeEnvelope::AmplitudeEnvelope(float duration, float amplitude) :
     KeyedEnvelope(amplitude)
 {
     addKey(duration, amplitude, Tween::Instant);
 }
 
-float BasicEnvelope::getAmplitude() const {
+float AmplitudeEnvelope::getAmplitude() const {
     return m_keys.begin()->second.first;
 }
 
