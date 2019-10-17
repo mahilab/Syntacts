@@ -35,9 +35,10 @@ set(SYNTACTS_INCLUDE
     "include/Syntacts/Cue.hpp"
     "include/Syntacts/Envelope.hpp"
     "include/Syntacts/Oscillator.hpp"
-    "include/Syntacts/Generator.hpp"
+    "include/Syntacts/Source.hpp"
     "include/Syntacts/Config.hpp"
     "include/Syntacts/AudioFile.hpp"
+    "include/Syntacts/Serialization.hpp"
 )
 
 # gather private sources
@@ -46,8 +47,10 @@ set(SYNTACTS_SRC
     "src/Syntacts/Cue.cpp"
     "src/Syntacts/Envelope.cpp"
     "src/Syntacts/Oscillator.cpp"
+    "src/Syntacts/Source.cpp"
     "src/Syntacts/Helpers.hpp"
     "src/Syntacts/AudioFile.cpp"
+    "src/Syntacts/Serialization.cpp"
     # "src/Syntacts/Detail/pink_noise.hpp"
     # "src/Syntacts/Detail/pink_noise.cpp"
 )
@@ -66,7 +69,7 @@ set(portaudio_INCLUDE_DIR "${portaudio_INCLUDE_DIR}/include")
 
 add_library(syntacts "")
 add_library(syntacts::syntacts ALIAS syntacts)
-set_target_properties(syntacts PROPERTIES DEBUG_POSTFIX -d)
+set_target_properties(syntacts PROPERTIES CXX_STANDARD 17 DEBUG_POSTFIX -d)
 target_sources(syntacts PRIVATE ${SYNTACTS_INCLUDE})
 target_sources(syntacts PRIVATE ${SYNTACTS_SRC})
 target_compile_definitions(syntacts PUBLIC SYNTACTS_STATIC PA_USE_ASIO PRIVATE NOMINMAX)
@@ -77,6 +80,7 @@ target_include_directories(syntacts
 	PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
         ${portaudio_INCLUDE_DIR}
+        3rdparty
 )
 target_link_libraries(syntacts PUBLIC portaudio_static)
 
@@ -87,7 +91,7 @@ target_link_libraries(syntacts PUBLIC portaudio_static)
 if (SYNTACTS_ANSI_C)
     add_library(syntacts-c SHARED "")
     add_library(syntacts::syntacts-c ALIAS syntacts-c)
-    set_target_properties(syntacts-c PROPERTIES DEBUG_POSTFIX -d)
+    set_target_properties(syntacts-c PROPERTIES CXX_STANDARD 17 DEBUG_POSTFIX -d)
     target_sources(syntacts-c PRIVATE ${SYNTACTS_INCLUDE})
     target_sources(syntacts-c PRIVATE ${SYNTACTS_SRC})
     target_compile_definitions(syntacts-c PRIVATE -DSYNTACTS_EXPORTS)

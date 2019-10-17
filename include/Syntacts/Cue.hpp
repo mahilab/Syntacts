@@ -34,7 +34,7 @@ public:
     std::shared_ptr<Envelope> getEnvelope() const;
 
     /// Chains an existing custom Generator to be processed
-    void chain(std::shared_ptr<Generator> gen);
+    void chain(std::shared_ptr<Source> gen);
 
     /// Makes and then chains a custon Generator to be processed
     template <typename T, typename ...Args>
@@ -48,8 +48,10 @@ public:
 
 private:
 
-    std::vector<std::shared_ptr<Generator>> m_generators; ///< array of generators
+    std::vector<std::shared_ptr<Source>> m_generators; ///< array of generators
     std::shared_ptr<Envelope> m_env;                      ///< the Cue's primary envelope
+
+    SERIALIZE(MEMBER(m_generators), MEMBER(m_env))
 };
 
 template <typename T, typename ...Args>

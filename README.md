@@ -12,6 +12,7 @@
 
 - [portaudio](http://www.portaudio.com/)
 - [Steinberg ASIO SDK](https://www.steinberg.net/en/company/developers.html)
+- [carnot](https://github.com/epezent/carnot) (Optional)
 
 ### Building portaudio with ASIO support
 
@@ -49,6 +50,6 @@
 ```
 
 2. This will build Release and Debug variants of `Syntacts` and install them in `C:/Program Files/Syntacts`.
-3. If you chose to build `carnot`, the Syntacts GUI will be built and installd to `C:/Program Files/Syntacts/bin'.
+3. If you chose to build `carnot`, the Syntacts GUI will be built and installd to `C:/Program Files/Syntacts/bin`.
 
 

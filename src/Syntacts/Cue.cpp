@@ -10,7 +10,7 @@ Cue::Cue() :
 }
 
 Cue::Cue(std::shared_ptr<Oscillator> osc, float duration, float amplitude) :
-    m_env(std::move(std::make_shared<BasicEnvelope>(duration, amplitude)))
+    m_env(std::move(std::make_shared<AmplitudeEnvelope>(duration, amplitude)))
 {
     chain(std::move(osc));
 }
@@ -40,7 +40,7 @@ std::shared_ptr<Envelope> Cue::getEnvelope() const {
     return m_env;
 }
 
-void Cue::chain(std::shared_ptr<Generator> gen) {
+void Cue::chain(std::shared_ptr<Source> gen) {
     m_generators.push_back(std::move(gen));
 }
 

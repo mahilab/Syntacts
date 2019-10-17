@@ -90,7 +90,7 @@ public:
     /// Builds the Syntacts Envelope
     Ptr<tact::Envelope> buildEnv() {
         if (m_envMode == EnvMode::Basic)
-            return make<tact::BasicEnvelope>(m_duration/1000.0f, m_amps[0]);    
+            return make<tact::AmplitudeEnvelope>(m_duration/1000.0f, m_amps[0]);    
         else if (m_envMode == EnvMode::ASR)
             return make<tact::ASR>(m_asr[0]/1000.0f, m_asr[1]/1000.0f, m_asr[2]/1000.f, m_amps[0], g_tweenFuncs[m_tweenModes[0]], g_tweenFuncs[m_tweenModes[2]]);
         else if (m_envMode == EnvMode::ADSR)
@@ -199,7 +199,7 @@ public:
         ImGui::SameLine();
         if (ImGui::Button(ICON_FA_FILE_AUDIO)) {
             std::string filePath = "syntacts_" + str(Random::range(0,std::numeric_limits<int>::max())) + ".wav";
-            tact::save(buildCue(), filePath);
+            tact::exportToWave(buildCue(), filePath);
         }
         ImGui::SameLine();
         if (ImGui::Button(ICON_FA_SYNC_ALT)) 
@@ -465,7 +465,7 @@ public:
             point = env->sample(t);
             t += 0.0001f;
         }
-        ImGui::PushItemWidth(m_windowSize.x - 25.0f);
+        ImGui::PushItemWidth(m_windowSize.x - 25.0f - 200);
         ImGui::PushStyleColor(ImGuiCol_PlotLines, hexCode("cf94c2"));
         ImGui::PushStyleColor(ImGuiCol_PlotLinesHovered, hexCode("cf94c2"));
         auto title = str(m_duration, "ms /", m_cuePlot.size(), " samples");
@@ -484,9 +484,10 @@ public:
     void update() override {    
         // Update the current size of the Window
         m_windowSize = Engine::getWindowSize();
+        float cueListWidth = 200;
         // Update the GUI
-        ImGui::SetNextWindowPos(Vector2f(5,5), ImGuiCond_Always);
-        ImGui::SetNextWindowSize(ImVec2(m_windowSize.x - 10.0f, m_windowSize.y - 10.0f), ImGuiCond_Always);
+        ImGui::SetNextWindowPos(Vector2f(5+5+cueListWidth,5), ImGuiCond_Always);
+        ImGui::SetNextWindowSize(ImVec2(m_windowSize.x - 10.0f - cueListWidth, m_windowSize.y - 10.0f), ImGuiCond_Always);
         ImGui::Begin("Syntacts", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);   
         updateTopBar();
         updateHelpInfo();
@@ -501,6 +502,10 @@ public:
         ImGui::Separator();
         // ImGui::ShowBezierDemo();
         updatePlot();
+        ImGui::End();
+        ImGui::SetNextWindowPos(Vector2f(5,5), ImGuiCond_Always);
+        ImGui::SetNextWindowSize(ImVec2(cueListWidth, m_windowSize.y - 10.0f), ImGuiCond_Always);
+        ImGui::Begin("Cues", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
         ImGui::End();
     }
 
@@ -548,7 +553,7 @@ private:
 int main(int argc, char const *argv[])
 {
     tact::initialize();
-    Engine::init(720, 540, WindowStyle::Default);
+    Engine::init(960, 540, WindowStyle::Default);
     Engine::window->setTitle("Syntacts");
     Engine::makeRoot<SyntactsGui>();
     Engine::run();  

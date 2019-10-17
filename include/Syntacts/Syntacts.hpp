@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Syntacts/Config.hpp>
-#include <Syntacts/Generator.hpp>
+#include <Syntacts/Source.hpp>
 #include <Syntacts/Oscillator.hpp>
 #include <Syntacts/Envelope.hpp>
 #include <Syntacts/Cue.hpp>
@@ -85,7 +85,7 @@ SYNTACTS_API int stop(int channel);
 SYNTACTS_API int stopAll();
 
 /// Saves a Cue to an audio file
-SYNTACTS_API int save(std::shared_ptr<Cue> cue, std::string filePath, AudioFileFormat format = AudioFileFormat::Wave, int sampleRate = DEFAULT_SAMPLE_RATE);
+SYNTACTS_API int exportToWave(std::shared_ptr<Cue> cue, std::string filePath, int sampleRate = DEFAULT_SAMPLE_RATE);
 
 /// Opens the ASIO Control Panel
 SYNTACTS_API int openControlPanel(int deviceIndex, void* windowHandle = nullptr);
