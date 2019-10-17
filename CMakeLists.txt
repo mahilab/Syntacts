@@ -181,3 +181,19 @@ export(EXPORT syntacts-targets
 	#    NAMESPACE syntacts::
 	   FILE ${CMAKE_CURRENT_BINARY_DIR}/SyntactsTargets.cmake)
 
+#==============================================================================
+# CPACK
+#==============================================================================
+
+set(CPACK_GENERATOR NSIS)
+set(CPACK_PACKAGE_NAME "Syntacts")
+set(CPACK_PACKAGE_VENDOR "MAHI Lab")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Syntacts - The Tactor Synthesizer")
+set(CPACK_PACKAGE_VERSION "1.0.0")
+set(CPACK_PACKAGE_VERSION_MAJOR "1")
+set(CPACK_PACKAGE_VERSION_MINOR "0")
+set(CPACK_PACKAGE_VERSION_PATCH "0")
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "CPack Example")
+SET(CPACK_NSIS_MODIFY_PATH ON)
+
+INCLUDE(CPack)

@@ -1,4 +1,4 @@
-#define CARNOT_NO_CONSOLE
+// #define CARNOT_NO_CONSOLE
 // #define CARNOT_USE_DISCRETE_GPU
 
 #include "gui-detail.hpp"
@@ -43,7 +43,7 @@ public:
     /// Restarts Syntacts and connects to a specifc device
     void connect(tact::DeviceInfo device) {
         tact::finalize();
-        tact::initialize(device.index, device.maxChannels);
+        print(tact::initialize(device.index, device.maxChannels));
         m_device = device;
         rechannel();
     }
