@@ -1,17 +1,24 @@
 #pragma once
 
+#include <Syntacts/Config.hpp>
+#include <Syntacts/Serialization.hpp>
+
 namespace tact {
 
 namespace Tween
 {
     /// Prototype for a function which interpolate from a to b given t between 0 and 1
     struct Functor {
-        virtual float operator()(float a, float b, float t) = 0;
+        virtual float tween(float a, float b, float t) = 0;
+
+        template <class Archive>
+        void serialize(Archive& archive) {}
     };
 
     /// Macro to quickly define a new tweening functor
     #define TWEEN(T) struct T : public Functor { \
-                         virtual float operator()(float a, float b, float t) override; \
+                         virtual float tween(float a, float b, float t) override; \
+                         SERIALIZE(PARENT(Functor)); \
                      };
 
     /// Returns b instantly regardless of t.

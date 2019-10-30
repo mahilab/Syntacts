@@ -43,7 +43,7 @@ float KeyedEnvelope::sample(float t) {
         return b->second.first;
     auto a = std::prev(b);
     t = (t - a->first) / (b->first - a->first);
-    return b->second.second->operator()(a->second.first, b->second.first, t);    
+    return b->second.second->tween(a->second.first, b->second.first, t);    
 }
 
 

@@ -3,6 +3,7 @@
 #include <Syntacts/Oscillator.hpp>
 #include <Syntacts/Envelope.hpp>
 #include <Syntacts/Cue.hpp>
+#include <Syntacts/Tween.hpp>
 
 #include <fstream>
 #include <filesystem>
@@ -34,6 +35,43 @@ CEREAL_REGISTER_TYPE(tact::Chirp);
 CEREAL_REGISTER_TYPE(tact::PulseTrain);
 
 CEREAL_REGISTER_TYPE(tact::Envelope);
+
+CEREAL_REGISTER_TYPE(tact::Tween::Instant);
+CEREAL_REGISTER_TYPE(tact::Tween::Delayed);
+CEREAL_REGISTER_TYPE(tact::Tween::Linear);
+CEREAL_REGISTER_TYPE(tact::Tween::Smoothstep);
+CEREAL_REGISTER_TYPE(tact::Tween::Smootherstep);
+CEREAL_REGISTER_TYPE(tact::Tween::Smootheststep);
+CEREAL_REGISTER_TYPE(tact::Tween::Quadratic::In);
+CEREAL_REGISTER_TYPE(tact::Tween::Quadratic::Out);
+CEREAL_REGISTER_TYPE(tact::Tween::Quadratic::InOut);
+CEREAL_REGISTER_TYPE(tact::Tween::Cubic::In);
+CEREAL_REGISTER_TYPE(tact::Tween::Cubic::Out);
+CEREAL_REGISTER_TYPE(tact::Tween::Cubic::InOut);
+CEREAL_REGISTER_TYPE(tact::Tween::Quartic::In);
+CEREAL_REGISTER_TYPE(tact::Tween::Quartic::Out);
+CEREAL_REGISTER_TYPE(tact::Tween::Quartic::InOut);
+CEREAL_REGISTER_TYPE(tact::Tween::Quintic::In);
+CEREAL_REGISTER_TYPE(tact::Tween::Quintic::Out);
+CEREAL_REGISTER_TYPE(tact::Tween::Quintic::InOut);
+CEREAL_REGISTER_TYPE(tact::Tween::Sinusoidal::In);
+CEREAL_REGISTER_TYPE(tact::Tween::Sinusoidal::Out);
+CEREAL_REGISTER_TYPE(tact::Tween::Sinusoidal::InOut);
+CEREAL_REGISTER_TYPE(tact::Tween::Exponential::In);
+CEREAL_REGISTER_TYPE(tact::Tween::Exponential::Out);
+CEREAL_REGISTER_TYPE(tact::Tween::Exponential::InOut);
+CEREAL_REGISTER_TYPE(tact::Tween::Circular::In);
+CEREAL_REGISTER_TYPE(tact::Tween::Circular::Out);
+CEREAL_REGISTER_TYPE(tact::Tween::Circular::InOut);
+CEREAL_REGISTER_TYPE(tact::Tween::Elastic::In);
+CEREAL_REGISTER_TYPE(tact::Tween::Elastic::Out);
+CEREAL_REGISTER_TYPE(tact::Tween::Elastic::InOut);
+CEREAL_REGISTER_TYPE(tact::Tween::Back::In);
+CEREAL_REGISTER_TYPE(tact::Tween::Back::Out);
+CEREAL_REGISTER_TYPE(tact::Tween::Back::InOut);
+CEREAL_REGISTER_TYPE(tact::Tween::Bounce::In);
+CEREAL_REGISTER_TYPE(tact::Tween::Bounce::Out);
+CEREAL_REGISTER_TYPE(tact::Tween::Bounce::InOut);
 
 namespace tact {
 

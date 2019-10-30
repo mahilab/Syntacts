@@ -15,34 +15,34 @@ inline float lerp(float a, float b, float t) {
 
 } // private namespace
 
-float Instant::operator()(float a, float b, float t) {
+float Instant::tween(float a, float b, float t) {
     return b;
 }
 
-float Delayed::operator()(float a, float b, float t) {
+float Delayed::tween(float a, float b, float t) {
     if (t == 1.0f)
         return b;
 }
 
 
-float Linear::operator()(float a, float b, float t) {
+float Linear::tween(float a, float b, float t) {
     return lerp(a,b,t);
 }
 
 
-float Smoothstep::operator()(float a, float b, float t) {
+float Smoothstep::tween(float a, float b, float t) {
     t = t * t * (3.0f - 2.0f * t);
     return lerp(a, b, t);
 }
 
 
-float Smootherstep::operator()(float a, float b, float t) {
+float Smootherstep::tween(float a, float b, float t) {
     t = t * t * t * (t * (t * 6.0f - 15.0f) + 10.0f);
     return lerp(a, b, t);
 }
 
 
-float Smootheststep::operator()(float a, float b, float t) {
+float Smootheststep::tween(float a, float b, float t) {
     t = t * t * t * t * (t * (t * (t * -20.0f + 70.0f) - 84.0f) + 35.0f);
     return lerp(a, b, t);
 }
@@ -53,19 +53,19 @@ float Smootheststep::operator()(float a, float b, float t) {
 
 namespace Quadratic {
 
-float In::operator()(float a, float b, float t) {
+float In::tween(float a, float b, float t) {
     t = t * t;
     return lerp(a, b, t);
 }
 
 
-float Out::operator()(float a, float b, float t) {
+float Out::tween(float a, float b, float t) {
     t = t * (2.0f - t);
     return lerp(a, b, t);
 }
 
 
-float InOut::operator()(float a, float b, float t) {
+float InOut::tween(float a, float b, float t) {
     t *= 2.0f;
     if (t < 1.0f)
         t = 0.5f * t * t;
@@ -80,20 +80,20 @@ float InOut::operator()(float a, float b, float t) {
 
 namespace Cubic {
 
-float In::operator()(float a, float b, float t) {
+float In::tween(float a, float b, float t) {
     t = t * t * t;
     return lerp(a, b, t);
 }
 
 
-float Out::operator()(float a, float b, float t) {
+float Out::tween(float a, float b, float t) {
     t -= 1.0f;
     t = (t * t * t + 1.0f);
     return lerp(a, b, t);
 }
 
 
-float InOut::operator()(float a, float b, float t) {
+float InOut::tween(float a, float b, float t) {
     t *= 2.0f;
     if (t < 1.0f)
         t = 0.5f * t * t * t;
@@ -108,20 +108,20 @@ float InOut::operator()(float a, float b, float t) {
 
 namespace Quartic {
 
-float In::operator()(float a, float b, float t) {
+float In::tween(float a, float b, float t) {
     t = t * t * t * t;
     return lerp(a, b, t);
 }
 
 
-float Out::operator()(float a, float b, float t) {
+float Out::tween(float a, float b, float t) {
     t -= 1.0f;
     t = -(t * t * t * t - 1.0f);
     return lerp(a, b, t);
 }
 
 
-float InOut::operator()(float a, float b, float t) {
+float InOut::tween(float a, float b, float t) {
     t *= 2.0f;
     if (t < 1.0f)
         t = 0.5f * t * t * t * t;
@@ -136,20 +136,20 @@ float InOut::operator()(float a, float b, float t) {
 
 namespace Quintic {
 
-float In::operator()(float a, float b, float t) {
+float In::tween(float a, float b, float t) {
     t = t * t * t * t * t;
     return lerp(a, b, t);
 }
 
 
-float Out::operator()(float a, float b, float t) {
+float Out::tween(float a, float b, float t) {
     t -= 1.0f;
     t = (t * t * t * t * t + 1.0f);
     return lerp(a, b, t);
 }
 
 
-float InOut::operator()(float a, float b, float t) {
+float InOut::tween(float a, float b, float t) {
     t *= 2.0f;
     if (t < 1.0f)
         t = 0.5f * t * t * t * t * t;
@@ -168,19 +168,19 @@ float InOut::operator()(float a, float b, float t) {
 
 namespace Sinusoidal {
 
-float In::operator()(float a, float b, float t) {
+float In::tween(float a, float b, float t) {
     t = 1.0f - std::cos(t * HALFPI);
     return lerp(a, b, t);
 }
 
 
-float Out::operator()(float a, float b, float t) {
+float Out::tween(float a, float b, float t) {
     t = std::sin(t * HALFPI);
     return lerp(a, b, t);
 }
 
 
-float InOut::operator()(float a, float b, float t) {
+float InOut::tween(float a, float b, float t) {
     t = -0.5f * (std::cos(PI * t) - 1.0f);
     return lerp(a, b, t);
 }
@@ -189,19 +189,19 @@ float InOut::operator()(float a, float b, float t) {
 
 namespace Exponential {
 
-float In::operator()(float a, float b, float t) {
+float In::tween(float a, float b, float t) {
     t = std::pow(2.0f, 10.0f * (t - 1.0f));
     return lerp(a, b, t);
 }
 
 
-float Out::operator()(float a, float b, float t) {
+float Out::tween(float a, float b, float t) {
     t = (-std::pow(2.0f, -10.0f * t) + 1.0f);
     return lerp(a, b, t);
 }
 
 
-float InOut::operator()(float a, float b, float t) {
+float InOut::tween(float a, float b, float t) {
     t *= 2.0f;
     if (t < 1.0f)
         t = 0.5f * std::pow(2.0f, 10.0f * (t - 1.0f));
@@ -216,20 +216,20 @@ float InOut::operator()(float a, float b, float t) {
 
 namespace Circular {
 
-float In::operator()(float a, float b, float t) {
+float In::tween(float a, float b, float t) {
     t = (1.0f - std::sqrt(1.0f - t * t));
     return lerp(a, b, t);
 }
 
 
-float Out::operator()(float a, float b, float t) {
+float Out::tween(float a, float b, float t) {
     t -= 1.0f;
     t = std::sqrt(1.0f - t * t);
     return lerp(a, b, t);
 }
 
 
-float InOut::operator()(float a, float b, float t) {
+float InOut::tween(float a, float b, float t) {
     t *= 2.0f;
     if (t < 1.0f)
         t = -0.5f * (std::sqrt(1.0f - t * t) - 1.0f);
@@ -248,7 +248,7 @@ float InOut::operator()(float a, float b, float t) {
 
 namespace Elastic {
 
-float In::operator()(float a, float b, float t) {
+float In::tween(float a, float b, float t) {
     if (t == 0.0f) {
         return a;
     }
@@ -261,7 +261,7 @@ float In::operator()(float a, float b, float t) {
 }
 
 
-float Out::operator()(float a, float b, float t) {
+float Out::tween(float a, float b, float t) {
     if (t == 0.0f) {
         return a;
     }
@@ -273,7 +273,7 @@ float Out::operator()(float a, float b, float t) {
 }
 
 
-float InOut::operator()(float a, float b, float t) {
+float InOut::tween(float a, float b, float t) {
     t *= 2.0f;
     if (t < 1.0f) {
         t -= 1.0f;
@@ -293,20 +293,20 @@ static float s  = 1.70158f;
 static float s2 = 2.5949095f;
 
 
-float In::operator()(float a, float b, float t) {
+float In::tween(float a, float b, float t) {
     t = (t * t * ((s + 1.0f) * t - s));
     return lerp(a, b, t);
 }
 
 
-float Out::operator()(float a, float b, float t) {
+float Out::tween(float a, float b, float t) {
     t -= 1.0f;
     t = (t * t * ((s + 1.0f) * t + s) + 1.0f);
     return lerp(a, b, t);
 }
 
 
-float InOut::operator()(float a, float b, float t) {
+float InOut::tween(float a, float b, float t) {
     t *= 2.0f;
     if (t < 1.0f) {
         t = (0.5f * (t * t * ((s2 + 1.0f) * t - s2)));
@@ -350,19 +350,19 @@ float InOut(float t) {
 }  // namespace detail
 
 
-float In::operator()(float a, float b, float t) {
+float In::tween(float a, float b, float t) {
     t = detail::In(t);
     return lerp(a, b, t);
 }
 
 
-float Out::operator()(float a, float b, float t) {
+float Out::tween(float a, float b, float t) {
     t = detail::Out(t);
     return lerp(a, b, t);
 }
 
 
-float InOut::operator()(float a, float b, float t) {
+float InOut::tween(float a, float b, float t) {
     t = detail::InOut(t);
     return lerp(a, b, t);
 }
