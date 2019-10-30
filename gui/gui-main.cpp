@@ -5,8 +5,31 @@
 
 using namespace carnot;
 
-const std::vector<const char*>     g_tweenStrings = {"Linear",            "Smoothstep",            "Smootherstep",            "Smootheststep",            "Sinusoidal::In",            "Sinusoidal::Out",            "Sinusoidal::InOut"           , "Exponential::In",            "Exponential::Out",            "Exponential::InOut"           };
-const std::vector<tact::TweenFunc> g_tweenFuncs   = {tact::Tween::Linear, tact::Tween::Smoothstep, tact::Tween::Smootherstep, tact::Tween::Smootheststep, tact::Tween::Sinusoidal::In, tact::Tween::Sinusoidal::Out, tact::Tween::Sinusoidal::InOut, tact::Tween::Exponential::In, tact::Tween::Exponential::Out, tact::Tween::Exponential::InOut};
+const std::vector<const char*> g_tweenStrings = {
+    "Linear", 
+    "Smoothstep",
+    "Smootherstep",
+    "Smootheststep",
+    "Sinusoidal::In",
+    "Sinusoidal::Out",
+    "Sinusoidal::InOut",
+    "Exponential::In",
+    "Exponential::Out",
+    "Exponential::InOut"
+};
+
+const std::vector<std::shared_ptr<tact::Tween::Functor>> g_tweenFuncs = {
+    std::make_shared<tact::Tween::Linear>(),
+    std::make_shared<tact::Tween::Smoothstep>(), 
+    std::make_shared<tact::Tween::Smootherstep>(), 
+    std::make_shared<tact::Tween::Smootheststep>(), 
+    std::make_shared<tact::Tween::Sinusoidal::In>(), 
+    std::make_shared<tact::Tween::Sinusoidal::Out>(), 
+    std::make_shared<tact::Tween::Sinusoidal::InOut>(), 
+    std::make_shared<tact::Tween::Exponential::In>(), 
+    std::make_shared<tact::Tween::Exponential::Out>(), 
+    std::make_shared<tact::Tween::Exponential::InOut>()
+};
 
 //==============================================================================
 // GUI GAMEOBJECT

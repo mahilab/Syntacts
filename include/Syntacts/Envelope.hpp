@@ -38,11 +38,13 @@ private:
 class SYNTACTS_API KeyedEnvelope : public Envelope {
 public:
 
+    typedef std::shared_ptr<Tween::Functor> TweenFunc;
+
     /// Constucts Envelope with initial amplitude
     KeyedEnvelope(float amplitude0 = 0.0f);
 
     /// Adds a new amplitude at time t seconds. Uses tween to interpolate from previous amplitude.
-    void addKey(float t, float amplitude, TweenFunc tween = Tween::Linear);
+    void addKey(float t, float amplitude, TweenFunc = std::make_shared<Tween::Linear>());
 
     float getDuration() const override;
 
@@ -76,7 +78,7 @@ public:
 
     /// Constructs ASR Envelope with specified attack, sustain, and release times
     ASR(float attackTime, float sustainTime, float releaseTime, float attackAmlitude = 1.0f, 
-        TweenFunc attackTween = Tween::Linear, TweenFunc releaseTween = Tween::Linear);
+        TweenFunc attackTween = std::make_shared<Tween::Linear>(), TweenFunc releaseTween = std::make_shared<Tween::Linear>());
 
 };
 
@@ -88,7 +90,7 @@ public:
 
     /// Constructs ASR Envelope with specified attack, sustain, and release times
     ADSR(float attackTime, float decayTime, float sustainTime, float releaseTime, float attackAmplitude = 1.0f, float decayAplitude = 0.5f, 
-         TweenFunc attackTween = Tween::Linear, TweenFunc decayTween = Tween::Linear, TweenFunc releaseTween = Tween::Linear);
+         TweenFunc attackTween = std::make_shared<Tween::Linear>(), TweenFunc decayTween = std::make_shared<Tween::Linear>(), TweenFunc releaseTween = std::make_shared<Tween::Linear>());
 
 };
 

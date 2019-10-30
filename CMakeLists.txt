@@ -39,6 +39,7 @@ set(SYNTACTS_INCLUDE
     "include/Syntacts/Config.hpp"
     "include/Syntacts/AudioFile.hpp"
     "include/Syntacts/Serialization.hpp"
+    "include/Syntacts/Tween.hpp"
 )
 
 # gather private sources
@@ -51,6 +52,7 @@ set(SYNTACTS_SRC
     "src/Syntacts/Helpers.hpp"
     "src/Syntacts/AudioFile.cpp"
     "src/Syntacts/Serialization.cpp"
+    "src/Syntacts/Tween.cpp"
     # "src/Syntacts/Detail/pink_noise.hpp"
     # "src/Syntacts/Detail/pink_noise.cpp"
 )

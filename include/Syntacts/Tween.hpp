@@ -1,107 +1,103 @@
 #pragma once
 
-#include <functional>
-
 namespace tact {
-
-typedef std::function<float(float,float,float)> TweenFunc;
 
 namespace Tween
 {
+    /// Prototype for a function which interpolate from a to b given t between 0 and 1
+    struct Functor {
+        virtual float operator()(float a, float b, float t) = 0;
+    };
+
+    /// Macro to quickly define a new tweening functor
+    #define TWEEN(T) struct T : public Functor { \
+                         virtual float operator()(float a, float b, float t) override; \
+                     };
+
     /// Returns b instantly regardless of t.
-    inline float Instant(float a, float b, float t);
+    TWEEN(Instant);
     /// Returns a until t = 1.0, then returns b.
-    inline float Delayed(float a, float b, float t);
+    TWEEN(Delayed);
     /// Transitions from a to b using linear interpolation
-    inline float Linear(float a, float b, float t);
+    TWEEN(Linear);
     /// Transitions from a to b using 3rd order Hermite interpolation.
-    inline float Smoothstep(float a, float b, float t);
+    TWEEN(Smoothstep);
     /// Transitions from a to b using 5th order Hermite interpolation.
-    inline float Smootherstep(float a, float b, float t);
+    TWEEN(Smootherstep);
     /// Transitions from a to b using 7th order Hermite interpolation.
-    inline float Smootheststep(float a, float b, float t);
+    TWEEN(Smootheststep);
 
     /// Transitions from a to b using 2nd order polynomial interpolation.
-    namespace Quadratic
-    {
-        inline float In(float a, float b, float t);
-        inline float Out(float a, float b, float t);
-        inline float InOut(float a, float b, float t);
+    namespace Quadratic {
+        TWEEN(In);
+        TWEEN(Out);
+        TWEEN(InOut);
     }
 
     /// Transitions from a to b using 3rd order polynomial interpolation.
-    namespace Cubic
-    {
-        inline float In(float a, float b, float t);
-        inline float Out(float a, float b, float t);
-        inline float InOut(float a, float b, float t);
+    namespace Cubic {
+        TWEEN(In);
+        TWEEN(Out);
+        TWEEN(InOut);
     }
 
     /// Transitions from a to b using 4th order polynomial interpolation.
-    namespace Quartic
-    {
-        inline float In(float a, float b, float t);
-        inline float Out(float a, float b, float t);
-        inline float InOut(float a, float b, float t);
+    namespace Quartic {
+        TWEEN(In);
+        TWEEN(Out);
+        TWEEN(InOut);
     }
 
     /// Transitions from a to b using 5th order polynomial interpolation.
-    namespace Quintic
-    {
-        inline float In(float a, float b, float t);
-        inline float Out(float a, float b, float t);
-        inline float InOut(float a, float b, float t);
+    namespace Quintic {
+        TWEEN(In);
+        TWEEN(Out);
+        TWEEN(InOut);
     }
 
     /// Transitions from a to b using sinusoidal interpolation.
-    namespace Sinusoidal
-    {
-        inline float In(float a, float b, float t);
-        inline float Out(float a, float b, float t);
-        inline float InOut(float a, float b, float t);
+    namespace Sinusoidal {
+        TWEEN(In);
+        TWEEN(Out);
+        TWEEN(InOut);
     }
 
     /// Transitions from a to b using exponential interpolation.
-    namespace Exponential
-    {
-        inline float In(float a, float b, float t);
-        inline float Out(float a, float b, float t);
-        inline float InOut(float a, float b, float t);
+    namespace Exponential {
+        TWEEN(In);
+        TWEEN(Out);
+        TWEEN(InOut);
     }
 
     /// Transitions from a to b using circular interpolation.
-    namespace Circular
-    {
-        inline float In(float a, float b, float t);
-        inline float Out(float a, float b, float t);
-        inline float InOut(float a, float b, float t);
+    namespace Circular {
+        TWEEN(In);
+        TWEEN(Out);
+        TWEEN(InOut);
     }
 
     /// Transitions from a to b with an elastic effect.
-    namespace Elastic
-    {
-        inline float In(float a, float b, float t);
-        inline float Out(float a, float b, float t);
-        inline float InOut(float a, float b, float t);
+    namespace Elastic {
+        TWEEN(In);
+        TWEEN(Out);
+        TWEEN(InOut);
     }
 
     /// Transitions from a to b with an overshooting effect
-    namespace Back
-    {
-        inline float In(float a, float b, float t);
-        inline float Out(float a, float b, float t);
-        inline float InOut(float a, float b, float t);
+    namespace Back {
+        TWEEN(In);
+        TWEEN(Out);
+        TWEEN(InOut);
     }
 
     /// Transitions from a to b with a bouncing effect.
-    namespace Bounce
-    {
-        inline float In(float a, float b, float t);
-        inline float Out(float a, float b, float t);
-        inline float InOut(float a, float b, float t);
+    namespace Bounce {
+        TWEEN(In);
+        TWEEN(Out);
+        TWEEN(InOut);
     }
 
 } // namespace Tween
 } // namespace tact
 
-#include "Detail/Tween.inl"
+// #include "Detail/Tween.inl"

@@ -43,14 +43,14 @@ float KeyedEnvelope::sample(float t) {
         return b->second.first;
     auto a = std::prev(b);
     t = (t - a->first) / (b->first - a->first);
-    return b->second.second(a->second.first, b->second.first, t);    
+    return b->second.second->operator()(a->second.first, b->second.first, t);    
 }
 
 
 AmplitudeEnvelope::AmplitudeEnvelope(float duration, float amplitude) :
     KeyedEnvelope(amplitude)
 {
-    addKey(duration, amplitude, Tween::Instant);
+    addKey(duration, amplitude, std::make_shared<Tween::Instant>());
 }
 
 float AmplitudeEnvelope::getAmplitude() const {
@@ -58,21 +58,21 @@ float AmplitudeEnvelope::getAmplitude() const {
 }
 
 
-ASR::ASR(float attackTime, float sustainTime, float releaseTime, float attackAmplitude, std::function<float(float, float, float)> attackTween, std::function<float(float, float, float)> releaseTween) :
+ASR::ASR(float attackTime, float sustainTime, float releaseTime, float attackAmplitude, TweenFunc attackTween, TweenFunc releaseTween) :
     KeyedEnvelope(0.0f)
 {
     addKey(attackTime, attackAmplitude, attackTween);
-    addKey(attackTime + sustainTime, attackAmplitude, Tween::Instant);
+    addKey(attackTime + sustainTime, attackAmplitude, std::make_shared<Tween::Instant>());
     addKey(attackTime + sustainTime + releaseTime, 0.0f, releaseTween);
 }
 
 
-ADSR::ADSR(float attackTime, float decayTime, float sustainTime, float releaseTime, float attackAmplitude, float decayAmplitude, std::function<float(float, float, float)> attackTween, std::function<float(float, float, float)> decayTween, std::function<float(float, float, float)> releaseTween) :
+ADSR::ADSR(float attackTime, float decayTime, float sustainTime, float releaseTime, float attackAmplitude, float decayAmplitude, TweenFunc attackTween, TweenFunc decayTween, TweenFunc releaseTween) :
     KeyedEnvelope(0.0f)
 {
     addKey(attackTime, attackAmplitude, attackTween);
     addKey(attackTime + decayTime, decayAmplitude, decayTween);
-    addKey(attackTime + decayTime + sustainTime, decayAmplitude, Tween::Instant);
+    addKey(attackTime + decayTime + sustainTime, decayAmplitude, std::make_shared<Tween::Instant>());
     addKey(attackTime + decayTime + sustainTime + releaseTime, 0.0f, releaseTween);
 }
 
