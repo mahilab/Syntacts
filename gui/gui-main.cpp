@@ -18,7 +18,7 @@ const std::vector<const char*> g_tweenStrings = {
     "Exponential::InOut"
 };
 
-const std::vector<std::shared_ptr<tact::Tween::Functor>> g_tweenFuncs = {
+const std::vector<std::shared_ptr<tact::Tween::Function>> g_tweenFuncs = {
     std::make_shared<tact::Tween::Linear>(),
     std::make_shared<tact::Tween::Smoothstep>(), 
     std::make_shared<tact::Tween::Smootherstep>(), 

@@ -16,10 +16,10 @@ public:
     Oscillator(float frequency = 1.0f);
 
     /// Constructs an Oscillator with a variable frequency
-    Oscillator(std::shared_ptr<Source> frequency);
+    Oscillator(Ptr<Source> frequency);
 
 protected:
-    std::shared_ptr<Source> m_frequency;    
+    Ptr<Source> m_frequency;    
 
 private:
     SERIALIZE(PARENT(Source), MEMBER(m_frequency));
@@ -148,7 +148,7 @@ private:
     float m_dutyCycle;
     float m_period;
 private:
-    SERIALIZE(PARENT(Oscillator), MEMBER(m_dutyCycle), MEMBER(m_period))
+    SERIALIZE(PARENT(Oscillator), MEMBER(m_dutyCycle), MEMBER(m_period));
 };
 
 } // namespace tact

@@ -11,12 +11,14 @@
 
 #include <cereal/types/memory.hpp>
 #include <cereal/archives/binary.hpp>
-// #include <cereal/archives/json.hpp>
+#include <cereal/archives/json.hpp>
 #include <cereal/types/base_class.hpp>
 #include <cereal/types/vector.hpp>
 #include <cereal/access.hpp>
 #include <cereal/types/polymorphic.hpp>
 #include <cereal/types/functional.hpp>
+#include <cereal/types/map.hpp>
+#include <cereal/types/utility.hpp>
 
 namespace fs = std::filesystem;
 
@@ -35,6 +37,11 @@ CEREAL_REGISTER_TYPE(tact::Chirp);
 CEREAL_REGISTER_TYPE(tact::PulseTrain);
 
 CEREAL_REGISTER_TYPE(tact::Envelope);
+CEREAL_REGISTER_TYPE(tact::KeyedEnvelope);
+CEREAL_REGISTER_TYPE(tact::AmplitudeEnvelope);
+CEREAL_REGISTER_TYPE(tact::ASR);
+CEREAL_REGISTER_TYPE(tact::ADSR);
+CEREAL_REGISTER_TYPE(tact::OscillatingEnvelope);
 
 CEREAL_REGISTER_TYPE(tact::Tween::Instant);
 CEREAL_REGISTER_TYPE(tact::Tween::Delayed);
@@ -75,17 +82,31 @@ CEREAL_REGISTER_TYPE(tact::Tween::Bounce::InOut);
 
 namespace tact {
 
-bool save(const std::shared_ptr<Cue>& cue, const std::string& name) {
-    std::ofstream file(name);
-    cereal::BinaryOutputArchive archive(file);
-    archive(cue);  
+bool save(const Ptr<Cue>& cue, const std::string& name, SerialFormat format) {
+    if (format == SerialFormat::Binary) {
+        std::ofstream file(name, std::ios::binary);
+        cereal::BinaryOutputArchive archive(file);
+        archive(cue);  
+    }
+    else if (format == SerialFormat::JSON) {
+        std::ofstream file(name);
+        cereal::JSONOutputArchive archive(file);
+        archive(cue); 
+    }
     return true;
 }
 
-bool load(std::shared_ptr<Cue>& cue, const std::string& name) {
-    std::ifstream file(name);
-    cereal::BinaryInputArchive archive(file);
-    archive(cue);
+bool load(Ptr<Cue>& cue, const std::string& name, SerialFormat format) {
+    if (format == SerialFormat::Binary) {
+        std::ifstream file(name, std::ios::binary);
+        cereal::BinaryInputArchive archive(file);
+        archive(cue);
+    }
+    else if (format == SerialFormat::JSON) {
+        std::ifstream file(name);
+        cereal::JSONInputArchive archive(file);
+        archive(cue);
+    }
     return true;
 }
 

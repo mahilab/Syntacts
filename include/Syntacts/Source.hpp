@@ -2,6 +2,7 @@
 
 #include <Syntacts/Config.hpp>
 #include <Syntacts/Serialization.hpp>
+#include <Syntacts/Memory.hpp>
 
 namespace tact
 {

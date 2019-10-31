@@ -29,7 +29,7 @@ public:
 protected:
     float m_duration;
 private:
-    SERIALIZE(PARENT(Source), MEMBER(m_duration))
+    SERIALIZE(PARENT(Source), MEMBER(m_duration));
 };
 
 //=============================================================================
@@ -38,13 +38,13 @@ private:
 class SYNTACTS_API KeyedEnvelope : public Envelope {
 public:
 
-    typedef std::shared_ptr<Tween::Functor> TweenFunc;
+    typedef Ptr<Tween::Function> TweenFunc;
 
     /// Constucts Envelope with initial amplitude
     KeyedEnvelope(float amplitude0 = 0.0f);
 
     /// Adds a new amplitude at time t seconds. Uses tween to interpolate from previous amplitude.
-    void addKey(float t, float amplitude, TweenFunc = std::make_shared<Tween::Linear>());
+    void addKey(float t, float amplitude, TweenFunc tween = create<Tween::Linear>());
 
     float getDuration() const override;
 
@@ -53,7 +53,9 @@ public:
 protected:
 
     std::map<float, std::pair<float, TweenFunc>> m_keys;
-    
+
+private:
+    SERIALIZE(PARENT(Envelope), MEMBER(m_keys));    
 };
 
 //=============================================================================
@@ -61,13 +63,12 @@ protected:
 /// An object which gives a Cue a duration and/or shape
 class SYNTACTS_API AmplitudeEnvelope : public KeyedEnvelope {
 public:
-
     /// Constructs an Eveloope with a specified duration
     AmplitudeEnvelope(float duration = 1.0f, float amplitude = 1.0f);
-
     /// Gets the normalized amlitude of the Envelope
     float getAmplitude() const;
-
+private:
+    SERIALIZE(PARENT(KeyedEnvelope));
 };
 
 //=============================================================================
@@ -75,11 +76,11 @@ public:
 /// Attack-Sustain-Release Envelope
 class SYNTACTS_API ASR : public KeyedEnvelope {
 public:
-
     /// Constructs ASR Envelope with specified attack, sustain, and release times
-    ASR(float attackTime, float sustainTime, float releaseTime, float attackAmlitude = 1.0f, 
-        TweenFunc attackTween = std::make_shared<Tween::Linear>(), TweenFunc releaseTween = std::make_shared<Tween::Linear>());
-
+    ASR(float attackTime = 1.0f, float sustainTime = 1.0f, float releaseTime = 1.0f, float attackAmlitude = 1.0f, 
+        TweenFunc attackTween = create<Tween::Linear>(), TweenFunc releaseTween = create<Tween::Linear>());
+private:
+    SERIALIZE(PARENT(KeyedEnvelope));
 };
 
 //=============================================================================
@@ -87,11 +88,11 @@ public:
 /// Attack-Decay-Sustain-Release Envelope
 class SYNTACTS_API ADSR : public KeyedEnvelope {
 public:
-
     /// Constructs ASR Envelope with specified attack, sustain, and release times
-    ADSR(float attackTime, float decayTime, float sustainTime, float releaseTime, float attackAmplitude = 1.0f, float decayAplitude = 0.5f, 
-         TweenFunc attackTween = std::make_shared<Tween::Linear>(), TweenFunc decayTween = std::make_shared<Tween::Linear>(), TweenFunc releaseTween = std::make_shared<Tween::Linear>());
-
+    ADSR(float attackTime = 1.0f, float decayTime = 1.0f, float sustainTime = 1.0f, float releaseTime = 1.0f, float attackAmplitude = 1.0f, float decayAplitude = 0.5f, 
+         TweenFunc attackTween = create<Tween::Linear>(), TweenFunc decayTween = create<Tween::Linear>(), TweenFunc releaseTween = create<Tween::Linear>());
+private:
+    SERIALIZE(PARENT(KeyedEnvelope));
 };
 
 //=============================================================================
@@ -99,16 +100,14 @@ public:
 /// An object which gives a Cue a duration and/or shape
 class SYNTACTS_API OscillatingEnvelope : public Envelope {
 public:
-
     /// Constructs an Envelope with a specified duration, positive oscillator type and frequency
-    OscillatingEnvelope(float duration , float amplitude, std::shared_ptr<Oscillator> osc);
-
+    OscillatingEnvelope(float duration = 1.0f , float amplitude = 1.0f, Ptr<Oscillator> osc = create<SineWave>());
     virtual float sample(float t) override;
-
 protected:
-
-    std::shared_ptr<Oscillator> m_osc;
+    Ptr<Oscillator> m_osc;
     float m_amplitude;
+private:
+    SERIALIZE(PARENT(Envelope), MEMBER(m_osc), MEMBER(m_amplitude));
 };
 
 } // namespace tact

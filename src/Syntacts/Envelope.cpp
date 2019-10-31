@@ -24,7 +24,7 @@ float Envelope::getDuration() const {
 KeyedEnvelope::KeyedEnvelope(float amplitude0) :
     Envelope()
 {
-   addKey(0.0f, amplitude0);
+   addKey(0.0f, amplitude0, create<Tween::Linear>());
 }
 
 void KeyedEnvelope::addKey(float t, float amplitude, TweenFunc tween) {
@@ -50,19 +50,18 @@ float KeyedEnvelope::sample(float t) {
 AmplitudeEnvelope::AmplitudeEnvelope(float duration, float amplitude) :
     KeyedEnvelope(amplitude)
 {
-    addKey(duration, amplitude, std::make_shared<Tween::Instant>());
+    addKey(duration, amplitude, create<Tween::Instant>());
 }
 
 float AmplitudeEnvelope::getAmplitude() const {
     return m_keys.begin()->second.first;
 }
 
-
 ASR::ASR(float attackTime, float sustainTime, float releaseTime, float attackAmplitude, TweenFunc attackTween, TweenFunc releaseTween) :
     KeyedEnvelope(0.0f)
 {
     addKey(attackTime, attackAmplitude, attackTween);
-    addKey(attackTime + sustainTime, attackAmplitude, std::make_shared<Tween::Instant>());
+    addKey(attackTime + sustainTime, attackAmplitude, create<Tween::Instant>());
     addKey(attackTime + sustainTime + releaseTime, 0.0f, releaseTween);
 }
 
@@ -72,11 +71,11 @@ ADSR::ADSR(float attackTime, float decayTime, float sustainTime, float releaseTi
 {
     addKey(attackTime, attackAmplitude, attackTween);
     addKey(attackTime + decayTime, decayAmplitude, decayTween);
-    addKey(attackTime + decayTime + sustainTime, decayAmplitude, std::make_shared<Tween::Instant>());
+    addKey(attackTime + decayTime + sustainTime, decayAmplitude, create<Tween::Instant>());
     addKey(attackTime + decayTime + sustainTime + releaseTime, 0.0f, releaseTween);
 }
 
-OscillatingEnvelope::OscillatingEnvelope(float duration , float amplitude , std::shared_ptr<Oscillator> osc) :
+OscillatingEnvelope::OscillatingEnvelope(float duration , float amplitude , Ptr<Oscillator> osc) :
     Envelope(duration), m_amplitude(amplitude), m_osc(std::move(osc))
 {
     

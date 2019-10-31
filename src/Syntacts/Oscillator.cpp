@@ -6,7 +6,7 @@ namespace tact
 {
 
 Oscillator::Oscillator(float frequency) :
-    Oscillator(std::move(std::make_shared<Scalar>(frequency)))
+    Oscillator(create<Scalar>(frequency))
 {
 
 }

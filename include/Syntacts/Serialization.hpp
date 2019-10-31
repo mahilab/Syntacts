@@ -35,9 +35,9 @@ enum class SerialFormat {
 };
 
 /// Saves a cue to the global Syntacts cue library
-bool save(const std::shared_ptr<Cue>& cue, const std::string& name);
+bool save(const std::shared_ptr<Cue>& cue, const std::string& name, SerialFormat format = SerialFormat::Binary);
 
 /// Loads a Cue from the global Syntacts Cue library
-bool load(std::shared_ptr<Cue>& cue, const std::string& name);
+bool load(std::shared_ptr<Cue>& cue, const std::string& name, SerialFormat format = SerialFormat::Binary);
 
 }
