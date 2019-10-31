@@ -2,8 +2,10 @@
 // #define CARNOT_USE_DISCRETE_GPU
 
 #include "gui-detail.hpp"
+#include <filesystem>
 
 using namespace carnot;
+namespace fs = std::filesystem;
 
 const std::vector<const char*> g_tweenStrings = {
     "Linear", 
@@ -229,7 +231,7 @@ public:
             connect(m_device);
         ImGui::SameLine();
         auto devs = tact::getAvailableDevices();
-        ImGui::PushItemWidth(200);
+        ImGui::PushItemWidth(400);
         if (ImGui::BeginCombo("##Devices", m_device.name.c_str())) // The second parameter is the label previewed before opening the combo.
         {
             for (int i = 0; i < devs.size(); i++)
@@ -497,6 +499,30 @@ public:
         ImGui::PopStyleColor();
         ImGui::PopItemWidth();
     }
+
+    void updateCueList() {
+        static char buffer[64] = ""; 
+        ImGui::InputText("##CueName", buffer, 64, ImGuiInputTextFlags_CharsNoBlank);
+        ImGui::SameLine();
+        if (ImGui::Button(ICON_FA_PLUS_SQUARE)) {
+            auto cue = buildCue();
+            std::string filename(buffer);
+            filename += ".json";
+            tact::save(cue, filename, tact::SerialFormat::JSON);
+        }
+        ImGui::SameLine();
+        if (ImGui::Button(ICON_FA_QUESTION"##CueHelp")) {
+
+        }
+        ImGui::Separator();
+        std::string path = "./";
+        for (const auto & entry : fs::directory_iterator(path))
+        {
+            auto filename = entry.path().filename();
+            if (filename.has_extension() && filename.extension().generic_string() == ".json")
+                ImGui::Text(filename.stem().generic_string().c_str());
+        }
+    }
     
 
     //--------------------------------------------------------------------------
@@ -529,6 +555,7 @@ public:
         ImGui::SetNextWindowPos(Vector2f(5,5), ImGuiCond_Always);
         ImGui::SetNextWindowSize(ImVec2(cueListWidth, m_windowSize.y - 10.0f), ImGuiCond_Always);
         ImGui::Begin("Cues", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
+        updateCueList();
         ImGui::End();
     }
 
