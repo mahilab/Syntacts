@@ -4,7 +4,8 @@
 namespace tact {
 
 Cue::Cue() :
-    m_generators(0)
+    m_generators(0),
+    m_env(std::move(create<Envelope>()))
 {
 
 }

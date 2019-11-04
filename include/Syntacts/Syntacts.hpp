@@ -31,8 +31,9 @@ enum SyntactsError : int {
 /// Struct holding ASIO device information
 struct SYNTACTS_API DeviceInfo {
     DeviceInfo();
-    DeviceInfo(int, std::string, std::string, int, bool, bool);
+    DeviceInfo(int, int, std::string, std::string, int, bool, bool);
     int index;         ///< device index
+    int indexApi;      ///< API index
     std::string name;  ///< device name
     std::string api;   ///< device API
     int maxChannels;   ///< maximum number of output channels

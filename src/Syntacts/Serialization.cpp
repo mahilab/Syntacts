@@ -8,6 +8,7 @@
 #include <fstream>
 #include <filesystem>
 #include <iostream>
+#include <cstdlib>
 
 #include <cereal/types/memory.hpp>
 #include <cereal/archives/binary.hpp>
@@ -82,14 +83,27 @@ CEREAL_REGISTER_TYPE(tact::Tween::Bounce::InOut);
 
 namespace tact {
 
-bool save(const Ptr<Cue>& cue, const std::string& name, SerialFormat format) {
+namespace {
+    void ensureLibraryDirectoryExists() {
+        fs::create_directories(getLibraryDirectory());
+    }
+}
+
+const std::string& getLibraryDirectory() {
+    static std::string appData   = std::string(std::getenv("APPDATA"));
+    static std::string libFolder = appData + std::string("\\Syntacts\\Library\\");
+    return libFolder;
+}
+
+bool save(const Ptr<Cue>& cue, const std::string& name, SerialFormat format) {    
+    ensureLibraryDirectoryExists();
     if (format == SerialFormat::Binary) {
-        std::ofstream file(name, std::ios::binary);
+        std::ofstream file(getLibraryDirectory() + name + ".tact", std::ios::binary);
         cereal::BinaryOutputArchive archive(file);
         archive(cue);  
     }
     else if (format == SerialFormat::JSON) {
-        std::ofstream file(name);
+        std::ofstream file(getLibraryDirectory() + name + ".tact");
         cereal::JSONOutputArchive archive(file);
         archive(cue); 
     }
@@ -97,13 +111,14 @@ bool save(const Ptr<Cue>& cue, const std::string& name, SerialFormat format) {
 }
 
 bool load(Ptr<Cue>& cue, const std::string& name, SerialFormat format) {
+    ensureLibraryDirectoryExists();
     if (format == SerialFormat::Binary) {
-        std::ifstream file(name, std::ios::binary);
+        std::ifstream file(getLibraryDirectory() + name + ".tact", std::ios::binary);
         cereal::BinaryInputArchive archive(file);
         archive(cue);
     }
     else if (format == SerialFormat::JSON) {
-        std::ifstream file(name);
+        std::ifstream file(getLibraryDirectory() + name + ".tact");
         cereal::JSONInputArchive archive(file);
         archive(cue);
     }

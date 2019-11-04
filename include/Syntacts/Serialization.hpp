@@ -34,6 +34,9 @@ enum class SerialFormat {
     JSON
 };
 
+/// Returns the directory to which all library cues are saved/loaded
+const std::string& getLibraryDirectory();
+
 /// Saves a cue to the global Syntacts cue library
 bool save(const std::shared_ptr<Cue>& cue, const std::string& name, SerialFormat format = SerialFormat::Binary);
 

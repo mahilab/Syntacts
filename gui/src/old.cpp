@@ -209,6 +209,8 @@ public:
     void updateTopBar() {
         if (ImGui::Button(ICON_FA_PLAY) || Input::getKeyDown(Key::Space)) 
             playSelected();
+        tooltip("Plays the current cue on all selected channels");
+
         ImGui::SameLine();
         if (ImGui::Button(ICON_FA_VOLUME_UP)) {
             playSpeaker();
@@ -500,30 +502,7 @@ public:
         ImGui::PopItemWidth();
     }
 
-    void updateCueList() {
-        static char buffer[64] = ""; 
-        ImGui::InputText("##CueName", buffer, 64, ImGuiInputTextFlags_CharsNoBlank);
-        ImGui::SameLine();
-        if (ImGui::Button(ICON_FA_PLUS_SQUARE)) {
-            auto cue = buildCue();
-            std::string filename(buffer);
-            filename += ".json";
-            tact::save(cue, filename, tact::SerialFormat::JSON);
-        }
-        ImGui::SameLine();
-        if (ImGui::Button(ICON_FA_QUESTION"##CueHelp")) {
-
-        }
-        ImGui::Separator();
-        std::string path = "./";
-        for (const auto & entry : fs::directory_iterator(path))
-        {
-            auto filename = entry.path().filename();
-            if (filename.has_extension() && filename.extension().generic_string() == ".json")
-                ImGui::Text(filename.stem().generic_string().c_str());
-        }
-    }
-    
+  
 
     //--------------------------------------------------------------------------
     // Update
@@ -549,13 +528,7 @@ public:
         ImGui::Separator();
         updateEnvelope();
         ImGui::Separator();
-        // ImGui::ShowBezierDemo();
         updatePlot();
-        ImGui::End();
-        ImGui::SetNextWindowPos(Vector2f(5,5), ImGuiCond_Always);
-        ImGui::SetNextWindowSize(ImVec2(cueListWidth, m_windowSize.y - 10.0f), ImGuiCond_Always);
-        ImGui::Begin("Cues", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
-        updateCueList();
         ImGui::End();
     }
 
@@ -576,8 +549,6 @@ private:
     float m_modIdx  = 2.0f;
 
     float m_chirp = 200;
-
-    bool m_deviceDetailsOpen = false;
 
     int   m_envMode  = EnvMode::ASR;
     std::vector<float> m_amps = {1.0f, 0.5f};
@@ -602,11 +573,9 @@ private:
 
 int main(int argc, char const *argv[])
 {
-    tact::initialize();
-    Engine::init(960, 540, WindowStyle::Default);
-    Engine::window->setTitle("Syntacts");
     Engine::makeRoot<SyntactsGui>();
+    Engine::init(900, 600, WindowStyle::Default);
+    Engine::window->setTitle("Syntacts");
     Engine::run();  
-    tact::finalize();
     return 0;
 }
