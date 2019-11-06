@@ -34,6 +34,7 @@ private:
         helpers::setWindowRect(rect);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(7,7));
         ImGui::Begin(getName().c_str(), nullptr,  ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
+        ImGui::BeginGroup();
         updateApiSelection();
         ImGui::SameLine();
         updateDeviceSelection();
@@ -43,6 +44,13 @@ private:
         if (ImGui::Button(ICON_FA_SYNC_ALT)) 
             initialize(m_currentDev);
         m_infoBar->tooltip("Refresh Device List");
+        ImGui::EndGroup();
+        if (ImGui::BeginDragDropTarget()) {
+            if (const ImGuiPayload* playload = ImGui::AcceptDragDropPayload("DND_HELP")) {
+                    print("HEY!");
+            }
+            ImGui::EndDragDropTarget();
+        }
         ImGui::End();
         ImGui::PopStyleVar();
     }
@@ -87,6 +95,7 @@ private:
         if (ImGui::Button("...")) {
             ImGui::OpenPopup("Device Details");
         }
+
         m_infoBar->tooltip("List Devices");
         bool modalOpen = true;
         if (ImGui::BeginPopupModal("Device Details", &modalOpen, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove))

@@ -67,7 +67,7 @@ struct CueSequence : public ImSequencer::SequenceInterface {
 	virtual void Get(int index, int** start, int** end, int *type, unsigned int *color) {
         Item& item = items[index];
         if (color)
-        	*color = ImGui::GetColorU32(ImGuiCol_TextDisabled,0.5f); // same color for everyone, return color based on type
+        	*color = 0x801080FF; // same color for everyone, return color based on type
 		if (start)
 			*start = &item.frameStart;
 		if (end)
@@ -112,8 +112,7 @@ public:
             return make<tact::Cue>(osc, modOsc, env);
         }
         else
-            return make<tact::Cue>(osc, env);
-            
+            return make<tact::Cue>(osc, env);            
     }
 
 private:
@@ -124,10 +123,14 @@ private:
     bool m_expanded = true;
     int m_currentFrame = 0;
 
+    tact::Ptr<tact::Envelope> testEnv;
+
     void start() override {
         m_sequence.frameMin = 0;
-        m_sequence.frameMax = 200;
-        m_sequence.items.push_back(CueSequence::Item{0, 0, 100, false});
+        m_sequence.frameMax = 100;
+        m_sequence.items.push_back(CueSequence::Item{0, 0, 20, false});
+
+        testEnv = tact::create<tact::ASR>();
     }
 
     void update() override {
@@ -138,6 +141,7 @@ private:
                 updateEnvelope();
                 updateCarrier();
                 updateModulation();
+                editEnvelope(0, testEnv);
                 ImGui::EndTabItem();
             }
             if (ImGui::BeginTabItem("Sequencer##Tab")) {
@@ -150,6 +154,30 @@ private:
         }
         
         ImGui::End();
+    }
+
+    /// Widget to design an envelope
+    void editEnvelope(int i, Ptr<tact::Envelope> env) {
+        int inMode, outMode;
+        if (std::dynamic_pointer_cast<tact::ASR>(env)) 
+            inMode = EnvMode::ASR;
+        else if (std::dynamic_pointer_cast<tact::ADSR>(env))
+            inMode = EnvMode::ADSR;
+        else if (std::dynamic_pointer_cast<tact::AmplitudeEnvelope>(env)) {
+            inMode = EnvMode::Basic;
+        }
+        if (!ImGui::CollapsingHeader(str("Envelope",i).c_str()))
+            return;
+        outMode = inMode;
+        ImGui::Indent();
+        ImGui::Text(str(inMode).c_str());
+        ImGui::RadioButton("Basic",&outMode, EnvMode::Basic); ImGui::SameLine();
+        ImGui::RadioButton("ASR",  &outMode, EnvMode::ASR);   ImGui::SameLine();
+        ImGui::RadioButton("ADSR", &outMode, EnvMode::ADSR);  ImGui::SameLine();
+        if (outMode != inMode) {
+            print("It changed");
+        }
+        ImGui::Unindent();
     }
 
     

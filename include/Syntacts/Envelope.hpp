@@ -21,7 +21,7 @@ public:
     Envelope(float duration = 1.0f);
 
     /// Implements 
-    virtual float sample(float t) override;
+    virtual float sample(float t) const override;
 
     /// Gets the duration of an Envelope
     virtual float getDuration() const;
@@ -48,7 +48,7 @@ public:
 
     float getDuration() const override;
 
-    virtual float sample(float t) override;
+    virtual float sample(float t) const override;
 
 protected:
 
@@ -102,10 +102,10 @@ class SYNTACTS_API OscillatingEnvelope : public Envelope {
 public:
     /// Constructs an Envelope with a specified duration, positive oscillator type and frequency
     OscillatingEnvelope(float duration = 1.0f , float amplitude = 1.0f, Ptr<Oscillator> osc = create<SineWave>());
-    virtual float sample(float t) override;
+    virtual float sample(float t) const override;
 protected:
     Ptr<Oscillator> m_osc;
-    float m_amplitude;
+    std::atomic<float> m_amplitude;
 private:
     SERIALIZE(PARENT(Envelope), MEMBER(m_osc), MEMBER(m_amplitude));
 };

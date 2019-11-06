@@ -319,7 +319,8 @@ namespace ImSequencer
                 customHeight = 0;
                 for (int i = 0; i < *selectedEntry; i++)
                     customHeight += sequence->GetCustomHeight(i);;
-                draw_list->AddRectFilled(ImVec2(contentMin.x, contentMin.y + ItemHeight * *selectedEntry + customHeight), ImVec2(contentMin.x + canvas_size.x, contentMin.y + ItemHeight * (*selectedEntry + 1) + customHeight), 0x801080FF, 1.f);
+                draw_list->AddRectFilled(ImVec2(contentMin.x, contentMin.y + ItemHeight * *selectedEntry + customHeight), 
+                           ImVec2(contentMin.x + canvas_size.x, contentMin.y + ItemHeight * (*selectedEntry + 1) + customHeight), ImGui::GetColorU32(carnot::Color::Transparent), 1.f);
             }
 
             // slots
@@ -335,8 +336,10 @@ namespace ImSequencer
                 ImVec2 slotP1(pos.x + *start * framePixelWidth, pos.y + 2);
                 ImVec2 slotP2(pos.x + *end * framePixelWidth + framePixelWidth, pos.y + ItemHeight - 2);
                 ImVec2 slotP3(pos.x + *end * framePixelWidth + framePixelWidth, pos.y + ItemHeight - 2 + localCustomHeight);
-                unsigned int slotColor = color | 0xFF000000;
-                unsigned int slotColorHalf = (color & 0xFFFFFF) | 0x40000000;
+                // unsigned int slotColor = color | 0xFF000000;
+                // unsigned int slotColorHalf = (color & 0xFFFFFF) | 0x40000000;
+                auto slotColor = color;
+                auto slotColorHalf = color;
 
                 if (slotP1.x <= (canvas_size.x + contentMin.x) && slotP2.x >= (contentMin.x + legendWidth))
                 {
@@ -351,7 +354,7 @@ namespace ImSequencer
                     , ImRect(ImVec2(slotP2.x - framePixelWidth / 2, slotP1.y), slotP2)
                     , ImRect(slotP1, slotP2) };
 
-                const unsigned int quadColor[] = { 0xFFFFFFFF, 0xFFFFFFFF, slotColor + (selected ? 0 : 0x202020) };
+                const unsigned int quadColor[] = { 0xFFFFFFFF, 0xFFFFFFFF, slotColor };
                 if (movingEntry == -1 && (sequenceOptions&SEQUENCER_EDIT_STARTEND))// TODOFOCUS && backgroundRect.Contains(io.MousePos))
                 {
                     for (int j = 2; j >= 0; j--)
@@ -453,7 +456,7 @@ namespace ImSequencer
             {
                 static const float cursorWidth = 2.f;
                 float cursorOffset = contentMin.x + legendWidth + (*currentFrame - firstFrameUsed) * framePixelWidth + framePixelWidth / 2 - cursorWidth * 0.5f;
-                draw_list->AddLine(ImVec2(cursorOffset, canvas_pos.y), ImVec2(cursorOffset, contentMax.y), ImGui::GetColorU32(carnot::hexCode("cf94c2")), cursorWidth);
+                draw_list->AddLine(ImVec2(cursorOffset, canvas_pos.y), ImVec2(cursorOffset, contentMax.y), ImGui::GetColorU32(carnot::Color::White), cursorWidth);
                 char tmps[512];
                 sprintf(tmps, "%d", *currentFrame);
                 draw_list->AddText(ImVec2(cursorOffset + 10, canvas_pos.y + 2), 0xFF2A2AFF, tmps);

@@ -23,7 +23,7 @@ private:
         helpers::setWindowRect(rect);
         ImGui::Begin(getName().c_str(), nullptr,  ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_HorizontalScrollbar);
         updatePlot();
-        ImGui::End();
+        ImGui::End();        
     }
 
     /// Updates the waveform plot
@@ -56,6 +56,7 @@ private:
         ImGui::PushStyleColor(ImGuiCol_PlotLinesHovered, hexCode("cf94c2"));
         auto title = str(cue->getEnvelope()->getDuration()*1000, "ms /", m_cuePlot.size(), " samples");
         ImGui::PlotLines2("", &m_cuePlot[0], &m_envPlot[0], nPoints,  0, "", -2.0f, 2.0f, ImVec2(0, ImGui::GetContentRegionAvail().y));
+
         if (ImGui::IsItemHovered()) {
             m_width -= Input::getScroll() * m_width / 20.0f; 
             if (Input::getDoubleClick(MouseButton::Left))

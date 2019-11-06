@@ -52,16 +52,24 @@ private:
     void update() override {
         helpers::setWindowRect(rect);
         ImGui::Begin(getName().c_str(), nullptr,  ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
+        ImGui::BeginGroup();
         updateCreateCueDialog();
         ImGui::Separator();
         updateLibraryList();     
         ImGui::Separator();   
         updateListControls();
+        ImGui::EndGroup();
+        if (ImGui::BeginDragDropTarget()) {
+            if (const ImGuiPayload* playload = ImGui::AcceptDragDropPayload("DND_HELP")) {
+                    print("HEY!");
+            }
+            ImGui::EndDragDropTarget();
+        }
         ImGui::End();
     }
 
     void updateCreateCueDialog() {
-        ImGui::PushItemWidth(-25);
+        ImGui::PushItemWidth(-30);
         bool entered = ImGui::InputText("##CueName", m_inputBuffer, 64, ImGuiInputTextFlags_CharsNoBlank | ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue);
         ImGui::SameLine(); 
         std::string filename(m_inputBuffer);
@@ -93,7 +101,11 @@ private:
         for (auto& pair : m_lib) {
             Entry& entry = pair.second;
             if (ImGui::Selectable(entry.name.c_str(), m_selected == entry.name))
-                m_selected = entry.name;            
+                m_selected = entry.name;           
+            if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_AcceptNoDrawDefaultRect)) {
+                ImGui::Text(entry.name.c_str());
+                ImGui::EndDragDropSource();
+            } 
         }
 
         ImGui::EndChild();

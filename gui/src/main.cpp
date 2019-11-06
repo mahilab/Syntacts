@@ -1,5 +1,5 @@
-#define CARNOT_NO_CONSOLE
-// #define CARNOT_USE_DISCRETE_GPU
+// #define CARNOT_NO_CONSOLE
+#define CARNOT_USE_DISCRETE_GPU
 
 #include "VisualizerWindow.hpp"
 #include "ChannelWindow.hpp"
@@ -38,6 +38,7 @@ private:
 
         ImGuiStyle * imStyle = &ImGui::GetStyle();
         ImVec4* colors = ImGui::GetStyle().Colors;
+        colors[ImGuiCol_DragDropTarget] = Oranges::Orange;
     }
 
     void lateUpdate() override {

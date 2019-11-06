@@ -20,6 +20,7 @@
 #include <cereal/types/functional.hpp>
 #include <cereal/types/map.hpp>
 #include <cereal/types/utility.hpp>
+#include <cereal/types/atomic.hpp>
 
 namespace fs = std::filesystem;
 

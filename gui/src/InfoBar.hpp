@@ -93,25 +93,35 @@ private:
         if (ImGui::Button(ICON_FA_QUESTION)) 
             ImGui::OpenPopup("Help");
         tooltip("Show Help Info");
+        if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None)) {
+            static int helpPayload = 1;
+            ImGui::SetDragDropPayload("DND_HELP", &helpPayload, sizeof(int));
+            ImGui::Text(ICON_FA_QUESTION);
+            ImGui::EndDragDropSource();
+        } 
         if (ImGui::BeginPopupModal("Help", &modalOpen, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove))
         {
-            ImGui::BulletText("Buttons");
-                ImGui::Indent();
-                ImGui::Text(ICON_FA_PLAY       " Plays the current cue on all selected ASIO channels." );
-                ImGui::Text(ICON_FA_VOLUME_UP  " Plays the current cue on the default audio output device." );
-                ImGui::Text(ICON_FA_STOP       " Stops all cues currently playing on the ASIO and audio devices." );
-                ImGui::Text(ICON_FA_PASTE      " Copies the C++ code required to generate the current cue to the clipboard.");
-                ImGui::Text(ICON_FA_FILE_AUDIO " Saves the current cue to a .wav file.");
-                ImGui::Text(ICON_FA_SYNC_ALT   " Reconnects the current device and refreshes the list of available ASIO devices.");
-                ImGui::Unindent();
-            ImGui::Spacing();
-            ImGui::BulletText("Use the device dropdown list to select your ASIO device. If no devices are listed, \ntry reconnecting and pressing " ICON_FA_SYNC_ALT ". Alternately, install ASIO4ALL to enable devices\nwhich do not proivde an ASIO driver.");
-            ImGui::Spacing();
-            ImGui::BulletText("Use the channel buttons to play a channel individually, or toggle multiple with the\ncheckboxes to play at once with " ICON_FA_PLAY ".");
-            ImGui::Spacing();
-            ImGui::BulletText("Build cues by changing parameters in the Carrier, Modulation, and Envelope dialogs.\nYou can change values by dragging or double clicking the numeric entries.");
-            ImGui::Spacing();
+            // ImGui::BulletText("Buttons");
+            //     ImGui::Indent();
+            //     ImGui::Text(ICON_FA_PLAY       " Plays the current cue on all selected ASIO channels." );
+            //     ImGui::Text(ICON_FA_VOLUME_UP  " Plays the current cue on the default audio output device." );
+            //     ImGui::Text(ICON_FA_STOP       " Stops all cues currently playing on the ASIO and audio devices." );
+            //     ImGui::Text(ICON_FA_PASTE      " Copies the C++ code required to generate the current cue to the clipboard.");
+            //     ImGui::Text(ICON_FA_FILE_AUDIO " Saves the current cue to a .wav file.");
+            //     ImGui::Text(ICON_FA_SYNC_ALT   " Reconnects the current device and refreshes the list of available ASIO devices.");
+            //     ImGui::Unindent();
+            // ImGui::Spacing();
+            // ImGui::BulletText("Use the device dropdown list to select your ASIO device. If no devices are listed, \ntry reconnecting and pressing " ICON_FA_SYNC_ALT ". Alternately, install ASIO4ALL to enable devices\nwhich do not proivde an ASIO driver.");
+            // ImGui::Spacing();
+            // ImGui::BulletText("Use the channel buttons to play a channel individually, or toggle multiple with the\ncheckboxes to play at once with " ICON_FA_PLAY ".");
+            // ImGui::Spacing();
+            // ImGui::BulletText("Build cues by changing parameters in the Carrier, Modulation, and Envelope dialogs.\nYou can change values by dragging or double clicking the numeric entries.");
+            // ImGui::Spacing();
+            ImGui::Text("To get helpful information and");
+            ImGui::Text("tips, simply drag the " ICON_FA_QUESTION);
+            ImGui::Text("button over areas of interest.");
             ImGui::EndPopup();
+
         }
         ImGui::SameLine();
         if (ImGui::Button(ICON_FA_INFO)) 

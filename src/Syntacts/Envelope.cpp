@@ -12,7 +12,7 @@ Envelope::Envelope(float duration) :
     
 }
 
-float Envelope::sample(float t) {
+float Envelope::sample(float t) const {
     return t > m_duration ? 0.0f : 1.0f;
 }
 
@@ -35,7 +35,7 @@ float KeyedEnvelope::getDuration() const {
     return m_keys.rbegin()->first;
 }
 
-float KeyedEnvelope::sample(float t) {
+float KeyedEnvelope::sample(float t) const {
     if (t > getDuration())
         return 0.0f;
     auto b = m_keys.lower_bound(t);
@@ -81,7 +81,7 @@ OscillatingEnvelope::OscillatingEnvelope(float duration , float amplitude , Ptr<
     
 }
 
-float OscillatingEnvelope::sample(float t) {
+float OscillatingEnvelope::sample(float t) const {
     if (t > getDuration())
         return 0.0f;
     float value = m_osc->sample(t);  
