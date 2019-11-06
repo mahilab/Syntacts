@@ -17,7 +17,7 @@ int exportToCsv(T& sampler, std::string filePath, int sampleRate = 44100) {
     float sampleLength = 1.0f / sampleRate;
     float t = 0;
     for (std::size_t i = 0; i < n; ++i) {
-        float sample = sampler->sample(t);
+        float sample = sin(6.28318530717959f * 880 * t);
         s << sample << std::endl;
         t += sampleLength;
     }
@@ -32,7 +32,7 @@ public:
     }
 };
 
-int main(int argc, char const *argv[])
+int main2(int argc, char const *argv[])
 {
     tact::initialize();
     auto frq = create<Scalar>(440);
@@ -48,12 +48,27 @@ int main(int argc, char const *argv[])
 
     tact::play(0, cue);
     exportToWave(cue, "cue.wav");
-    exportToCsv(cue, "cue.csv");
+    exportToCsv(sw, "cue.csv");
 
     carnot::Clock clock;
     while (clock.getElapsedTime().asSeconds() < cue->getEnvelope()->getDuration()) {
 
     }
     tact::finalize();
+    return 0;
+}
+
+int main() {
+    std::ofstream file;
+    file.open("sind.csv");
+    int n = 352800;
+    double sampleLength = 1.0 / 44100.0;
+    double t = 0;
+    for (std::size_t i = 0; i < n; ++i) {
+        double sample = std::sin(6.28318530717959 * 880 * t);
+        file << sample << std::endl;
+        t += sampleLength;
+    }
+    file.close();
     return 0;
 }
