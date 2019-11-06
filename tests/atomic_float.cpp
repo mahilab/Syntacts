@@ -10,7 +10,7 @@ using namespace tact;
 class SW : public Source {
 
     float sample(float t) const override {
-        return (float)std::sin(6.28318530717959 * 880 * (double)t);
+        return sin(6.28318530717959f * 880 * t);
     }
 };
 
