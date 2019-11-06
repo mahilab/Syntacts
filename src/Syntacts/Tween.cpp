@@ -1,51 +1,50 @@
-
-#include <vector>
-#include <algorithm>
+#include <Syntacts/Tween.hpp>
 #include <cmath>
-
-
 
 namespace tact {
 namespace Tween {
 
+namespace {
+
 constexpr float PI     = 3.14159265358979f;
 constexpr float HALFPI = PI * 0.5f;
 
-//==============================================================================
-// BASIC TWEENS
-//==============================================================================
+inline float lerp(float a, float b, float t) {
+    return a + (b - a) * t;
+}
 
-inline float Instant(float a, float b, float t) {
+} // private namespace
+
+float Instant::tween(float a, float b, float t) {
     return b;
 }
 
-
-inline float Delayed(float a, float b, float t) {
+float Delayed::tween(float a, float b, float t) {
     if (t == 1.0f)
         return b;
 }
 
 
-inline float Linear(float a, float b, float t) {
-    return a + (b - a) * t;
+float Linear::tween(float a, float b, float t) {
+    return lerp(a,b,t);
 }
 
 
-inline float Smoothstep(float a, float b, float t) {
+float Smoothstep::tween(float a, float b, float t) {
     t = t * t * (3.0f - 2.0f * t);
-    return Linear(a, b, t);
+    return lerp(a, b, t);
 }
 
 
-inline float Smootherstep(float a, float b, float t) {
+float Smootherstep::tween(float a, float b, float t) {
     t = t * t * t * (t * (t * 6.0f - 15.0f) + 10.0f);
-    return Linear(a, b, t);
+    return lerp(a, b, t);
 }
 
 
-inline float Smootheststep(float a, float b, float t) {
+float Smootheststep::tween(float a, float b, float t) {
     t = t * t * t * t * (t * (t * (t * -20.0f + 70.0f) - 84.0f) + 35.0f);
-    return Linear(a, b, t);
+    return lerp(a, b, t);
 }
 
 //==============================================================================
@@ -54,19 +53,19 @@ inline float Smootheststep(float a, float b, float t) {
 
 namespace Quadratic {
 
-inline float In(float a, float b, float t) {
+float In::tween(float a, float b, float t) {
     t = t * t;
-    return Linear(a, b, t);
+    return lerp(a, b, t);
 }
 
 
-inline float Out(float a, float b, float t) {
+float Out::tween(float a, float b, float t) {
     t = t * (2.0f - t);
-    return Linear(a, b, t);
+    return lerp(a, b, t);
 }
 
 
-inline float InOut(float a, float b, float t) {
+float InOut::tween(float a, float b, float t) {
     t *= 2.0f;
     if (t < 1.0f)
         t = 0.5f * t * t;
@@ -74,27 +73,27 @@ inline float InOut(float a, float b, float t) {
         t -= 1.0f;
         t = -0.5f * (t * (t - 2.0f) - 1.0f);
     }
-    return Linear(a, b, t);
+    return lerp(a, b, t);
 }
 
 };  // namespace Quadratic
 
 namespace Cubic {
 
-inline float In(float a, float b, float t) {
+float In::tween(float a, float b, float t) {
     t = t * t * t;
-    return Linear(a, b, t);
+    return lerp(a, b, t);
 }
 
 
-inline float Out(float a, float b, float t) {
+float Out::tween(float a, float b, float t) {
     t -= 1.0f;
     t = (t * t * t + 1.0f);
-    return Linear(a, b, t);
+    return lerp(a, b, t);
 }
 
 
-inline float InOut(float a, float b, float t) {
+float InOut::tween(float a, float b, float t) {
     t *= 2.0f;
     if (t < 1.0f)
         t = 0.5f * t * t * t;
@@ -102,27 +101,27 @@ inline float InOut(float a, float b, float t) {
         t -= 2.0f;
         t = 0.5f * (t * t * t + 2.0f);
     }
-    return Linear(a, b, t);
+    return lerp(a, b, t);
 }
 
 };  // namespace Cubic
 
 namespace Quartic {
 
-inline float In(float a, float b, float t) {
+float In::tween(float a, float b, float t) {
     t = t * t * t * t;
-    return Linear(a, b, t);
+    return lerp(a, b, t);
 }
 
 
-inline float Out(float a, float b, float t) {
+float Out::tween(float a, float b, float t) {
     t -= 1.0f;
     t = -(t * t * t * t - 1.0f);
-    return Linear(a, b, t);
+    return lerp(a, b, t);
 }
 
 
-inline float InOut(float a, float b, float t) {
+float InOut::tween(float a, float b, float t) {
     t *= 2.0f;
     if (t < 1.0f)
         t = 0.5f * t * t * t * t;
@@ -130,27 +129,27 @@ inline float InOut(float a, float b, float t) {
         t -= 2.0f;
         t = -0.5f * (t * t * t * t - 2.0f);
     }
-    return Linear(a, b, t);
+    return lerp(a, b, t);
 }
 
 };  // namespace Quartic
 
 namespace Quintic {
 
-inline float In(float a, float b, float t) {
+float In::tween(float a, float b, float t) {
     t = t * t * t * t * t;
-    return Linear(a, b, t);
+    return lerp(a, b, t);
 }
 
 
-inline float Out(float a, float b, float t) {
+float Out::tween(float a, float b, float t) {
     t -= 1.0f;
     t = (t * t * t * t * t + 1.0f);
-    return Linear(a, b, t);
+    return lerp(a, b, t);
 }
 
 
-inline float InOut(float a, float b, float t) {
+float InOut::tween(float a, float b, float t) {
     t *= 2.0f;
     if (t < 1.0f)
         t = 0.5f * t * t * t * t * t;
@@ -158,7 +157,7 @@ inline float InOut(float a, float b, float t) {
         t -= 2.0f;
         t = 0.5f * (t * t * t * t * t + 2.0f);
     }
-    return Linear(a, b, t);
+    return lerp(a, b, t);
 }
 
 };  // namespace Quintic
@@ -169,40 +168,40 @@ inline float InOut(float a, float b, float t) {
 
 namespace Sinusoidal {
 
-inline float In(float a, float b, float t) {
+float In::tween(float a, float b, float t) {
     t = 1.0f - std::cos(t * HALFPI);
-    return Linear(a, b, t);
+    return lerp(a, b, t);
 }
 
 
-inline float Out(float a, float b, float t) {
+float Out::tween(float a, float b, float t) {
     t = std::sin(t * HALFPI);
-    return Linear(a, b, t);
+    return lerp(a, b, t);
 }
 
 
-inline float InOut(float a, float b, float t) {
+float InOut::tween(float a, float b, float t) {
     t = -0.5f * (std::cos(PI * t) - 1.0f);
-    return Linear(a, b, t);
+    return lerp(a, b, t);
 }
 
 };  // namespace Sinusoidal
 
 namespace Exponential {
 
-inline float In(float a, float b, float t) {
+float In::tween(float a, float b, float t) {
     t = std::pow(2.0f, 10.0f * (t - 1.0f));
-    return Linear(a, b, t);
+    return lerp(a, b, t);
 }
 
 
-inline float Out(float a, float b, float t) {
+float Out::tween(float a, float b, float t) {
     t = (-std::pow(2.0f, -10.0f * t) + 1.0f);
-    return Linear(a, b, t);
+    return lerp(a, b, t);
 }
 
 
-inline float InOut(float a, float b, float t) {
+float InOut::tween(float a, float b, float t) {
     t *= 2.0f;
     if (t < 1.0f)
         t = 0.5f * std::pow(2.0f, 10.0f * (t - 1.0f));
@@ -210,27 +209,27 @@ inline float InOut(float a, float b, float t) {
         t -= 1.0f;
         t = 0.5f * (-std::pow(2.0f, -10.0f * t) + 2.0f);
     }
-    return Linear(a, b, t);
+    return lerp(a, b, t);
 }
 
 };  // namespace Exponential
 
 namespace Circular {
 
-inline float In(float a, float b, float t) {
+float In::tween(float a, float b, float t) {
     t = (1.0f - std::sqrt(1.0f - t * t));
-    return Linear(a, b, t);
+    return lerp(a, b, t);
 }
 
 
-inline float Out(float a, float b, float t) {
+float Out::tween(float a, float b, float t) {
     t -= 1.0f;
     t = std::sqrt(1.0f - t * t);
-    return Linear(a, b, t);
+    return lerp(a, b, t);
 }
 
 
-inline float InOut(float a, float b, float t) {
+float InOut::tween(float a, float b, float t) {
     t *= 2.0f;
     if (t < 1.0f)
         t = -0.5f * (std::sqrt(1.0f - t * t) - 1.0f);
@@ -238,7 +237,7 @@ inline float InOut(float a, float b, float t) {
         t -= 2.0f;
         t = 0.5f * (std::sqrt(1.0f - t * t) + 1.0f);
     }
-    return Linear(a, b, t);
+    return lerp(a, b, t);
 }
 
 };  // namespace Circular
@@ -249,7 +248,7 @@ inline float InOut(float a, float b, float t) {
 
 namespace Elastic {
 
-inline float In(float a, float b, float t) {
+float In::tween(float a, float b, float t) {
     if (t == 0.0f) {
         return a;
     }
@@ -258,11 +257,11 @@ inline float In(float a, float b, float t) {
     }
     t -= 1.0f;
     t = (-std::pow(2.0f, 10.0f * t) * std::sin((t - 0.1f) * (2.0f * PI) * 2.5f));
-    return Linear(a, b, t);
+    return lerp(a, b, t);
 }
 
 
-inline float Out(float a, float b, float t) {
+float Out::tween(float a, float b, float t) {
     if (t == 0.0f) {
         return a;
     }
@@ -270,11 +269,11 @@ inline float Out(float a, float b, float t) {
         return b;
     }
     t =  (std::pow(2.0f, -10.0f * t) * std::sin((t - 0.1f) * (2.0f * PI) * 2.5f) + 1.0f);
-    return Linear(a, b, t);
+    return lerp(a, b, t);
 }
 
 
-inline float InOut(float a, float b, float t) {
+float InOut::tween(float a, float b, float t) {
     t *= 2.0f;
     if (t < 1.0f) {
         t -= 1.0f;
@@ -284,7 +283,7 @@ inline float InOut(float a, float b, float t) {
         t -= 1.0f;
         t = (std::pow(2.0f, -10.0f * t) * std::sin((t - 0.1f) * (2.0f * PI) * 2.5f) * 0.5f + 1.0f);
     }
-    return Linear(a, b, t);
+    return lerp(a, b, t);
 }
 
 };  // namespace Elastic
@@ -294,20 +293,20 @@ static float s  = 1.70158f;
 static float s2 = 2.5949095f;
 
 
-inline float In(float a, float b, float t) {
+float In::tween(float a, float b, float t) {
     t = (t * t * ((s + 1.0f) * t - s));
-    return Linear(a, b, t);
+    return lerp(a, b, t);
 }
 
 
-inline float Out(float a, float b, float t) {
+float Out::tween(float a, float b, float t) {
     t -= 1.0f;
     t = (t * t * ((s + 1.0f) * t + s) + 1.0f);
-    return Linear(a, b, t);
+    return lerp(a, b, t);
 }
 
 
-inline float InOut(float a, float b, float t) {
+float InOut::tween(float a, float b, float t) {
     t *= 2.0f;
     if (t < 1.0f) {
         t = (0.5f * (t * t * ((s2 + 1.0f) * t - s2)));
@@ -316,7 +315,7 @@ inline float InOut(float a, float b, float t) {
         t -= 2.0f;
         t = (0.5f * (t * t * ((s2 + 1.0f) * t + s2) + 2.0f));
     }
-    return Linear(a, b, t);
+    return lerp(a, b, t);
 }
 
 };  // namespace Back
@@ -324,7 +323,7 @@ inline float InOut(float a, float b, float t) {
 namespace Bounce {
 
 namespace detail {
-inline float Out(float t) {
+float Out(float t) {
     if (t < (1.0f / 2.75f)) {
         return 7.5625f * t * t;
     } else if (t < (2.0f / 2.75f)) {
@@ -339,11 +338,11 @@ inline float Out(float t) {
     }
 }
 
-inline float In(float t) {
+float In(float t) {
     return 1.0f - Out(1.0f - t);
 }
 
-inline float InOut(float t) {
+float InOut(float t) {
     if (t < 0.5f)
         return In(t * 2.0f) * 0.5f;
     return Out(t * 2.0f - 1.0f) * 0.5f + 0.5f;
@@ -351,25 +350,24 @@ inline float InOut(float t) {
 }  // namespace detail
 
 
-inline float In(float a, float b, float t) {
+float In::tween(float a, float b, float t) {
     t = detail::In(t);
-    return Linear(a, b, t);
+    return lerp(a, b, t);
 }
 
 
-inline float Out(float a, float b, float t) {
+float Out::tween(float a, float b, float t) {
     t = detail::Out(t);
-    return Linear(a, b, t);
+    return lerp(a, b, t);
 }
 
 
-inline float InOut(float a, float b, float t) {
+float InOut::tween(float a, float b, float t) {
     t = detail::InOut(t);
-    return Linear(a, b, t);
+    return lerp(a, b, t);
 }
 
 };  // namespace Bounce
 
-}  // namespace Tween
-
-} // namespace tact
+} // namespace Tween
+} // namespace Tact

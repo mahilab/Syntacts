@@ -83,13 +83,16 @@ int tryInitPortaudio() {
     return paNoError;
 }
 
-
 DeviceInfo makeDeviceInfo(int deviceIndex) {
     auto pa_dev_info = Pa_GetDeviceInfo(deviceIndex);
     auto pa_api_info = Pa_GetHostApiInfo(pa_dev_info->hostApi);
+    std::string tidiedApi = pa_api_info->name;
+    if (tidiedApi.find("Windows ") == 0)
+        tidiedApi.erase(0, 8);
     return DeviceInfo(deviceIndex, 
+                    pa_api_info->type,
                     pa_dev_info->name, 
-                    pa_api_info->name, 
+                    tidiedApi, 
                     pa_dev_info->maxOutputChannels, 
                     deviceIndex == Pa_GetDefaultOutputDevice(),
                     deviceIndex == Pa_GetHostApiInfo( pa_dev_info->hostApi )->defaultOutputDevice);
@@ -98,13 +101,13 @@ DeviceInfo makeDeviceInfo(int deviceIndex) {
 } // private namespace
 
 DeviceInfo::DeviceInfo() :
-    DeviceInfo(-1, "none", "none", 0, false, false)
+    DeviceInfo(-1, -1, "none", "none", 0, false, false)
 {
 
 }
 
-DeviceInfo::DeviceInfo(int _index, std::string _name, std::string _api, int _maxChannels, bool _default, bool _defaultApi) :
-    index(_index), name(_name), api(_api), maxChannels(_maxChannels), default(_default), defaultApi(_defaultApi)
+DeviceInfo::DeviceInfo(int _index, int _indexApi, std::string _name, std::string _api, int _maxChannels, bool _default, bool _defaultApi) :
+    index(_index), indexApi(_indexApi), name(_name), api(_api), maxChannels(_maxChannels), default(_default), defaultApi(_defaultApi)
 {
 
 }

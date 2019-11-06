@@ -16,10 +16,10 @@ public:
     Oscillator(float frequency = 1.0f);
 
     /// Constructs an Oscillator with a variable frequency
-    Oscillator(std::shared_ptr<Source> frequency);
+    Oscillator(Ptr<Source> frequency);
 
 protected:
-    std::shared_ptr<Source> m_frequency;    
+    Ptr<Source> m_frequency;    
 
 private:
     SERIALIZE(PARENT(Source), MEMBER(m_frequency));
@@ -35,7 +35,7 @@ public:
     using Oscillator::Oscillator;
 
     /// Implements sine wave oscillation
-    virtual float sample(float t) override;
+    virtual float sample(float t) const override;
 private:
     SERIALIZE(PARENT(Oscillator))
 };
@@ -50,7 +50,7 @@ public:
     using Oscillator::Oscillator;
 
     /// Implements square wave oscillation
-    virtual float sample(float t) override;
+    virtual float sample(float t) const override;
 private:
     SERIALIZE(PARENT(Oscillator));
 };
@@ -65,7 +65,7 @@ public:
     using Oscillator::Oscillator;
 
     /// Implements saw wave oscillation
-    virtual float sample(float t) override;
+    virtual float sample(float t) const override;
 private:
     SERIALIZE(PARENT(Oscillator));
 };
@@ -80,7 +80,7 @@ public:
     using Oscillator::Oscillator;
 
     /// Implements saw wave oscillation
-    virtual float sample(float t) override;
+    virtual float sample(float t) const override;
 private:
     SERIALIZE(PARENT(Oscillator));
 };
@@ -101,11 +101,11 @@ public:
     void setIndex(float index);
 
     /// Implements FM sine wave oscillation
-    virtual float sample(float t) override;
+    virtual float sample(float t) const override;
 
 private:
-    float m_modulation; ///< modulation frequency
-    float m_index;      ///< modulation index
+    std::atomic<float> m_modulation; ///< modulation frequency
+    std::atomic<float> m_index;      ///< modulation index
 private:
     SERIALIZE(PARENT(Oscillator), MEMBER(m_modulation), MEMBER(m_index))
 };
@@ -121,10 +121,10 @@ public:
     void setChirpyness(float chirpyness);
 
     /// Implements chirp wave oscillation
-    virtual float sample(float t) override;
+    virtual float sample(float t) const override;
 
 private:
-    float m_chirpyness; ///< the chirp rate or (f1-f0)/T
+    std::atomic<float> m_chirpyness; ///< the chirp rate or (f1-f0)/T
 private:
     SERIALIZE(PARENT(Oscillator), MEMBER(m_chirpyness))
 };
@@ -142,13 +142,13 @@ public:
     void setDutyCycle(float dutyCycle);
 
     /// Implements pulse train oscillation
-    virtual float sample(float t) override;
+    virtual float sample(float t) const override;
 
 private:
-    float m_dutyCycle;
-    float m_period;
+    std::atomic<float> m_dutyCycle;
+    std::atomic<float> m_period;
 private:
-    SERIALIZE(PARENT(Oscillator), MEMBER(m_dutyCycle), MEMBER(m_period))
+    SERIALIZE(PARENT(Oscillator), MEMBER(m_dutyCycle), MEMBER(m_period));
 };
 
 } // namespace tact

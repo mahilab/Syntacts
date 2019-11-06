@@ -29,3 +29,6 @@ set_target_properties(serial_lib PROPERTIES CXX_STANDARD 17)
 
 add_executable(serial2 serial2.cpp)
 target_link_libraries(serial2 serial_lib)
+
+add_executable(atomic_float atomic_float.cpp)
+target_link_libraries(atomic_float carnot syntacts)

@@ -2,11 +2,36 @@
 // #define CARNOT_USE_DISCRETE_GPU
 
 #include "gui-detail.hpp"
+#include <filesystem>
 
 using namespace carnot;
+namespace fs = std::filesystem;
 
-const std::vector<const char*>     g_tweenStrings = {"Linear",            "Smoothstep",            "Smootherstep",            "Smootheststep",            "Sinusoidal::In",            "Sinusoidal::Out",            "Sinusoidal::InOut"           , "Exponential::In",            "Exponential::Out",            "Exponential::InOut"           };
-const std::vector<tact::TweenFunc> g_tweenFuncs   = {tact::Tween::Linear, tact::Tween::Smoothstep, tact::Tween::Smootherstep, tact::Tween::Smootheststep, tact::Tween::Sinusoidal::In, tact::Tween::Sinusoidal::Out, tact::Tween::Sinusoidal::InOut, tact::Tween::Exponential::In, tact::Tween::Exponential::Out, tact::Tween::Exponential::InOut};
+const std::vector<const char*> g_tweenStrings = {
+    "Linear", 
+    "Smoothstep",
+    "Smootherstep",
+    "Smootheststep",
+    "Sinusoidal::In",
+    "Sinusoidal::Out",
+    "Sinusoidal::InOut",
+    "Exponential::In",
+    "Exponential::Out",
+    "Exponential::InOut"
+};
+
+const std::vector<std::shared_ptr<tact::Tween::Function>> g_tweenFuncs = {
+    std::make_shared<tact::Tween::Linear>(),
+    std::make_shared<tact::Tween::Smoothstep>(), 
+    std::make_shared<tact::Tween::Smootherstep>(), 
+    std::make_shared<tact::Tween::Smootheststep>(), 
+    std::make_shared<tact::Tween::Sinusoidal::In>(), 
+    std::make_shared<tact::Tween::Sinusoidal::Out>(), 
+    std::make_shared<tact::Tween::Sinusoidal::InOut>(), 
+    std::make_shared<tact::Tween::Exponential::In>(), 
+    std::make_shared<tact::Tween::Exponential::Out>(), 
+    std::make_shared<tact::Tween::Exponential::InOut>()
+};
 
 //==============================================================================
 // GUI GAMEOBJECT
@@ -184,6 +209,8 @@ public:
     void updateTopBar() {
         if (ImGui::Button(ICON_FA_PLAY) || Input::getKeyDown(Key::Space)) 
             playSelected();
+        tooltip("Plays the current cue on all selected channels");
+
         ImGui::SameLine();
         if (ImGui::Button(ICON_FA_VOLUME_UP)) {
             playSpeaker();
@@ -206,7 +233,7 @@ public:
             connect(m_device);
         ImGui::SameLine();
         auto devs = tact::getAvailableDevices();
-        ImGui::PushItemWidth(200);
+        ImGui::PushItemWidth(400);
         if (ImGui::BeginCombo("##Devices", m_device.name.c_str())) // The second parameter is the label previewed before opening the combo.
         {
             for (int i = 0; i < devs.size(); i++)
@@ -474,7 +501,8 @@ public:
         ImGui::PopStyleColor();
         ImGui::PopItemWidth();
     }
-    
+
+  
 
     //--------------------------------------------------------------------------
     // Update
@@ -500,12 +528,7 @@ public:
         ImGui::Separator();
         updateEnvelope();
         ImGui::Separator();
-        // ImGui::ShowBezierDemo();
         updatePlot();
-        ImGui::End();
-        ImGui::SetNextWindowPos(Vector2f(5,5), ImGuiCond_Always);
-        ImGui::SetNextWindowSize(ImVec2(cueListWidth, m_windowSize.y - 10.0f), ImGuiCond_Always);
-        ImGui::Begin("Cues", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
         ImGui::End();
     }
 
@@ -526,8 +549,6 @@ private:
     float m_modIdx  = 2.0f;
 
     float m_chirp = 200;
-
-    bool m_deviceDetailsOpen = false;
 
     int   m_envMode  = EnvMode::ASR;
     std::vector<float> m_amps = {1.0f, 0.5f};
@@ -552,11 +573,9 @@ private:
 
 int main(int argc, char const *argv[])
 {
-    tact::initialize();
-    Engine::init(960, 540, WindowStyle::Default);
-    Engine::window->setTitle("Syntacts");
     Engine::makeRoot<SyntactsGui>();
+    Engine::init(900, 600, WindowStyle::Default);
+    Engine::window->setTitle("Syntacts");
     Engine::run();  
-    tact::finalize();
     return 0;
 }

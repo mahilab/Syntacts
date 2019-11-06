@@ -2,6 +2,8 @@
 
 #include <Syntacts/Config.hpp>
 #include <Syntacts/Serialization.hpp>
+#include <Syntacts/Memory.hpp>
+#include <atomic>
 
 namespace tact
 {
@@ -19,7 +21,7 @@ public:
     virtual ~Source() = default;
 
     /// Override to implement generator sampling behavior (required).
-    virtual float sample(float t) = 0;
+    virtual float sample(float t) const = 0;
 
 private:
     // Serialization
@@ -36,10 +38,10 @@ public:
     Scalar(float value = 1);
 
     /// Implements scalar
-    virtual float sample(float t) override;
+    virtual float sample(float t) const override;
 
 private:
-    float m_value; ///< the scalar value
+    std::atomic<float> m_value; ///< the scalar value
 
 private:
     SERIALIZE(PARENT(Source), MEMBER(m_value));
@@ -53,11 +55,11 @@ public:
     Ramp(float initial = 1, float rate = 0);
     Ramp(float initial, float final, float span);
 
-    virtual float sample(float t) override;
+    virtual float sample(float t) const override;
 
 private:
-    float m_initial;
-    float m_rate;
+    std::atomic<float> m_initial;
+    std::atomic<float> m_rate;
 
 private:
     SERIALIZE(PARENT(Source), MEMBER(m_initial), MEMBER(m_rate));

@@ -39,6 +39,8 @@ set(SYNTACTS_INCLUDE
     "include/Syntacts/Config.hpp"
     "include/Syntacts/AudioFile.hpp"
     "include/Syntacts/Serialization.hpp"
+    "include/Syntacts/Tween.hpp"
+    "include/Syntacts/Memory.hpp"
 )
 
 # gather private sources
@@ -51,6 +53,7 @@ set(SYNTACTS_SRC
     "src/Syntacts/Helpers.hpp"
     "src/Syntacts/AudioFile.cpp"
     "src/Syntacts/Serialization.cpp"
+    "src/Syntacts/Tween.cpp"
     # "src/Syntacts/Detail/pink_noise.hpp"
     # "src/Syntacts/Detail/pink_noise.cpp"
 )
@@ -70,6 +73,7 @@ set(portaudio_INCLUDE_DIR "${portaudio_INCLUDE_DIR}/include")
 add_library(syntacts "")
 add_library(syntacts::syntacts ALIAS syntacts)
 set_target_properties(syntacts PROPERTIES CXX_STANDARD 17 DEBUG_POSTFIX -d)
+set_target_properties(syntacts PROPERTIES COMPILE_FLAGS "/bigobj")
 target_sources(syntacts PRIVATE ${SYNTACTS_INCLUDE})
 target_sources(syntacts PRIVATE ${SYNTACTS_SRC})
 target_compile_definitions(syntacts PUBLIC SYNTACTS_STATIC PA_USE_ASIO PRIVATE NOMINMAX)
@@ -92,18 +96,19 @@ if (SYNTACTS_ANSI_C)
     add_library(syntacts-c SHARED "")
     add_library(syntacts::syntacts-c ALIAS syntacts-c)
     set_target_properties(syntacts-c PROPERTIES CXX_STANDARD 17 DEBUG_POSTFIX -d)
+    set_target_properties(syntacts-c PROPERTIES COMPILE_FLAGS "/bigobj")
     target_sources(syntacts-c PRIVATE ${SYNTACTS_INCLUDE})
     target_sources(syntacts-c PRIVATE ${SYNTACTS_SRC})
     target_compile_definitions(syntacts-c PRIVATE -DSYNTACTS_EXPORTS)
     target_compile_definitions(syntacts-c PUBLIC -DSYNTACTS_ANSI_C PA_USE_ASIO PRIVATE NOMINMAX)
     target_include_directories(syntacts-c
-	PUBLIC
-		$<INSTALL_INTERFACE:include>
-		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-	PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src
-        ${portaudio_INCLUDE_DIR}
-)
+        PUBLIC
+            $<INSTALL_INTERFACE:include>
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        PRIVATE
+            ${CMAKE_CURRENT_SOURCE_DIR}/src
+            ${portaudio_INCLUDE_DIR}
+    )
     target_link_libraries(syntacts-c PUBLIC portaudio_static)
 endif()
 
