@@ -9,3 +9,4 @@ endmacro()
 
 
 syntacts_example(basic)
+syntacts_example(devices)

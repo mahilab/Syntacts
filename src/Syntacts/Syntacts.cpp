@@ -13,6 +13,9 @@
 #include <cassert>
 #include <utility>
 
+// comment out for interleaved buffers
+#define NO_INTERLEAVED
+
 using namespace rigtorp;
 
 namespace tact {
@@ -28,8 +31,17 @@ struct Instruction {
 
 /// A Cue and its current time
 struct CueAndTime {
+    CueAndTime() : cue(), time(0.0), pitch(1.0f) { }
+    CueAndTime(const CueAndTime& other) {
+        this->cue = other.cue;
+        double temp = other.time;
+        this->time = temp;
+        float temp2 = other.pitch;
+        this->pitch = temp2;
+    }
     std::shared_ptr<Cue> cue;
-    float time = 0.0f;
+    std::atomic<double> time = 0.0; 
+    std::atomic<float> pitch = 1.0f;
 };
 
 // Globals
@@ -40,17 +52,18 @@ PaStream* g_stream;                         ///< portaudio stream
 bool g_syntacts_initialized = false;        ///< syntacts initialized?
 bool g_pa_initialized  = false;             ///< portadio initialized? 
 DeviceInfo g_currentDevice = DeviceInfo();
-float g_sampleLength = DEFAULT_SAMPLE_LENGTH;
+double g_sampleLength = DEFAULT_SAMPLE_LENGTH;
 
 /// Pops new instructions off the queue into the cue vector
 void processQueue() {
     while (g_queue.front()) {
         auto i = *g_queue.front();
         g_cues[i.channel].cue = i.cue;
-        g_cues[i.channel].time = 0.0f;
+        g_cues[i.channel].time = 0.0;
         g_queue.pop();
     }
 }
+
 
 // portaudio callback method (where the magic happens!)
 int pa_callback(const void *inputBuffer, void *outputBuffer,
@@ -61,15 +74,25 @@ int pa_callback(const void *inputBuffer, void *outputBuffer,
 {
     processQueue();
     /* Cast data passed through stream to our structure. */    
-    float *out = (float *)outputBuffer;
+    float** out = (float**)outputBuffer;
     (void)inputBuffer; /* Prevent unused variable warning. */   
-    for (unsigned long f = 0; f < framesPerBuffer; f++) {
-        for (std::size_t c = 0; c < g_channelCount; ++c) {
-            // out[g_channelCount * f + c] = g_cues[c].first->nextSample();
-            out[g_channelCount * f + c] = g_cues[c].cue->sample(g_cues[c].time);
-            g_cues[c].time += g_sampleLength;
+    // std::cout << framesPerBuffer << std::endl;
+#ifdef NO_INTERLEAVED
+    for (std::size_t c = 0; c < g_channelCount; ++c) {
+        for (unsigned long f = 0; f < framesPerBuffer; f++) {
+            out[c][f] = g_cues[c].cue->sample(static_cast<float>(g_cues[c].time));
+            g_cues[c].time = g_cues[c].time + g_sampleLength;
         }
     }
+#else
+    for (unsigned long f = 0; f < framesPerBuffer; f++) {
+        for (std::size_t c = 0; c < g_channelCount; ++c) {
+            out[g_channelCount * f + c] = g_cues[c].cue->sample(static_cast<float>(g_cues[c].time));
+            g_cues[c].time = g_cues[c].time + g_sampleLength;
+        }
+    }
+#endif
+
     return 0;
 }  
 
@@ -99,6 +122,12 @@ DeviceInfo makeDeviceInfo(int deviceIndex) {
 }
 
 } // private namespace
+
+
+float channelTime(int channel) {
+    double temp = (g_cues[channel].time);
+    return static_cast<float>(temp);
+}
 
 DeviceInfo::DeviceInfo() :
     DeviceInfo(-1, -1, "none", "none", 0, false, false)
@@ -175,7 +204,11 @@ int initialize(int device, int channelCount, int sampleRate) {
 		if (hostApiOutputParameters.device == paNoDevice)
 			return paDeviceUnavailable;
         hostApiOutputParameters.channelCount = g_channelCount;
+#ifdef NO_INTERLEAVED
+        hostApiOutputParameters.sampleFormat = paFloat32 | paNonInterleaved;
+#else
         hostApiOutputParameters.sampleFormat = paFloat32;
+#endif
         hostApiOutputParameters.suggestedLatency = Pa_GetDeviceInfo( hostApiOutputParameters.device )->defaultLowOutputLatency;
         hostApiOutputParameters.hostApiSpecificStreamInfo = NULL;
         hostApiOutputParametersPtr = &hostApiOutputParameters;
@@ -183,7 +216,7 @@ int initialize(int device, int channelCount, int sampleRate) {
     else {
         hostApiOutputParametersPtr = NULL;
     }   
-    result = Pa_OpenStream(&g_stream, nullptr, hostApiOutputParametersPtr, sampleRate, 0, paNoFlag, pa_callback, nullptr );
+    result = Pa_OpenStream(&g_stream, nullptr, hostApiOutputParametersPtr, sampleRate, 16, paNoFlag, pa_callback, nullptr );
     if (result != paNoError)
         return result;    
     result = Pa_StartStream(g_stream);
@@ -240,10 +273,10 @@ int exportToWave(std::shared_ptr<Cue> cue, std::string filePath, int sampleRate)
     AudioFile<float>::AudioBuffer buffer;
     buffer.resize(1);
     buffer[0].resize(cue->sampleCount(sampleRate));
-    float sampleLength = 1.0f / sampleRate;
-    float t = 0;
+    double sampleLength = 1.0 / sampleRate;
+    double t = 0;
     for (auto& sample : buffer[0]) {
-        sample = cue->sample(t);  
+        sample = cue->sample(static_cast<float>(t));  
         t += sampleLength;
     }
     if (!file.setAudioBuffer(buffer))

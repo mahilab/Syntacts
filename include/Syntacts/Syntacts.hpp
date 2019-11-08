@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Syntacts/Error.hpp>
 #include <Syntacts/Config.hpp>
 #include <Syntacts/Source.hpp>
 #include <Syntacts/Oscillator.hpp>
@@ -10,23 +11,9 @@
 
 namespace tact {  
 
-constexpr int   DEFAULT_QUEUE_SIZE    = 256;
-constexpr int   DEFAULT_SAMPLE_RATE   = 44100;
-constexpr float DEFAULT_SAMPLE_LENGTH = 1.0f / DEFAULT_SAMPLE_RATE;
-
-/// Return errors
-enum SyntactsError : int {
-    SyntactsError_NoError             =  0,
-    SyntactsError_InvalidDevice       = -1,
-    SyntactsError_NotInitialized      = -2,
-    SyntactsError_AlreadyIntialized   = -3,
-    SyntactsError_InvalidChannel      = -4,
-    SyntactsError_InvalidChannelCount = -5,
-    SyntactsError_NoWaveform          = -6,
-    SyntactsError_AudioFileBufferFail = -7,
-    SyntactsError_AudioFileSaveFail   = -8,
-    SyntactsError_ControlPanelFail    = -9
-};
+constexpr int    DEFAULT_QUEUE_SIZE    = 256;
+constexpr int    DEFAULT_SAMPLE_RATE   = 44100;
+constexpr double DEFAULT_SAMPLE_LENGTH = 1.0 / DEFAULT_SAMPLE_RATE;
 
 /// Struct holding ASIO device information
 struct SYNTACTS_API DeviceInfo {
@@ -90,6 +77,9 @@ SYNTACTS_API int exportToWave(std::shared_ptr<Cue> cue, std::string filePath, in
 
 /// Opens the ASIO Control Panel
 SYNTACTS_API int openControlPanel(int deviceIndex, void* windowHandle = nullptr);
+
+/// Returns the current time of a channel
+float channelTime(int channel);
 
 #else
 

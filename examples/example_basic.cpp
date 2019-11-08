@@ -4,11 +4,14 @@
 
 using namespace tact;
 
-class SW : public Source {
-
+class Amp : public Envelope {
+    using Envelope::Envelope;
     float sample(float t) const override {
-        return std::sin(6.28318530717959e+0f * 440 * t);
+        float temp = value;
+        return temp;
     }
+
+    std::atomic<float> value = 0.0f;
 };
 
 int main(int argc, char const *argv[])
@@ -42,7 +45,7 @@ int main(int argc, char const *argv[])
     auto frq = create<Scalar>(440);
     auto osc = create<SineWave>(frq);
     auto mod = create<SineWave>(10);
-    auto env = create<ASR>(1,18,1);
+    auto env = create<Amp>(10);
     auto cue = create<Cue>();
     cue->setEnvelope(create<AmplitudeEnvelope>(10,1));
     cue->chain(create<SineWave>(440));

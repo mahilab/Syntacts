@@ -41,6 +41,7 @@ set(SYNTACTS_INCLUDE
     "include/Syntacts/Serialization.hpp"
     "include/Syntacts/Tween.hpp"
     "include/Syntacts/Memory.hpp"
+    "include/Syntacts/Session.hpp"
 )
 
 # gather private sources
@@ -54,6 +55,7 @@ set(SYNTACTS_SRC
     "src/Syntacts/AudioFile.cpp"
     "src/Syntacts/Serialization.cpp"
     "src/Syntacts/Tween.cpp"
+    "src/Syntacts/Session.cpp"
     # "src/Syntacts/Detail/pink_noise.hpp"
     # "src/Syntacts/Detail/pink_noise.cpp"
 )
@@ -65,6 +67,8 @@ get_filename_component(portaudio_INCLUDE_DIR ${portaudio_INCLUDE_DIR} DIRECTORY)
 get_filename_component(portaudio_INCLUDE_DIR ${portaudio_INCLUDE_DIR} DIRECTORY)
 get_filename_component(portaudio_INCLUDE_DIR ${portaudio_INCLUDE_DIR} DIRECTORY)
 set(portaudio_INCLUDE_DIR "${portaudio_INCLUDE_DIR}/include")
+
+link_directories(3rdparty/rubberband)
 
 #===============================================================================
 # Syntacts Static C++ Library
@@ -86,7 +90,7 @@ target_include_directories(syntacts
         ${portaudio_INCLUDE_DIR}
         3rdparty
 )
-target_link_libraries(syntacts PUBLIC portaudio_static)
+target_link_libraries(syntacts PUBLIC portaudio_static PRIVATE rubberband-library)
 
 #===============================================================================
 # Syntacts Dynamic ANSI C Library
