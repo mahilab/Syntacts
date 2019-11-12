@@ -307,7 +307,7 @@ public:
 //=============================================================================
 
 Session::Session() : 
-    m_impl(std::move(create<Session::Impl>())) 
+    m_impl((create<Session::Impl>())) 
 { }
 
 int Session::open() {
