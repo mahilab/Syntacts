@@ -96,34 +96,44 @@ const std::string& getLibraryDirectory() {
     return libFolder;
 }
 
-bool save(const Ptr<Cue>& cue, const std::string& name, SerialFormat format) {    
-    ensureLibraryDirectoryExists();
-    if (format == SerialFormat::Binary) {
-        std::ofstream file(getLibraryDirectory() + name + ".tact", std::ios::binary);
-        cereal::BinaryOutputArchive archive(file);
-        archive(cue);  
+bool save(const Ptr<Cue>& cue, const std::string& name, SerialFormat format) {  
+    try {  
+        ensureLibraryDirectoryExists();
+        if (format == SerialFormat::Binary) {
+            std::ofstream file(getLibraryDirectory() + name + ".tact", std::ios::binary);
+            cereal::BinaryOutputArchive archive(file);
+            archive(cue);  
+        }
+        else if (format == SerialFormat::JSON) {
+            std::ofstream file(getLibraryDirectory() + name + ".tact");
+            cereal::JSONOutputArchive archive(file);
+            archive(cue); 
+        }
+        return true;
     }
-    else if (format == SerialFormat::JSON) {
-        std::ofstream file(getLibraryDirectory() + name + ".tact");
-        cereal::JSONOutputArchive archive(file);
-        archive(cue); 
+    catch (...) {
+        return false;
     }
-    return true;
 }
 
 bool load(Ptr<Cue>& cue, const std::string& name, SerialFormat format) {
-    ensureLibraryDirectoryExists();
-    if (format == SerialFormat::Binary) {
-        std::ifstream file(getLibraryDirectory() + name + ".tact", std::ios::binary);
-        cereal::BinaryInputArchive archive(file);
-        archive(cue);
+    try {
+        ensureLibraryDirectoryExists();
+        if (format == SerialFormat::Binary) {
+            std::ifstream file(getLibraryDirectory() + name + ".tact", std::ios::binary);
+            cereal::BinaryInputArchive archive(file);
+            archive(cue);
+        }
+        else if (format == SerialFormat::JSON) {
+            std::ifstream file(getLibraryDirectory() + name + ".tact");
+            cereal::JSONInputArchive archive(file);
+            archive(cue);
+        }
+        return true;
     }
-    else if (format == SerialFormat::JSON) {
-        std::ifstream file(getLibraryDirectory() + name + ".tact");
-        cereal::JSONInputArchive archive(file);
-        archive(cue);
+    catch (...) {
+        return false;
     }
-    return true;
 }
 
 }

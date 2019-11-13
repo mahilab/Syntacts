@@ -67,7 +67,7 @@ void Chirp::setChirpyness(float chirpyness) {
 }
 
 float Chirp::sample(float t) const {
-    float phi = 2 * PI * ((m_frequency->sample(t) + 0.5f * m_chirpyness * t) * t);
+    float phi = 2 * PI * (m_frequency->sample(t) + 0.5f * m_chirpyness * t) * t;
     return std::sin(phi);
 }
 

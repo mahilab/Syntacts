@@ -5,7 +5,7 @@
 #include "ImSequencer.hpp"
 #include <Engine/ImGui/imgui.h>
 #include <Engine/ImGui/imgui_internal.h>
-#include <Engine/FontAwesome5.hpp>
+#include <Engine/IconsFontAwesome5.hpp>
 #include <Graphics/Color.hpp>
 #include <cstdlib>
 

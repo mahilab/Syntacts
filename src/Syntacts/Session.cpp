@@ -34,7 +34,7 @@ constexpr double SAMPLE_LENGTH = 1.0 / SAMPLE_RATE;
 /// Channel structure
 class Channel {
 public:
-    Channel() : m_stretcher(SAMPLE_RATE, 1, RubberBand::RubberBandStretcher::OptionProcessRealTime) {}
+    //Channel() : m_stretcher(SAMPLE_RATE, 1, RubberBand::RubberBandStretcher::OptionProcessRealTime) {}
     Ptr<Cue> cue;
     double   time   = 0.0; 
     float    volume = 1.0f;
@@ -49,7 +49,7 @@ public:
         return sample;
     }
 private:
-    RubberBand::RubberBandStretcher m_stretcher;
+    //RubberBand::RubberBandStretcher m_stretcher;
 };
 
 /// Interface for commands sent through command queue
