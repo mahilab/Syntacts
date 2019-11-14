@@ -33,7 +33,7 @@ public:
 private:
 
     void start() {
-        fs::create_directories(tact::getLibraryDirectory());
+        fs::create_directories(tact::Library::getLibraryDirectory());
         m_infoBar =  findSibling<InfoBar>();
         m_designer = findSibling<DesignerWindow>();
         sync();
@@ -79,7 +79,7 @@ private:
         if (ImGui::Button(ICON_FA_PLUS_SQUARE) || (entered && valid)) {
             if (!m_lib.count(filename)) {
                 auto cue = m_designer->buildCue();
-                tact::save(cue, filename);
+                tact::Library::saveCue(cue, filename);
                 sync();
                 m_infoBar->pushMessage("Created Cue " + filename);
                 memset(m_inputBuffer, 0, 64);
@@ -117,8 +117,8 @@ private:
         helpers::beginDisabled(disabled);
         if (ImGui::Button(ICON_FA_SAVE)) {
             auto cue = m_designer->buildCue();
-            tact::save(cue, m_selected);
-            tact::load(m_lib[m_selected].disk, m_selected);
+            tact::Library::saveCue(cue, m_selected);
+            tact::Library::loadCue(m_lib[m_selected].disk, m_selected);
             m_infoBar->pushMessage("Saved Cue " + m_selected);
             sync();
         }
@@ -147,7 +147,7 @@ private:
         ImGui::SameLine();
         if (ImGui::Button(ICON_FA_FILE_AUDIO)) {
             std::string filePath = m_selected + ".wav";
-            tact::exportToWave(getSelectedCue(), filePath);
+            tact::Library::exportCue(getSelectedCue(), filePath);
             m_infoBar->pushMessage("Exported Cue " + m_selected + " to " + filePath);
         }
         m_infoBar->tooltip("Export Selected Cue to WAV");
@@ -159,7 +159,7 @@ private:
     void sync() {
         // load new entries from disk
         std::set<std::string> diskNames;
-        for (const auto & dir_entry : fs::directory_iterator(tact::getLibraryDirectory()))
+        for (const auto & dir_entry : fs::directory_iterator(tact::Library::getLibraryDirectory()))
         {
             if (dir_entry.path().has_extension() && dir_entry.path().extension() == ".tact") {
                 std::string name = dir_entry.path().stem().generic_string();
@@ -168,7 +168,7 @@ private:
                     m_lib[name] = Entry();
                     m_lib[name].name = name;
                     m_lib[name].path = dir_entry.path();
-                    tact::load(m_lib[name].disk, name);
+                    tact::Library::loadCue(m_lib[name].disk, name);
                     m_lib[name].saved = true;
                 }
             }

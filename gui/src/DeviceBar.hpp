@@ -13,21 +13,27 @@ public:
 
     using GameObject::GameObject;
 
-     /// Restarts Syntacts and initializes a specifc device
-    void initialize(tact::DeviceInfo device) {
-        tact::finalize();
-        tact::initialize(device.index, device.maxChannels);
-        getAvailable();
+     /// Restarts Syntacts session
+    void initialize() {
+        session = make<tact::Session>();
+        session->open();
         getCurrent();
+        getAvailable();
         onInitialize.emit();
+    }
+
+    void switchDevice(const tact::Device& dev) {
+        session->close();
+        session->open(dev);
+        getCurrent();
+        onSwitchDevice.emit();
     }
 
 private:
 
     void start() {
         m_infoBar = findSibling<InfoBar>();
-        getCurrent();
-        getAvailable();
+        initialize();
     }
 
     void update() override {
@@ -42,7 +48,7 @@ private:
         updateDeviceDetails();
         ImGui::SameLine();
         if (ImGui::Button(ICON_FA_SYNC_ALT)) 
-            initialize(m_currentDev);
+            initialize();
         m_infoBar->tooltip("Refresh Device List");
         ImGui::EndGroup();
         if (ImGui::BeginDragDropTarget()) {
@@ -81,7 +87,7 @@ private:
             {
                 bool is_selected = (m_currentDev.index == m_available[m_currentApi][i].index);
                 if (ImGui::Selectable(m_available[m_currentApi][i].name.c_str(), is_selected))
-                    initialize(m_available[m_currentApi][i]);
+                    switchDevice(m_available[m_currentApi][i]);
                 if (is_selected)
                     ImGui::SetItemDefaultFocus(); 
             }
@@ -105,11 +111,11 @@ private:
             ImGui::Text("API");             
             for (auto& pair : m_available) {
                 for (auto& d : pair.second) {
-                    auto api = d.api;
-                    if (d.defaultApi)
+                    auto api = d.apiName;
+                    if (d.isDefaultApi)
                         api += "*";
                     std::string id = str(d.index);
-                    if (d.default)
+                    if (d.isDefault)
                         id += "*";
                     ImGui::Separator();
                     ImGui::Text(id.c_str());   ImGui::SameLine(40);
@@ -122,18 +128,18 @@ private:
     }
 
     void getCurrent() {
-        m_currentDev = tact::getCurrentDevice();
-        m_currentApi = m_currentDev.api;
+        m_currentDev = session->getCurrentDevice();
+        m_currentApi = m_currentDev.apiName;
     }
 
     void getAvailable() {
         m_available.clear();
-        auto devs = tact::getAvailableDevices();
+        auto devs = session->getAvailableDevices();
         for (auto& dev : devs) {
-            if (dev.defaultApi)
-                m_available[dev.api].push_front(dev);
+            if (dev.second.isDefaultApi)
+                m_available[dev.second.apiName].push_front(dev.second);
             else
-                m_available[dev.api].push_back(dev);
+                m_available[dev.second.apiName].push_back(dev.second);
         }
     }
 
@@ -141,7 +147,7 @@ private:
         if (m_currentApi != api)
         {
             m_currentApi = api;
-            initialize(m_available[m_currentApi][0]);
+            switchDevice(m_available[m_currentApi][0]);
             m_infoBar->pushMessage("Switched API to " + m_currentApi);
         }        
     }
@@ -150,13 +156,15 @@ public:
 
     FloatRect rect;
     Signal<void(void)> onInitialize;
+    Signal<void(void)> onSwitchDevice;
+    Ptr<tact::Session> session;
 
 private:
 
-    tact::DeviceInfo m_currentDev;
+    tact::Device m_currentDev;
     // std::vector<tact::DeviceInfo> m_available;
     std::string m_currentApi;
-    std::map<std::string, std::deque<tact::DeviceInfo>> m_available;
+    std::map<std::string, std::deque<tact::Device>> m_available;
     Handle<InfoBar> m_infoBar;
 
 };

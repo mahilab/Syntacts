@@ -10,3 +10,4 @@ endmacro()
 
 syntacts_example(basic)
 syntacts_example(devices)
+syntacts_example(library)

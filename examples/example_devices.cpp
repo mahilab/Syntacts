@@ -1,9 +1,11 @@
 #include <Syntacts/Session.hpp>
 #include <iostream>
 
+using namespace tact;
+
 int main(int argc, char const *argv[])
 {
-    tact::Session session;
+    Session session;
 
     for (auto& d : session.getAvailableDevices())
         std::cout << d.first << "," << d.second.name << std::endl;

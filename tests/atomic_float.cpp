@@ -22,21 +22,6 @@ public:
     SERIALIZE(PARENT(Oscillator));
 };
 
-template <typename T>
-int exportToCsv(const T& sampler, std::string filePath, int sampleRate = 44100) {
-    std::ofstream s;
-    s.open(filePath);
-    int n = 220500;
-    double sampleLength = 1.0 / sampleRate;
-    double t = 0;
-    for (std::size_t i = 0; i < n; ++i) {
-        float sample = sampler->sample(static_cast<float>(t));
-        s << sample << std::endl;
-        t += sampleLength;
-    }
-    s.close();
-    return 0;
-}
 
 int main(int argc, char const *argv[])
 {
@@ -57,8 +42,6 @@ int main(int argc, char const *argv[])
 
     // save(cue,"aWeirdOne");
 
-    exportToCsv(cue, "cue.csv");
-    exportToWave(cue, "hmm.wav");
 
     session.play(0, cue);
     // session.play(1, cue);    

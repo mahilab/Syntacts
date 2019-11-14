@@ -37,23 +37,24 @@ set(SYNTACTS_INCLUDE
     "include/Syntacts/Oscillator.hpp"
     "include/Syntacts/Source.hpp"
     "include/Syntacts/Config.hpp"
-    "include/Syntacts/AudioFile.hpp"
     "include/Syntacts/Serialization.hpp"
     "include/Syntacts/Tween.hpp"
     "include/Syntacts/Memory.hpp"
     "include/Syntacts/Session.hpp"
+    "include/Syntacts/Library.hpp"
 )
 
 # gather private sources
 set(SYNTACTS_SRC 
-    "src/Syntacts/Syntacts.cpp"
+    # "src/Syntacts/Syntacts.cpp"
     "src/Syntacts/Cue.cpp"
     "src/Syntacts/Envelope.cpp"
     "src/Syntacts/Oscillator.cpp"
     "src/Syntacts/Source.cpp"
     "src/Syntacts/Helpers.hpp"
+    "src/Syntacts/AudioFile.hpp"
     "src/Syntacts/AudioFile.cpp"
-    "src/Syntacts/Serialization.cpp"
+    "src/Syntacts/Library.cpp"
     "src/Syntacts/Tween.cpp"
     "src/Syntacts/Session.cpp"
     # "src/Syntacts/Detail/pink_noise.hpp"

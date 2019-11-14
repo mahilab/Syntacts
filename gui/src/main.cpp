@@ -11,13 +11,7 @@
 class SyntactsGui : public GameObject {
 public:
 
-    SyntactsGui() {
-        tact::initialize();
-    }
 
-    ~SyntactsGui() {
-        tact::finalize();
-    }
 
 private:
 
@@ -29,9 +23,9 @@ private:
     Handle<VisualizerWindow> m_visualizer;
 
     void start() override {
+        m_device     = makeChild<DeviceBar>("Device");
         m_info       = makeChild<InfoBar>("Info");
         m_library    = makeChild<LibraryWindow>("Library");
-        m_device     = makeChild<DeviceBar>("Device");
         m_designer   = makeChild<DesignerWindow>("Designer");
         m_channel    = makeChild<ChannelWindow>("Channel");
         m_visualizer = makeChild<VisualizerWindow>("Visualizer");

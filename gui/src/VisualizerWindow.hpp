@@ -28,34 +28,29 @@ private:
 
     /// Updates the waveform plot
     void updatePlot() {
-        m_cuePlot.clear();
-        auto cue = m_designer->buildCue();
-        auto nPoints = cue->sampleCount(10000);
-        m_cuePlot.resize(nPoints);    
+        
+        auto des = m_designer->buildCue();
+        auto lib = m_library->getSelectedCue();
+
+        auto nPoints = lib ? std::max(des->sampleCount(10000),lib->sampleCount(10000)) : des->sampleCount(10000);
+
+        m_desPlot.resize(nPoints); 
+        m_libPlot.resize(nPoints);
+
         float t = 0;
-        for (auto& point : m_cuePlot) {
-            point = cue->sample(t) + 1;
+        for (int i = 0; i < nPoints; ++i) {
+            m_desPlot[i] = des->sample(t) + 1;
+            m_libPlot[i] = lib ? lib->sample(t) - 1 : -3;
             t += 0.0001f;
-        }
-        m_envPlot.resize(nPoints);
-        // auto env = m_designer->buildEnv();
-        auto env = m_library->getSelectedCue();
-        t = 0;
-        for (auto& point : m_envPlot) {
-            if (env)
-                point = env->sample(t) - 1;
-            else
-                point = -3;
-            t += 0.0001f;
-        }
+        }   
+
         
         float avail = ImGui::GetContentRegionAvailWidth()+1;
         m_width = Math::clamp(m_width, avail, 10000.0f);
         ImGui::PushItemWidth(m_width);
         ImGui::PushStyleColor(ImGuiCol_PlotLines, hexCode("cf94c2"));
         ImGui::PushStyleColor(ImGuiCol_PlotLinesHovered, hexCode("cf94c2"));
-        auto title = str(cue->getEnvelope()->getDuration()*1000, "ms /", m_cuePlot.size(), " samples");
-        ImGui::PlotLines2("", &m_cuePlot[0], &m_envPlot[0], nPoints,  0, "", -2.0f, 2.0f, ImVec2(0, ImGui::GetContentRegionAvail().y));
+        ImGui::PlotLines2("", &m_desPlot[0], &m_libPlot[0], nPoints,  0, "", -2.0f, 2.0f, ImVec2(0, ImGui::GetContentRegionAvail().y));
 
         if (ImGui::IsItemHovered()) {
             m_width -= Input::getScroll() * m_width / 20.0f; 
@@ -73,8 +68,8 @@ public:
 
 private:
 
-    std::vector<float> m_cuePlot;
-    std::vector<float> m_envPlot;
+    std::vector<float> m_desPlot;
+    std::vector<float> m_libPlot;
     Handle<DesignerWindow> m_designer;
     Handle<LibraryWindow>  m_library;
 

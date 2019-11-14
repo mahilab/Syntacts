@@ -26,6 +26,7 @@ private:
         m_designer = findSibling<DesignerWindow>();
         m_library = findSibling<LibraryWindow>();
         m_deviceBar->onInitialize.connect(this, &ChannelWindow::rechannel);
+        m_deviceBar->onSwitchDevice.connect(this, &ChannelWindow::rechannel);
         rechannel();
     }
 
@@ -51,7 +52,7 @@ private:
     void updateChannels() {
         ImGui::PushStyleColor(ImGuiCol_Border, Color::Transparent);
         ImGui::BeginChild("Channels", ImVec2(0,0), false, ImGuiWindowFlags_NoBackground);
-        for (int i = 0; i < tact::getCurrentDevice().maxChannels; ++i)
+        for (int i = 0; i < m_deviceBar->session->getCurrentDevice().maxChannels; ++i)
         {
             auto label = str(i + 1);
             if (ImGui::Button(label.c_str(), ImVec2(25,0))) // || Input::getKeyDown((Key)((int)Key::Num1 + i)))
@@ -81,13 +82,13 @@ private:
         auto cue =  m_designer->buildCue();
         // auto cue = m_library->getSelectedCue();
         if (cue) {
-            tact::play(ch, cue);
+            m_deviceBar->session->play(ch, cue);
         }
     }
 
     /// Plays all selected channels
     void playSelected() {
-        for (int i = 0; i < tact::getCurrentDevice().maxChannels; ++i) {
+        for (int i = 0; i < m_deviceBar->session->getCurrentDevice().maxChannels; ++i) {
             if (m_checkBoxes[i])
                 playCh(i);
         }
@@ -101,8 +102,8 @@ private:
 
     /// Gets number of channels from current Syntacts device and resizes accordingly
     void rechannel() {
-        m_checkBoxes = std::deque<bool>(tact::getCurrentDevice().maxChannels, false);
-        m_channelVol = std::vector<float>(tact::getCurrentDevice().maxChannels, 0.0f);
+        m_checkBoxes = std::deque<bool>(m_deviceBar->session->getCurrentDevice().maxChannels, false);
+        m_channelVol = std::vector<float>(m_deviceBar->session->getCurrentDevice().maxChannels, 0.0f);
         if (m_checkBoxes.size() > 0) {
             m_checkBoxes[0] = true;
             m_channelVol[0] = 1.0f;

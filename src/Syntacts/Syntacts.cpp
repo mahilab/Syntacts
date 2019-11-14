@@ -267,26 +267,6 @@ int stopAll() {
     return playAll(std::make_shared<Cue>());
 }
 
-int exportToWave(std::shared_ptr<Cue> cue, std::string filePath, int sampleRate) {
-    AudioFileFormat format = AudioFileFormat::Wave;
-    AudioFile<float> file;
-    AudioFile<float>::AudioBuffer buffer;
-    buffer.resize(1);
-    buffer[0].resize(cue->sampleCount(sampleRate));
-    double sampleLength = 1.0 / sampleRate;
-    double t = 0;
-    for (auto& sample : buffer[0]) {
-        sample = cue->sample(static_cast<float>(t));  
-        t += sampleLength;
-    }
-    if (!file.setAudioBuffer(buffer))
-        return SyntactsError_AudioFileBufferFail;
-    file.setBitDepth(16);
-    file.setSampleRate(sampleRate);
-    if (!file.save(filePath, format))
-        return SyntactsError_AudioFileSaveFail;
-    return SyntactsError_NoError;
-}
 
 int openControlPanel(int deviceIndex, void* windowHandle) {
     PaError result = PaAsio_ShowControlPanel(deviceIndex, windowHandle);
