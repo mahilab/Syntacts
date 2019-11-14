@@ -18,9 +18,9 @@
 cmake_minimum_required(VERSION 3.13.0)
 
 # user options
-option(SYNTACTS_EXAMPLES "Turn ON to build Syntacts example(s)"       ON )
-option(SYNTACTS_TEST     "Turn ON to build Syntacts test(s)"          ON )
-option(SYNTACTS_ANSI_C   "Turn ON to build Syntacts ANSI C interface" OFF)
+option(SYNTACTS_PLUGIN   "Turn ON to build Syntacts plugin DLL" ON )
+option(SYNTACTS_EXAMPLES "Turn ON to build Syntacts example(s)" ON )
+option(SYNTACTS_TEST     "Turn ON to build Syntacts test(s)"    ON )
 
 # create project
 project(syntacts VERSION 1.0.0 LANGUAGES CXX)
@@ -93,27 +93,11 @@ target_include_directories(syntacts
 target_link_libraries(syntacts PUBLIC portaudio_static PRIVATE) # rubberband-library)
 
 #===============================================================================
-# Syntacts Dynamic ANSI C Library
+# Syntacts Plugin DLL
 #===============================================================================
 
-if (SYNTACTS_ANSI_C)
-    add_library(syntacts-c SHARED "")
-    add_library(syntacts::syntacts-c ALIAS syntacts-c)
-    set_target_properties(syntacts-c PROPERTIES CXX_STANDARD 17 DEBUG_POSTFIX -d)
-    set_target_properties(syntacts-c PROPERTIES COMPILE_FLAGS "/bigobj")
-    target_sources(syntacts-c PRIVATE ${SYNTACTS_INCLUDE})
-    target_sources(syntacts-c PRIVATE ${SYNTACTS_SRC})
-    target_compile_definitions(syntacts-c PRIVATE -DSYNTACTS_EXPORTS)
-    target_compile_definitions(syntacts-c PUBLIC -DSYNTACTS_ANSI_C PA_USE_ASIO PRIVATE NOMINMAX)
-    target_include_directories(syntacts-c
-        PUBLIC
-            $<INSTALL_INTERFACE:include>
-            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-        PRIVATE
-            ${CMAKE_CURRENT_SOURCE_DIR}/src
-            ${portaudio_INCLUDE_DIR}
-    )
-    target_link_libraries(syntacts-c PUBLIC portaudio_static)
+if (SYNTACTS_PLUGIN)
+    add_subdirectory("plugin")
 endif()
 
 #===============================================================================
