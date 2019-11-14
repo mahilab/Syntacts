@@ -1,7 +1,6 @@
 #pragma once
 
-#include <Syntacts/Config.hpp>
-#include <Syntacts/Source.hpp>
+#include <Syntacts/Signal.hpp>
 #include <Syntacts/Tween.hpp>
 #include <Syntacts/Oscillator.hpp>
 #include <functional>
@@ -14,7 +13,7 @@ namespace tact
 //=============================================================================
 
 /// Abstract Base Envelope 
-class SYNTACTS_API Envelope : public Source {
+class SYNTACTS_API Envelope : public Signal {
 public:
 
     /// Constructor
@@ -29,7 +28,7 @@ public:
 protected:
     float m_duration;
 private:
-    SERIALIZE(PARENT(Source), MEMBER(m_duration));
+    SERIALIZE(PARENT(Signal), MEMBER(m_duration));
 };
 
 //=============================================================================

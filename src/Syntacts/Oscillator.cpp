@@ -11,8 +11,8 @@ Oscillator::Oscillator(float frequency) :
 
 }
 
-Oscillator::Oscillator(std::shared_ptr<Source> frequency) :
-    Source(),
+Oscillator::Oscillator(Ptr<Signal> frequency) :
+    Signal(),
     m_frequency(frequency)
 {
 

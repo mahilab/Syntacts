@@ -20,10 +20,10 @@ cmake_minimum_required(VERSION 3.13.0)
 # user options
 option(SYNTACTS_PLUGIN   "Turn ON to build Syntacts plugin DLL" ON )
 option(SYNTACTS_EXAMPLES "Turn ON to build Syntacts example(s)" ON )
-option(SYNTACTS_TEST     "Turn ON to build Syntacts test(s)"    ON )
+option(SYNTACTS_TEST     "Turn ON to build Syntacts test(s)"    OFF)
 
 # create project
-project(syntacts VERSION 1.0.0 LANGUAGES CXX)
+project(syntacts VERSION 0.1.0 LANGUAGES CXX)
 
 # add modules
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
@@ -35,7 +35,7 @@ set(SYNTACTS_INCLUDE
     "include/Syntacts/Cue.hpp"
     "include/Syntacts/Envelope.hpp"
     "include/Syntacts/Oscillator.hpp"
-    "include/Syntacts/Source.hpp"
+    "include/Syntacts/Signal.hpp"
     "include/Syntacts/Config.hpp"
     "include/Syntacts/Serialization.hpp"
     "include/Syntacts/Tween.hpp"
@@ -46,19 +46,16 @@ set(SYNTACTS_INCLUDE
 
 # gather private sources
 set(SYNTACTS_SRC 
-    # "src/Syntacts/Syntacts.cpp"
     "src/Syntacts/Cue.cpp"
     "src/Syntacts/Envelope.cpp"
     "src/Syntacts/Oscillator.cpp"
-    "src/Syntacts/Source.cpp"
+    "src/Syntacts/Signal.cpp"
     "src/Syntacts/Helpers.hpp"
     "src/Syntacts/AudioFile.hpp"
     "src/Syntacts/AudioFile.cpp"
     "src/Syntacts/Library.cpp"
     "src/Syntacts/Tween.cpp"
     "src/Syntacts/Session.cpp"
-    # "src/Syntacts/Detail/pink_noise.hpp"
-    # "src/Syntacts/Detail/pink_noise.cpp"
 )
 
 # find portaudio

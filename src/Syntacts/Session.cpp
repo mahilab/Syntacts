@@ -323,11 +323,11 @@ int Session::open(const Device& device, int channelCount) {
 }
 
 int Session::open(int index) {
-    open(getAvailableDevices().at(index));
+    return open(getAvailableDevices().at(index));
 }
 
 int Session::open(int index, int channelCount) {
-    open(getAvailableDevices().at(index),channelCount);
+    return open(getAvailableDevices().at(index),channelCount);
 }
 
 int Session::close() {

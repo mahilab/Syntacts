@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Syntacts/Config.hpp>
-#include <Syntacts/Source.hpp>
+#include <Syntacts/Signal.hpp>
 
 namespace tact
 {
@@ -9,20 +9,20 @@ namespace tact
 //=============================================================================
 
 /// Abstract base class for objects which produce a periodic, oscillating signal
-class SYNTACTS_API Oscillator : public Source
+class SYNTACTS_API Oscillator : public Signal
 {
 public:
     /// Constructs an Oscillator with a scalar frequency
     Oscillator(float frequency = 1.0f);
 
     /// Constructs an Oscillator with a variable frequency
-    Oscillator(Ptr<Source> frequency);
+    Oscillator(Ptr<Signal> frequency);
 
 protected:
-    Ptr<Source> m_frequency;    
+    Ptr<Signal> m_frequency;    
 
 private:
-    SERIALIZE(PARENT(Source), MEMBER(m_frequency));
+    SERIALIZE(PARENT(Signal), MEMBER(m_frequency));
 };
 
 //=============================================================================

@@ -1,9 +1,3 @@
-# executables
-# find_package(MEL REQUIRED)
-
-add_executable(devs devs.cpp)
-target_link_libraries(devs portaudio_static)
-
 # add_executable(benchmark benchmark.cpp)
 # target_link_libraries(benchmark syntacts)
 
@@ -18,6 +12,3 @@ target_link_libraries(devs portaudio_static)
 
 # add_executable(testLoop testLoop.cpp)
 # target_link_libraries(testLoop MEL::quanser syntacts)
-
-add_executable(atomic_float atomic_float.cpp)
-target_link_libraries(atomic_float carnot syntacts)

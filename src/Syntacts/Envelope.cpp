@@ -7,7 +7,7 @@
 namespace tact {
 
 Envelope::Envelope(float duration) :
-    Source(), m_duration(duration)
+    m_duration(duration)
 {
     
 }

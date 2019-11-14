@@ -9,7 +9,7 @@
 namespace tact {
 
 /// Encapsulates a cue to be played on a single channel
-class SYNTACTS_API Cue {
+class SYNTACTS_API Cue : public Signal {
 public:
 
     /// Default constructor
@@ -34,24 +34,24 @@ public:
     Ptr<Envelope> getEnvelope() const;
 
     /// Chains an existing custom Generator to be processed
-    void chain(Ptr<Source> gen);
+    void chain(Ptr<Signal> sig);
 
     /// Makes and then chains a custon Generator to be processed
     template <typename T, typename ...Args>
     void chain(Args ... args);
 
     /// Compounds all Generators to compute a sample at time t
-    float sample(float t);
+    virtual float sample(float t) const override;
 
     /// Returns the number of samples this Cue generates for a particular sample rate
-    int sampleCount(int sampleRate);
+    int sampleCount(int sampleRate) const;
 
 private:
 
-    std::vector<Ptr<Source>> m_generators; ///< array of generators
-    Ptr<Envelope> m_env;                      ///< the Cue's primary envelope
+    std::vector<Ptr<Signal>> m_sigs; ///< array of generators
+    Ptr<Envelope> m_env;             ///< the Cue's primary envelope
 
-    SERIALIZE(MEMBER(m_generators), MEMBER(m_env))
+    SERIALIZE(PARENT(Signal), MEMBER(m_sigs), MEMBER(m_env))
 };
 
 template <typename T, typename ...Args>
