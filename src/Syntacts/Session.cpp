@@ -5,7 +5,7 @@
 #define NO_INTERLEAVED
 
 #include "Helpers.hpp"
-#include <Syntacts/Detail/SPSCQueue.hpp>
+#include "Util/SPSCQueue.hpp"
 #include <Syntacts/Session.hpp>
 #include <cassert>
 #include "portaudio.h"

@@ -11,7 +11,7 @@ int main(int argc, char const *argv[])
     Session session;
     session.open();
 
-    auto osc = create<SineWave>(440);
+    auto osc = create<Sine>(440);
     auto cue = create<Cue>(osc, 5);
 
     session.play(0, cue);

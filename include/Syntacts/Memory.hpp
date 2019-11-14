@@ -4,7 +4,7 @@
 
 namespace tact {
 
-    /// Smart pointer type
+    /// Smart pointer type used throughout the Syntacts library
     template <typename T>
     using Ptr = std::shared_ptr<T>;
 

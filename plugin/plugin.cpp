@@ -42,6 +42,9 @@ int Session_resume(Handle session, int channel) {
     return static_cast<Session*>(session)->resume(channel);
 }
 
+int Signal_count() {
+    return Signal::count();
+}
 
 Handle Envelope_create(float duration) {
     auto env = create<Envelope>(duration);
@@ -73,15 +76,15 @@ void Oscillator_delete(Handle osc) {
     g_oscs.erase(osc);
 }
 
-Handle SineWave_create(float frequency) {
-    auto osc = create<SineWave>(frequency);
+Handle Sine_create(float frequency) {
+    auto osc = create<Sine>(frequency);
     Handle hand = osc.get();
     g_oscs[hand] = std::move(osc);
     return hand;
 }
 
-Handle SquareWave_create(float frequency) {
-    auto osc = create<SquareWave>(frequency);
+Handle Square_create(float frequency) {
+    auto osc = create<Square>(frequency);
     Handle hand = osc.get();
     g_oscs[hand] = std::move(osc);
     return hand;

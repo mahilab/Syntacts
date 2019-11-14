@@ -28,7 +28,7 @@ private:
 //=============================================================================
 
 /// A sine wave Oscillator
-class SYNTACTS_API SineWave : public Oscillator
+class SYNTACTS_API Sine : public Oscillator
 {
 public:
     /// Inherited Constructor
@@ -43,7 +43,7 @@ private:
 //=============================================================================
 
 /// A square wave Oscillator
-class SYNTACTS_API SquareWave : public Oscillator
+class SYNTACTS_API Square : public Oscillator
 {
 public:
     // Inherited Constructor
@@ -58,7 +58,7 @@ private:
 //=============================================================================
 
 /// A saw wave Oscillator
-class SYNTACTS_API SawWave : public Oscillator
+class SYNTACTS_API Saw : public Oscillator
 {
 public:
     // Inherited Constructor
@@ -73,7 +73,7 @@ private:
 //=============================================================================
 
 /// A triangle wave Oscillator
-class SYNTACTS_API TriWave : public Oscillator
+class SYNTACTS_API Triangle : public Oscillator
 {
 public:
     // Inherited Constructor
@@ -88,11 +88,11 @@ private:
 //=============================================================================
 
 /// A frequency modulated sine wave Oscillator
-class SYNTACTS_API SineWaveFM : public Oscillator
+class SYNTACTS_API SineFM : public Oscillator
 {
 public:
     /// Constructor
-    SineWaveFM(float frequency = 1, float modulation = 1, float index = 2);
+    SineFM(float frequency = 1, float modulation = 1, float index = 2);
 
     /// Sets modulation frequency
     void setModulation(float modulation);

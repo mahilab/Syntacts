@@ -10,7 +10,7 @@ int main(int argc, char const *argv[])
 
     // create a cue
     auto osc = create<Chirp>(250, 10);
-    auto mod = create<SineWave>(5);
+    auto mod = create<Sine>(5);
     auto env = create<ASR>(1,3,1);
     auto cue = create<Cue>(osc, mod, env);
 

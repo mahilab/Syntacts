@@ -315,18 +315,18 @@ private:
     Ptr<tact::Oscillator> buildCarOsc() {
         if (m_modMode != ModMode::FM) {
             if (m_carType == OscType::Sine)
-                return make<tact::SineWave>((float)m_carFreq);
+                return make<tact::Sine>((float)m_carFreq);
             else if (m_carType == OscType::Square)
-                return make<tact::SquareWave>((float)m_carFreq);
+                return make<tact::Square>((float)m_carFreq);
             else if (m_carType == OscType::Saw)
-                return make<tact::SawWave>((float)m_carFreq);
+                return make<tact::Saw>((float)m_carFreq);
             else if (m_carType == OscType::Triangle)
-                return make<tact::TriWave>((float)m_carFreq);  
+                return make<tact::Triangle>((float)m_carFreq);  
             else 
                 return make<tact::Chirp>((float)m_carFreq, m_chirp);
         }       
         else {
-            return make<tact::SineWaveFM>((float)m_carFreq, (float)m_modFreq, m_modIdx);
+            return make<tact::SineFM>((float)m_carFreq, (float)m_modFreq, m_modIdx);
         }
     }
 
@@ -334,13 +334,13 @@ private:
     Ptr<tact::Oscillator> buildModOsc() {
         Ptr<tact::Oscillator> modOsc;
         if (m_modType == OscType::Sine)
-            modOsc = make<tact::SineWave>((float)m_modFreq);
+            modOsc = make<tact::Sine>((float)m_modFreq);
         else if (m_modType == OscType::Square)
-            modOsc = make<tact::SquareWave>((float)m_modFreq);
+            modOsc = make<tact::Square>((float)m_modFreq);
         else if (m_modType == OscType::Saw)
-            modOsc = make<tact::SawWave>((float)m_modFreq);
+            modOsc = make<tact::Saw>((float)m_modFreq);
         else if (m_modType == OscType::Triangle)
-            modOsc = make<tact::TriWave>((float)m_modFreq);  
+            modOsc = make<tact::Triangle>((float)m_modFreq);  
         return modOsc;
     }
 

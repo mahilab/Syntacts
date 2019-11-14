@@ -100,7 +100,7 @@ private:
 class SYNTACTS_API OscillatingEnvelope : public Envelope {
 public:
     /// Constructs an Envelope with a specified duration, positive oscillator type and frequency
-    OscillatingEnvelope(float duration = 1.0f , float amplitude = 1.0f, Ptr<Oscillator> osc = create<SineWave>());
+    OscillatingEnvelope(float duration = 1.0f , float amplitude = 1.0f, Ptr<Oscillator> osc = create<Sine>());
     virtual float sample(float t) const override;
 protected:
     Ptr<Oscillator> m_osc;

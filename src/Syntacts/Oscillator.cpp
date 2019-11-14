@@ -18,24 +18,24 @@ Oscillator::Oscillator(Ptr<Signal> frequency) :
 
 }
 
-float SineWave::sample(float t) const {
+float Sine::sample(float t) const {
     return std::sin(TWO_PI * m_frequency->sample(t) * t);
 }
 
-float SquareWave::sample(float t) const {
+float Square::sample(float t) const {
     return std::sin(TWO_PI * m_frequency->sample(t) * t) > 0 ? 1.0f : -1.0f;
 }
 
-float SawWave::sample(float t) const {
+float Saw::sample(float t) const {
     float f = m_frequency->sample(t);
     return -2.0f / PI * std::atan(std::cos(PI * f * t) / std::sin(PI * f * t));
 }
 
-float TriWave::sample(float t) const {
+float Triangle::sample(float t) const {
     return -2.0f / PI * std::asin(std::sin(2.0f * PI * m_frequency->sample(t) * t));
 }
 
-SineWaveFM::SineWaveFM(float frequency, float modulation, float index) :
+SineFM::SineFM(float frequency, float modulation, float index) :
     Oscillator(frequency),
     m_modulation(modulation),
     m_index(index) 
@@ -43,15 +43,15 @@ SineWaveFM::SineWaveFM(float frequency, float modulation, float index) :
 
 }
 
-void SineWaveFM::setModulation(float modulation) {
+void SineFM::setModulation(float modulation) {
     m_modulation = modulation;
 }
 
-void SineWaveFM::setIndex(float index) {
+void SineFM::setIndex(float index) {
     m_index = index;
 }
 
-float SineWaveFM::sample(float t) const {
+float SineFM::sample(float t) const {
     return std::cos(2.0f * PI * m_frequency->sample(t) * t + m_index * std::sin(2.0f * PI * m_modulation * t));
 }
 

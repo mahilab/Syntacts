@@ -13,6 +13,10 @@ Signal::~Signal() {
     s_count--;
 }
 
+int Signal::count() {
+    return s_count;
+}
+
 Scalar::Scalar(float value) : m_value(value) {}
 float Scalar::sample(float t) const { return m_value; }
 void Scalar::setValue(float value) { m_value = value; }
