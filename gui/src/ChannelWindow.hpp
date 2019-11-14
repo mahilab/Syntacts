@@ -60,11 +60,15 @@ private:
             ImGui::SameLine();
             // ImGui::Checkbox(str("##", i).c_str(), &m_checkBoxes[i]);
             ImGui::PushItemWidth(-1);
-            ImGui::SliderFloat(str("##", i).c_str(), &m_channelVol[i], 0, 1, "");
+            if (ImGui::SliderFloat(str("##", i).c_str(), &m_channelVol[i], 0, 1, "")) {
+                m_deviceBar->session->setVolume(i, Math::pow(m_channelVol[i],4));
+            }
             // if (ImGui::IsItemHovered() || ImGui::IsItemActive())
             //     ImGui::SetTooltip("%.3f", m_channelVol[i]);
-            if (ImGui::IsItemClicked(1))
+            if (ImGui::IsItemClicked(1)) {
                 m_channelVol[i] = m_channelVol[i] == 0.0f ? 1.0f : m_channelVol[i] == 1.0f ? 0.0f : m_channelVol[i] < 0.5f ? 0.0f : 1.0f;
+                m_deviceBar->session->setVolume(i, Math::pow(m_channelVol[i],4));
+            }
             // ImGui::SameLine();
         }
         ImGui::EndChild();
@@ -89,23 +93,15 @@ private:
     /// Plays all selected channels
     void playSelected() {
         for (int i = 0; i < m_deviceBar->session->getCurrentDevice().maxChannels; ++i) {
-            if (m_checkBoxes[i])
+            if (m_channelVol[i] > 0)
                 playCh(i);
         }
     }
 
-    /// Selects/deselects all available channels
-    void selectAllChannels(bool select) {
-        for (int i = 0; i < m_checkBoxes.size(); i++)
-            m_checkBoxes[i] = select;
-    }
-
     /// Gets number of channels from current Syntacts device and resizes accordingly
     void rechannel() {
-        m_checkBoxes = std::deque<bool>(m_deviceBar->session->getCurrentDevice().maxChannels, false);
         m_channelVol = std::vector<float>(m_deviceBar->session->getCurrentDevice().maxChannels, 0.0f);
-        if (m_checkBoxes.size() > 0) {
-            m_checkBoxes[0] = true;
+        if (m_channelVol.size() > 0) {
             m_channelVol[0] = 1.0f;
         }
     }
@@ -117,7 +113,6 @@ public:
 private:
 
     float              m_masterVol = 1.0f;
-    std::deque<bool>   m_checkBoxes;
     std::vector<float> m_channelVol;
 
 };

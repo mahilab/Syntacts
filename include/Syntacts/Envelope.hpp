@@ -3,9 +3,8 @@
 #include <Syntacts/Signal.hpp>
 #include <Syntacts/Tween.hpp>
 #include <Syntacts/Oscillator.hpp>
-#include <functional>
-#include <map>
 #include <utility>
+#include <map>
 
 namespace tact
 {
@@ -26,7 +25,7 @@ public:
     virtual float getDuration() const;
 
 protected:
-    float m_duration;
+    std::atomic<float> m_duration;
 private:
     SERIALIZE(PARENT(Signal), MEMBER(m_duration));
 };

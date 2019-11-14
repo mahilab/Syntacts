@@ -5,9 +5,32 @@
 
 using namespace tact;
 
+std::unordered_map<void*, Ptr<Signal>>     g_sigs;
 std::unordered_map<void*, Ptr<Oscillator>> g_oscs;
 std::unordered_map<void*, Ptr<Envelope>>   g_envs; 
 std::unordered_map<void*, Ptr<Cue>>        g_cues;
+
+template <typename P, typename M>
+inline Handle store(P p, M& m) {
+    Handle hand = p.get(); 
+    m[hand] = move(p);
+    return hand;
+}
+
+inline Ptr<Signal> findSignal(Handle sig) {
+    if (g_sigs.count(sig))
+        return g_sigs[sig];
+    else if (g_oscs.count(sig))
+        return g_oscs[sig];
+    else if (g_envs.count(sig))
+        return g_envs[sig];
+    else if (g_cues.count(sig))
+        return g_cues[sig];
+    else
+        return nullptr;
+}
+
+//=============================================================================
 
 Handle Session_create() {
     Session* session = new Session();
@@ -42,64 +65,107 @@ int Session_resume(Handle session, int channel) {
     return static_cast<Session*>(session)->resume(channel);
 }
 
+int Session_setVolume(Handle session, int channel, float volume) {
+    return static_cast<Session*>(session)->setVolume(channel, volume);
+}
+
+//=============================================================================
+
+bool Signal_valid(Handle sig) {
+    return findSignal(sig) != nullptr ? true : false;
+}
+
+void Signal_delete(Handle sig) {
+    g_sigs.erase(sig);
+    g_oscs.erase(sig);
+    g_envs.erase(sig);
+    g_cues.erase(sig);
+}
+
+float Signal_sample(Handle sig, float t) {
+    if (auto s = findSignal(sig))
+        return s->sample(t);
+    else
+        return std::numeric_limits<float>::infinity();
+}
+
 int Signal_count() {
     return Signal::count();
 }
 
-Handle Envelope_create(float duration) {
-    auto env = create<Envelope>(duration);
-    Handle hand = env.get();
-    g_envs[hand] = std::move(env);
-    return hand;
+//=============================================================================
+
+Handle Scalar_create(float value) {
+    return store(create<Scalar>(value), g_sigs);
 }
 
-void Envelope_delete(Handle env) {
-    g_envs.erase(env);
+Handle Ramp_create(float initial, float rate) {
+    return store(create<Ramp>(initial, rate), g_sigs);
+}
+
+//=============================================================================
+
+
+Handle Envelope_create(float duration) {
+    return store(create<Envelope>(duration), g_envs);
 }
 
 Handle ASR_create(float a, float s, float r) {
-    auto env = create<ASR>(a,s,r);
-    Handle hand = env.get();
-    g_envs[hand] = std::move(env);
-    return hand;
+    return store(create<ASR>(a,s,r), g_envs);
 }
 
 Handle ADSR_create(float a, float d, float s, float r) {
-    auto env = create<ADSR>(a,d,s,r);
-    Handle hand = env.get();
-    g_envs[hand] = std::move(env);
-    return hand;
+    return store(create<ADSR>(a,d,s,r), g_envs);
 }
 
-
-void Oscillator_delete(Handle osc) {
-    g_oscs.erase(osc);
-}
+//=============================================================================
 
 Handle Sine_create(float frequency) {
-    auto osc = create<Sine>(frequency);
-    Handle hand = osc.get();
-    g_oscs[hand] = std::move(osc);
-    return hand;
+    return store(create<Sine>(frequency), g_oscs);
 }
 
 Handle Square_create(float frequency) {
-    auto osc = create<Square>(frequency);
-    Handle hand = osc.get();
-    g_oscs[hand] = std::move(osc);
-    return hand;
+    return store(create<Square>(frequency), g_oscs);
 }
 
-Handle Cue_create(Handle osc, Handle env) {
-    auto cue = create<Cue>(g_oscs.at(osc), g_envs.at(env));
-    Handle hand = cue.get();
-    g_cues[hand] = std::move(cue);
-    return hand;
+Handle Saw_create(float frequency) {
+    return store(create<Saw>(frequency), g_oscs);
 }
 
-void Cue_delete(Handle cue) {
-    g_cues.erase(cue);
+Handle Triangle_create(float frequency) {
+    return store(create<Triangle>(frequency), g_oscs);
 }
+
+//=============================================================================
+
+Handle Cue_create() {
+    return store(create<Cue>(), g_cues);
+}
+
+void Cue_setEnvelope(Handle cue, Handle env) {
+    g_cues.at(cue)->setEnvelope(g_envs.at(env));
+}
+
+void Cue_chain(Handle cue, Handle sig) {
+    if (auto s = findSignal(sig))
+        g_cues.at(cue)->chain(s);
+}
+
+//=============================================================================
+
+bool Library_saveCue(Handle cue, const char* name) {
+    Library::saveCue(g_cues.at(cue), name);
+} 
+
+Handle Library_loadCue(const char* name) {
+    auto cue = Library::loadCue(name);
+    if (cue != nullptr)
+        return store(cue, g_cues);
+    else
+        return nullptr;
+}
+
+//=============================================================================
 
 int Debug_oscMapSize() {
     return static_cast<int>(g_oscs.size());
@@ -112,3 +178,5 @@ int Debug_envMapSize() {
 int Debug_cueMapSize() {
     return static_cast<int>(g_cues.size());
 }
+
+//=============================================================================

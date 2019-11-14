@@ -1,13 +1,10 @@
 #include <Syntacts/Tween.hpp>
-#include <cmath>
+#include "Util/Util.hpp"
 
 namespace tact {
 namespace Tween {
 
 namespace {
-
-constexpr float PI     = 3.14159265358979f;
-constexpr float HALFPI = PI * 0.5f;
 
 inline float lerp(float a, float b, float t) {
     return a + (b - a) * t;
@@ -169,13 +166,13 @@ float InOut::tween(float a, float b, float t) {
 namespace Sinusoidal {
 
 float In::tween(float a, float b, float t) {
-    t = 1.0f - std::cos(t * HALFPI);
+    t = 1.0f - std::cos(t * HALF_PI);
     return lerp(a, b, t);
 }
 
 
 float Out::tween(float a, float b, float t) {
-    t = std::sin(t * HALFPI);
+    t = std::sin(t * HALF_PI);
     return lerp(a, b, t);
 }
 

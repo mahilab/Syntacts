@@ -14,4 +14,7 @@ namespace tact {
         return std::make_shared<T>(std::forward<Args>(args)...);
     }
 
+    /// Shorthand for std::move(...)
+    using std::move;
+
 }

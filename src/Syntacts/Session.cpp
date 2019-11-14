@@ -4,7 +4,7 @@
 
 #define NO_INTERLEAVED
 
-#include "Helpers.hpp"
+#include "Util/Util.hpp"
 #include "Util/SPSCQueue.hpp"
 #include <Syntacts/Session.hpp>
 #include <cassert>
@@ -27,9 +27,10 @@ namespace {
 using namespace rigtorp;
 
 // Constants
-constexpr int    QUEUE_SIZE    = 256;
-constexpr double SAMPLE_RATE   = 44100;
-constexpr double SAMPLE_LENGTH = 1.0 / SAMPLE_RATE;
+constexpr int    QUEUE_SIZE        = 256;
+constexpr double SAMPLE_RATE       = 44100;
+constexpr double SAMPLE_LENGTH     = 1.0 / SAMPLE_RATE;
+constexpr int    FRAMES_PER_BUFFER = 0;
 
 /// Channel structure
 class Channel {
@@ -38,6 +39,7 @@ public:
     Ptr<Cue> cue;
     double   time   = 0.0; 
     float    volume = 1.0f;
+    float    lastVolume = 1.0f;
     float    pitch  = 1.0f;
     bool     paused = true;
     float nextSample() {
@@ -47,6 +49,17 @@ public:
             time += SAMPLE_LENGTH;
         }
         return sample;
+    }
+    void fillBuffer(float* buffer, unsigned long frames) {
+        float nextVolume = volume;
+        float volumeIncr = (nextVolume - lastVolume) / frames;
+        volume = lastVolume;        
+        for (unsigned long f = 0; f < frames; f++) {
+            volume += volumeIncr;
+            buffer[f] = nextSample();
+        }
+        volume     = nextVolume;
+        lastVolume = nextVolume;
     }
 private:
     //RubberBand::RubberBandStretcher m_stretcher;
@@ -141,7 +154,7 @@ public:
         params.sampleFormat = paFloat32;
 #endif
         int result;
-        result = Pa_OpenStream(&m_stream, nullptr, &params, SAMPLE_RATE, 16, paNoFlag, callback, this);
+        result = Pa_OpenStream(&m_stream, nullptr, &params, SAMPLE_RATE, FRAMES_PER_BUFFER, paNoFlag, callback, this);
         if (result != paNoError)
             return result;  
         result = Pa_StartStream(m_stream);
@@ -208,7 +221,7 @@ public:
             return SyntactsError_InvalidChannel;
         auto command = create<Volume>();
         command->channel = channel;
-        command->volume  = volume;
+        command->volume  = clamp01(volume);
         bool success = m_commands.try_push(std::move(command));
         assert(success);
         return SyntactsError_NoError; 
@@ -262,9 +275,7 @@ public:
 #ifdef NO_INTERLEAVED
         float** out = (float**)outputBuffer;
         for (std::size_t c = 0; c < channels.size(); ++c) {
-            for (unsigned long f = 0; f < framesPerBuffer; f++) {
-                out[c][f] = channels[c].nextSample();
-            }
+            channels[c].fillBuffer(out[c], framesPerBuffer);
         }
 #else
         float* out = (float*)outputBuffer;

@@ -120,7 +120,8 @@ bool saveCue(const Ptr<Cue>& cue, const std::string& name, SaveFormat format) {
     }
 }
 
-bool loadCue(Ptr<Cue>& cue, const std::string& name, SaveFormat format) {
+Ptr<Cue> loadCue(const std::string& name, SaveFormat format) {
+    Ptr<Cue> cue = nullptr;
     try {
         ensureLibraryDirectoryExists();
         if (format == SaveFormat::Binary) {
@@ -133,11 +134,9 @@ bool loadCue(Ptr<Cue>& cue, const std::string& name, SaveFormat format) {
             cereal::JSONInputArchive archive(file);
             archive(cue);
         }
-        return true;
     }
-    catch (...) {
-        return false;
-    }
+    catch (...) { }
+    return cue;
 }
 
 bool exportCue(const Ptr<Cue>& cue, const std::string& filePath, ExportFormat format) {    

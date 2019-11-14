@@ -1,7 +1,7 @@
 #include <Syntacts/Envelope.hpp>
 #include <Syntacts/Tween.hpp>
 #include <Syntacts/Oscillator.hpp>
-#include "Helpers.hpp"
+#include "Util/Util.hpp"
 #include <functional>
 
 namespace tact {
@@ -85,7 +85,7 @@ float OscillatingEnvelope::sample(float t) const {
     if (t > getDuration())
         return 0.0f;
     float value = m_osc->sample(t);  
-    value = interp(value, -1, 1 , 0 , m_amplitude);
+    value = remap(value, -1, 1 , 0 , m_amplitude);
     return value;
 }
 

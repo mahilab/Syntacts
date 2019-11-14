@@ -1,6 +1,5 @@
 #include <Syntacts/Oscillator.hpp>
-#include "Helpers.hpp"
-#include <cmath>
+#include "Util/Util.hpp"
 
 namespace tact
 {
@@ -43,14 +42,6 @@ SineFM::SineFM(float frequency, float modulation, float index) :
 
 }
 
-void SineFM::setModulation(float modulation) {
-    m_modulation = modulation;
-}
-
-void SineFM::setIndex(float index) {
-    m_index = index;
-}
-
 float SineFM::sample(float t) const {
     return std::cos(2.0f * PI * m_frequency->sample(t) * t + m_index * std::sin(2.0f * PI * m_modulation * t));
 }
@@ -60,10 +51,6 @@ Chirp::Chirp(float frequency, float chirpyness) :
     m_chirpyness(chirpyness)
 {
 
-}
-
-void Chirp::setChirpyness(float chirpyness) {
-    m_chirpyness = chirpyness;
 }
 
 float Chirp::sample(float t) const {
@@ -77,10 +64,6 @@ PulseTrain::PulseTrain(float frequency, float dutyCycle) :
     m_period(1.0f / frequency)
 {
 
-}
-
-void PulseTrain::setDutyCycle(float dutyCycle) {
-    m_dutyCycle = clamp01(dutyCycle);
 }
 
 float PulseTrain::sample(float t) const {

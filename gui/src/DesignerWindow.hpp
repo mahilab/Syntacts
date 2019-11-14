@@ -141,7 +141,6 @@ private:
                 updateEnvelope();
                 updateCarrier();
                 updateModulation();
-                editEnvelope(0, testEnv);
                 ImGui::EndTabItem();
             }
             if (ImGui::BeginTabItem("Sequencer##Tab")) {
@@ -156,31 +155,7 @@ private:
         ImGui::End();
     }
 
-    /// Widget to design an envelope
-    void editEnvelope(int i, Ptr<tact::Envelope> env) {
-        int inMode, outMode;
-        if (std::dynamic_pointer_cast<tact::ASR>(env)) 
-            inMode = EnvMode::ASR;
-        else if (std::dynamic_pointer_cast<tact::ADSR>(env))
-            inMode = EnvMode::ADSR;
-        else if (std::dynamic_pointer_cast<tact::AmplitudeEnvelope>(env)) {
-            inMode = EnvMode::Basic;
-        }
-        if (!ImGui::CollapsingHeader(str("Envelope",i).c_str()))
-            return;
-        outMode = inMode;
-        ImGui::Indent();
-        ImGui::Text(str(inMode).c_str());
-        ImGui::RadioButton("Basic",&outMode, EnvMode::Basic); ImGui::SameLine();
-        ImGui::RadioButton("ASR",  &outMode, EnvMode::ASR);   ImGui::SameLine();
-        ImGui::RadioButton("ADSR", &outMode, EnvMode::ADSR);  ImGui::SameLine();
-        if (outMode != inMode) {
-            print("It changed");
-        }
-        ImGui::Unindent();
-    }
-
-    
+  
     /// Updates the carrier section
     void updateCarrier() {
         if (!ImGui::CollapsingHeader("Carrier"))
@@ -351,21 +326,21 @@ public:
 
 private:
 
-    int   m_carFreq = 175;
+    int   m_carFreq = 250;
     int   m_carType = 0;
 
     int   m_modMode = ModMode::AM;
-    int   m_modFreq = 25;
+    int   m_modFreq = 20;
     int   m_modType = OscType::Sine;
     float m_modIdx  = 2.0f;
 
-    float m_chirp = 200;
+    float m_chirp = 250;
 
     int   m_envMode  = EnvMode::ASR;
     std::vector<float> m_amps = {1.0f, 0.5f};
-    int   m_duration = 150;
+    int   m_duration = 500;
     std::vector<int> m_pwmValues = {10, 25};
-    std::vector<int> m_asr   = {50, 75, 25};    
+    std::vector<int> m_asr   = {100, 300, 100};    
     std::vector<int> m_adsr  = {50,50,75,25};
     std::vector<int> m_tweenModes = {0,0,0,0};
 

@@ -4,7 +4,6 @@
 #include <Syntacts/Serialization.hpp>
 #include <Syntacts/Memory.hpp>
 #include <atomic>
-#include <mutex>
 
 namespace tact
 {
@@ -49,9 +48,6 @@ public:
 
     /// Implements scalar
     virtual float sample(float t) const override;
-
-    /// Sets the sclar value
-    virtual void setValue(float value);
 
 private:
     std::atomic<float> m_value; ///< the scalar value

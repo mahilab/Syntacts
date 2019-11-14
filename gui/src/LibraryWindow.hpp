@@ -118,7 +118,7 @@ private:
         if (ImGui::Button(ICON_FA_SAVE)) {
             auto cue = m_designer->buildCue();
             tact::Library::saveCue(cue, m_selected);
-            tact::Library::loadCue(m_lib[m_selected].disk, m_selected);
+            m_lib[m_selected].disk = tact::Library::loadCue(m_selected);
             m_infoBar->pushMessage("Saved Cue " + m_selected);
             sync();
         }
@@ -147,10 +147,19 @@ private:
         ImGui::SameLine();
         if (ImGui::Button(ICON_FA_FILE_AUDIO)) {
             std::string filePath = m_selected + ".wav";
-            tact::Library::exportCue(getSelectedCue(), filePath);
+            tact::Library::exportCue(getSelectedCue(), filePath, tact::ExportFormat::WAV);
             m_infoBar->pushMessage("Exported Cue " + m_selected + " to " + filePath);
         }
         m_infoBar->tooltip("Export Selected Cue to WAV");
+
+        ImGui::SameLine();
+        if (ImGui::Button(ICON_FA_FILE_CSV)) {
+            std::string filePath = m_selected + ".csv";
+            tact::Library::exportCue(getSelectedCue(), filePath, tact::ExportFormat::CSV);
+            m_infoBar->pushMessage("Exported Cue " + m_selected + " to " + filePath);
+        }
+        m_infoBar->tooltip("Export Selected Cue to CSV");
+
         helpers::endDisabled(disabled);
     }
 
@@ -168,7 +177,7 @@ private:
                     m_lib[name] = Entry();
                     m_lib[name].name = name;
                     m_lib[name].path = dir_entry.path();
-                    tact::Library::loadCue(m_lib[name].disk, name);
+                    m_lib[name].disk = tact::Library::loadCue(name);
                     m_lib[name].saved = true;
                 }
             }

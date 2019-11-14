@@ -2,6 +2,7 @@
 
 #include <Syntacts/Error.hpp>
 #include <Syntacts/Cue.hpp>
+#include <string>
 
 namespace tact {
 

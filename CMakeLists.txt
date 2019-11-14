@@ -50,7 +50,6 @@ set(SYNTACTS_SRC
     "src/Syntacts/Envelope.cpp"
     "src/Syntacts/Oscillator.cpp"
     "src/Syntacts/Signal.cpp"
-    "src/Syntacts/Helpers.hpp"
     "src/Syntacts/AudioFile.hpp"
     "src/Syntacts/AudioFile.cpp"
     "src/Syntacts/Library.cpp"

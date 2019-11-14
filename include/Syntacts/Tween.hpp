@@ -8,7 +8,7 @@ namespace tact {
 namespace Tween
 {
     /// Prototype for a function which interpolate from a to b given t between 0 and 1
-    struct Function {
+    struct SYNTACTS_API Function {
         virtual float tween(float a, float b, float t) = 0;
 
         template <class Archive>
@@ -16,7 +16,7 @@ namespace Tween
     };
 
     /// Macro to quickly define a new tweening functor
-    #define TWEEN(T) struct T : public Function { \
+    #define TWEEN(T) struct SYNTACTS_API T : public Function { \
                          virtual float tween(float a, float b, float t) override; \
                          SERIALIZE(PARENT(Function)); \
                      };

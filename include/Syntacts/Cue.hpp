@@ -4,7 +4,6 @@
 #include <Syntacts/Oscillator.hpp>
 #include <Syntacts/Envelope.hpp>
 #include <vector>
-#include <utility>
 
 namespace tact {
 
@@ -33,31 +32,30 @@ public:
     /// Gets the primary Envelope of a Cue
     Ptr<Envelope> getEnvelope() const;
 
-    /// Chains an existing custom Generator to be processed
+    /// Chains an existing custom Signal to be processed
     void chain(Ptr<Signal> sig);
 
-    /// Makes and then chains a custon Generator to be processed
+    /// Makes and then chains a custon Signal to be processed
     template <typename T, typename ...Args>
     void chain(Args ... args);
 
-    /// Compounds all Generators to compute a sample at time t
+    /// Compounds all Signals to compute a sample at time t
     virtual float sample(float t) const override;
 
     /// Returns the number of samples this Cue generates for a particular sample rate
     int sampleCount(int sampleRate) const;
 
 private:
-
-    std::vector<Ptr<Signal>> m_sigs; ///< array of generators
+    std::vector<Ptr<Signal>> m_sigs; ///< array of Signals
     Ptr<Envelope> m_env;             ///< the Cue's primary envelope
-
+private:
     SERIALIZE(PARENT(Signal), MEMBER(m_sigs), MEMBER(m_env))
 };
 
 template <typename T, typename ...Args>
 void Cue::chain(Args... args) {
     auto g = create<T>(std::forward<Args>(args)...);
-    chain(std::move(g));
+    chain(move(g));
 }
 
 } // namespace tact

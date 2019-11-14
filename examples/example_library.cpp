@@ -23,8 +23,7 @@ int main(int argc, char const *argv[])
     Library::saveCue(cue, "libCue", SaveFormat::JSON);
 
     // load the cue back in at a later time or in another process
-    Ptr<Cue> loadedCue;
-    Library::loadCue(loadedCue, "libCue");
+    auto loadedCue = Library::loadCue("libCue");
 
     // play the cue for reference (should be exactly same as before)
     session.play(0, loadedCue);

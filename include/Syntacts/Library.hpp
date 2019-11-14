@@ -5,10 +5,6 @@
 #include <memory>
 #include <string>
 
-//============================================================================
-// LIBRARY FUNCTIONS
-//============================================================================
-
 namespace tact {
 
 class Cue;
@@ -35,7 +31,7 @@ const std::string& getLibraryDirectory();
 bool saveCue(const Ptr<Cue>& cue, const std::string& name, SaveFormat format = SaveFormat::Binary);
 
 /// Loads a serialized Cue from the global Syntacts Cue library
-bool loadCue(Ptr<Cue>& cue, const std::string& name, SaveFormat format = SaveFormat::Binary);
+Ptr<Cue> loadCue(const std::string& name, SaveFormat format = SaveFormat::Binary);
 
 /// Saves a Cue to an audio file or CSV
 bool exportCue(const Ptr<Cue>& cue, const std::string& filePath, ExportFormat format = ExportFormat::WAV); 

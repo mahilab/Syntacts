@@ -94,12 +94,6 @@ public:
     /// Constructor
     SineFM(float frequency = 1, float modulation = 1, float index = 2);
 
-    /// Sets modulation frequency
-    void setModulation(float modulation);
-
-    /// Sets modulation index
-    void setIndex(float index);
-
     /// Implements FM sine wave oscillation
     virtual float sample(float t) const override;
 
@@ -115,10 +109,7 @@ class SYNTACTS_API Chirp : public Oscillator
 {
 public:
     /// Constructor
-    Chirp(float frequency=1, float chirpyness=1);
-
-    /// Sets the chirpyness (i.e. the chirp rate or (f1-f0)/T)
-    void setChirpyness(float chirpyness);
+    Chirp(float frequency = 1, float chirpyness = 0);
 
     /// Implements chirp wave oscillation
     virtual float sample(float t) const override;
@@ -137,9 +128,6 @@ class SYNTACTS_API PulseTrain : public Oscillator
 public:
     /// Constructor
     PulseTrain(float frequency = 1, float dutyCycle = 0.5f);
-
-    /// Sets the duty cycle between 0 and 1
-    void setDutyCycle(float dutyCycle);
 
     /// Implements pulse train oscillation
     virtual float sample(float t) const override;

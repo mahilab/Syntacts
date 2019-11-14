@@ -2,8 +2,9 @@
 
 #include <cmath>
 
-#define PI            3.14159265358979e+0f
-#define TWO_PI        6.28318530717959e+0f
+constexpr float PI      = 3.14159265358979f;
+constexpr float HALF_PI = 0.5f * PI;
+constexpr float TWO_PI  = 2.0f * PI;
 
 namespace tact {
 namespace {
@@ -18,7 +19,7 @@ inline float clamp01(float value) {
     return value <= 0.0f ? 0.0f : value >= 1.0f ? 1.0f : value;
 }
 
-inline float interp(float x, float x0, float x1, float y0, float y1) {
+inline float remap(float x, float x0, float x1, float y0, float y1) {
     return y0 + (x - x0) * (y1 - y0) / (x1 - x0);
 }
 

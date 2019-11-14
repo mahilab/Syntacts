@@ -1,32 +1,32 @@
 #include <Syntacts/Syntacts.hpp>
-#include "Helpers.hpp"
+#include "Util/Util.hpp"
 
 namespace tact {
 
 Cue::Cue() :
     m_sigs(0),
-    m_env(std::move(create<Envelope>()))
+    m_env(move(create<Envelope>()))
 {
 
 }
 
 Cue::Cue(Ptr<Oscillator> osc, float duration, float amplitude) :
-    m_env(std::move(create<AmplitudeEnvelope>(duration, amplitude)))
+    m_env(move(create<AmplitudeEnvelope>(duration, amplitude)))
 {
-    chain(std::move(osc));
+    chain(move(osc));
 }
 
 Cue::Cue(Ptr<Oscillator> osc, Ptr<Envelope> env) :
-    m_env(std::move(env))
+    m_env(move(env))
 {
-    chain(std::move(osc));
+    chain(move(osc));
 }
 
 Cue::Cue(Ptr<Oscillator> osc, Ptr<Oscillator> mod, Ptr<Envelope> env) :
-    m_env(std::move(env))
+    m_env(move(env))
 {
-    chain(std::move(osc));
-    chain(std::move(mod));
+    chain(move(osc));
+    chain(move(mod));
 }
 
 Cue::~Cue() {
@@ -42,7 +42,7 @@ Ptr<Envelope> Cue::getEnvelope() const {
 }
 
 void Cue::chain(Ptr<Signal> gen) {
-    m_sigs.push_back(std::move(gen));
+    m_sigs.push_back(move(gen));
 }
 
 float Cue::sample(float t) const {
