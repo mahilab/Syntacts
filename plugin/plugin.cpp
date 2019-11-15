@@ -2,13 +2,14 @@
 #include <Syntacts/Syntacts.hpp>
 #include <Syntacts/Session.hpp>
 #include <unordered_map>
+#include <iostream>
 
 using namespace tact;
 
-std::unordered_map<void*, Ptr<Signal>>     g_sigs;
-std::unordered_map<void*, Ptr<Oscillator>> g_oscs;
-std::unordered_map<void*, Ptr<Envelope>>   g_envs; 
-std::unordered_map<void*, Ptr<Cue>>        g_cues;
+std::unordered_map<void*, Ptr<SignalBase>>     g_sigs;
+std::unordered_map<void*, Ptr<OscillatorBase>> g_oscs;
+std::unordered_map<void*, Ptr<EnvelopeBase>>   g_envs; 
+std::unordered_map<void*, Ptr<Cue>>            g_cues;
 
 template <typename P, typename M>
 inline Handle store(P p, M& m) {
@@ -17,7 +18,7 @@ inline Handle store(P p, M& m) {
     return hand;
 }
 
-inline Ptr<Signal> findSignal(Handle sig) {
+inline Ptr<SignalBase> findSignal(Handle sig) {
     if (g_sigs.count(sig))
         return g_sigs[sig];
     else if (g_oscs.count(sig))
@@ -69,6 +70,10 @@ int Session_setVolume(Handle session, int channel, float volume) {
     return static_cast<Session*>(session)->setVolume(channel, volume);
 }
 
+bool Session_isOpen(Handle session) {
+    return static_cast<Session*>(session)->isOpen();
+}
+
 //=============================================================================
 
 bool Signal_valid(Handle sig) {
@@ -90,7 +95,7 @@ float Signal_sample(Handle sig, float t) {
 }
 
 int Signal_count() {
-    return Signal::count();
+    return SignalBase::count();
 }
 
 //=============================================================================
@@ -154,7 +159,7 @@ void Cue_chain(Handle cue, Handle sig) {
 //=============================================================================
 
 bool Library_saveCue(Handle cue, const char* name) {
-    Library::saveCue(g_cues.at(cue), name);
+    return Library::saveCue(g_cues.at(cue), name);
 } 
 
 Handle Library_loadCue(const char* name) {

@@ -14,6 +14,7 @@
 #include <functional>
 #include <thread>
 #include <iostream>
+#include <fstream>
 #include "rubberband/RubberBandStretcher.h"
 
 namespace tact {
@@ -125,6 +126,7 @@ public:
                 m_devices.emplace(i, makeDevice(i));
             }   
         }
+        s_count++;
     }
 
     ~Impl() {
@@ -132,6 +134,7 @@ public:
             close();
         int result = Pa_Terminate();
         assert(result == paNoError);
+        s_count--;
     }
 
     int open(const Device& device, int channels) {
@@ -254,6 +257,10 @@ public:
         return 0;
     }
 
+    static int count() {
+        return s_count;
+    }
+
     void performCommands() {
         while (m_commands.front()) {
             auto command = *m_commands.front();
@@ -310,16 +317,23 @@ public:
 
     SPSCQueue<Ptr<Command>> m_commands;
     PaStream* m_stream;
+
+    static int s_count;
 };
 
+int Session::Impl::s_count = 0;
 
 //=============================================================================
 // PUBLIC INTERFACE
 //=============================================================================
 
 Session::Session() : 
-    m_impl((create<Session::Impl>())) 
+    m_impl((std::make_unique<Session::Impl>())) 
 { }
+
+Session::~Session() {
+    
+}
 
 int Session::open() {
     return open(getDefaultDevice());
@@ -419,6 +433,10 @@ int Session::getChannelCount() const {
 
 double Session::getCpuLoad() const {
     return m_impl->getCpuLoad();
+}
+
+int Session::count() {
+    return Impl::count();
 }
 
 }; // namespace tact

@@ -15,6 +15,7 @@ EXPORT int Session_stop(Handle session, int channel);
 EXPORT int Session_pause(Handle session, int channel);
 EXPORT int Session_resume(Handle session, int channel);
 EXPORT int Session_setVolume(Handle session, int channel, float volume);
+EXPORT bool Session_isOpen(Handle session);
 
 //=============================================================================
 

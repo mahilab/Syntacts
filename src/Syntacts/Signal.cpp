@@ -3,17 +3,17 @@
 namespace tact
 {
 
-int Signal::s_count = 0;
+int SignalBase::s_count = 0;
 
-Signal::Signal() {
+SignalBase::SignalBase() {
     s_count++;
 }
 
-Signal::~Signal() {
+SignalBase::~SignalBase() {
     s_count--;
 }
 
-int Signal::count() {
+int SignalBase::count() {
     return s_count;
 }
 

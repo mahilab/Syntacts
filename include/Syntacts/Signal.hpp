@@ -10,21 +10,21 @@ namespace tact
 
 //=============================================================================
 
-/// An abstract class which generates time variant samples
-class SYNTACTS_API Signal
+/// An abstract base class which generates time variant samples
+class SYNTACTS_API SignalBase
 {
 public:
     /// Default constructor
-    Signal();
+    SignalBase();
 
     /// Virtual destructor
-    virtual ~Signal();
+    virtual ~SignalBase();
 
     /// Override to implement generator sampling behavior (required).
     virtual float sample(float t) const = 0;
 
 public:
-    /// Returns the number of living Signals across the entire process
+    /// Returns the number of Signals across the entire process
     static int count();
 
 private:
@@ -41,7 +41,7 @@ private:
 //=============================================================================
 
 /// A Signal that emits a constant value over time
-class SYNTACTS_API Scalar : public Signal
+class SYNTACTS_API Scalar : public SignalBase
 {
 public:
     Scalar(float value = 1);
@@ -53,13 +53,13 @@ private:
     std::atomic<float> m_value; ///< the scalar value
 
 private:
-    SERIALIZE(PARENT(Signal), MEMBER(m_value));
+    SERIALIZE(PARENT(SignalBase), MEMBER(m_value));
 };
 
 //=============================================================================
 
 /// A Signal that increaes or decreases over time
-class SYNTACTS_API Ramp : public Signal
+class SYNTACTS_API Ramp : public SignalBase
 {
 public:
     Ramp(float initial = 1, float rate = 0);
@@ -72,7 +72,7 @@ private:
     std::atomic<float> m_rate;
 
 private:
-    SERIALIZE(PARENT(Signal), MEMBER(m_initial), MEMBER(m_rate));
+    SERIALIZE(PARENT(SignalBase), MEMBER(m_initial), MEMBER(m_rate));
 };
 
 //=============================================================================

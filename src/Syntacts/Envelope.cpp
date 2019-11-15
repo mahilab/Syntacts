@@ -6,23 +6,30 @@
 
 namespace tact {
 
-Envelope::Envelope(float duration) :
+EnvelopeBase::EnvelopeBase(float duration) :
     m_duration(duration)
 {
     
 }
 
-float Envelope::sample(float t) const {
+float EnvelopeBase::sample(float t) const {
     return t > m_duration ? 0.0f : 1.0f;
 }
 
-float Envelope::getDuration() const {
+float EnvelopeBase::getDuration() const {
     return m_duration;
 }
 
+Envelope::Envelope(float duration, float amplitude) :
+    EnvelopeBase(duration), m_amplitude(amplitude)
+{ }
+
+float Envelope::sample(float t) const {
+    return t > m_duration ? 0.0f : m_amplitude;
+}
 
 KeyedEnvelope::KeyedEnvelope(float amplitude0) :
-    Envelope()
+    EnvelopeBase()
 {
    addKey(0.0f, amplitude0, create<Tween::Linear>());
 }
@@ -47,15 +54,7 @@ float KeyedEnvelope::sample(float t) const {
 }
 
 
-AmplitudeEnvelope::AmplitudeEnvelope(float duration, float amplitude) :
-    KeyedEnvelope(amplitude)
-{
-    addKey(duration, amplitude, create<Tween::Instant>());
-}
 
-float AmplitudeEnvelope::getAmplitude() const {
-    return m_keys.begin()->second.first;
-}
 
 ASR::ASR(float attackTime, float sustainTime, float releaseTime, float attackAmplitude, TweenFunc attackTween, TweenFunc releaseTween) :
     KeyedEnvelope(0.0f)
@@ -75,8 +74,8 @@ ADSR::ADSR(float attackTime, float decayTime, float sustainTime, float releaseTi
     addKey(attackTime + decayTime + sustainTime + releaseTime, 0.0f, releaseTween);
 }
 
-OscillatingEnvelope::OscillatingEnvelope(float duration , float amplitude , Ptr<Oscillator> osc) :
-    Envelope(duration), m_amplitude(amplitude), m_osc(std::move(osc))
+OscillatingEnvelope::OscillatingEnvelope(float duration , float amplitude , Ptr<OscillatorBase> osc) :
+    EnvelopeBase(duration), m_amplitude(amplitude), m_osc(std::move(osc))
 {
     
 }

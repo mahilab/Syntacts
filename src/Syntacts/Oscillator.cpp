@@ -4,14 +4,13 @@
 namespace tact
 {
 
-Oscillator::Oscillator(float frequency) :
-    Oscillator(create<Scalar>(frequency))
+OscillatorBase::OscillatorBase(float frequency) :
+    OscillatorBase(create<Scalar>(frequency))
 {
 
 }
 
-Oscillator::Oscillator(Ptr<Signal> frequency) :
-    Signal(),
+OscillatorBase::OscillatorBase(Ptr<SignalBase> frequency) :
     m_frequency(frequency)
 {
 
@@ -35,7 +34,7 @@ float Triangle::sample(float t) const {
 }
 
 SineFM::SineFM(float frequency, float modulation, float index) :
-    Oscillator(frequency),
+    OscillatorBase(frequency),
     m_modulation(modulation),
     m_index(index) 
 {
@@ -47,7 +46,7 @@ float SineFM::sample(float t) const {
 }
 
 Chirp::Chirp(float frequency, float chirpyness) :
-    Oscillator(frequency),
+    OscillatorBase(frequency),
     m_chirpyness(chirpyness)
 {
 
@@ -59,7 +58,7 @@ float Chirp::sample(float t) const {
 }
 
 PulseTrain::PulseTrain(float frequency, float dutyCycle) :
-    Oscillator(frequency), 
+    OscillatorBase(frequency), 
     m_dutyCycle(clamp01(dutyCycle)),
     m_period(1.0f / frequency)
 {

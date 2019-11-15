@@ -5,24 +5,24 @@ namespace tact {
 
 Cue::Cue() :
     m_sigs(0),
-    m_env(move(create<Envelope>()))
+    m_env(move(create<EnvelopeBase>()))
 {
 
 }
 
-Cue::Cue(Ptr<Oscillator> osc, float duration, float amplitude) :
-    m_env(move(create<AmplitudeEnvelope>(duration, amplitude)))
+Cue::Cue(Ptr<OscillatorBase> osc, float duration, float amplitude) :
+    m_env(move(create<Envelope>(duration, amplitude)))
 {
     chain(move(osc));
 }
 
-Cue::Cue(Ptr<Oscillator> osc, Ptr<Envelope> env) :
+Cue::Cue(Ptr<OscillatorBase> osc, Ptr<EnvelopeBase> env) :
     m_env(move(env))
 {
     chain(move(osc));
 }
 
-Cue::Cue(Ptr<Oscillator> osc, Ptr<Oscillator> mod, Ptr<Envelope> env) :
+Cue::Cue(Ptr<OscillatorBase> osc, Ptr<OscillatorBase> mod, Ptr<EnvelopeBase> env) :
     m_env(move(env))
 {
     chain(move(osc));
@@ -33,15 +33,15 @@ Cue::~Cue() {
 
 }
 
-void Cue::setEnvelope(Ptr<Envelope> env) {
+void Cue::setEnvelope(Ptr<EnvelopeBase> env) {
     m_env = env;
 }
 
-Ptr<Envelope> Cue::getEnvelope() const {
+Ptr<EnvelopeBase> Cue::getEnvelope() const {
     return m_env;
 }
 
-void Cue::chain(Ptr<Signal> gen) {
+void Cue::chain(Ptr<SignalBase> gen) {
     m_sigs.push_back(move(gen));
 }
 

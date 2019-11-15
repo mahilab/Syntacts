@@ -20,17 +20,17 @@ const std::vector<const char*> g_tweenStrings = {
     "Exponential::InOut"
 };
 
-const std::vector<std::shared_ptr<tact::Tween::Function>> g_tweenFuncs = {
-    std::make_shared<tact::Tween::Linear>(),
-    std::make_shared<tact::Tween::Smoothstep>(), 
-    std::make_shared<tact::Tween::Smootherstep>(), 
-    std::make_shared<tact::Tween::Smootheststep>(), 
-    std::make_shared<tact::Tween::Sinusoidal::In>(), 
-    std::make_shared<tact::Tween::Sinusoidal::Out>(), 
-    std::make_shared<tact::Tween::Sinusoidal::InOut>(), 
-    std::make_shared<tact::Tween::Exponential::In>(), 
-    std::make_shared<tact::Tween::Exponential::Out>(), 
-    std::make_shared<tact::Tween::Exponential::InOut>()
+const std::vector<Ptr<tact::Tween::Function>> g_tweenFuncs = {
+    make<tact::Tween::Linear>(),
+    make<tact::Tween::Smoothstep>(), 
+    make<tact::Tween::Smootherstep>(), 
+    make<tact::Tween::Smootheststep>(), 
+    make<tact::Tween::Sinusoidal::In>(), 
+    make<tact::Tween::Sinusoidal::Out>(), 
+    make<tact::Tween::Sinusoidal::InOut>(), 
+    make<tact::Tween::Exponential::In>(), 
+    make<tact::Tween::Exponential::Out>(), 
+    make<tact::Tween::Exponential::InOut>()
 };
 
 struct CueSequence : public ImSequencer::SequenceInterface {
@@ -90,9 +90,9 @@ public:
 
     
     /// Builds the Syntacts Envelope
-    Ptr<tact::Envelope> buildEnv() {
+    Ptr<tact::EnvelopeBase> buildEnv() {
         if (m_envMode == EnvMode::Basic)
-            return make<tact::AmplitudeEnvelope>(m_duration/1000.0f, m_amps[0]);    
+            return make<tact::Envelope>(m_duration/1000.0f, m_amps[0]);    
         else if (m_envMode == EnvMode::ASR)
             return make<tact::ASR>(m_asr[0]/1000.0f, m_asr[1]/1000.0f, m_asr[2]/1000.f, m_amps[0], g_tweenFuncs[m_tweenModes[0]], g_tweenFuncs[m_tweenModes[2]]);
         else if (m_envMode == EnvMode::ADSR)
@@ -123,14 +123,11 @@ private:
     bool m_expanded = true;
     int m_currentFrame = 0;
 
-    tact::Ptr<tact::Envelope> testEnv;
 
     void start() override {
         m_sequence.frameMin = 0;
         m_sequence.frameMax = 100;
         m_sequence.items.push_back(CueSequence::Item{0, 0, 20, false});
-
-        testEnv = tact::create<tact::ASR>();
     }
 
     void update() override {
@@ -287,7 +284,7 @@ private:
     }
 
         /// Builds the carrier oscillator
-    Ptr<tact::Oscillator> buildCarOsc() {
+    Ptr<tact::OscillatorBase> buildCarOsc() {
         if (m_modMode != ModMode::FM) {
             if (m_carType == OscType::Sine)
                 return make<tact::Sine>((float)m_carFreq);
@@ -306,8 +303,8 @@ private:
     }
 
     /// Builds the modulation oscillator
-    Ptr<tact::Oscillator> buildModOsc() {
-        Ptr<tact::Oscillator> modOsc;
+    Ptr<tact::OscillatorBase> buildModOsc() {
+        Ptr<tact::OscillatorBase> modOsc;
         if (m_modType == OscType::Sine)
             modOsc = make<tact::Sine>((float)m_modFreq);
         else if (m_modType == OscType::Square)

@@ -23,6 +23,9 @@ public:
     /// Constructor
     Session();
 
+    /// Destructor
+    ~Session();
+
     /// Opens the default device with max channels
     int open();
 
@@ -86,11 +89,15 @@ public:
     /// Returns the CPU load (0 to 1) of the session
     double getCpuLoad() const;
 
+public:
+
+    /// Returns the number of active Sessions across the entire process
+    static int count();
+
 private:
 
-    class Impl;       ///< private implementation
-    Ptr<Impl> m_impl; ///< pointer to implementation
-
+    class Impl;                   ///< private implementation
+    std::unique_ptr<Impl> m_impl; ///< pointer to implementation    
 };
 
 } // namespace tact

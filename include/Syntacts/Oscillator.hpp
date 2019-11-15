@@ -9,86 +9,86 @@ namespace tact
 //=============================================================================
 
 /// Abstract base class for objects which produce a periodic, oscillating signal
-class SYNTACTS_API Oscillator : public Signal
+class SYNTACTS_API OscillatorBase : public SignalBase
 {
 public:
     /// Constructs an Oscillator with a scalar frequency
-    Oscillator(float frequency = 1.0f);
+    OscillatorBase(float frequency = 1.0f);
 
     /// Constructs an Oscillator with a variable frequency
-    Oscillator(Ptr<Signal> frequency);
+    OscillatorBase(Ptr<SignalBase> frequency);
 
 protected:
-    Ptr<Signal> m_frequency;    
+    Ptr<SignalBase> m_frequency;    
 
 private:
-    SERIALIZE(PARENT(Signal), MEMBER(m_frequency));
+    SERIALIZE(PARENT(SignalBase), MEMBER(m_frequency));
 };
 
 //=============================================================================
 
 /// A sine wave Oscillator
-class SYNTACTS_API Sine : public Oscillator
+class SYNTACTS_API Sine : public OscillatorBase
 {
 public:
     /// Inherited Constructor
-    using Oscillator::Oscillator;
+    using OscillatorBase::OscillatorBase;
 
     /// Implements sine wave oscillation
     virtual float sample(float t) const override;
 private:
-    SERIALIZE(PARENT(Oscillator))
+    SERIALIZE(PARENT(OscillatorBase))
 };
 
 //=============================================================================
 
 /// A square wave Oscillator
-class SYNTACTS_API Square : public Oscillator
+class SYNTACTS_API Square : public OscillatorBase
 {
 public:
     // Inherited Constructor
-    using Oscillator::Oscillator;
+    using OscillatorBase::OscillatorBase;
 
     /// Implements square wave oscillation
     virtual float sample(float t) const override;
 private:
-    SERIALIZE(PARENT(Oscillator));
+    SERIALIZE(PARENT(OscillatorBase));
 };
 
 //=============================================================================
 
 /// A saw wave Oscillator
-class SYNTACTS_API Saw : public Oscillator
+class SYNTACTS_API Saw : public OscillatorBase
 {
 public:
     // Inherited Constructor
-    using Oscillator::Oscillator;
+    using OscillatorBase::OscillatorBase;
 
     /// Implements saw wave oscillation
     virtual float sample(float t) const override;
 private:
-    SERIALIZE(PARENT(Oscillator));
+    SERIALIZE(PARENT(OscillatorBase));
 };
 
 //=============================================================================
 
 /// A triangle wave Oscillator
-class SYNTACTS_API Triangle : public Oscillator
+class SYNTACTS_API Triangle : public OscillatorBase
 {
 public:
     // Inherited Constructor
-    using Oscillator::Oscillator;
+    using OscillatorBase::OscillatorBase;
 
     /// Implements saw wave oscillation
     virtual float sample(float t) const override;
 private:
-    SERIALIZE(PARENT(Oscillator));
+    SERIALIZE(PARENT(OscillatorBase));
 };
 
 //=============================================================================
 
 /// A frequency modulated sine wave Oscillator
-class SYNTACTS_API SineFM : public Oscillator
+class SYNTACTS_API SineFM : public OscillatorBase
 {
 public:
     /// Constructor
@@ -101,11 +101,11 @@ private:
     std::atomic<float> m_modulation; ///< modulation frequency
     std::atomic<float> m_index;      ///< modulation index
 private:
-    SERIALIZE(PARENT(Oscillator), MEMBER(m_modulation), MEMBER(m_index))
+    SERIALIZE(PARENT(OscillatorBase), MEMBER(m_modulation), MEMBER(m_index))
 };
 
 /// A linear chirp Oscillator
-class SYNTACTS_API Chirp : public Oscillator
+class SYNTACTS_API Chirp : public OscillatorBase
 {
 public:
     /// Constructor
@@ -117,13 +117,13 @@ public:
 private:
     std::atomic<float> m_chirpyness; ///< the chirp rate or (f1-f0)/T
 private:
-    SERIALIZE(PARENT(Oscillator), MEMBER(m_chirpyness))
+    SERIALIZE(PARENT(OscillatorBase), MEMBER(m_chirpyness))
 };
 
 //=============================================================================
 
 /// A square wave with adjustable frequency and duty cycle
-class SYNTACTS_API PulseTrain : public Oscillator
+class SYNTACTS_API PulseTrain : public OscillatorBase
 {
 public:
     /// Constructor
@@ -136,7 +136,7 @@ private:
     std::atomic<float> m_dutyCycle;
     std::atomic<float> m_period;
 private:
-    SERIALIZE(PARENT(Oscillator), MEMBER(m_dutyCycle), MEMBER(m_period));
+    SERIALIZE(PARENT(OscillatorBase), MEMBER(m_dutyCycle), MEMBER(m_period));
 };
 
 } // namespace tact

@@ -14,12 +14,13 @@ public class SyntactsDemo : MonoBehaviour
 
     Session session;
 
+    public bool open = false;
+
     // Start is called before the first frame update
     void Start()
     {
         session = new Session();
         session.Open(3,1);
-        Signal signal = new Signal();
     }
 
     // Update is called once per frame
@@ -37,6 +38,8 @@ public class SyntactsDemo : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.C)) {
             print(Signal.Count());
         }
+
+        open = session.IsOpen();
     }
 
     void OnDestroy() 

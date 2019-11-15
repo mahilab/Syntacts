@@ -128,6 +128,10 @@ namespace Syntacts
             return Dll.Session_setVolume(handle, channel, volume);
         }
 
+        public bool IsOpen() {
+            return Dll.Session_isOpen(handle);
+        }
+
         ~Session()
         {
             Dispose(false);
@@ -173,6 +177,8 @@ namespace Syntacts
         public static extern int Session_resume(Handle session, int channel);
         [DllImport("syntacts-plugin")]
         public static extern int Session_setVolume(Handle session, int channel, float volume);
+        [DllImport("syntacts-plugin")]
+        public static extern bool Session_isOpen(Handle session);
 
         [DllImport("syntacts-plugin")]
         public static extern bool Signal_valid(Handle sig);
