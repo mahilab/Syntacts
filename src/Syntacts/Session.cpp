@@ -16,6 +16,7 @@
 #include <iostream>
 #include <fstream>
 #include "rubberband/RubberBandStretcher.h"
+#include "Util/Util.hpp"
 
 namespace tact {
 
@@ -26,12 +27,6 @@ namespace tact {
 namespace {
 
 using namespace rigtorp;
-
-// Constants
-constexpr int    QUEUE_SIZE        = 256;
-constexpr double SAMPLE_RATE       = 44100;
-constexpr double SAMPLE_LENGTH     = 1.0 / SAMPLE_RATE;
-constexpr int    FRAMES_PER_BUFFER = 0;
 
 /// Channel structure
 class Channel {
@@ -295,6 +290,10 @@ public:
         return paContinue;
     }
 
+    void openControlPanel(int index) {
+        PaAsio_ShowControlPanel(index, nullptr);
+    }
+
     Device makeDevice(int index) {
     auto pa_dev_info = Pa_GetDeviceInfo(index);
     auto pa_api_info = Pa_GetHostApiInfo(pa_dev_info->hostApi);
@@ -437,6 +436,10 @@ double Session::getCpuLoad() const {
 
 int Session::count() {
     return Impl::count();
+}
+
+void Session::openControlPanel(int index) {
+    m_impl->openControlPanel(index);
 }
 
 }; // namespace tact

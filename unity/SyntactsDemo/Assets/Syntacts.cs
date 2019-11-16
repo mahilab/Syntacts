@@ -152,7 +152,7 @@ namespace Syntacts
             }
         }
 
-        private Handle handle = Handle.Zero;
+        public Handle handle = Handle.Zero;
 
     }
 

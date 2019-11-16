@@ -6,6 +6,7 @@
 #include <Syntacts/Tween.hpp>
 #include <Syntacts/Library.hpp>
 #include "AudioFile.hpp"
+#include "Util/Util.hpp"
 
 #include <fstream>
 #include <filesystem>
@@ -141,12 +142,11 @@ Ptr<Cue> loadCue(const std::string& name, SaveFormat format) {
 
 bool exportCue(const Ptr<Cue>& cue, const std::string& filePath, ExportFormat format) {    
     try {
-        std::vector<float> buffer(cue->sampleCount(44100));
-        double sampleLength = 1.0 / 44100;
+        std::vector<float> buffer(cue->sampleCount(SAMPLE_RATE));
         double t = 0;
         for (auto& sample : buffer) {
             sample = cue->sample(static_cast<float>(t));  
-            t += sampleLength;
+            t += SAMPLE_LENGTH;
         }
         if (format == ExportFormat::WAV || format == ExportFormat::AIFF) {
             AudioFile<float>::AudioBuffer audioBuffer;
@@ -156,7 +156,7 @@ bool exportCue(const Ptr<Cue>& cue, const std::string& filePath, ExportFormat fo
             if (!file.setAudioBuffer(audioBuffer))
                 return false;
             file.setBitDepth(16);
-            file.setSampleRate(44100);
+            file.setSampleRate(SAMPLE_RATE);
             if (!file.save(filePath, audioFormat))
                 return false;
         }

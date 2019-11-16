@@ -6,6 +6,11 @@ constexpr float PI      = 3.14159265358979f;
 constexpr float HALF_PI = 0.5f * PI;
 constexpr float TWO_PI  = 2.0f * PI;
 
+constexpr int    QUEUE_SIZE        = 256;
+constexpr double SAMPLE_RATE       = 44100;
+constexpr double SAMPLE_LENGTH     = 1.0 / SAMPLE_RATE;
+constexpr int    FRAMES_PER_BUFFER = 0;
+
 namespace tact {
 namespace {
 

@@ -89,6 +89,9 @@ public:
     /// Returns the CPU load (0 to 1) of the session
     double getCpuLoad() const;
 
+    /// Opens the control panel of a device if supported
+    void openControlPanel(int index);
+
 public:
 
     /// Returns the number of active Sessions across the entire process
