@@ -16,6 +16,7 @@
 #include <iostream>
 #include <fstream>
 #include "rubberband/RubberBandStretcher.h"
+#include <set>
 
 namespace tact {
 
@@ -126,6 +127,8 @@ public:
                 m_devices.emplace(i, makeDevice(i));
             }   
         }
+        // clean up devices
+        correctMmeNames();
         s_count++;
     }
 
@@ -308,6 +311,26 @@ public:
                 tidiedApi, 
                 index == Pa_GetHostApiInfo( pa_dev_info->hostApi )->defaultOutputDevice,
                 pa_dev_info->maxOutputChannels};
+    }
+
+    void correctMmeNames() {
+        // correct MME names
+        std::vector<std::string*> mme;
+        std::set<std::string> notMME;
+        for (auto& d : m_devices) {
+            if (d.second.apiIndex == paMME)
+                mme.push_back(&d.second.name);
+            else
+                notMME.insert(d.second.name);
+        }
+        for (auto& cur : mme) {
+            for (auto& alt : notMME) {
+                if (alt.find(*cur) == 0) {
+                    *cur = alt;
+                    std::cout << "Match!" << std::endl;
+                }
+            }
+        } 
     }
 
     Device m_device;
