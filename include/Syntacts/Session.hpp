@@ -86,8 +86,14 @@ public:
     /// Returns the number of available channels (0 if not open)
     int getChannelCount() const;
 
+    /// Returns the current sampling rate in Hz
+    double getSampleRate() const;
+
     /// Returns the CPU load (0 to 1) of the session
     double getCpuLoad() const;
+
+    /// Opens the control panel of a device if supported
+    void openControlPanel(int index);
 
 public:
 

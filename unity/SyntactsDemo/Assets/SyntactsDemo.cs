@@ -30,13 +30,21 @@ public class SyntactsDemo : MonoBehaviour
             Cue cue = new Cue();
             cue.SetEnvelope(new ASR(1,3,1));
             cue.Chain(new Sine(440));
-            if (Input.GetKey(KeyCode.LeftControl))
+            if (Input.GetKey(KeyCode.LeftControl)) {
                 cue.Chain(new Sine(20));
+                cue.Chain(new Sine(5));
+            }
             session.Play(0, cue);
         }
 
         if (Input.GetKeyDown(KeyCode.C)) {
             print(Signal.Count());
+        }
+
+        if (Input.GetKeyDown(KeyCode.L)) {
+            var cue = Dll.Library_loadCue(cueName);
+            Dll.Session_play(session.handle, 0, cue);
+            Dll.Signal_delete(cue);
         }
 
         open = session.IsOpen();

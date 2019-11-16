@@ -6,6 +6,7 @@ constexpr float PI      = 3.14159265358979f;
 constexpr float HALF_PI = 0.5f * PI;
 constexpr float TWO_PI  = 2.0f * PI;
 
+
 namespace tact {
 namespace {
 

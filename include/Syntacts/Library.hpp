@@ -34,7 +34,7 @@ bool saveCue(const Ptr<Cue>& cue, const std::string& name, SaveFormat format = S
 Ptr<Cue> loadCue(const std::string& name, SaveFormat format = SaveFormat::Binary);
 
 /// Saves a Cue to an audio file or CSV
-bool exportCue(const Ptr<Cue>& cue, const std::string& filePath, ExportFormat format = ExportFormat::WAV); 
+bool exportCue(const Ptr<Cue>& cue, const std::string& filePath, ExportFormat format = ExportFormat::WAV, double sampleRate = 44100); 
 
 } // namespace Library
 

@@ -17,6 +17,7 @@ public:
     void initialize() {
         session = make<tact::Session>();
         session->open();
+        print(session->getSampleRate());
         getCurrent();
         getAvailable();
         onInitialize.emit();
@@ -25,6 +26,7 @@ public:
     void switchDevice(const tact::Device& dev) {
         session->close();
         session->open(dev);
+        print(session->getSampleRate());
         getCurrent();
         onSwitchDevice.emit();
     }
@@ -53,7 +55,6 @@ private:
         ImGui::EndGroup();
         if (ImGui::BeginDragDropTarget()) {
             if (const ImGuiPayload* playload = ImGui::AcceptDragDropPayload("DND_HELP")) {
-                    print("HEY!");
             }
             ImGui::EndDragDropTarget();
         }
@@ -109,19 +110,18 @@ private:
             ImGui::Text("ID"); ImGui::SameLine(40);
             ImGui::Text("Name");  ImGui::SameLine(500);
             ImGui::Text("API");             
-            for (auto& pair : m_available) {
-                for (auto& d : pair.second) {
-                    auto api = d.apiName;
-                    if (d.isDefaultApi)
-                        api += "*";
-                    std::string id = str(d.index);
-                    if (d.isDefault)
-                        id += "*";
-                    ImGui::Separator();
-                    ImGui::Text(id.c_str());   ImGui::SameLine(40);
-                    ImGui::Text(d.name.c_str()); ImGui::SameLine(500);
-                    ImGui::Text(api.c_str()); 
-                }    
+            for (auto& pair : session->getAvailableDevices()) {
+                auto d = pair.second;
+                auto api = d.apiName;
+                if (d.isDefaultApi)
+                    api += "*";
+                std::string id = str(d.index);
+                if (d.isDefault)
+                    id += "*";
+                ImGui::Separator();
+                ImGui::Text(id.c_str());   ImGui::SameLine(40);
+                ImGui::Text(d.name.c_str()); ImGui::SameLine(500);
+                ImGui::Text(api.c_str()); 
             }
             ImGui::EndPopup();
         }

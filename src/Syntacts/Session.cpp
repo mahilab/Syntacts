@@ -2,14 +2,14 @@
     #define PA_USE_ASIO 1
 #endif
 
-#define NO_INTERLEAVED
-
 #include "Util/Util.hpp"
 #include "Util/SPSCQueue.hpp"
 #include <Syntacts/Session.hpp>
 #include <cassert>
 #include "portaudio.h"
 #include "pa_asio.h"
+#include "pa_win_wasapi.h"
+#include "pa_win_ds.h"
 #include <algorithm>
 #include <functional>
 #include <thread>
@@ -17,6 +17,8 @@
 #include <fstream>
 #include "rubberband/RubberBandStretcher.h"
 #include <set>
+#include <numeric>
+#include "Util/Util.hpp"
 
 namespace tact {
 
@@ -26,13 +28,10 @@ namespace tact {
 
 namespace {
 
-using namespace rigtorp;
-
-// Constants
 constexpr int    QUEUE_SIZE        = 256;
-constexpr double SAMPLE_RATE       = 44100;
-constexpr double SAMPLE_LENGTH     = 1.0 / SAMPLE_RATE;
 constexpr int    FRAMES_PER_BUFFER = 0;
+
+using namespace rigtorp;
 
 /// Channel structure
 class Channel {
@@ -40,6 +39,7 @@ public:
     //Channel() : m_stretcher(SAMPLE_RATE, 1, RubberBand::RubberBandStretcher::OptionProcessRealTime) {}
     Ptr<Cue> cue;
     double   time   = 0.0; 
+    double   sampleLength = 0.0;
     float    volume = 1.0f;
     float    lastVolume = 1.0f;
     float    pitch  = 1.0f;
@@ -48,7 +48,7 @@ public:
         float sample = 0;
         if (!paused) {
             sample = volume * cue->sample(static_cast<float>(time));
-            time += SAMPLE_LENGTH;
+            time += sampleLength;
         }
         return sample;
     }
@@ -128,7 +128,9 @@ public:
             }   
         }
         // clean up devices
-        correctMmeNames();
+        correctMMENames();
+        removeDigitalDevices();
+        tidyNames();
         s_count++;
     }
 
@@ -141,26 +143,55 @@ public:
     }
 
     int open(const Device& device, int channels) {
+
+        // return if already open
         if (isOpen())
             return SyntactsError_AlreadyIntialized;
+
         // set device
         m_device = device;
-        // resize vector of channels
-        m_channels.resize(channels);
-        for (auto& c : m_channels)
-            c.cue = create<Cue>();
+
+        // generat list of channel numbers
+        std::vector<int> channelNumbers(channels);
+        std::iota(channelNumbers.begin(), channelNumbers.end(), 0);
+
+        // TODO
+        PaWasapiStreamInfo wasapiInfo ;
+        wasapiInfo.size = sizeof(PaWasapiStreamInfo);
+        wasapiInfo.hostApiType = paWASAPI;
+        wasapiInfo.version = 1;
+        wasapiInfo.flags = paWinWasapiExclusive;   
+        wasapiInfo.channelMask = NULL;
+        wasapiInfo.hostProcessorOutput = NULL;
+        wasapiInfo.hostProcessorInput = NULL;
+        wasapiInfo.threadPriority = eThreadPriorityProAudio;
+
+        // TODO
+        PaAsioStreamInfo asioInfo;
+        asioInfo.channelSelectors = &channelNumbers[0];
+        asioInfo.size = sizeof(PaAsioStreamInfo);
+        asioInfo.version = 1;
+        asioInfo.hostApiType = paASIO;
+        asioInfo.flags = 0;
+
+
+
         PaStreamParameters params;
         params.device = device.index;
         params.channelCount = channels;
-        params.suggestedLatency = Pa_GetDeviceInfo( params.device )->defaultLowOutputLatency;
+        params.suggestedLatency = Pa_GetDeviceInfo(params.device)->defaultLowOutputLatency;
         params.hostApiSpecificStreamInfo = nullptr;
-#ifdef NO_INTERLEAVED
         params.sampleFormat = paFloat32 | paNonInterleaved;
-#else
-        params.sampleFormat = paFloat32;
-#endif
+        m_sampleRate = Pa_GetDeviceInfo(params.device)->defaultSampleRate;
+        // resize vector of channels
+        m_channels.resize(channels);
+        for (auto& c : m_channels) {
+            c.cue = create<Cue>();
+            c.sampleLength = 1.0 / m_sampleRate;
+        }
+        // open stream
         int result;
-        result = Pa_OpenStream(&m_stream, nullptr, &params, SAMPLE_RATE, FRAMES_PER_BUFFER, paNoFlag, callback, this);
+        result = Pa_OpenStream(&m_stream, nullptr, &params, m_sampleRate, FRAMES_PER_BUFFER, paNoFlag, callback, this);
         if (result != paNoError)
             return result;  
         result = Pa_StartStream(m_stream);
@@ -175,6 +206,7 @@ public:
         Pa_CloseStream(m_stream);
         m_device = {-1,"N/A",false,-1,"N/A",false,0};
         m_channels.clear();
+        m_sampleRate = 0;
         return SyntactsError_NoError;
     }
 
@@ -254,6 +286,10 @@ public:
             return 0;
     }
 
+    double getSampleRate() const {
+        return m_sampleRate;
+    }
+
     double getCpuLoad() const {
         if (isOpen())
             return Pa_GetStreamCpuLoad(m_stream);
@@ -282,38 +318,41 @@ public:
         auto& channels = session->m_channels;
         session->performCommands();
         (void)inputBuffer;     
-#ifdef NO_INTERLEAVED
         float** out = (float**)outputBuffer;
         for (std::size_t c = 0; c < channels.size(); ++c) {
             channels[c].fillBuffer(out[c], framesPerBuffer);
         }
-#else
-        float* out = (float*)outputBuffer;
-        for (unsigned long f = 0; f < framesPerBuffer; f++) {
-            for (std::size_t c = 0; c < channels.size(); ++c) {
-                out[channels.size() * f + c] = channels[c].nextSample();
-            }
-        }
-#endif   
         return paContinue;
+    }
+
+    void openControlPanel(int index) {
+        PaAsio_ShowControlPanel(index, nullptr);
     }
 
     Device makeDevice(int index) {
     auto pa_dev_info = Pa_GetDeviceInfo(index);
     auto pa_api_info = Pa_GetHostApiInfo(pa_dev_info->hostApi);
-    std::string tidiedApi = pa_api_info->name;
-    if (tidiedApi.find("Windows ") == 0)
-        tidiedApi.erase(0, 8);
     return Device{index, 
                 pa_dev_info->name, 
                 index == Pa_GetDefaultOutputDevice(),
                 pa_api_info->type,
-                tidiedApi, 
+                pa_api_info->name, 
                 index == Pa_GetHostApiInfo( pa_dev_info->hostApi )->defaultOutputDevice,
                 pa_dev_info->maxOutputChannels};
     }
 
-    void correctMmeNames() {
+    void tidyNames() {
+        static std::vector<std::string> apiRemoves = {"Windows "};
+        for (auto& d : m_devices) {
+            for (auto& r : apiRemoves) {
+                auto found = d.second.apiName.find(r);
+                if (found != std::string::npos)
+                    d.second.apiName.erase(found, r.length());
+            }
+        }
+    }
+
+    void correctMMENames() {
         // correct MME names
         std::vector<std::string*> mme;
         std::set<std::string> notMME;
@@ -327,10 +366,26 @@ public:
             for (auto& alt : notMME) {
                 if (alt.find(*cur) == 0) {
                     *cur = alt;
-                    std::cout << "Match!" << std::endl;
                 }
             }
         } 
+    }
+
+    void removeDigitalDevices() {
+        static std::vector<std::string> digitalStrings = {"SPDIF","S/PDIF","Optic","optic"};
+        for (auto dev = m_devices.begin(); dev != m_devices.end();) {
+            bool remove = false;
+            for (auto& digi : digitalStrings) {
+                if (dev->second.name.find(digi) != std::string::npos) {
+                    remove = true;
+                    break;
+                }
+            }
+            if (remove)
+                m_devices.erase(dev++);
+            else
+                ++dev;
+        }
     }
 
     Device m_device;
@@ -340,6 +395,8 @@ public:
 
     SPSCQueue<Ptr<Command>> m_commands;
     PaStream* m_stream;
+
+    double m_sampleRate = 0;
 
     static int s_count;
 };
@@ -454,12 +511,20 @@ int Session::getChannelCount() const {
     return m_impl->getChannelCount();
 }
 
+double Session::getSampleRate() const {
+    return m_impl->getSampleRate();
+}
+
 double Session::getCpuLoad() const {
     return m_impl->getCpuLoad();
 }
 
 int Session::count() {
     return Impl::count();
+}
+
+void Session::openControlPanel(int index) {
+    m_impl->openControlPanel(index);
 }
 
 }; // namespace tact
