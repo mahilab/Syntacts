@@ -100,10 +100,7 @@ private:
 
     /// Gets number of channels from current Syntacts device and resizes accordingly
     void rechannel() {
-        m_channelVol = std::vector<float>(m_deviceBar->session->getCurrentDevice().maxChannels, 0.0f);
-        if (m_channelVol.size() > 0) {
-            m_channelVol[0] = 1.0f;
-        }
+        m_channelVol = std::vector<float>(m_deviceBar->session->getCurrentDevice().maxChannels, 1.0f);
     }
 
 public:

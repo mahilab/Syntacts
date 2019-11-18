@@ -31,6 +31,11 @@ namespace {
 constexpr int    QUEUE_SIZE        = 256;
 constexpr int    FRAMES_PER_BUFFER = 0;
 
+static std::vector<double> STANDARD_SAMPLE_RATES = {
+    8000.0, 9600.0, 11025.0, 12000.0, 16000.0, 22050.0, 24000.0, 32000.0,
+    44100.0, 48000.0, 88200.0, 96000.0, 192000.0
+};
+
 using namespace rigtorp;
 
 /// Channel structure
@@ -47,7 +52,8 @@ public:
     float nextSample() {
         float sample = 0;
         if (!paused) {
-            sample = volume * cue->sample(static_cast<float>(time));
+            if (time >= 0 && time <= cue->getEnvelope()->getDuration())
+                sample = volume * cue->sample(static_cast<float>(time));
             time += sampleLength;
         }
         return sample;
@@ -77,10 +83,11 @@ struct Command {
 struct Play : public Command {
     virtual void perform(Channel& channel) override {
         channel.paused = false;
-        channel.time   = 0;
+        channel.time   = -inSeconds;
         channel.cue    = cue;
     }
     Ptr<Cue> cue;
+    double inSeconds;
 };
 
 /// Command to stop a channel
@@ -142,11 +149,11 @@ public:
         s_count--;
     }
 
-    int open(const Device& device, int channels) {
+    int open(const Device& device, int channels, double sampleRate) {
 
         // return if already open
         if (isOpen())
-            return SyntactsError_AlreadyIntialized;
+            return SyntactsError_AlreadyOpen;
 
         // set device
         m_device = device;
@@ -174,15 +181,18 @@ public:
         asioInfo.hostApiType = paASIO;
         asioInfo.flags = 0;
 
-
-
         PaStreamParameters params;
         params.device = device.index;
         params.channelCount = channels;
         params.suggestedLatency = Pa_GetDeviceInfo(params.device)->defaultLowOutputLatency;
         params.hostApiSpecificStreamInfo = nullptr;
         params.sampleFormat = paFloat32 | paNonInterleaved;
-        m_sampleRate = Pa_GetDeviceInfo(params.device)->defaultSampleRate;
+
+        m_sampleRate = sampleRate == 0 ? Pa_GetDeviceInfo(params.device)->defaultSampleRate : sampleRate;
+
+        if (Pa_IsFormatSupported(nullptr, &params, m_sampleRate) != paFormatIsSupported)
+            return SyntactsError_InvalidSampleRate;
+
         // resize vector of channels
         m_channels.resize(channels);
         for (auto& c : m_channels) {
@@ -202,7 +212,7 @@ public:
 
     int close() {
         if (!isOpen())
-            return SyntactsError_NotInitialized;
+            return SyntactsError_NotOpen;
         Pa_CloseStream(m_stream);
         m_device = {-1,"N/A",false,-1,"N/A",false,0};
         m_channels.clear();
@@ -214,14 +224,15 @@ public:
         return Pa_IsStreamActive(m_stream) == 1;
     }
 
-    int play(int channel, Ptr<Cue> cue) {
+    int play(int channel, Ptr<Cue> cue, double inSeconds) {
         if (!isOpen())
-            return SyntactsError_NotInitialized;
+            return SyntactsError_NotOpen;
         if (!(channel < m_channels.size()))
             return SyntactsError_InvalidChannel;
         auto command = create<Play>();
         command->cue = std::move(cue);
         command->channel = channel;
+        command->inSeconds = inSeconds;
         bool success = m_commands.try_push(std::move(command));
         assert(success);
         return SyntactsError_NoError;
@@ -229,7 +240,7 @@ public:
 
     int stop(int channel) {
         if (!isOpen())
-            return SyntactsError_NotInitialized;
+            return SyntactsError_NotOpen;
         if (!(channel < m_channels.size()))
             return SyntactsError_InvalidChannel;
         auto command = create<Stop>();
@@ -241,7 +252,7 @@ public:
 
     int pause(int channel, bool paused) {
         if (!isOpen())
-            return SyntactsError_NotInitialized;
+            return SyntactsError_NotOpen;
         if (!(channel < m_channels.size()))
             return SyntactsError_InvalidChannel;
         auto command = create<Pause>();
@@ -254,7 +265,7 @@ public:
 
     int setVolume(int channel, float volume) {
         if (!isOpen())
-            return SyntactsError_NotInitialized;
+            return SyntactsError_NotOpen;
         if (!(channel < m_channels.size()))
             return SyntactsError_InvalidChannel;
         auto command = create<Volume>();
@@ -332,14 +343,35 @@ public:
     Device makeDevice(int index) {
     auto pa_dev_info = Pa_GetDeviceInfo(index);
     auto pa_api_info = Pa_GetHostApiInfo(pa_dev_info->hostApi);
+
+    std::vector<double> sampleRates;
+    sampleRates.reserve(STANDARD_SAMPLE_RATES.size());
+
+    PaStreamParameters params;
+    params.device = index;
+    params.channelCount = pa_dev_info->maxOutputChannels;
+    params.suggestedLatency = Pa_GetDeviceInfo(params.device)->defaultLowOutputLatency;
+    params.hostApiSpecificStreamInfo = nullptr;
+    params.sampleFormat = paFloat32 | paNonInterleaved;
+
+
+    for (auto& s : STANDARD_SAMPLE_RATES) {
+        if (Pa_IsFormatSupported(nullptr, &params, s) == paFormatIsSupported)
+            sampleRates.push_back(s);
+    }
+
     return Device{index, 
                 pa_dev_info->name, 
                 index == Pa_GetDefaultOutputDevice(),
                 pa_api_info->type,
                 pa_api_info->name, 
                 index == Pa_GetHostApiInfo( pa_dev_info->hostApi )->defaultOutputDevice,
-                pa_dev_info->maxOutputChannels};
+                pa_dev_info->maxOutputChannels,
+                std::move(sampleRates)};
     }
+
+
+
 
     void tidyNames() {
         static std::vector<std::string> apiRemoves = {"Windows "};
@@ -420,19 +452,19 @@ int Session::open() {
 }
 
 int Session::open(const Device& device) {
-    return m_impl->open(device, device.maxChannels);
+    return m_impl->open(device, device.maxChannels, 0);
 }
 
-int Session::open(const Device& device, int channelCount) {
-    return m_impl->open(device, std::min(channelCount, device.maxChannels));
+int Session::open(const Device& device, int channelCount, double sampleRate) {
+    return m_impl->open(device, std::min(channelCount, device.maxChannels), sampleRate);
 }
 
 int Session::open(int index) {
     return open(getAvailableDevices().at(index));
 }
 
-int Session::open(int index, int channelCount) {
-    return open(getAvailableDevices().at(index),channelCount);
+int Session::open(int index, int channelCount, double sampleRate) {
+    return open(getAvailableDevices().at(index),channelCount, sampleRate);
 }
 
 int Session::close() {
@@ -444,7 +476,11 @@ bool Session::isOpen() const {
 }
 
 int Session::play(int channel, Ptr<Cue> cue) {
-    return m_impl->play(channel, std::move(cue));
+    return m_impl->play(channel, std::move(cue), 0);
+}
+
+int Session::play(int channel, Ptr<Cue> cue, double inSeconds) {
+    return m_impl->play(channel, std::move(cue), inSeconds);
 }
 
 int Session::playAll(Ptr<Cue> cue) {

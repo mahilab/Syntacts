@@ -8,13 +8,14 @@ namespace tact {
 
 /// Useful device information
 struct Device {
-    int index;           ///< device index
-    std::string name;    ///< device name
-    bool isDefault;      ///< is this the default device?
-    int apiIndex;        ///< device API index
-    std::string apiName; ///< device API name
-    bool isDefaultApi;   ///< is this the default device for its API?
-    int maxChannels;     ///< maximum number of output channels
+    int index;                        ///< device index
+    std::string name;                 ///< device name
+    bool isDefault;                   ///< is this the default device?
+    int apiIndex;                     ///< device API index
+    std::string apiName;              ///< device API name
+    bool isApiDefault;                ///< is this the default device for its API?
+    int maxChannels;                  ///< maximum number of output channels
+    std::vector<double> sampleRates;  ///< supported sample rates
 };
 
 class Session {
@@ -26,20 +27,20 @@ public:
     /// Destructor
     ~Session();
 
-    /// Opens the default device with max channels
+    /// Opens the default device with its max channels and default sample rate
     int open();
 
-    /// Opens a spcific device with max channels
+    /// Opens a specific device with its max channels and default sample rate
     int open(const Device& device);
 
-    /// Opens a specific device with a specified number of channels
-    int open(const Device& device, int channelCount);
+    /// Opens a specific device with a specified number of channels and sample rate
+    int open(const Device& device, int channelCount, double sampleRate);
 
     /// Opens a specific device by index with a specified number of channels
     int open(int index);
 
-    /// Opens a specific device by index with a specified number of channels
-    int open(int index, int channelCount);
+    /// Opens a specific device by index with a specified number of channels and sample rate
+    int open(int index, int channelCount, double sampleRate);
 
     /// Closes the currently opened device
     int close();
@@ -49,6 +50,9 @@ public:
 
     /// Plays a Cue on the specified channel of the current device
     int play(int channel, Ptr<Cue> cue);
+
+    /// Plays A cue on the specified channel of the current device with a delay in seconds
+    int play(int channel, Ptr<Cue> cue, double inSeconds);
 
     /// Plays a Cue on all available channels of the current device
     int playAll(Ptr<Cue> cue);

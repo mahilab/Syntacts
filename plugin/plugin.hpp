@@ -8,7 +8,7 @@ typedef void* Handle;
 
 EXPORT Handle Session_create();
 EXPORT void Session_delete(Handle session);
-EXPORT int Session_open(Handle session, int index, int channelCount);
+EXPORT int Session_open(Handle session, int index, int channelCount, double sampleRate);
 EXPORT int Session_close(Handle session);
 EXPORT int Session_play(Handle session, int channel, Handle cue);
 EXPORT int Session_stop(Handle session, int channel);

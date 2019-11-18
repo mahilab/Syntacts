@@ -17,7 +17,6 @@ public:
     void initialize() {
         session = make<tact::Session>();
         session->open();
-        print(session->getSampleRate());
         getCurrent();
         getAvailable();
         onInitialize.emit();
@@ -26,9 +25,14 @@ public:
     void switchDevice(const tact::Device& dev) {
         session->close();
         session->open(dev);
-        print(session->getSampleRate());
         getCurrent();
         onSwitchDevice.emit();
+    }
+
+    void switchSampleRate(double sampleRate) {
+        session->close();
+        session->open(m_currentDev, m_currentDev.maxChannels, sampleRate);
+        m_infoBar->pushMessage("Changed sample rate to " + str(sampleRate, "Hz"));
     }
 
 private:
@@ -46,6 +50,8 @@ private:
         updateApiSelection();
         ImGui::SameLine();
         updateDeviceSelection();
+        ImGui::SameLine();
+        updateDeviceSampleRates();
         ImGui::SameLine();
         updateDeviceDetails();
         ImGui::SameLine();
@@ -81,21 +87,38 @@ private:
     }
 
     void updateDeviceSelection() {
-        ImGui::PushItemWidth(-65);
+        ImGui::PushItemWidth(300);
         if (ImGui::BeginCombo("##Devices", m_currentDev.name.c_str())) 
         {
             for (int i = 0; i < m_available[m_currentApi].size(); i++)
             {
-                bool is_selected = (m_currentDev.index == m_available[m_currentApi][i].index);
-                if (ImGui::Selectable(m_available[m_currentApi][i].name.c_str(), is_selected))
+                bool selected = (m_currentDev.index == m_available[m_currentApi][i].index);
+                if (ImGui::Selectable(m_available[m_currentApi][i].name.c_str(), selected))
                     switchDevice(m_available[m_currentApi][i]);
-                if (is_selected)
+                if (selected)
                     ImGui::SetItemDefaultFocus(); 
             }
             ImGui::EndCombo();
         }
         m_infoBar->tooltip("Select Device");
         ImGui::PopItemWidth();
+    }
+
+    void updateDeviceSampleRates() {
+        ImGui::PushItemWidth(-65);
+        std::string rate = str(session->getSampleRate(), "Hz");
+        if (ImGui::BeginCombo("##SampleRates", rate.c_str())) {
+            for (auto& s : m_currentDev.sampleRates) {
+                rate = str(s, "Hz");
+                bool selected = session->getSampleRate() == s;
+                if (ImGui::Selectable(rate.c_str(), selected)) {
+                    switchSampleRate(s);
+                }
+                if (selected)
+                    ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndCombo();
+        }
     }
 
     void updateDeviceDetails() {
@@ -107,25 +130,29 @@ private:
         bool modalOpen = true;
         if (ImGui::BeginPopupModal("Device Details", &modalOpen, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove))
         {
-            ImGui::Text("ID"); ImGui::SameLine(40);
-            ImGui::Text("Name");  ImGui::SameLine(500);
-            ImGui::Text("API");             
+            ImGui::Text("ID"); ImGui::SameLine(50);
+            ImGui::Text("Name");  ImGui::SameLine(400);
+            ImGui::Text("API"); ImGui::SameLine(500);
+            ImGui::Text("Ch.");
             for (auto& pair : session->getAvailableDevices()) {
                 auto d = pair.second;
                 auto api = d.apiName;
-                if (d.isDefaultApi)
+                if (d.isApiDefault)
                     api += "*";
                 std::string id = str(d.index);
                 if (d.isDefault)
                     id += "*";
                 ImGui::Separator();
-                ImGui::Text(id.c_str());   ImGui::SameLine(40);
-                ImGui::Text(d.name.c_str()); ImGui::SameLine(500);
-                ImGui::Text(api.c_str()); 
+                ImGui::Text(id.c_str());   ImGui::SameLine(50);
+                ImGui::Text(d.name.c_str()); ImGui::SameLine(400);
+                ImGui::Text(api.c_str());  ImGui::SameLine(500);
+                ImGui::Text(str(d.maxChannels).c_str());
             }
             ImGui::EndPopup();
         }
     }
+
+
 
     void getCurrent() {
         m_currentDev = session->getCurrentDevice();
@@ -136,7 +163,7 @@ private:
         m_available.clear();
         auto devs = session->getAvailableDevices();
         for (auto& dev : devs) {
-            if (dev.second.isDefaultApi)
+            if (dev.second.isApiDefault)
                 m_available[dev.second.apiName].push_front(dev.second);
             else
                 m_available[dev.second.apiName].push_back(dev.second);

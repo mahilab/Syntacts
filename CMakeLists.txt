@@ -20,7 +20,7 @@ cmake_minimum_required(VERSION 3.13.0)
 # user options
 option(SYNTACTS_PLUGIN   "Turn ON to build Syntacts plugin DLL" ON )
 option(SYNTACTS_EXAMPLES "Turn ON to build Syntacts example(s)" ON )
-option(SYNTACTS_TEST     "Turn ON to build Syntacts test(s)"    OFF)
+option(SYNTACTS_TEST     "Turn ON to build Syntacts test(s)"    ON )
 
 # create project
 project(syntacts VERSION 0.1.0 LANGUAGES CXX)

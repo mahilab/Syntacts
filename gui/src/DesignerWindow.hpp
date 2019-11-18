@@ -337,7 +337,7 @@ private:
     std::vector<float> m_amps = {1.0f, 0.5f};
     int   m_duration = 500;
     std::vector<int> m_pwmValues = {10, 25};
-    std::vector<int> m_asr   = {100, 300, 100};    
+    std::vector<int> m_asr   = {50, 150, 50};    
     std::vector<int> m_adsr  = {50,50,75,25};
     std::vector<int> m_tweenModes = {0,0,0,0};
 

@@ -8,13 +8,21 @@ int main(int argc, char const *argv[])
     Session session;
 
     for (auto& d : session.getAvailableDevices())
-        std::cout << d.first << "," << d.second.name << std::endl;
-
-    auto& devs = session.getAvailableDevices();
-    session.open(devs.at(12));
-
-    std::cout << session.getCurrentDevice().name << std::endl;
-    std::cout << session.isOpen() << std::endl;
+    {
+        auto& dev = d.second;
+        std::cout << std::endl;
+        std::cout << "Index:        " << dev.index << std::endl;
+        std::cout << "Name:         " << dev.name  << std::endl;
+        std::cout << "Default:      " << (dev.isDefault ? "Yes" : "No") << std::endl;
+        std::cout << "API:          " << dev.apiName << std::endl;
+        std::cout << "API Default:  " << (dev.isApiDefault ? "Yes" : "No") << std::endl;
+        std::cout << "Max Channels: " << dev.maxChannels << std::endl;
+        std::cout << "Sample Rates: ";
+                                        for (auto& s : dev.sampleRates)
+                                            std::cout << s << " ";
+                                        std::cout << std::endl;
+    }
+    std::cout << std::endl;
 
 
     return 0;

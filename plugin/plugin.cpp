@@ -42,8 +42,8 @@ void Session_delete(Handle session) {
     delete static_cast<Session*>(session);
 }
 
-int Session_open(Handle session, int index, int channelCount) {
-    return static_cast<Session*>(session)->open(index, channelCount);
+int Session_open(Handle session, int index, int channelCount, double sampleRate) {
+    return static_cast<Session*>(session)->open(index, channelCount, sampleRate);
 }
 
 int Session_close(Handle session) {
