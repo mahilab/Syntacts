@@ -39,8 +39,10 @@ private:
         ImGui::SameLine();
         ImGui::PushItemWidth(-1);
         if (ImGui::SliderFloat("##Master", &m_masterVol, 0, 1, "")) {
-            for (auto& vol : m_channelVol)
-                vol = m_masterVol;
+            for (int i = 0; i < m_deviceBar->session->getCurrentDevice().maxChannels; ++i) {
+                m_channelVol[i] = m_masterVol;
+                m_deviceBar->session->setVolume(i, m_masterVol);
+            }
         }
         ImGui::PopItemWidth();
         ImGui::Separator();
@@ -67,7 +69,7 @@ private:
             //     ImGui::SetTooltip("%.3f", m_channelVol[i]);
             if (ImGui::IsItemClicked(1)) {
                 m_channelVol[i] = m_channelVol[i] == 0.0f ? 1.0f : m_channelVol[i] == 1.0f ? 0.0f : m_channelVol[i] < 0.5f ? 0.0f : 1.0f;
-                m_deviceBar->session->setVolume(i, Math::pow(m_channelVol[i],4));
+                m_deviceBar->session->setVolume(i, Math::pow(m_channelVol[i],1));
             }
             // ImGui::SameLine();
         }

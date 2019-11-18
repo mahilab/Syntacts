@@ -16,7 +16,8 @@ public:
      /// Restarts Syntacts session
     void initialize() {
         session = make<tact::Session>();
-        session->open();
+        if (!session->open())
+            m_infoBar->pushMessage("Failed to initialize device!",InfoBar::Error);
         getCurrent();
         getAvailable();
         onInitialize.emit();

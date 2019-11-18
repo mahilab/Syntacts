@@ -404,7 +404,7 @@ public:
     }
 
     void removeDigitalDevices() {
-        static std::vector<std::string> digitalStrings = {"SPDIF","S/PDIF","Optic","optic"};
+        static std::vector<std::string> digitalStrings = {"SPDIF","S/PDIF","Optic","optic","digital","Digital"};
         for (auto dev = m_devices.begin(); dev != m_devices.end();) {
             bool remove = false;
             for (auto& digi : digitalStrings) {
