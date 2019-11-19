@@ -17,11 +17,15 @@ int SignalBase::count() {
     return s_count;
 }
 
-Scalar::Scalar(float value) : m_value(value) {}
-float Scalar::sample(float t) const { return m_value; }
+Ptr<SignalBase> SignalBase::clone() const {
+    return create<Scalar>(1);
+}
 
-Ramp::Ramp(float initial, float rate) : m_initial(initial), m_rate(rate) {}
-Ramp::Ramp(float initial, float final, float span) : m_initial(initial), m_rate((final - initial) / span) {}
-float Ramp::sample(float t) const { return m_initial + m_rate * t; }
+Scalar::Scalar(float _value) : value(_value) {}
+float Scalar::sample(float t) const { return value; }
+
+Ramp::Ramp(float _initial, float _rate) : initial(_initial), rate(_rate) {}
+Ramp::Ramp(float _initial, float _final, float _span) : initial(_initial), rate((_final - _initial) / _span) {}
+float Ramp::sample(float t) const { return initial + rate * t; }
 
 } // namespace tact

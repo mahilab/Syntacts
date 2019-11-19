@@ -3,12 +3,11 @@
 #include <Syntacts/Config.hpp>
 #include <Syntacts/Serialization.hpp>
 #include <Syntacts/Memory.hpp>
-#include <atomic>
 
 namespace tact
 {
 
-//=============================================================================
+///////////////////////////////////////////////////////////////////////////////
 
 /// An abstract base class which generates time variant samples
 class SYNTACTS_API SignalBase
@@ -22,6 +21,9 @@ public:
 
     /// Override to implement generator sampling behavior (required).
     virtual float sample(float t) const = 0;
+
+    /// Creates a deep copy of the Signal
+    virtual Ptr<SignalBase> clone() const;
 
 public:
     /// Returns the number of Signals across the entire process
@@ -38,10 +40,21 @@ private:
 
 };
 
-//=============================================================================
+///////////////////////////////////////////////////////////////////////////////
+
+/// Signal with automatic clone implementation via CRTP
+template <typename Derived>
+class SignalCloneable : public SignalBase {
+public:
+    virtual Ptr<SignalBase> clone() const override {
+        return create<Derived>(static_cast<Derived const &>(*this));
+    }
+};
+
+///////////////////////////////////////////////////////////////////////////////
 
 /// A Signal that emits a constant value over time
-class SYNTACTS_API Scalar : public SignalBase
+class SYNTACTS_API Scalar : public SignalCloneable<Scalar>
 {
 public:
     Scalar(float value = 1);
@@ -49,17 +62,17 @@ public:
     /// Implements scalar
     virtual float sample(float t) const override;
 
-private:
-    std::atomic<float> m_value; ///< the scalar value
+public:
+    float value; ///< the scalar value
 
 private:
-    SERIALIZE(PARENT(SignalBase), MEMBER(m_value));
+    SERIALIZE(PARENT(SignalBase), MEMBER(value));
 };
 
-//=============================================================================
+///////////////////////////////////////////////////////////////////////////////
 
 /// A Signal that increaes or decreases over time
-class SYNTACTS_API Ramp : public SignalBase
+class SYNTACTS_API Ramp : public SignalCloneable<Ramp>
 {
 public:
     Ramp(float initial = 1, float rate = 0);
@@ -67,15 +80,15 @@ public:
 
     virtual float sample(float t) const override;
 
-private:
-    std::atomic<float> m_initial;
-    std::atomic<float> m_rate;
+public:
+    float initial;
+    float rate;
 
 private:
-    SERIALIZE(PARENT(SignalBase), MEMBER(m_initial), MEMBER(m_rate));
+    SERIALIZE(PARENT(SignalBase), MEMBER(initial), MEMBER(rate));
 };
 
-//=============================================================================
+///////////////////////////////////////////////////////////////////////////////
 
 } // namespace tact
 

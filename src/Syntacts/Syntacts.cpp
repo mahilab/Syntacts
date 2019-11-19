@@ -41,7 +41,7 @@ struct CueAndTime {
     }
     std::shared_ptr<Cue> cue;
     std::atomic<double> time = 0.0; 
-    std::atomic<float> pitch = 1.0f;
+    float pitch = 1.0f;
 };
 
 // Globals
@@ -141,9 +141,9 @@ DeviceInfo::DeviceInfo(int _index, int _indexApi, std::string _name, std::string
 
 }
 
-//==============================================================================
+///////////////////////////////////////////////////////////////////////////////=
 // C++11 INTERFACE
-//==============================================================================
+///////////////////////////////////////////////////////////////////////////////=
 
 std::vector<DeviceInfo> getAvailableDevices() {
     tryInitPortaudio();
@@ -277,9 +277,9 @@ int openControlPanel(int deviceIndex, void* windowHandle) {
     }
 }
 
-//==============================================================================
+///////////////////////////////////////////////////////////////////////////////=
 // ANSI C INTEFACE (DLL BINDINGS)
-//==============================================================================
+///////////////////////////////////////////////////////////////////////////////=
 
 int initializeChannels(int channelCount) {
     return initialize(-1, channelCount, DEFAULT_SAMPLE_RATE);

@@ -9,28 +9,20 @@
 namespace tact
 {
 
-//=============================================================================
+///////////////////////////////////////////////////////////////////////////////
 
 /// Abstract base class for object which gives a Cue a duration and/or shape
 class SYNTACTS_API EnvelopeBase : public SignalBase {
 public:
 
-    /// Constructor
-    EnvelopeBase(float duration = 1.0f);
-
-    /// Implements a time bounded envelope with amplitude of 1
-    virtual float sample(float t) const override;
-
     /// Gets the duration of an Envelope
-    virtual float getDuration() const;
+    virtual float getDuration() const = 0;
 
-protected:
-    std::atomic<float> m_duration;
 private:
-    SERIALIZE(PARENT(SignalBase), MEMBER(m_duration));
+    SERIALIZE(PARENT(SignalBase));
 };
 
-//=============================================================================
+///////////////////////////////////////////////////////////////////////////////
 
 /// A basic envelope, providing a duratin and constant amplitude
 class SYNTACTS_API Envelope : public EnvelopeBase {
@@ -39,13 +31,16 @@ public:
     Envelope(float duration = 1.0f, float amplitude = 1.0f);
     /// Implements a time bounded envelope with specified amplitude
     virtual float sample(float t) const override;
+    /// Gets the duration of an Envelope
+    virtual float getDuration() const override;
+protected:
+    float m_duration;
+    float m_amplitude;
 private:
-    std::atomic<float> m_amplitude;
-private:
-    SERIALIZE(PARENT(EnvelopeBase));
+    SERIALIZE(PARENT(EnvelopeBase),  MEMBER(m_duration), MEMBER(m_amplitude));
 };
 
-//=============================================================================
+///////////////////////////////////////////////////////////////////////////////
 
 /// Envelope with time sequenced amplitudes and tweening functions
 class SYNTACTS_API KeyedEnvelope : public EnvelopeBase {
@@ -72,7 +67,7 @@ private:
     SERIALIZE(PARENT(EnvelopeBase), MEMBER(m_keys));    
 };
 
-//=============================================================================
+///////////////////////////////////////////////////////////////////////////////
 
 /// Attack-Sustain-Release Envelope
 class SYNTACTS_API ASR : public KeyedEnvelope {
@@ -84,7 +79,7 @@ private:
     SERIALIZE(PARENT(KeyedEnvelope));
 };
 
-//=============================================================================
+///////////////////////////////////////////////////////////////////////////////
 
 /// Attack-Decay-Sustain-Release Envelope
 class SYNTACTS_API ADSR : public KeyedEnvelope {
@@ -96,19 +91,18 @@ private:
     SERIALIZE(PARENT(KeyedEnvelope));
 };
 
-//=============================================================================
+///////////////////////////////////////////////////////////////////////////////
 
 /// An object which gives a Cue a duration and/or shape
-class SYNTACTS_API OscillatingEnvelope : public EnvelopeBase {
+class SYNTACTS_API OscillatingEnvelope : public Envelope {
 public:
     /// Constructs an Envelope with a specified duration, positive oscillator type and frequency
     OscillatingEnvelope(float duration = 1.0f , float amplitude = 1.0f, Ptr<OscillatorBase> osc = create<Sine>());
     virtual float sample(float t) const override;
 protected:
     Ptr<OscillatorBase> m_osc;
-    std::atomic<float> m_amplitude;
 private:
-    SERIALIZE(PARENT(EnvelopeBase), MEMBER(m_osc), MEMBER(m_amplitude));
+    SERIALIZE(PARENT(Envelope), MEMBER(m_osc));
 };
 
 } // namespace tact

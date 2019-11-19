@@ -6,7 +6,7 @@
 namespace tact
 {
 
-//=============================================================================
+///////////////////////////////////////////////////////////////////////////////
 
 /// Abstract base class for objects which produce a periodic, oscillating signal
 class SYNTACTS_API OscillatorBase : public SignalBase
@@ -25,7 +25,7 @@ private:
     SERIALIZE(PARENT(SignalBase), MEMBER(m_frequency));
 };
 
-//=============================================================================
+///////////////////////////////////////////////////////////////////////////////
 
 /// A sine wave Oscillator
 class SYNTACTS_API Sine : public OscillatorBase
@@ -40,7 +40,7 @@ private:
     SERIALIZE(PARENT(OscillatorBase))
 };
 
-//=============================================================================
+///////////////////////////////////////////////////////////////////////////////
 
 /// A square wave Oscillator
 class SYNTACTS_API Square : public OscillatorBase
@@ -55,7 +55,7 @@ private:
     SERIALIZE(PARENT(OscillatorBase));
 };
 
-//=============================================================================
+///////////////////////////////////////////////////////////////////////////////
 
 /// A saw wave Oscillator
 class SYNTACTS_API Saw : public OscillatorBase
@@ -70,7 +70,7 @@ private:
     SERIALIZE(PARENT(OscillatorBase));
 };
 
-//=============================================================================
+///////////////////////////////////////////////////////////////////////////////
 
 /// A triangle wave Oscillator
 class SYNTACTS_API Triangle : public OscillatorBase
@@ -85,7 +85,7 @@ private:
     SERIALIZE(PARENT(OscillatorBase));
 };
 
-//=============================================================================
+///////////////////////////////////////////////////////////////////////////////
 
 /// A frequency modulated sine wave Oscillator
 class SYNTACTS_API SineFM : public OscillatorBase
@@ -98,8 +98,8 @@ public:
     virtual float sample(float t) const override;
 
 private:
-    std::atomic<float> m_modulation; ///< modulation frequency
-    std::atomic<float> m_index;      ///< modulation index
+    float m_modulation; ///< modulation frequency
+    float m_index;      ///< modulation index
 private:
     SERIALIZE(PARENT(OscillatorBase), MEMBER(m_modulation), MEMBER(m_index))
 };
@@ -115,12 +115,12 @@ public:
     virtual float sample(float t) const override;
 
 private:
-    std::atomic<float> m_chirpyness; ///< the chirp rate or (f1-f0)/T
+    float m_chirpyness; ///< the chirp rate or (f1-f0)/T
 private:
     SERIALIZE(PARENT(OscillatorBase), MEMBER(m_chirpyness))
 };
 
-//=============================================================================
+///////////////////////////////////////////////////////////////////////////////
 
 /// A square wave with adjustable frequency and duty cycle
 class SYNTACTS_API PulseTrain : public OscillatorBase
@@ -133,8 +133,8 @@ public:
     virtual float sample(float t) const override;
 
 private:
-    std::atomic<float> m_dutyCycle;
-    std::atomic<float> m_period;
+    float m_dutyCycle;
+    float m_period;
 private:
     SERIALIZE(PARENT(OscillatorBase), MEMBER(m_dutyCycle), MEMBER(m_period));
 };

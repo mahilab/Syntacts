@@ -5,7 +5,7 @@ namespace tact {
 
 Cue::Cue() :
     m_sigs(0),
-    m_env(move(create<EnvelopeBase>()))
+    m_env(move(create<Envelope>()))
 {
 
 }

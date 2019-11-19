@@ -6,30 +6,19 @@
 
 namespace tact {
 
-EnvelopeBase::EnvelopeBase(float duration) :
-    m_duration(duration)
-{
-    
-}
-
-float EnvelopeBase::sample(float t) const {
-    return t > m_duration ? 0.0f : 1.0f;
-}
-
-float EnvelopeBase::getDuration() const {
-    return m_duration;
-}
-
 Envelope::Envelope(float duration, float amplitude) :
-    EnvelopeBase(duration), m_amplitude(amplitude)
+    m_duration(duration), m_amplitude(amplitude)
 { }
 
 float Envelope::sample(float t) const {
     return t > m_duration ? 0.0f : m_amplitude;
 }
 
-KeyedEnvelope::KeyedEnvelope(float amplitude0) :
-    EnvelopeBase()
+float Envelope::getDuration() const {
+    return m_duration;
+}
+
+KeyedEnvelope::KeyedEnvelope(float amplitude0)
 {
    addKey(0.0f, amplitude0, create<Tween::Linear>());
 }
@@ -75,7 +64,7 @@ ADSR::ADSR(float attackTime, float decayTime, float sustainTime, float releaseTi
 }
 
 OscillatingEnvelope::OscillatingEnvelope(float duration , float amplitude , Ptr<OscillatorBase> osc) :
-    EnvelopeBase(duration), m_amplitude(amplitude), m_osc(std::move(osc))
+    Envelope(duration, amplitude), m_osc(std::move(osc))
 {
     
 }

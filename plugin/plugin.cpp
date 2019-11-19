@@ -31,7 +31,7 @@ inline Ptr<SignalBase> findSignal(Handle sig) {
         return nullptr;
 }
 
-//=============================================================================
+///////////////////////////////////////////////////////////////////////////////
 
 Handle Session_create() {
     Session* session = new Session();
@@ -74,7 +74,7 @@ bool Session_isOpen(Handle session) {
     return static_cast<Session*>(session)->isOpen();
 }
 
-//=============================================================================
+///////////////////////////////////////////////////////////////////////////////
 
 bool Signal_valid(Handle sig) {
     return findSignal(sig) != nullptr ? true : false;
@@ -98,7 +98,7 @@ int Signal_count() {
     return SignalBase::count();
 }
 
-//=============================================================================
+///////////////////////////////////////////////////////////////////////////////
 
 Handle Scalar_create(float value) {
     return store(create<Scalar>(value), g_sigs);
@@ -108,7 +108,7 @@ Handle Ramp_create(float initial, float rate) {
     return store(create<Ramp>(initial, rate), g_sigs);
 }
 
-//=============================================================================
+///////////////////////////////////////////////////////////////////////////////
 
 
 Handle Envelope_create(float duration) {
@@ -123,7 +123,7 @@ Handle ADSR_create(float a, float d, float s, float r) {
     return store(create<ADSR>(a,d,s,r), g_envs);
 }
 
-//=============================================================================
+///////////////////////////////////////////////////////////////////////////////
 
 Handle Sine_create(float frequency) {
     return store(create<Sine>(frequency), g_oscs);
@@ -141,7 +141,7 @@ Handle Triangle_create(float frequency) {
     return store(create<Triangle>(frequency), g_oscs);
 }
 
-//=============================================================================
+///////////////////////////////////////////////////////////////////////////////
 
 Handle Cue_create() {
     return store(create<Cue>(), g_cues);
@@ -156,7 +156,7 @@ void Cue_chain(Handle cue, Handle sig) {
         g_cues.at(cue)->chain(s);
 }
 
-//=============================================================================
+///////////////////////////////////////////////////////////////////////////////
 
 bool Library_saveCue(Handle cue, const char* name) {
     return Library::saveCue(g_cues.at(cue), name);
@@ -170,7 +170,7 @@ Handle Library_loadCue(const char* name) {
         return nullptr;
 }
 
-//=============================================================================
+///////////////////////////////////////////////////////////////////////////////
 
 int Debug_oscMapSize() {
     return static_cast<int>(g_oscs.size());
@@ -184,4 +184,4 @@ int Debug_cueMapSize() {
     return static_cast<int>(g_cues.size());
 }
 
-//=============================================================================
+///////////////////////////////////////////////////////////////////////////////
