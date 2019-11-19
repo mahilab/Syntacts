@@ -23,7 +23,7 @@ int main(int argc, char const *argv[])
     auto G      = create<Cue>(create<Saw>(4 * 391.9954f), create<ASR>(0.05f, 0.15f, 0.05f));
 
     std::vector<Ptr<Cue>> notes = {Dsharp, Dsharp, Csharp, Dsharp, Asharp, Asharp, Dsharp, Gsharp, G,     Dsharp};
-    std::vector<float>    delay = {0.25f,  0.25f,  0.25f,  0.25,   0.5f,   0.25f,  0.25f,  0.25f,  0.25f, 1.0f  };
+    std::vector<float>    delay = {0.25f,  0.25f,  0.25f,  0.5,   0.5f,   0.25f,  0.25f,  0.25f,  0.25f, 1.0f  };
 
     while (true) {
         for (std::size_t i = 0; i < notes.size(); ++i) {

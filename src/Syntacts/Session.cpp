@@ -142,12 +142,15 @@ public:
     }
 
     ~Impl() {
+        close();
         if (isOpen())
             close();
         int result = Pa_Terminate();
         assert(result == paNoError);
         s_count--;
     }
+
+    std::vector<int> channelNumbers;
 
     int open(const Device& device, int channels, double sampleRate) {
 
@@ -159,27 +162,8 @@ public:
         m_device = device;
 
         // generat list of channel numbers
-        std::vector<int> channelNumbers(channels);
-        std::iota(channelNumbers.begin(), channelNumbers.end(), 0);
-
-        // TODO
-        PaWasapiStreamInfo wasapiInfo ;
-        wasapiInfo.size = sizeof(PaWasapiStreamInfo);
-        wasapiInfo.hostApiType = paWASAPI;
-        wasapiInfo.version = 1;
-        wasapiInfo.flags = paWinWasapiExclusive;   
-        wasapiInfo.channelMask = NULL;
-        wasapiInfo.hostProcessorOutput = NULL;
-        wasapiInfo.hostProcessorInput = NULL;
-        wasapiInfo.threadPriority = eThreadPriorityProAudio;
-
-        // TODO
-        PaAsioStreamInfo asioInfo;
-        asioInfo.channelSelectors = &channelNumbers[0];
-        asioInfo.size = sizeof(PaAsioStreamInfo);
-        asioInfo.version = 1;
-        asioInfo.hostApiType = paASIO;
-        asioInfo.flags = 0;
+        channelNumbers.resize(channels);
+        std::iota(channelNumbers.begin(), channelNumbers.end(), 1);
 
         PaStreamParameters params;
         params.device = device.index;
@@ -367,7 +351,8 @@ public:
                 pa_api_info->name, 
                 index == Pa_GetHostApiInfo( pa_dev_info->hostApi )->defaultOutputDevice,
                 pa_dev_info->maxOutputChannels,
-                std::move(sampleRates)};
+                std::move(sampleRates),
+                pa_dev_info->defaultSampleRate};
     }
 
 

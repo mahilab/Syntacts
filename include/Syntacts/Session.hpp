@@ -16,6 +16,7 @@ struct Device {
     bool isApiDefault;                ///< is this the default device for its API?
     int maxChannels;                  ///< maximum number of output channels
     std::vector<double> sampleRates;  ///< supported sample rates
+    double defaultSampleRate;         ///< the device's default sample rate
 };
 
 class Session {
