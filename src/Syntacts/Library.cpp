@@ -27,12 +27,12 @@
 
 namespace fs = std::filesystem;
 
-// Reigster Types (must be done in global namespace)
+// Register Types (must be done in global namespace)
 
 CEREAL_REGISTER_TYPE(tact::Scalar);
 CEREAL_REGISTER_TYPE(tact::Ramp);
 
-CEREAL_REGISTER_TYPE(tact::OscillatorBase);
+CEREAL_REGISTER_TYPE(tact::IOscillator);
 CEREAL_REGISTER_TYPE(tact::Sine);
 CEREAL_REGISTER_TYPE(tact::Square);
 CEREAL_REGISTER_TYPE(tact::Saw);
@@ -41,7 +41,7 @@ CEREAL_REGISTER_TYPE(tact::SineFM);
 CEREAL_REGISTER_TYPE(tact::Chirp);
 CEREAL_REGISTER_TYPE(tact::PulseTrain);
 
-CEREAL_REGISTER_TYPE(tact::EnvelopeBase)
+CEREAL_REGISTER_TYPE(tact::IEnvelope)
 CEREAL_REGISTER_TYPE(tact::Envelope);
 CEREAL_REGISTER_TYPE(tact::KeyedEnvelope);
 CEREAL_REGISTER_TYPE(tact::ASR);

@@ -90,7 +90,7 @@ public:
 
     
     /// Builds the Syntacts Envelope
-    Ptr<tact::EnvelopeBase> buildEnv() {
+    Ptr<tact::IEnvelope> buildEnv() {
         if (m_envMode == EnvMode::Basic)
             return make<tact::Envelope>(m_duration/1000.0f, m_amps[0]);    
         else if (m_envMode == EnvMode::ASR)
@@ -284,7 +284,7 @@ private:
     }
 
         /// Builds the carrier oscillator
-    Ptr<tact::OscillatorBase> buildCarOsc() {
+    Ptr<tact::IOscillator> buildCarOsc() {
         if (m_modMode != ModMode::FM) {
             if (m_carType == OscType::Sine)
                 return make<tact::Sine>((float)m_carFreq);
@@ -303,8 +303,8 @@ private:
     }
 
     /// Builds the modulation oscillator
-    Ptr<tact::OscillatorBase> buildModOsc() {
-        Ptr<tact::OscillatorBase> modOsc;
+    Ptr<tact::IOscillator> buildModOsc() {
+        Ptr<tact::IOscillator> modOsc;
         if (m_modType == OscType::Sine)
             modOsc = make<tact::Sine>((float)m_modFreq);
         else if (m_modType == OscType::Square)

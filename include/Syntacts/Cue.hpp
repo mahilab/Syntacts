@@ -8,32 +8,32 @@
 namespace tact {
 
 /// Encapsulates a cue to be played on a single channel
-class SYNTACTS_API Cue : public SignalBase {
+class SYNTACTS_API Cue : public ISignal {
 public:
 
     /// Default constructor
     Cue();
 
     /// Constructs a Cue with a Oscillator lasting a specified duration
-    Cue(Ptr<OscillatorBase> osc, float duration, float amplitude = 1.0f);
+    Cue(Ptr<IOscillator> osc, float duration, float amplitude = 1.0f);
 
     /// Constructs a Cue with a Oscillator and Envelope follower
-    Cue(Ptr<OscillatorBase> osc, Ptr<EnvelopeBase> env);
+    Cue(Ptr<IOscillator> osc, Ptr<IEnvelope> env);
 
     /// Constructs a Cue with a Oscillator, modulating Oscillator, and Envelope follower
-    Cue(Ptr<OscillatorBase> osc, Ptr<OscillatorBase> mod, Ptr<EnvelopeBase> env);
+    Cue(Ptr<IOscillator> osc, Ptr<IOscillator> mod, Ptr<IEnvelope> env);
 
     /// Virtual destructor
     virtual ~Cue();
 
     /// Sets the primary Envelope of a Cue
-    void setEnvelope(Ptr<EnvelopeBase> env);
+    void setEnvelope(Ptr<IEnvelope> env);
 
     /// Gets the primary Envelope of a Cue
-    Ptr<EnvelopeBase> getEnvelope() const;
+    Ptr<IEnvelope> getEnvelope() const;
 
     /// Chains an existing custom Signal to be processed
-    void chain(Ptr<SignalBase> sig);
+    void chain(Ptr<ISignal> sig);
 
     /// Makes and then chains a custon Signal to be processed
     template <typename T, typename ...Args>
@@ -46,10 +46,10 @@ public:
     int sampleCount(int sampleRate) const;
 
 private:
-    std::vector<Ptr<SignalBase>> m_sigs; ///< array of Signals
-    Ptr<EnvelopeBase> m_env;             ///< the Cue's primary envelope
+    std::vector<Ptr<ISignal>> m_sigs; ///< array of Signals
+    Ptr<IEnvelope> m_env;             ///< the Cue's primary envelope
 private:
-    SERIALIZE(PARENT(SignalBase), MEMBER(m_sigs), MEMBER(m_env))
+    SERIALIZE(PARENT(ISignal), MEMBER(m_sigs), MEMBER(m_env))
 };
 
 template <typename T, typename ...Args>

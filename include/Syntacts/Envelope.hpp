@@ -12,20 +12,20 @@ namespace tact
 ///////////////////////////////////////////////////////////////////////////////
 
 /// Abstract base class for object which gives a Cue a duration and/or shape
-class SYNTACTS_API EnvelopeBase : public SignalBase {
+class SYNTACTS_API IEnvelope : public ISignal {
 public:
 
     /// Gets the duration of an Envelope
     virtual float getDuration() const = 0;
 
 private:
-    SERIALIZE(PARENT(SignalBase));
+    SERIALIZE(PARENT(ISignal));
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// A basic envelope, providing a duratin and constant amplitude
-class SYNTACTS_API Envelope : public EnvelopeBase {
+/// A basic envelope, providing a durations and constant amplitude
+class SYNTACTS_API Envelope : public IEnvelope {
 public:
     /// Constructs an Evelope with a specified duration and amplitude
     Envelope(float duration = 1.0f, float amplitude = 1.0f);
@@ -37,13 +37,13 @@ protected:
     float m_duration;
     float m_amplitude;
 private:
-    SERIALIZE(PARENT(EnvelopeBase),  MEMBER(m_duration), MEMBER(m_amplitude));
+    SERIALIZE(PARENT(IEnvelope),  MEMBER(m_duration), MEMBER(m_amplitude));
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /// Envelope with time sequenced amplitudes and tweening functions
-class SYNTACTS_API KeyedEnvelope : public EnvelopeBase {
+class SYNTACTS_API KeyedEnvelope : public IEnvelope {
 public:
 
     typedef Ptr<Tween::Function> TweenFunc;
@@ -64,7 +64,7 @@ protected:
     std::map<float, std::pair<float, TweenFunc>> m_keys;
 
 private:
-    SERIALIZE(PARENT(EnvelopeBase), MEMBER(m_keys));    
+    SERIALIZE(PARENT(IEnvelope), MEMBER(m_keys));    
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -97,10 +97,10 @@ private:
 class SYNTACTS_API OscillatingEnvelope : public Envelope {
 public:
     /// Constructs an Envelope with a specified duration, positive oscillator type and frequency
-    OscillatingEnvelope(float duration = 1.0f , float amplitude = 1.0f, Ptr<OscillatorBase> osc = create<Sine>());
+    OscillatingEnvelope(float duration = 1.0f , float amplitude = 1.0f, Ptr<IOscillator> osc = create<Sine>());
     virtual float sample(float t) const override;
 protected:
-    Ptr<OscillatorBase> m_osc;
+    Ptr<IOscillator> m_osc;
 private:
     SERIALIZE(PARENT(Envelope), MEMBER(m_osc));
 };

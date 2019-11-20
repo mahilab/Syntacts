@@ -6,9 +6,9 @@
 
 using namespace tact;
 
-std::unordered_map<void*, Ptr<SignalBase>>     g_sigs;
-std::unordered_map<void*, Ptr<OscillatorBase>> g_oscs;
-std::unordered_map<void*, Ptr<EnvelopeBase>>   g_envs; 
+std::unordered_map<void*, Ptr<ISignal>>     g_sigs;
+std::unordered_map<void*, Ptr<IOscillator>> g_oscs;
+std::unordered_map<void*, Ptr<IEnvelope>>   g_envs; 
 std::unordered_map<void*, Ptr<Cue>>            g_cues;
 
 template <typename P, typename M>
@@ -18,7 +18,7 @@ inline Handle store(P p, M& m) {
     return hand;
 }
 
-inline Ptr<SignalBase> findSignal(Handle sig) {
+inline Ptr<ISignal> findSignal(Handle sig) {
     if (g_sigs.count(sig))
         return g_sigs[sig];
     else if (g_oscs.count(sig))
@@ -95,7 +95,7 @@ float Signal_sample(Handle sig, float t) {
 }
 
 int Signal_count() {
-    return SignalBase::count();
+    return ISignal::count();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

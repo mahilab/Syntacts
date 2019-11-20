@@ -10,19 +10,19 @@ Cue::Cue() :
 
 }
 
-Cue::Cue(Ptr<OscillatorBase> osc, float duration, float amplitude) :
+Cue::Cue(Ptr<IOscillator> osc, float duration, float amplitude) :
     m_env(move(create<Envelope>(duration, amplitude)))
 {
     chain(move(osc));
 }
 
-Cue::Cue(Ptr<OscillatorBase> osc, Ptr<EnvelopeBase> env) :
+Cue::Cue(Ptr<IOscillator> osc, Ptr<IEnvelope> env) :
     m_env(move(env))
 {
     chain(move(osc));
 }
 
-Cue::Cue(Ptr<OscillatorBase> osc, Ptr<OscillatorBase> mod, Ptr<EnvelopeBase> env) :
+Cue::Cue(Ptr<IOscillator> osc, Ptr<IOscillator> mod, Ptr<IEnvelope> env) :
     m_env(move(env))
 {
     chain(move(osc));
@@ -33,15 +33,15 @@ Cue::~Cue() {
 
 }
 
-void Cue::setEnvelope(Ptr<EnvelopeBase> env) {
+void Cue::setEnvelope(Ptr<IEnvelope> env) {
     m_env = env;
 }
 
-Ptr<EnvelopeBase> Cue::getEnvelope() const {
+Ptr<IEnvelope> Cue::getEnvelope() const {
     return m_env;
 }
 
-void Cue::chain(Ptr<SignalBase> gen) {
+void Cue::chain(Ptr<ISignal> gen) {
     m_sigs.push_back(move(gen));
 }
 

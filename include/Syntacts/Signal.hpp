@@ -10,20 +10,17 @@ namespace tact
 ///////////////////////////////////////////////////////////////////////////////
 
 /// An abstract base class which generates time variant samples
-class SYNTACTS_API SignalBase
+class SYNTACTS_API ISignal
 {
 public:
     /// Default constructor
-    SignalBase();
+    ISignal();
 
     /// Virtual destructor
-    virtual ~SignalBase();
+    virtual ~ISignal();
 
     /// Override to implement generator sampling behavior (required).
     virtual float sample(float t) const = 0;
-
-    /// Creates a deep copy of the Signal
-    virtual Ptr<SignalBase> clone() const;
 
 public:
     /// Returns the number of Signals across the entire process
@@ -42,19 +39,8 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// Signal with automatic clone implementation via CRTP
-template <typename Derived>
-class SignalCloneable : public SignalBase {
-public:
-    virtual Ptr<SignalBase> clone() const override {
-        return create<Derived>(static_cast<Derived const &>(*this));
-    }
-};
-
-///////////////////////////////////////////////////////////////////////////////
-
 /// A Signal that emits a constant value over time
-class SYNTACTS_API Scalar : public SignalCloneable<Scalar>
+class SYNTACTS_API Scalar : public ISignal
 {
 public:
     Scalar(float value = 1);
@@ -66,13 +52,13 @@ public:
     float value; ///< the scalar value
 
 private:
-    SERIALIZE(PARENT(SignalBase), MEMBER(value));
+    SERIALIZE(PARENT(ISignal), MEMBER(value));
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// A Signal that increaes or decreases over time
-class SYNTACTS_API Ramp : public SignalCloneable<Ramp>
+/// A Signal that increases or decreases over time
+class SYNTACTS_API Ramp : public ISignal
 {
 public:
     Ramp(float initial = 1, float rate = 0);
@@ -85,7 +71,7 @@ public:
     float rate;
 
 private:
-    SERIALIZE(PARENT(SignalBase), MEMBER(initial), MEMBER(rate));
+    SERIALIZE(PARENT(ISignal), MEMBER(initial), MEMBER(rate));
 };
 
 ///////////////////////////////////////////////////////////////////////////////

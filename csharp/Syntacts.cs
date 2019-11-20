@@ -38,11 +38,11 @@ namespace Syntacts
         internal Handle handle = Handle.Zero;
     }
 
-    class EnvelopeBase : Signal {
+    class IEnvelope : Signal {
 
     }
 
-    class Envelope : EnvelopeBase
+    class Envelope : IEnvelope
     {
         public Envelope(float duration)
         {
@@ -50,7 +50,7 @@ namespace Syntacts
         }
     }
 
-    class ASR : EnvelopeBase {
+    class ASR : IEnvelope {
         public ASR(float a, float s, float r) {
             handle = Dll.ASR_create(a,s,r);
         }
@@ -75,7 +75,7 @@ namespace Syntacts
             handle = Dll.Cue_create();
         }
 
-        public void SetEnvelope(EnvelopeBase env)
+        public void SetEnvelope(IEnvelope env)
         {
             Dll.Cue_setEnvelope(handle, env.handle);
         }
