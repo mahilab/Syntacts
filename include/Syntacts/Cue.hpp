@@ -3,12 +3,13 @@
 #include <Syntacts/Config.hpp>
 #include <Syntacts/Oscillator.hpp>
 #include <Syntacts/Envelope.hpp>
+#include <Syntacts/Operator.hpp>
 #include <vector>
 
 namespace tact {
 
 /// Encapsulates a cue to be played on a single channel
-class SYNTACTS_API Cue : public ISignal {
+class SYNTACTS_API Cue : public Cloneable<Cue, ISignal> {
 public:
 
     /// Default constructor
@@ -28,6 +29,9 @@ public:
 
     /// Sets the primary Envelope of a Cue
     void setEnvelope(Ptr<IEnvelope> env);
+
+    /// Sets the primary Envelope of a Cue to duration seconds long
+    void setEnvelope(float duration, float amplitude = 1.0f);
 
     /// Gets the primary Envelope of a Cue
     Ptr<IEnvelope> getEnvelope() const;
@@ -49,7 +53,7 @@ private:
     std::vector<Ptr<ISignal>> m_sigs; ///< array of Signals
     Ptr<IEnvelope> m_env;             ///< the Cue's primary envelope
 private:
-    SERIALIZE(PARENT(ISignal), MEMBER(m_sigs), MEMBER(m_env))
+    TACT_SERIALIZE(TACT_PARENT(ISignal), TACT_MEMBER(m_sigs), TACT_MEMBER(m_env))
 };
 
 template <typename T, typename ...Args>

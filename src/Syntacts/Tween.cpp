@@ -1,16 +1,8 @@
 #include <Syntacts/Tween.hpp>
-#include "Util/Util.hpp"
+#include <Syntacts/Util.hpp>
 
 namespace tact {
 namespace Tween {
-
-namespace {
-
-inline float lerp(float a, float b, float t) {
-    return a + (b - a) * t;
-}
-
-} // private namespace
 
 float Instant::tween(float a, float b, float t) {
     return b;

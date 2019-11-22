@@ -34,5 +34,6 @@ int main(int argc, char const *argv[])
     Library::exportCue(cue, "libCue.aiff", ExportFormat::AIFF);
     Library::exportCue(cue, "libCue.csv",  ExportFormat::CSV);
 
+    printf("All Good!");
     return 0;
 }

@@ -1,5 +1,5 @@
 #include <Syntacts/Syntacts.hpp>
-#include "Util/Util.hpp"
+#include <Syntacts/Util.hpp>
 
 namespace tact {
 
@@ -37,6 +37,10 @@ void Cue::setEnvelope(Ptr<IEnvelope> env) {
     m_env = env;
 }
 
+void Cue::setEnvelope(float duration, float amplitude) {
+    m_env = create<Envelope>(duration, amplitude);
+}
+
 Ptr<IEnvelope> Cue::getEnvelope() const {
     return m_env;
 }
@@ -56,7 +60,7 @@ float Cue::sample(float t) const {
 }
 
 int Cue::sampleCount(int sampleRate) const {
-    return (int)(m_env->getDuration() * sampleRate);
+    return (int)(m_env->length() * sampleRate);
 }
 
 };

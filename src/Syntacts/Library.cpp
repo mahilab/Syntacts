@@ -1,12 +1,7 @@
-#include <Syntacts/Serialization.hpp>
-#include <Syntacts/Signal.hpp>
-#include <Syntacts/Oscillator.hpp>
-#include <Syntacts/Envelope.hpp>
 #include <Syntacts/Cue.hpp>
-#include <Syntacts/Tween.hpp>
 #include <Syntacts/Library.hpp>
+#include <Syntacts/Sequence.hpp>
 #include "AudioFile.hpp"
-#include "Util/Util.hpp"
 
 #include <fstream>
 #include <filesystem>
@@ -31,6 +26,14 @@ namespace fs = std::filesystem;
 
 CEREAL_REGISTER_TYPE(tact::Scalar);
 CEREAL_REGISTER_TYPE(tact::Ramp);
+CEREAL_REGISTER_TYPE(tact::Noise);
+
+CEREAL_REGISTER_TYPE(tact::IOperator);
+CEREAL_REGISTER_TYPE(tact::Sum);
+CEREAL_REGISTER_TYPE(tact::Difference);
+CEREAL_REGISTER_TYPE(tact::Product);
+
+CEREAL_REGISTER_TYPE(tact::Sequence);
 
 CEREAL_REGISTER_TYPE(tact::IOscillator);
 CEREAL_REGISTER_TYPE(tact::Sine);

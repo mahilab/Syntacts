@@ -3,6 +3,8 @@
 #include <Syntacts/Error.hpp>
 #include <Syntacts/Config.hpp>
 #include <Syntacts/Signal.hpp>
+#include <Syntacts/Operator.hpp>
+#include <Syntacts/Sequence.hpp>
 #include <Syntacts/Oscillator.hpp>
 #include <Syntacts/Envelope.hpp>
 #include <Syntacts/Cue.hpp>

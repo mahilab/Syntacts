@@ -42,6 +42,10 @@ set(SYNTACTS_INCLUDE
     "include/Syntacts/Memory.hpp"
     "include/Syntacts/Session.hpp"
     "include/Syntacts/Library.hpp"
+    "include/Syntacts/Operator.hpp"
+    "include/Syntacts/Sequence.hpp"
+    "include/Syntacts/Curve.hpp"
+    "include/Syntacts/Util.hpp"
 )
 
 # gather private sources
@@ -55,6 +59,11 @@ set(SYNTACTS_SRC
     "src/Syntacts/Library.cpp"
     "src/Syntacts/Tween.cpp"
     "src/Syntacts/Session.cpp"
+    "src/Syntacts/Operator.cpp"
+    "src/Syntacts/Sequence.cpp"
+    "src/Syntacts/Curve.cpp"
+    "src/Syntacts/Util/SPSCQueue.hpp"
+    
 )
 
 # find portaudio
@@ -64,8 +73,6 @@ get_filename_component(portaudio_INCLUDE_DIR ${portaudio_INCLUDE_DIR} DIRECTORY)
 get_filename_component(portaudio_INCLUDE_DIR ${portaudio_INCLUDE_DIR} DIRECTORY)
 get_filename_component(portaudio_INCLUDE_DIR ${portaudio_INCLUDE_DIR} DIRECTORY)
 set(portaudio_INCLUDE_DIR "${portaudio_INCLUDE_DIR}/include")
-
-link_directories(3rdparty/rubberband)
 
 #===============================================================================
 # Syntacts Static C++ Library

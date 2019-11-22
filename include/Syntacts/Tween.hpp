@@ -18,7 +18,7 @@ namespace Tween
     /// Macro to quickly define a new tweening functor
     #define TWEEN(T) struct SYNTACTS_API T : public Function { \
                          virtual float tween(float a, float b, float t) override; \
-                         SERIALIZE(PARENT(Function)); \
+                         TACT_SERIALIZE(TACT_PARENT(Function)); \
                      };
 
     /// Returns b instantly regardless of t.

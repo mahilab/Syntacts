@@ -2,7 +2,6 @@
     #define PA_USE_ASIO 1
 #endif
 
-#include "Util/Util.hpp"
 #include "Util/SPSCQueue.hpp"
 #include <Syntacts/Session.hpp>
 #include <cassert>
@@ -15,10 +14,8 @@
 #include <thread>
 #include <iostream>
 #include <fstream>
-#include "rubberband/RubberBandStretcher.h"
 #include <set>
 #include <numeric>
-#include "Util/Util.hpp"
 
 namespace tact {
 
@@ -52,7 +49,7 @@ public:
     float nextSample() {
         float sample = 0;
         if (!paused) {
-            if (time >= 0 && time <= cue->getEnvelope()->getDuration())
+            if (time >= 0 && time <= cue->getEnvelope()->length())
                 sample = volume * cue->sample(static_cast<float>(time));
             time += sampleLength;
         }
@@ -69,8 +66,6 @@ public:
         volume     = nextVolume;
         lastVolume = nextVolume;
     }
-private:
-    //RubberBand::RubberBandStretcher m_stretcher;
 };
 
 /// Interface for commands sent through command queue
@@ -325,34 +320,34 @@ public:
     }
 
     Device makeDevice(int index) {
-    auto pa_dev_info = Pa_GetDeviceInfo(index);
-    auto pa_api_info = Pa_GetHostApiInfo(pa_dev_info->hostApi);
+        auto pa_dev_info = Pa_GetDeviceInfo(index);
+        auto pa_api_info = Pa_GetHostApiInfo(pa_dev_info->hostApi);
 
-    std::vector<double> sampleRates;
-    sampleRates.reserve(STANDARD_SAMPLE_RATES.size());
+        std::vector<double> sampleRates;
+        sampleRates.reserve(STANDARD_SAMPLE_RATES.size());
 
-    PaStreamParameters params;
-    params.device = index;
-    params.channelCount = pa_dev_info->maxOutputChannels;
-    params.suggestedLatency = Pa_GetDeviceInfo(params.device)->defaultLowOutputLatency;
-    params.hostApiSpecificStreamInfo = nullptr;
-    params.sampleFormat = paFloat32 | paNonInterleaved;
+        PaStreamParameters params;
+        params.device = index;
+        params.channelCount = pa_dev_info->maxOutputChannels;
+        params.suggestedLatency = Pa_GetDeviceInfo(params.device)->defaultLowOutputLatency;
+        params.hostApiSpecificStreamInfo = nullptr;
+        params.sampleFormat = paFloat32 | paNonInterleaved;
 
 
-    for (auto& s : STANDARD_SAMPLE_RATES) {
-        if (Pa_IsFormatSupported(nullptr, &params, s) == paFormatIsSupported)
-            sampleRates.push_back(s);
-    }
+        for (auto& s : STANDARD_SAMPLE_RATES) {
+            if (Pa_IsFormatSupported(nullptr, &params, s) == paFormatIsSupported)
+                sampleRates.push_back(s);
+        }
 
-    return Device{index, 
-                pa_dev_info->name, 
-                index == Pa_GetDefaultOutputDevice(),
-                pa_api_info->type,
-                pa_api_info->name, 
-                index == Pa_GetHostApiInfo( pa_dev_info->hostApi )->defaultOutputDevice,
-                pa_dev_info->maxOutputChannels,
-                std::move(sampleRates),
-                pa_dev_info->defaultSampleRate};
+        return Device{index, 
+                    pa_dev_info->name, 
+                    index == Pa_GetDefaultOutputDevice(),
+                    pa_api_info->type,
+                    pa_api_info->name, 
+                    index == Pa_GetHostApiInfo( pa_dev_info->hostApi )->defaultOutputDevice,
+                    pa_dev_info->maxOutputChannels,
+                    std::move(sampleRates),
+                    pa_dev_info->defaultSampleRate};
     }
 
 

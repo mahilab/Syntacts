@@ -1,21 +1,18 @@
 #include <Syntacts/Envelope.hpp>
 #include <Syntacts/Tween.hpp>
 #include <Syntacts/Oscillator.hpp>
-#include "Util/Util.hpp"
 #include <functional>
 
 namespace tact {
 
-Envelope::Envelope(float duration, float amplitude) :
-    m_duration(duration), m_amplitude(amplitude)
-{ }
-
-float Envelope::sample(float t) const {
-    return t > m_duration ? 0.0f : m_amplitude;
+Envelope::Envelope(float duration, float _amplitude) :
+    amplitude(_amplitude)
+{ 
+    m_length = duration;
 }
 
-float Envelope::getDuration() const {
-    return m_duration;
+float Envelope::sample(float t) const {
+    return t > m_length ? 0.0f : amplitude;
 }
 
 KeyedEnvelope::KeyedEnvelope(float amplitude0)
@@ -25,14 +22,11 @@ KeyedEnvelope::KeyedEnvelope(float amplitude0)
 
 void KeyedEnvelope::addKey(float t, float amplitude, TweenFunc tween) {
     m_keys[t] = std::make_pair(amplitude, tween);
-}
-
-float KeyedEnvelope::getDuration() const {
-    return m_keys.rbegin()->first;
+    m_length = m_keys.rbegin()->first;
 }
 
 float KeyedEnvelope::sample(float t) const {
-    if (t > getDuration())
+    if (t > length())
         return 0.0f;
     auto b = m_keys.lower_bound(t);
     if (b->first == t)
@@ -41,9 +35,6 @@ float KeyedEnvelope::sample(float t) const {
     t = (t - a->first) / (b->first - a->first);
     return b->second.second->tween(a->second.first, b->second.first, t);    
 }
-
-
-
 
 ASR::ASR(float attackTime, float sustainTime, float releaseTime, float attackAmplitude, TweenFunc attackTween, TweenFunc releaseTween)
 {
@@ -62,16 +53,16 @@ ADSR::ADSR(float attackTime, float decayTime, float sustainTime, float releaseTi
 }
 
 OscillatingEnvelope::OscillatingEnvelope(float duration , float amplitude , Ptr<IOscillator> osc) :
-    Envelope(duration, amplitude), m_osc(std::move(osc))
+    Cloneable(duration, amplitude), m_osc(std::move(osc))
 {
     
 }
 
 float OscillatingEnvelope::sample(float t) const {
-    if (t > getDuration())
+    if (t > length())
         return 0.0f;
     float value = m_osc->sample(t);  
-    value = remap(value, -1, 1 , 0 , m_amplitude);
+    value = remap(value, -1, 1 , 0 , amplitude);
     return value;
 }
 
