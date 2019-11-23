@@ -37,8 +37,7 @@ set(SYNTACTS_INCLUDE
     "include/Syntacts/Oscillator.hpp"
     "include/Syntacts/Signal.hpp"
     "include/Syntacts/Config.hpp"
-    "include/Syntacts/Serialization.hpp"
-    "include/Syntacts/Tween.hpp"
+    "include/Syntacts/Macros.hpp"
     "include/Syntacts/Memory.hpp"
     "include/Syntacts/Session.hpp"
     "include/Syntacts/Library.hpp"
@@ -57,7 +56,6 @@ set(SYNTACTS_SRC
     "src/Syntacts/AudioFile.hpp"
     "src/Syntacts/AudioFile.cpp"
     "src/Syntacts/Library.cpp"
-    "src/Syntacts/Tween.cpp"
     "src/Syntacts/Session.cpp"
     "src/Syntacts/Operator.cpp"
     "src/Syntacts/Sequence.cpp"
@@ -108,10 +106,10 @@ endif()
 # Syntacts GUI
 #===============================================================================
 
-find_package(carnot)
-if (carnot_FOUND) 
-    add_subdirectory("gui")
-endif()
+# find_package(carnot)
+# if (carnot_FOUND) 
+#     add_subdirectory("gui")
+# endif()
 
 #===============================================================================
 # Syntacts Examples/Tests

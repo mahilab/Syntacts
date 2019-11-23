@@ -10,3 +10,4 @@
 #include <Syntacts/Cue.hpp>
 #include <Syntacts/Library.hpp>
 #include <Syntacts/Session.hpp>
+#include <Syntacts/Curve.hpp>

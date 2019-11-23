@@ -20,17 +20,17 @@ const std::vector<const char*> g_tweenStrings = {
     "Exponential::InOut"
 };
 
-const std::vector<Ptr<tact::Tween::Function>> g_tweenFuncs = {
-    make<tact::Tween::Linear>(),
-    make<tact::Tween::Smoothstep>(), 
-    make<tact::Tween::Smootherstep>(), 
-    make<tact::Tween::Smootheststep>(), 
-    make<tact::Tween::Sinusoidal::In>(), 
-    make<tact::Tween::Sinusoidal::Out>(), 
-    make<tact::Tween::Sinusoidal::InOut>(), 
-    make<tact::Tween::Exponential::In>(), 
-    make<tact::Tween::Exponential::Out>(), 
-    make<tact::Tween::Exponential::InOut>()
+const std::vector<tact::Curve> g_tweenFuncs = {
+    tact::Curves::Linear(),
+    tact::Curves::Smoothstep(), 
+    tact::Curves::Smootherstep(), 
+    tact::Curves::Smootheststep(), 
+    tact::Curves::Sinusoidal::In(), 
+    tact::Curves::Sinusoidal::Out(), 
+    tact::Curves::Sinusoidal::InOut(), 
+    tact::Curves::Exponential::In(), 
+    tact::Curves::Exponential::Out(), 
+    tact::Curves::Exponential::InOut()
 };
 
 struct CueSequence : public ImSequencer::SequenceInterface {

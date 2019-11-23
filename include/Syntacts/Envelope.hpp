@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Syntacts/Signal.hpp>
-#include <Syntacts/Tween.hpp>
+#include <Syntacts/Curve.hpp>
 #include <Syntacts/Oscillator.hpp>
 #include <utility>
 #include <map>
@@ -34,17 +34,16 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// Envelope with time sequenced amplitudes and tweening functions
+/// Envelope with time sequenced amplitudes and curves
 class SYNTACTS_API KeyedEnvelope : public Cloneable<KeyedEnvelope, IEnvelope> {
 public:
-    typedef Ptr<Tween::Function> TweenFunc;
     /// Constucts Envelope with initial amplitude
     KeyedEnvelope(float amplitude0 = 0.0f);
-    /// Adds a new amplitude at time t seconds. Uses tween to interpolate from previous amplitude.
-    void addKey(float t, float amplitude, TweenFunc tween = create<Tween::Linear>());
+    /// Adds a new amplitude at time t seconds. Uses curve to interpolate from previous amplitude.
+    void addKey(float t, float amplitude, Curve curve = Curves::Linear());
     virtual float sample(float t) const override;
 private:
-    std::map<float, std::pair<float, TweenFunc>> m_keys;
+    std::map<float, std::pair<float, Curve>> m_keys;
 private:
     TACT_SERIALIZE(TACT_PARENT(IEnvelope), TACT_MEMBER(m_keys));    
 };
@@ -56,7 +55,7 @@ class SYNTACTS_API ASR : public Cloneable<ASR, KeyedEnvelope> {
 public:
     /// Constructs ASR Envelope with specified attack, sustain, and release times
     ASR(float attackTime = 1.0f, float sustainTime = 1.0f, float releaseTime = 1.0f, float attackAmlitude = 1.0f, 
-        TweenFunc attackTween = create<Tween::Linear>(), TweenFunc releaseTween = create<Tween::Linear>());
+        Curve attackCurve = Curves::Linear(), Curve releaseCurve = Curves::Linear());
 private:
     TACT_SERIALIZE(TACT_PARENT(KeyedEnvelope));
 };
@@ -68,7 +67,7 @@ class SYNTACTS_API ADSR : public Cloneable<ADSR, KeyedEnvelope> {
 public:
     /// Constructs ASR Envelope with specified attack, sustain, and release times
     ADSR(float attackTime = 1.0f, float decayTime = 1.0f, float sustainTime = 1.0f, float releaseTime = 1.0f, float attackAmplitude = 1.0f, float decayAplitude = 0.5f, 
-         TweenFunc attackTween = create<Tween::Linear>(), TweenFunc decayTween = create<Tween::Linear>(), TweenFunc releaseTween = create<Tween::Linear>());
+         Curve attackCurve = Curves::Linear(), Curve decayCurve = Curves::Linear(), Curve releaseCurve = Curves::Linear());
 private:
     TACT_SERIALIZE(TACT_PARENT(KeyedEnvelope));
 };

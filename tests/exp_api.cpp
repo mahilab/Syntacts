@@ -30,34 +30,34 @@
 
 using namespace std;
 
+struct Scalar {
+    Scalar() : value(0) {};
+    Scalar(float _value) : value(_value) { }
+    float sample(float t) const {
+        return value;
+    }
+    float value;
+};
+
 class Signal {
 public:
 
-    Signal() = default;
+    Signal() : Signal(Scalar()) { }
 
     template<typename T>
-    Signal(T x) : 
-        m_ptr(make_shared<Model<T>>(move(x)))
-    { 
-    }
+    Signal(T signal) : 
+        m_ptr(make_shared<Model<T>>(move(signal)))
+    {}
 
     float sample(float t) const {
         return m_ptr->sample(t); 
     }
 
-    bool valid() const {
-        return m_ptr != nullptr;
-    }
-
 public:
 
     struct Concept {
-        Concept() {
-            std::cout << "Made a concept" << std::endl;
-        }
-        virtual ~Concept() {
-            std::cout << "Dest a concept" << std::endl;
-        }
+        Concept() = default;
+        virtual ~Concept() = default;
         virtual float sample(float t) const = 0;
         template <class Archive>
         void serialize(Archive& archive) {}
@@ -123,21 +123,21 @@ Sum operator+(const Signal& lhs, const Signal& rhs) {
     return Sum(lhs, rhs);
 }
 
-// CEREAL_REGISTER_TYPE(Signal::Model<Sine>);
-// CEREAL_REGISTER_TYPE(Signal::Model<Sum>);
-// CEREAL_REGISTER_TYPE(Signal::Model<Product>);
+CEREAL_REGISTER_TYPE(Signal::Model<Sine>);
+CEREAL_REGISTER_TYPE(Signal::Model<Sum>);
+CEREAL_REGISTER_TYPE(Signal::Model<Product>);
 
-// void save(const Signal& signal, const std::string& name) {
-//     ofstream file(name + ".tact", std::ios::binary);
-//     cereal::BinaryOutputArchive archive(file);
-//     archive(signal); 
-// }
+void save(const Signal& signal, const std::string& name) {
+    ofstream file(name + ".tact", std::ios::binary);
+    cereal::BinaryOutputArchive archive(file);
+    archive(signal); 
+}
 
-// void load(Signal& signal, const std::string& name) {
-//     std::ifstream file(name + ".tact", std::ios::binary);
-//     cereal::BinaryInputArchive archive(file);
-//     archive(signal);
-// }
+void load(Signal& signal, const std::string& name) {
+    std::ifstream file(name + ".tact", std::ios::binary);
+    cereal::BinaryInputArchive archive(file);
+    archive(signal);
+}
 
 int main(int argc, char const *argv[])
 {    
@@ -146,19 +146,7 @@ int main(int argc, char const *argv[])
     Signal y = Sine(200);
     Signal z = x * y;
 
-    myFunc(z);
-    x = Sine(660);
-    myFunc(z);
 
-    Signal zz = x * y;
-    myFunc(zz);
-
-    // save(z, "z");
-    // Signal zz;
-    // load(zz, "z");
-
-    // myFunc2(z);
-    // myFunc2(zz);
 
 
     return 0;

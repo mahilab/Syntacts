@@ -1,6 +1,7 @@
 #include <Syntacts/Cue.hpp>
 #include <Syntacts/Library.hpp>
 #include <Syntacts/Sequence.hpp>
+#include <Syntacts/Curve.hpp>
 #include "AudioFile.hpp"
 
 #include <fstream>
@@ -51,42 +52,42 @@ CEREAL_REGISTER_TYPE(tact::ASR);
 CEREAL_REGISTER_TYPE(tact::ADSR);
 CEREAL_REGISTER_TYPE(tact::OscillatingEnvelope);
 
-CEREAL_REGISTER_TYPE(tact::Tween::Instant);
-CEREAL_REGISTER_TYPE(tact::Tween::Delayed);
-CEREAL_REGISTER_TYPE(tact::Tween::Linear);
-CEREAL_REGISTER_TYPE(tact::Tween::Smoothstep);
-CEREAL_REGISTER_TYPE(tact::Tween::Smootherstep);
-CEREAL_REGISTER_TYPE(tact::Tween::Smootheststep);
-CEREAL_REGISTER_TYPE(tact::Tween::Quadratic::In);
-CEREAL_REGISTER_TYPE(tact::Tween::Quadratic::Out);
-CEREAL_REGISTER_TYPE(tact::Tween::Quadratic::InOut);
-CEREAL_REGISTER_TYPE(tact::Tween::Cubic::In);
-CEREAL_REGISTER_TYPE(tact::Tween::Cubic::Out);
-CEREAL_REGISTER_TYPE(tact::Tween::Cubic::InOut);
-CEREAL_REGISTER_TYPE(tact::Tween::Quartic::In);
-CEREAL_REGISTER_TYPE(tact::Tween::Quartic::Out);
-CEREAL_REGISTER_TYPE(tact::Tween::Quartic::InOut);
-CEREAL_REGISTER_TYPE(tact::Tween::Quintic::In);
-CEREAL_REGISTER_TYPE(tact::Tween::Quintic::Out);
-CEREAL_REGISTER_TYPE(tact::Tween::Quintic::InOut);
-CEREAL_REGISTER_TYPE(tact::Tween::Sinusoidal::In);
-CEREAL_REGISTER_TYPE(tact::Tween::Sinusoidal::Out);
-CEREAL_REGISTER_TYPE(tact::Tween::Sinusoidal::InOut);
-CEREAL_REGISTER_TYPE(tact::Tween::Exponential::In);
-CEREAL_REGISTER_TYPE(tact::Tween::Exponential::Out);
-CEREAL_REGISTER_TYPE(tact::Tween::Exponential::InOut);
-CEREAL_REGISTER_TYPE(tact::Tween::Circular::In);
-CEREAL_REGISTER_TYPE(tact::Tween::Circular::Out);
-CEREAL_REGISTER_TYPE(tact::Tween::Circular::InOut);
-CEREAL_REGISTER_TYPE(tact::Tween::Elastic::In);
-CEREAL_REGISTER_TYPE(tact::Tween::Elastic::Out);
-CEREAL_REGISTER_TYPE(tact::Tween::Elastic::InOut);
-CEREAL_REGISTER_TYPE(tact::Tween::Back::In);
-CEREAL_REGISTER_TYPE(tact::Tween::Back::Out);
-CEREAL_REGISTER_TYPE(tact::Tween::Back::InOut);
-CEREAL_REGISTER_TYPE(tact::Tween::Bounce::In);
-CEREAL_REGISTER_TYPE(tact::Tween::Bounce::Out);
-CEREAL_REGISTER_TYPE(tact::Tween::Bounce::InOut);
+CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Instant>);
+CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Delayed>);
+CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Linear>);
+CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Smoothstep>);
+CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Smootherstep>);
+CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Smootheststep>);
+CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Quadratic::In>);
+CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Quadratic::Out>);
+CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Quadratic::InOut>);
+CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Cubic::In>);
+CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Cubic::Out>);
+CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Cubic::InOut>);
+CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Quartic::In>);
+CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Quartic::Out>);
+CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Quartic::InOut>);
+CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Quintic::In>);
+CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Quintic::Out>);
+CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Quintic::InOut>);
+CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Sinusoidal::In>);
+CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Sinusoidal::Out>);
+CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Sinusoidal::InOut>);
+CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Exponential::In>);
+CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Exponential::Out>);
+CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Exponential::InOut>);
+CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Circular::In>);
+CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Circular::Out>);
+CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Circular::InOut>);
+CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Elastic::In>);
+CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Elastic::Out>);
+CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Elastic::InOut>);
+CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Back::In>);
+CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Back::Out>);
+CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Back::InOut>);
+CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Bounce::In>);
+CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Bounce::Out>);
+CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Bounce::InOut>);
 
 namespace tact {
 

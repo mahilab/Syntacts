@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Syntacts/Config.hpp>
-#include <Syntacts/Serialization.hpp>
+#include <Syntacts/Macros.hpp>
 #include <Syntacts/Memory.hpp>
 #include <Syntacts/Util.hpp>
 
