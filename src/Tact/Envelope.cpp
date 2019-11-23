@@ -1,5 +1,5 @@
-#include <Syntacts/Envelope.hpp>
-#include <Syntacts/Oscillator.hpp>
+#include <Tact/Envelope.hpp>
+#include <Tact/Oscillator.hpp>
 #include <functional>
 
 namespace tact {

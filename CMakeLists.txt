@@ -31,30 +31,29 @@ include(GNUInstallDirs)
 
 # gather public includes
 set(SYNTACTS_INCLUDE 
-    "include/Syntacts/Envelope.hpp"
-    "include/Syntacts/Oscillator.hpp"
-    "include/Syntacts/Signal.hpp"
-    "include/Syntacts/Config.hpp"
-    "include/Syntacts/Macros.hpp"
-    "include/Syntacts/Session.hpp"
-    "include/Syntacts/Library.hpp"
-    "include/Syntacts/Operator.hpp"
-    "include/Syntacts/Sequence.hpp"
-    "include/Syntacts/Curve.hpp"
-    "include/Syntacts/Util.hpp"
+    "include/Tact/Envelope.hpp"
+    "include/Tact/Oscillator.hpp"
+    "include/Tact/Signal.hpp"
+    "include/Tact/Macros.hpp"
+    "include/Tact/Session.hpp"
+    "include/Tact/Library.hpp"
+    "include/Tact/Operator.hpp"
+    "include/Tact/Sequence.hpp"
+    "include/Tact/Curve.hpp"
+    "include/Tact/Util.hpp"
 )
 
 # gather private sources
 set(SYNTACTS_SRC 
-    "src/Syntacts/Envelope.cpp"
-    "src/Syntacts/Oscillator.cpp"
-    "src/Syntacts/Signal.cpp"
-    "src/Syntacts/Library.cpp"
-    "src/Syntacts/Session.cpp"
-    "src/Syntacts/Operator.cpp"
-    "src/Syntacts/Sequence.cpp"
-    "src/Syntacts/Curve.cpp"
-    "src/Syntacts/Util/SPSCQueue.hpp"
+    "src/Tact/Envelope.cpp"
+    "src/Tact/Oscillator.cpp"
+    "src/Tact/Signal.cpp"
+    "src/Tact/Library.cpp"
+    "src/Tact/Session.cpp"
+    "src/Tact/Operator.cpp"
+    "src/Tact/Sequence.cpp"
+    "src/Tact/Curve.cpp"
+    "src/Tact/Util/SPSCQueue.hpp"
     
 )
 
@@ -113,9 +112,9 @@ if (SYNTACTS_EXAMPLES)
     add_subdirectory("examples")
 endif()
 
-# if (SYNTACTS_TEST)
-#     add_subdirectory("tests")
-# endif()
+if (SYNTACTS_TEST)
+    add_subdirectory("tests")
+endif()
 
 #===============================================================================
 # Install

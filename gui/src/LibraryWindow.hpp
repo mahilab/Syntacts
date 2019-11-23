@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Syntacts/Syntacts.hpp>
+#include <Tact/Syntacts.hpp>
 #include <carnot>
 #include <filesystem>
 #include "helpers.hpp"

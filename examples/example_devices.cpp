@@ -1,4 +1,4 @@
-#include <Syntacts/Session.hpp>
+#include <Tact/Session.hpp>
 #include <iostream>
 
 using namespace tact;

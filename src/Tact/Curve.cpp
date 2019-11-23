@@ -1,5 +1,5 @@
-#include <Syntacts/Curve.hpp>
-#include <Syntacts/Util.hpp>
+#include <Tact/Curve.hpp>
+#include <Tact/Util.hpp>
 
 namespace tact
 {

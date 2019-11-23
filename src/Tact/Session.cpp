@@ -3,7 +3,7 @@
 #endif
 
 #include "Util/SPSCQueue.hpp"
-#include <Syntacts/Session.hpp>
+#include <Tact/Session.hpp>
 #include <cassert>
 #include "portaudio.h"
 #include "pa_asio.h"

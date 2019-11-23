@@ -2,9 +2,9 @@
 #define _CRT_SECURE_NO_WARNINGS
 #endif
 
-#include <Syntacts/Library.hpp>
-#include <Syntacts/Sequence.hpp>
-#include <Syntacts/Curve.hpp>
+#include <Tact/Library.hpp>
+#include <Tact/Sequence.hpp>
+#include <Tact/Curve.hpp>
 
 #include <fstream>
 #include <filesystem>

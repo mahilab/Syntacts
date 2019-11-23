@@ -1,6 +1,6 @@
 #include "plugin.hpp"
-#include <Syntacts/Syntacts.hpp>
-#include <Syntacts/Session.hpp>
+#include <Tact/Syntacts.hpp>
+#include <Tact/Session.hpp>
 #include <unordered_map>
 #include <iostream>
 

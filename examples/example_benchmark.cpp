@@ -1,4 +1,4 @@
-#include <tact>
+#include <syntacts>
 #include <chrono>
 #include <thread>
 #include <iostream>
@@ -12,7 +12,7 @@ int main(int argc, char const *argv[])
     // SYNTACTS SYNTAX 
     ///////////////////////////////////////////////////////////////////////////
 
-    Signal sig =  0.5f * Sine(440) * Saw(220) * ASR() << 1 << Triangle(400) << ADSR();
+    Signal sig =  0.5f * Sine(440) * Saw(220) * ASR();
     int n = 100000000;
     volatile double sum = 0;
     auto start = std::chrono::high_resolution_clock::now();

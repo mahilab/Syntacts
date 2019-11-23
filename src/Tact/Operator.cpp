@@ -1,4 +1,4 @@
-#include <Syntacts/Operator.hpp>
+#include <Tact/Operator.hpp>
 #include <algorithm>
 
 namespace tact

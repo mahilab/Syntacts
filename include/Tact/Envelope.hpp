@@ -1,8 +1,8 @@
 #pragma once
 
-#include <Syntacts/Signal.hpp>
-#include <Syntacts/Curve.hpp>
-#include <Syntacts/Oscillator.hpp>
+#include <Tact/Signal.hpp>
+#include <Tact/Curve.hpp>
+#include <Tact/Oscillator.hpp>
 #include <utility>
 #include <map>
 

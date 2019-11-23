@@ -1,4 +1,4 @@
-#include <Syntacts/Sequence.hpp>
+#include <Tact/Sequence.hpp>
 #include <iostream>
 
 namespace tact {

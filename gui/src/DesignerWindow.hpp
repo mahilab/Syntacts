@@ -1,7 +1,7 @@
 #pragma once
 
 #include <carnot>
-#include <Syntacts/Syntacts.hpp>
+#include <Tact/Syntacts.hpp>
 #include "helpers.hpp"
 #include "ImGui/ImSequencer.hpp"
 

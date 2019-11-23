@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Syntacts/Macros.hpp>
-#include <Syntacts/Util.hpp>
+#include <Tact/Macros.hpp>
+#include <Tact/Util.hpp>
 #include <memory>
 
 namespace tact

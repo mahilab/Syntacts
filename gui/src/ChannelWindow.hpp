@@ -4,7 +4,7 @@
 #include "DeviceBar.hpp"
 #include "DesignerWindow.hpp"
 #include "LibraryWindow.hpp"
-#include <Syntacts/Syntacts.hpp>
+#include <Tact/Syntacts.hpp>
 #include "helpers.hpp"
 #include <deque>
 

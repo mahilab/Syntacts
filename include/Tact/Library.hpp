@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Syntacts/Signal.hpp>
+#include <Tact/Signal.hpp>
 #include <string>
 
 namespace tact {

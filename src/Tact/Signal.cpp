@@ -1,4 +1,4 @@
-#include <Syntacts/Signal.hpp>
+#include <Tact/Signal.hpp>
 #include <random>
 #include <ctime>
 

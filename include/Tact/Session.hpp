@@ -1,10 +1,10 @@
 #pragma once
 
-#include <Syntacts/Error.hpp>
-#include <Syntacts/Oscillator.hpp>
-#include <Syntacts/Envelope.hpp>
-#include <Syntacts/Sequence.hpp>
-#include <Syntacts/Operator.hpp>
+#include <Tact/Error.hpp>
+#include <Tact/Oscillator.hpp>
+#include <Tact/Envelope.hpp>
+#include <Tact/Sequence.hpp>
+#include <Tact/Operator.hpp>
 #include <string>
 
 namespace tact {

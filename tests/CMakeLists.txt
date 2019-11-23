@@ -17,3 +17,6 @@ add_executable(clone clone.cpp)
 add_executable(clone2 clone2.cpp)
 
 add_executable(te te.cpp)
+
+add_executable(memory memory.cpp)
+target_link_libraries(memory syntacts)

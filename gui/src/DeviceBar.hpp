@@ -1,7 +1,7 @@
 #pragma once
 
 #include <carnot>
-#include <Syntacts/Syntacts.hpp>
+#include <Tact/Syntacts.hpp>
 #include "InfoBar.hpp"
 #include "helpers.hpp"
 #include <deque>

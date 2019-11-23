@@ -1,4 +1,4 @@
-#include <tact>
+#include <syntacts>
 #include <iostream>
 #include <thread>
 #include <chrono>

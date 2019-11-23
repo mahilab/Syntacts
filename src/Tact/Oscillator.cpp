@@ -1,4 +1,4 @@
-#include <Syntacts/Oscillator.hpp>
+#include <Tact/Oscillator.hpp>
 
 namespace tact
 {
