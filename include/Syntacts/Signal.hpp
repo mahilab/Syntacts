@@ -1,9 +1,8 @@
 #pragma once
 
-#include <Syntacts/Config.hpp>
 #include <Syntacts/Macros.hpp>
-#include <Syntacts/Memory.hpp>
 #include <Syntacts/Util.hpp>
+#include <memory>
 
 namespace tact
 {
@@ -11,7 +10,7 @@ namespace tact
 ///////////////////////////////////////////////////////////////////////////////
 
 /// Generates time variant samples 
-class Signal {
+class SYNTACTS_API Signal {
 public:
     /// Default constructor
     Signal();
@@ -51,38 +50,13 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// An abstract base class which generates time variant samples
-class SYNTACTS_API ISignal : public Cloneable<Interface<ISignal>>
-{
-public:
-    /// Default constructor
-    ISignal();
-    /// Virtual destructor
-    virtual ~ISignal();
-    /// Override to implement generator sampling behavior (required).
-    virtual float sample(float t) const = 0;
-    /// Returns the length of the Signal in seconds
-    float length() const;
-public:
-    /// Returns the number of Signals across the entire process
-    static int count();
-protected:
-    float m_length; 
-private:
-    static int s_count;
-private:
-    // Serialization
-    TACT_SERIALIZE(TACT_MEMBER(m_length));
-};
-
-///////////////////////////////////////////////////////////////////////////////
-
 /// A Signal that emits a constant value over time
-class SYNTACTS_API Scalar : public Cloneable<Scalar, ISignal>
+class SYNTACTS_API Scalar
 {
 public:
     Scalar(float value = 1);
-    virtual float sample(float t) const override;
+    float sample(float t) const;
+    float length() const;
 public:
     float value;
 private:
@@ -92,12 +66,13 @@ private:
 ///////////////////////////////////////////////////////////////////////////////
 
 /// A Signal that increases or decreases over time
-class SYNTACTS_API Ramp : public Cloneable<Ramp, ISignal>
+class SYNTACTS_API Ramp 
 {
 public:
     Ramp(float initial = 1, float rate = 0);
     Ramp(float initial, float final, float span);
-    virtual float sample(float t) const override;
+    float sample(float t) const;
+    float length() const;
 public:
     float initial;
     float rate;
@@ -108,13 +83,16 @@ private:
 ///////////////////////////////////////////////////////////////////////////////
 
 /// A signal that generates white noise
-class SYNTACTS_API Noise : public Cloneable<Noise, ISignal>
+class SYNTACTS_API Noise
 {
 public:
     Noise();
-    virtual float sample(float t) const override;
+    float sample(float t) const;
+    float length() const;
 private:
-    TACT_SERIALIZE(TACT_PARENT(ISignal));
+    friend class cereal::access;
+    template <class Archive>
+    void serialize(Archive& archive) {}
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -4,14 +4,13 @@
 
 namespace tact {
 
-Envelope::Envelope(float duration, float _amplitude) :
+Envelope::Envelope(float _duration, float _amplitude) :
+    duration(_duration),
     amplitude(_amplitude)
-{ 
-    m_length = duration;
-}
+{ }
 
 float Envelope::sample(float t) const {
-    return t > m_length ? 0.0f : amplitude;
+    return t > duration ? 0.0f : amplitude;
 }
 
 KeyedEnvelope::KeyedEnvelope(float amplitude0)
@@ -21,7 +20,6 @@ KeyedEnvelope::KeyedEnvelope(float amplitude0)
 
 void KeyedEnvelope::addKey(float t, float amplitude, Curve curve) {
     m_keys[t] = std::make_pair(amplitude, curve);
-    m_length = m_keys.rbegin()->first;
 }
 
 float KeyedEnvelope::sample(float t) const {
@@ -32,7 +30,12 @@ float KeyedEnvelope::sample(float t) const {
         return b->second.first;
     auto a = std::prev(b);
     t = (t - a->first) / (b->first - a->first);
-    return b->second.second(a->second.first, b->second.first, t);    
+    float sample = b->second.second(a->second.first, b->second.first, t);    
+    return sample;
+}
+
+float KeyedEnvelope::length() const {
+    return m_keys.rbegin()->first;
 }
 
 ASR::ASR(float attackTime, float sustainTime, float releaseTime, float attackAmplitude, Curve attackCurve, Curve releaseCurve)
@@ -51,18 +54,20 @@ ADSR::ADSR(float attackTime, float decayTime, float sustainTime, float releaseTi
     addKey(attackTime + decayTime + sustainTime + releaseTime, 0.0f, releaseCurve);
 }
 
-OscillatingEnvelope::OscillatingEnvelope(float duration , float amplitude , Ptr<IOscillator> osc) :
-    Cloneable(duration, amplitude), m_osc(std::move(osc))
-{
-    
-}
+SignalEnvelope::SignalEnvelope(Signal _signal, float _duration , float _amplitude) :
+    signal(_signal), duration(_duration), amplitude(_amplitude)
+{ }
 
-float OscillatingEnvelope::sample(float t) const {
+float SignalEnvelope::sample(float t) const {
     if (t > length())
         return 0.0f;
-    float value = m_osc->sample(t);  
+    float value = signal.sample(t);  
     value = remap(value, -1, 1 , 0 , amplitude);
     return value;
+}
+
+float SignalEnvelope::length() const {
+    return duration;
 }
 
 } // namespace tact

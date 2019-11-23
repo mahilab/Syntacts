@@ -208,7 +208,7 @@ public:
             return SyntactsError_NotOpen;
         if (!(channel < m_channels.size()))
             return SyntactsError_InvalidChannel;
-        auto command = create<Play>();
+        auto command = std::make_shared<Play>();
         command->signal = signal;
         command->channel = channel;
         command->inSeconds = inSeconds;
@@ -222,7 +222,7 @@ public:
             return SyntactsError_NotOpen;
         if (!(channel < m_channels.size()))
             return SyntactsError_InvalidChannel;
-        auto command = create<Stop>();
+        auto command = std::make_shared<Stop>();
         command->channel = channel;   
         bool success = m_commands.try_push(std::move(command));
         assert(success);
@@ -234,7 +234,7 @@ public:
             return SyntactsError_NotOpen;
         if (!(channel < m_channels.size()))
             return SyntactsError_InvalidChannel;
-        auto command = create<Pause>();
+        auto command = std::make_shared<Pause>();
         command->channel = channel;   
         command->paused  = paused;
         bool success = m_commands.try_push(std::move(command));
@@ -247,7 +247,7 @@ public:
             return SyntactsError_NotOpen;
         if (!(channel < m_channels.size()))
             return SyntactsError_InvalidChannel;
-        auto command = create<Volume>();
+        auto command = std::make_shared<Volume>();
         command->channel = channel;
         command->volume  = clamp01(volume);
         bool success = m_commands.try_push(std::move(command));
@@ -323,7 +323,7 @@ public:
         auto pa_dev_info = Pa_GetDeviceInfo(index);
         auto pa_api_info = Pa_GetHostApiInfo(pa_dev_info->hostApi);
 
-        std::vector<double> sampleRates;
+        std::vector<int> sampleRates;
         sampleRates.reserve(STANDARD_SAMPLE_RATES.size());
 
         PaStreamParameters params;
@@ -336,7 +336,7 @@ public:
 
         for (auto& s : STANDARD_SAMPLE_RATES) {
             if (Pa_IsFormatSupported(nullptr, &params, s) == paFormatIsSupported)
-                sampleRates.push_back(s);
+                sampleRates.push_back(static_cast<int>(s));
         }
 
         return Device{index, 
@@ -347,7 +347,7 @@ public:
                     index == Pa_GetHostApiInfo( pa_dev_info->hostApi )->defaultOutputDevice,
                     pa_dev_info->maxOutputChannels,
                     std::move(sampleRates),
-                    pa_dev_info->defaultSampleRate};
+                    static_cast<int>(pa_dev_info->defaultSampleRate)};
     }
 
 
@@ -405,7 +405,7 @@ public:
 
     std::vector<Channel> m_channels;
 
-    SPSCQueue<Ptr<Command>> m_commands;
+    SPSCQueue<std::shared_ptr<Command>> m_commands;
     PaStream* m_stream;
 
     double m_sampleRate = 0;

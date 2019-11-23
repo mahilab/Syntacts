@@ -2,11 +2,9 @@
 #define _CRT_SECURE_NO_WARNINGS
 #endif
 
-#include <Syntacts/Cue.hpp>
 #include <Syntacts/Library.hpp>
 #include <Syntacts/Sequence.hpp>
 #include <Syntacts/Curve.hpp>
-#include "AudioFile.hpp"
 
 #include <fstream>
 #include <filesystem>
@@ -23,7 +21,8 @@
 #include <cereal/types/functional.hpp>
 #include <cereal/types/map.hpp>
 #include <cereal/types/utility.hpp>
-#include <cereal/types/atomic.hpp>
+
+#include <AudioFile/AudioFile.h>
 
 namespace fs = std::filesystem;
 
@@ -98,8 +97,8 @@ namespace tact {
 namespace Library {
 
 namespace {
-    void ensureLibraryDirectoryExists() {
-        fs::create_directories(getLibraryDirectory());
+    bool ensureLibraryDirectoryExists() {
+        return fs::create_directories(getLibraryDirectory());
     }
 }
 
@@ -109,72 +108,91 @@ const std::string& getLibraryDirectory() {
     return libFolder;
 }
 
-bool saveCue(const Ptr<Cue>& cue, const std::string& name, SaveFormat format) {  
+bool saveSignal(const Signal& signal, const std::string& name) {  
     try {  
-        ensureLibraryDirectoryExists();
-        if (format == SaveFormat::Binary) {
-            std::ofstream file(getLibraryDirectory() + name + ".tact", std::ios::binary);
+        static bool folderExists = ensureLibraryDirectoryExists();
+        std::ofstream file;
+        file.open(getLibraryDirectory() + name + ".tact", std::ios::binary);
+        if (file) {
             cereal::BinaryOutputArchive archive(file);
-            archive(cue);  
+            archive(signal);  
+            return true;
         }
-        else if (format == SaveFormat::JSON) {
-            std::ofstream file(getLibraryDirectory() + name + ".json");
-            cereal::JSONOutputArchive archive(file);
-            archive(cue); 
-        }
-        return true;
+        return false;
     }
     catch (...) {
         return false;
     }
 }
 
-Ptr<Cue> loadCue(const std::string& name, SaveFormat format) {
-    Ptr<Cue> cue = nullptr;
+bool loadSignal(Signal& signal, const std::string& name) {
     try {
-        ensureLibraryDirectoryExists();
-        if (format == SaveFormat::Binary) {
-            std::ifstream file(getLibraryDirectory() + name + ".tact", std::ios::binary);
+        static bool folderExists = ensureLibraryDirectoryExists();
+        std::ifstream file;
+        file.open(getLibraryDirectory() + name + ".tact", std::ios::binary);
+        if (file) {
             cereal::BinaryInputArchive archive(file);
-            archive(cue);
+            archive(signal);
+            return true;
         }
-        else if (format == SaveFormat::JSON) {
-            std::ifstream file(getLibraryDirectory() + name + ".json");
-            cereal::JSONInputArchive archive(file);
-            archive(cue);
-        }
+        return false;
     }
-    catch (...) { }
-    return cue;
+    catch (...) {
+        return false;
+     }
 }
 
-bool exportCue(const Ptr<Cue>& cue, const std::string& filePath, ExportFormat format, double sampleRate) {    
-    double sampleLength = 1.0 / sampleRate;
+bool exportSignal(const Signal& signal, const std::string& filePath, FileFormat format, int sampleRate, float maxLength) {
     try {
-        std::vector<float> buffer(cue->sampleCount((int)sampleRate));
+
+        auto path = fs::path(filePath);
+        if (format == FileFormat::WAV) {
+            path.replace_extension(".wav");
+        }
+        else if (format == FileFormat::AIFF)
+            path.replace_extension(".aiff");
+        else if (format == FileFormat::CSV)
+            path.replace_extension(".csv");
+        else if (format == FileFormat::JSON)
+            path.replace_extension(".json");
+
+
+        // export using cereal if JSON
+        if (format == FileFormat::JSON) {
+            std::ofstream file;
+            file.open(path);
+            cereal::JSONOutputArchive archive(file);
+            archive(signal); 
+            return true;
+        }
+
+        double sampleLength = 1.0 / sampleRate;
+        auto length = signal.length() > maxLength ? maxLength : signal.length();
+        std::vector<double> buffer(static_cast<std::size_t>(length * sampleRate));
         double t = 0;
         for (auto& sample : buffer) {
-            sample = cue->sample(static_cast<float>(t));  
+            sample = signal.sample(static_cast<float>(t));  
             t += sampleLength;
         }
-        if (format == ExportFormat::WAV || format == ExportFormat::AIFF) {
-            AudioFile<float>::AudioBuffer audioBuffer;
-            audioBuffer.push_back(buffer);
-            AudioFileFormat audioFormat = format == ExportFormat::WAV ? AudioFileFormat::Wave : AudioFileFormat::Aiff;
-            AudioFile<float> file;
+
+        if (format == FileFormat::WAV || format == FileFormat::AIFF) {
+            AudioFile<double>::AudioBuffer audioBuffer;
+            audioBuffer.emplace_back(std::move(buffer));
+            AudioFileFormat audioFormat = format == FileFormat::WAV ? AudioFileFormat::Wave : AudioFileFormat::Aiff;
+            AudioFile<double> file;
             if (!file.setAudioBuffer(audioBuffer))
                 return false;
             file.setBitDepth(16);
-            file.setSampleRate((int)sampleRate);
-            if (!file.save(filePath, audioFormat))
+            file.setSampleRate(sampleRate);
+            if (!file.save(path.generic_string(), audioFormat))
                 return false;
         }
-        else if (format == ExportFormat::CSV) {
-            std::ofstream s;
-            s.open(filePath);
+        else if (format == FileFormat::CSV) {
+            std::ofstream file;
+            file.open(path);
             for (auto& sample : buffer)
-                s << sample << std::endl;
-            s.close();
+                file << sample << std::endl;
+            file.close();
         }
         return true;
     }

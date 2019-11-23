@@ -1,22 +1,25 @@
 #pragma once
 
 #include <Syntacts/Error.hpp>
-#include <Syntacts/Cue.hpp>
+#include <Syntacts/Oscillator.hpp>
+#include <Syntacts/Envelope.hpp>
+#include <Syntacts/Sequence.hpp>
+#include <Syntacts/Operator.hpp>
 #include <string>
 
 namespace tact {
 
 /// Useful device information
 struct Device {
-    int index;                        ///< device index
-    std::string name;                 ///< device name
-    bool isDefault;                   ///< is this the default device?
-    int apiIndex;                     ///< device API index
-    std::string apiName;              ///< device API name
-    bool isApiDefault;                ///< is this the default device for its API?
-    int maxChannels;                  ///< maximum number of output channels
-    std::vector<double> sampleRates;  ///< supported sample rates
-    double defaultSampleRate;         ///< the device's default sample rate
+    int index;                     ///< device index
+    std::string name;              ///< device name
+    bool isDefault;                ///< is this the default device?
+    int apiIndex;                  ///< device API index
+    std::string apiName;           ///< device API name
+    bool isApiDefault;             ///< is this the default device for its API?
+    int maxChannels;               ///< maximum number of output channels
+    std::vector<int> sampleRates;  ///< supported sample rates
+    int defaultSampleRate;         ///< the device's default sample rate
 };
 
 class Session {

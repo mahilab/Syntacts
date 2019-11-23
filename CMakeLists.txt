@@ -31,14 +31,11 @@ include(GNUInstallDirs)
 
 # gather public includes
 set(SYNTACTS_INCLUDE 
-    "include/Syntacts/Syntacts.hpp"
-    "include/Syntacts/Cue.hpp"
     "include/Syntacts/Envelope.hpp"
     "include/Syntacts/Oscillator.hpp"
     "include/Syntacts/Signal.hpp"
     "include/Syntacts/Config.hpp"
     "include/Syntacts/Macros.hpp"
-    "include/Syntacts/Memory.hpp"
     "include/Syntacts/Session.hpp"
     "include/Syntacts/Library.hpp"
     "include/Syntacts/Operator.hpp"
@@ -49,12 +46,9 @@ set(SYNTACTS_INCLUDE
 
 # gather private sources
 set(SYNTACTS_SRC 
-    "src/Syntacts/Cue.cpp"
     "src/Syntacts/Envelope.cpp"
     "src/Syntacts/Oscillator.cpp"
     "src/Syntacts/Signal.cpp"
-    "src/Syntacts/AudioFile.hpp"
-    "src/Syntacts/AudioFile.cpp"
     "src/Syntacts/Library.cpp"
     "src/Syntacts/Session.cpp"
     "src/Syntacts/Operator.cpp"

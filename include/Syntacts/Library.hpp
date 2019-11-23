@@ -1,40 +1,31 @@
 #pragma once
 
-#include <Syntacts/Config.hpp>
-#include <Syntacts/Memory.hpp>
-#include <memory>
+#include <Syntacts/Signal.hpp>
 #include <string>
 
 namespace tact {
 
-class Cue;
-
-/// Formats used for saving and loading seralized Cues
-enum class SaveFormat {
-    Binary, ///< fast saving/loading and compact, but not human readable
-    JSON    ///< slower saving/loading and large, but human readable
-};
-
-/// Formats used for exporting Cues
-enum class ExportFormat {
+/// Formats used for exporting Signals
+enum class FileFormat {
     WAV,   ///< WAV audio file format
     AIFF,  ///< AIFF audio file format
-    CSV    ///< comman-separated-value format
+    CSV,   ///< comman-separated-value format,
+    JSON   ///< human readable serialized format
 };
 
 namespace Library {
 
-/// Returns the directory to which all library cues are saved/loaded (usually C:\Users\[user]\AppData\Roaming\Syntacts\Library)
+/// Returns the directory to which all library Signals are saved/loaded (usually C:\Users\[user]\AppData\Roaming\Syntacts\Library)
 const std::string& getLibraryDirectory();
 
-/// Saves a serialized cue to the global Syntacts cue library
-bool saveCue(const Ptr<Cue>& cue, const std::string& name, SaveFormat format = SaveFormat::Binary);
+/// Saves a serialized Signal to the global Syntacts Signal library
+bool saveSignal(const Signal& signal, const std::string& name);
 
-/// Loads a serialized Cue from the global Syntacts Cue library
-Ptr<Cue> loadCue(const std::string& name, SaveFormat format = SaveFormat::Binary);
+/// Loads a serialized Signal from the global Syntacts Signal library
+bool loadSignal(Signal& signal, const std::string& name);
 
-/// Saves a Cue to an audio file or CSV
-bool exportCue(const Ptr<Cue>& cue, const std::string& filePath, ExportFormat format = ExportFormat::WAV, double sampleRate = 44100); 
+/// Saves a Signal to an audio file or CSV
+bool exportSignal(const Signal& signal, const std::string& filePath, FileFormat format = FileFormat::WAV, int sampleRate = 48000, float maxLength = 60); 
 
 } // namespace Library
 
