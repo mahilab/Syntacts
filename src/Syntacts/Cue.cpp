@@ -1,4 +1,4 @@
-#include <Syntacts/Syntacts.hpp>
+#include <tact>
 #include <Syntacts/Util.hpp>
 
 namespace tact {

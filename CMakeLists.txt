@@ -98,9 +98,9 @@ target_link_libraries(syntacts PUBLIC portaudio_static PRIVATE) # rubberband-lib
 # Syntacts Plugin DLL
 #===============================================================================
 
-if (SYNTACTS_PLUGIN)
-    add_subdirectory("plugin")
-endif()
+# if (SYNTACTS_PLUGIN)
+#     add_subdirectory("plugin")
+# endif()
 
 #===============================================================================
 # Syntacts GUI
@@ -119,9 +119,9 @@ if (SYNTACTS_EXAMPLES)
     add_subdirectory("examples")
 endif()
 
-if (SYNTACTS_TEST)
-    add_subdirectory("tests")
-endif()
+# if (SYNTACTS_TEST)
+#     add_subdirectory("tests")
+# endif()
 
 #===============================================================================
 # Install

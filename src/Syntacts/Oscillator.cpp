@@ -21,16 +21,11 @@ float Square::sample(float t) const {
 }
 
 float Saw::sample(float t) const {
-    // return -2.0f / PI * std::atan(std::cos(PI * frequency * t) / std::sin(PI * frequency * t));
-    return (2.0f / PI) * (frequency->sample(t) * PI * std::fmod(t, 1.0f / frequency->sample(t)) - (PI / 2.0f));
-    // float out = 0.0;
-    // for (float n = 1.0; n < 10; n++)
-    //     out += (sin(n * TWO_PI * frequency * t)) / n;
-    // return out * (2.0f / PI);
+    return 2 * INV_PI * (frequency->sample(t) * PI * std::fmod(t, 1.0f / frequency->sample(t)) - HALF_PI);
 }
 
 float Triangle::sample(float t) const {
-    return 2.0f / PI * std::asin(std::sin(2.0f * PI * frequency->sample(t) * t));
+    return 2 * INV_PI * std::asin(std::sin(TWO_PI * frequency->sample(t) * t));
 }
 
 SineFM::SineFM(float _frequency, float _modulation, float _index) :

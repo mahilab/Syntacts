@@ -5,6 +5,16 @@
 namespace tact
 {
 
+Signal::Signal() : Signal(Scalar()) { }
+
+float Signal::sample(float t) const {
+    return m_ptr->sample(t); 
+}
+
+float Signal::length() const {
+    return m_ptr->length();
+}
+
 int ISignal::s_count = 0;
 
 ISignal::ISignal() :

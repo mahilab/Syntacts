@@ -49,34 +49,34 @@ public:
     /// Returns true if a device is open, false otherwise
     bool isOpen() const;
 
-    /// Plays a Cue on the specified channel of the current device
-    int play(int channel, Ptr<Cue> cue);
+    /// Plays a signal on the specified channel of the current device
+    int play(int channel, Signal signal);
 
-    /// Plays A cue on the specified channel of the current device with a delay in seconds
-    int play(int channel, Ptr<Cue> cue, double inSeconds);
+    /// Plays A signal on the specified channel of the current device with a delay in seconds
+    int play(int channel, Signal signal, double inSeconds);
 
-    /// Plays a Cue on all available channels of the current device
-    int playAll(Ptr<Cue> cue);
+    /// Plays a signal on all available channels of the current device
+    int playAll(Signal signal);
 
-    /// Stops playing Cues on the specified channel of the current device
+    /// Stops playing signals on the specified channel of the current device
     int stop(int channel);
 
-    /// Stops playing Cues on all channels
+    /// Stops playing signals on all channels
     int stopAll();
 
-    /// Pauses playihng Cues on the specified channel of the current device
+    /// Pauses playing signals on the specified channel of the current device
     int pause(int channel);
 
-    /// Pauses playing Cues on all channels
+    /// Pauses playing signals on all channels
     int pauseAll();
 
-    /// Resumes playihng Cues on the specified channel of the current device
+    /// Resumes playing signals on the specified channel of the current device
     int resume(int channel);
 
-    /// Resumes playing Cues on all channels
+    /// Resumes playing signals on all channels
     int resumeAll();
 
-    /// Sets teh vule on the specified channel of the current device
+    /// Sets the volume on the specified channel of the current device
     int setVolume(int channel, float volume);
 
     /// Gets info for the currently opened device
@@ -94,7 +94,7 @@ public:
     /// Returns the current sampling rate in Hz
     double getSampleRate() const;
 
-    /// Returns the CPU load (0 to 1) of the session
+    /// Returns the CPU core load (0 to 1) of the session
     double getCpuLoad() const;
 
     /// Opens the control panel of a device if supported

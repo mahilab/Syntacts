@@ -39,7 +39,7 @@ using namespace rigtorp;
 class Channel {
 public:
     //Channel() : m_stretcher(SAMPLE_RATE, 1, RubberBand::RubberBandStretcher::OptionProcessRealTime) {}
-    Ptr<Cue> cue;
+    Signal   signal;
     double   time   = 0.0; 
     double   sampleLength = 0.0;
     float    volume = 1.0f;
@@ -49,8 +49,8 @@ public:
     float nextSample() {
         float sample = 0;
         if (!paused) {
-            if (time >= 0 && time <= cue->getEnvelope()->length())
-                sample = volume * cue->sample(static_cast<float>(time));
+            if (time >= 0 && time <= signal.length())
+                sample = volume * signal.sample(static_cast<float>(time));
             time += sampleLength;
         }
         return sample;
@@ -79,9 +79,9 @@ struct Play : public Command {
     virtual void perform(Channel& channel) override {
         channel.paused = false;
         channel.time   = -inSeconds;
-        channel.cue    = cue;
+        channel.signal = signal;
     }
-    Ptr<Cue> cue;
+    Signal signal;
     double inSeconds;
 };
 
@@ -90,7 +90,7 @@ struct Stop : public Command {
     virtual void perform(Channel& channel) override {
         channel.paused = true;
         channel.time   = 0;
-        channel.cue    = create<Cue>();
+        channel.signal = Signal();
     }
 };
 
@@ -175,7 +175,7 @@ public:
         // resize vector of channels
         m_channels.resize(channels);
         for (auto& c : m_channels) {
-            c.cue = create<Cue>();
+            c.signal = Signal();
             c.sampleLength = 1.0 / m_sampleRate;
         }
         // open stream
@@ -203,13 +203,13 @@ public:
         return Pa_IsStreamActive(m_stream) == 1;
     }
 
-    int play(int channel, Ptr<Cue> cue, double inSeconds) {
+    int play(int channel, Signal signal, double inSeconds) {
         if (!isOpen())
             return SyntactsError_NotOpen;
         if (!(channel < m_channels.size()))
             return SyntactsError_InvalidChannel;
         auto command = create<Play>();
-        command->cue = std::move(cue);
+        command->signal = signal;
         command->channel = channel;
         command->inSeconds = inSeconds;
         bool success = m_commands.try_push(std::move(command));
@@ -455,17 +455,17 @@ bool Session::isOpen() const {
     return m_impl->isOpen();
 }
 
-int Session::play(int channel, Ptr<Cue> cue) {
-    return m_impl->play(channel, std::move(cue), 0);
+int Session::play(int channel, Signal signal) {
+    return m_impl->play(channel, signal, 0);
 }
 
-int Session::play(int channel, Ptr<Cue> cue, double inSeconds) {
-    return m_impl->play(channel, std::move(cue), inSeconds);
+int Session::play(int channel, Signal signal, double inSeconds) {
+    return m_impl->play(channel, signal, inSeconds);
 }
 
-int Session::playAll(Ptr<Cue> cue) {
+int Session::playAll(Signal signal) {
     for (int i = 0; i < getChannelCount(); ++i) {
-        if (int ret = play(i, cue) != SyntactsError_NoError)
+        if (int ret = play(i, signal) != SyntactsError_NoError)
             return ret;
     }
     return SyntactsError_NoError;

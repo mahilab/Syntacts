@@ -1,3 +1,7 @@
+#ifdef _MSC_VER
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+
 #include <Syntacts/Cue.hpp>
 #include <Syntacts/Library.hpp>
 #include <Syntacts/Sequence.hpp>
@@ -25,69 +29,69 @@ namespace fs = std::filesystem;
 
 // Register Types (must be done in global namespace)
 
-CEREAL_REGISTER_TYPE(tact::Scalar);
-CEREAL_REGISTER_TYPE(tact::Ramp);
-CEREAL_REGISTER_TYPE(tact::Noise);
+// CEREAL_REGISTER_TYPE(tact::Scalar);
+// CEREAL_REGISTER_TYPE(tact::Ramp);
+// CEREAL_REGISTER_TYPE(tact::Noise);
 
-CEREAL_REGISTER_TYPE(tact::IOperator);
-CEREAL_REGISTER_TYPE(tact::Sum);
-CEREAL_REGISTER_TYPE(tact::Difference);
-CEREAL_REGISTER_TYPE(tact::Product);
+// CEREAL_REGISTER_TYPE(tact::IOperator);
+// CEREAL_REGISTER_TYPE(tact::Sum);
+// CEREAL_REGISTER_TYPE(tact::Difference);
+// CEREAL_REGISTER_TYPE(tact::Product);
 
-CEREAL_REGISTER_TYPE(tact::Sequence);
+// CEREAL_REGISTER_TYPE(tact::Sequence);
 
-CEREAL_REGISTER_TYPE(tact::IOscillator);
-CEREAL_REGISTER_TYPE(tact::Sine);
-CEREAL_REGISTER_TYPE(tact::Square);
-CEREAL_REGISTER_TYPE(tact::Saw);
-CEREAL_REGISTER_TYPE(tact::Triangle);
-CEREAL_REGISTER_TYPE(tact::SineFM);
-CEREAL_REGISTER_TYPE(tact::Chirp);
-CEREAL_REGISTER_TYPE(tact::PulseTrain);
+// CEREAL_REGISTER_TYPE(tact::IOscillator);
+// CEREAL_REGISTER_TYPE(tact::Sine);
+// CEREAL_REGISTER_TYPE(tact::Square);
+// CEREAL_REGISTER_TYPE(tact::Saw);
+// CEREAL_REGISTER_TYPE(tact::Triangle);
+// CEREAL_REGISTER_TYPE(tact::SineFM);
+// CEREAL_REGISTER_TYPE(tact::Chirp);
+// CEREAL_REGISTER_TYPE(tact::PulseTrain);
 
-CEREAL_REGISTER_TYPE(tact::IEnvelope)
-CEREAL_REGISTER_TYPE(tact::Envelope);
-CEREAL_REGISTER_TYPE(tact::KeyedEnvelope);
-CEREAL_REGISTER_TYPE(tact::ASR);
-CEREAL_REGISTER_TYPE(tact::ADSR);
-CEREAL_REGISTER_TYPE(tact::OscillatingEnvelope);
+// CEREAL_REGISTER_TYPE(tact::IEnvelope)
+// CEREAL_REGISTER_TYPE(tact::Envelope);
+// CEREAL_REGISTER_TYPE(tact::KeyedEnvelope);
+// CEREAL_REGISTER_TYPE(tact::ASR);
+// CEREAL_REGISTER_TYPE(tact::ADSR);
+// CEREAL_REGISTER_TYPE(tact::OscillatingEnvelope);
 
-CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Instant>);
-CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Delayed>);
-CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Linear>);
-CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Smoothstep>);
-CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Smootherstep>);
-CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Smootheststep>);
-CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Quadratic::In>);
-CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Quadratic::Out>);
-CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Quadratic::InOut>);
-CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Cubic::In>);
-CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Cubic::Out>);
-CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Cubic::InOut>);
-CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Quartic::In>);
-CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Quartic::Out>);
-CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Quartic::InOut>);
-CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Quintic::In>);
-CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Quintic::Out>);
-CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Quintic::InOut>);
-CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Sinusoidal::In>);
-CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Sinusoidal::Out>);
-CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Sinusoidal::InOut>);
-CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Exponential::In>);
-CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Exponential::Out>);
-CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Exponential::InOut>);
-CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Circular::In>);
-CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Circular::Out>);
-CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Circular::InOut>);
-CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Elastic::In>);
-CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Elastic::Out>);
-CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Elastic::InOut>);
-CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Back::In>);
-CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Back::Out>);
-CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Back::InOut>);
-CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Bounce::In>);
-CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Bounce::Out>);
-CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Bounce::InOut>);
+// CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Instant>);
+// CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Delayed>);
+// CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Linear>);
+// CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Smoothstep>);
+// CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Smootherstep>);
+// CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Smootheststep>);
+// CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Quadratic::In>);
+// CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Quadratic::Out>);
+// CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Quadratic::InOut>);
+// CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Cubic::In>);
+// CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Cubic::Out>);
+// CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Cubic::InOut>);
+// CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Quartic::In>);
+// CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Quartic::Out>);
+// CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Quartic::InOut>);
+// CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Quintic::In>);
+// CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Quintic::Out>);
+// CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Quintic::InOut>);
+// CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Sinusoidal::In>);
+// CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Sinusoidal::Out>);
+// CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Sinusoidal::InOut>);
+// CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Exponential::In>);
+// CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Exponential::Out>);
+// CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Exponential::InOut>);
+// CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Circular::In>);
+// CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Circular::Out>);
+// CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Circular::InOut>);
+// CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Elastic::In>);
+// CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Elastic::Out>);
+// CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Elastic::InOut>);
+// CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Back::In>);
+// CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Back::Out>);
+// CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Back::InOut>);
+// CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Bounce::In>);
+// CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Bounce::Out>);
+// CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Bounce::InOut>);
 
 namespace tact {
 
@@ -147,7 +151,7 @@ Ptr<Cue> loadCue(const std::string& name, SaveFormat format) {
 bool exportCue(const Ptr<Cue>& cue, const std::string& filePath, ExportFormat format, double sampleRate) {    
     double sampleLength = 1.0 / sampleRate;
     try {
-        std::vector<float> buffer(cue->sampleCount(sampleRate));
+        std::vector<float> buffer(cue->sampleCount((int)sampleRate));
         double t = 0;
         for (auto& sample : buffer) {
             sample = cue->sample(static_cast<float>(t));  
@@ -161,7 +165,7 @@ bool exportCue(const Ptr<Cue>& cue, const std::string& filePath, ExportFormat fo
             if (!file.setAudioBuffer(audioBuffer))
                 return false;
             file.setBitDepth(16);
-            file.setSampleRate(sampleRate);
+            file.setSampleRate((int)sampleRate);
             if (!file.save(filePath, audioFormat))
                 return false;
         }
