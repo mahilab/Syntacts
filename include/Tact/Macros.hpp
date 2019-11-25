@@ -25,6 +25,10 @@ namespace cereal {
     class access;
 }
 
+#define TACT_SERIALIZABLE friend class cereal::access; \
+                          template <class Archive> \
+                          void serialize(Archive& archive) {} 
+
 #define TACT_SERIALIZE(...) friend class cereal::access; \
                             template <class Archive> \
                             void serialize(Archive& archive) { \

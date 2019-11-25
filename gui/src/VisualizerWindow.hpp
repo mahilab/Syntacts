@@ -1,6 +1,7 @@
 #pragma once
 
 #include <carnot>
+#include <syntacts>
 #include "gui-detail.hpp"
 #include "DesignerWindow.hpp"
 #include "LibraryWindow.hpp"
@@ -32,15 +33,16 @@ private:
         auto des = m_designer->buildCue();
         auto lib = m_library->getSelectedCue();
 
-        auto nPoints = lib ? std::max(des->sampleCount(10000),lib->sampleCount(10000)) : des->sampleCount(10000);
+        auto nPoints = std::max(des.length() * 48000, lib.length() * 48000);
+        std::cout << nPoints << std::endl;
 
         m_desPlot.resize(nPoints); 
         m_libPlot.resize(nPoints);
 
         float t = 0;
         for (int i = 0; i < nPoints; ++i) {
-            m_desPlot[i] = des->sample(t) + 1;
-            m_libPlot[i] = lib ? lib->sample(t) - 1 : -3;
+            m_desPlot[i] = des.sample(t) + 1;
+            m_libPlot[i] = lib.sample(t) - 1;
             t += 0.0001f;
         }   
 

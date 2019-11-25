@@ -99,10 +99,10 @@ target_link_libraries(syntacts PUBLIC portaudio_static PRIVATE) # rubberband-lib
 # Syntacts GUI
 #===============================================================================
 
-# find_package(carnot)
-# if (carnot_FOUND) 
-#     add_subdirectory("gui")
-# endif()
+find_package(carnot)
+if (carnot_FOUND) 
+    add_subdirectory("gui")
+endif()
 
 #===============================================================================
 # Syntacts Examples/Tests

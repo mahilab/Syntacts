@@ -1,10 +1,10 @@
 #pragma once
 
 #include <carnot>
+#include <syntacts>
 #include "DeviceBar.hpp"
 #include "DesignerWindow.hpp"
 #include "LibraryWindow.hpp"
-#include <Tact/Syntacts.hpp>
 #include "helpers.hpp"
 #include <deque>
 
@@ -87,9 +87,7 @@ private:
     void playCh(int ch) {
         auto cue =  m_designer->buildCue();
         // auto cue = m_library->getSelectedCue();
-        if (cue) {
-            m_deviceBar->session->play(ch, cue);
-        }
+        m_deviceBar->session->play(ch, cue);
     }
 
     /// Plays all selected channels

@@ -2,6 +2,7 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
+#include <typeinfo>
 
 using namespace tact;
 
@@ -12,19 +13,32 @@ void sleep(float sec) {
         std::this_thread::sleep_for(std::chrono::milliseconds((int)(60 * 1000)));
 }
 
-Signal g_sig = Sine(100);
+std::chrono::time_point<std::chrono::high_resolution_clock> g_tic, g_toc;
+
+void tic() {
+    g_tic = std::chrono::high_resolution_clock::now();
+}
+
+double toc() {
+    g_toc = std::chrono::high_resolution_clock::now();
+    auto ns = std::chrono::duration_cast<std::chrono::nanoseconds>(g_toc - g_tic).count();
+    return ns / 1000000000.0;
+}
 
 int main(int argc, char const *argv[])
 {
     // Session s;
     // s.open(8);
 
-    // Signal x = Saw(440) * Sine(10) * ASR(1,3,1);
-    // s.playAll(x);
-    
-    // std::cout << x.length() << std::endl;
+    Signal x = Saw(440);
 
-    // sleep(x.length());
+    std::cout << x.isType<Oscillator>() << std::endl;
+    std::cout << x.isType<Saw>() << std::endl;
+
+    const void* y = x.get();
+
+
+
 
     return 0;
 }

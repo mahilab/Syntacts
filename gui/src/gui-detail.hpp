@@ -5,7 +5,7 @@
 #pragma once
 
 #include <carnot>
-#include <Tact/Syntacts.hpp>
+#include <syntacts>
 #include <deque>
 #include <functional>
 #include <chrono>

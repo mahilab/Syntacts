@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Tact/Syntacts.hpp>
 #include <carnot>
+#include <syntacts>
 #include <filesystem>
 #include "helpers.hpp"
 #include "InfoBar.hpp"
@@ -19,15 +19,15 @@ public:
     struct Entry {
         std::string name;
         fs::path path;
-        tact::Ptr<tact::Cue> disk;
+        tact::Signal disk;
         bool saved;
     };
 
-    tact::Ptr<tact::Cue> getSelectedCue() {
+    tact::Signal getSelectedCue() {
         if (m_lib.count(m_selected)) {
             return m_lib[m_selected].disk;
         }   
-        return nullptr;
+        return tact::Signal();
     }
 
 private:
@@ -79,7 +79,7 @@ private:
         if (ImGui::Button(ICON_FA_PLUS_SQUARE) || (entered && valid)) {
             if (!m_lib.count(filename)) {
                 auto cue = m_designer->buildCue();
-                tact::Library::saveCue(cue, filename);
+                tact::Library::saveSignal(cue, filename);
                 sync();
                 m_infoBar->pushMessage("Created Cue " + filename);
                 memset(m_inputBuffer, 0, 64);
@@ -117,8 +117,8 @@ private:
         helpers::beginDisabled(disabled);
         if (ImGui::Button(ICON_FA_SAVE)) {
             auto cue = m_designer->buildCue();
-            tact::Library::saveCue(cue, m_selected);
-            m_lib[m_selected].disk = tact::Library::loadCue(m_selected);
+            tact::Library::saveSignal(cue, m_selected);
+            tact::Library::loadSignal(m_lib[m_selected].disk, m_selected);
             m_infoBar->pushMessage("Saved Cue " + m_selected);
             sync();
         }
@@ -146,16 +146,16 @@ private:
 
         ImGui::SameLine();
         if (ImGui::Button(ICON_FA_FILE_AUDIO)) {
-            std::string filePath = m_selected + ".wav";
-            tact::Library::exportCue(getSelectedCue(), filePath, tact::ExportFormat::WAV);
+            std::string filePath = m_selected;
+            tact::Library::exportSignal(getSelectedCue(), filePath, tact::FileFormat::WAV);
             m_infoBar->pushMessage("Exported Cue " + m_selected + " to " + filePath);
         }
         m_infoBar->tooltip("Export Selected Cue to WAV");
 
         ImGui::SameLine();
         if (ImGui::Button(ICON_FA_FILE_CSV)) {
-            std::string filePath = m_selected + ".csv";
-            tact::Library::exportCue(getSelectedCue(), filePath, tact::ExportFormat::CSV);
+            std::string filePath = m_selected;
+            tact::Library::exportSignal(getSelectedCue(), filePath, tact::FileFormat::CSV);
             m_infoBar->pushMessage("Exported Cue " + m_selected + " to " + filePath);
         }
         m_infoBar->tooltip("Export Selected Cue to CSV");
@@ -177,7 +177,7 @@ private:
                     m_lib[name] = Entry();
                     m_lib[name].name = name;
                     m_lib[name].path = dir_entry.path();
-                    m_lib[name].disk = tact::Library::loadCue(name);
+                    tact::Library::loadSignal(m_lib[name].disk, name);
                     m_lib[name].saved = true;
                 }
             }

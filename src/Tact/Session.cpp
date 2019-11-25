@@ -94,8 +94,10 @@ public:
                 buffer[f] *= volume;
             }
         }
-        if (time > signal.length())
+        if (time > signal.length()) {
+            signal = ZeroSignal();
             paused = true;
+        }
         volume     = nextVolume;
         lastVolume = nextVolume;
     }

@@ -4,6 +4,8 @@
 #include <Tact/MemoryPool.hpp>
 #include <Tact/Util.hpp>
 #include <memory>
+#include <typeinfo>
+#include <typeindex>
 
 namespace tact
 {
@@ -21,6 +23,8 @@ constexpr std::size_t MAX_SIGNALS = 512;
 struct ZeroSignal {
     constexpr float sample(float t) const { return 0; }
     constexpr float length() const { return 0; }
+private:
+    TACT_SERIALIZABLE
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -47,6 +51,16 @@ public:
     /// Returns the length of the Signal in seconds
     inline float length() const
     { return m_ptr->length(); }
+    /// Returns the type_index of the underlying Signal type
+    inline std::type_index typeId() const
+    { return m_ptr->typeId(); }
+    /// Returns true if the underlying Signal is type T
+    template <typename T>
+    inline bool isType() const
+    { return m_ptr->typeId() == typeid(T); }
+    /// Gets a pointer to the underlying type
+    const void* get() const  
+    { return m_ptr->get(); }
 public:
     float scale;
     float offset;
@@ -57,6 +71,8 @@ public:
         virtual float sample(float t) const = 0;
         virtual void sample(const float* t, float* b, int n, float s, float o) const = 0;
         virtual float length() const = 0;
+        virtual std::type_index typeId() const = 0;
+        virtual const void* get() const = 0;
         template <class Archive>
         void serialize(Archive& archive) {}
     };
@@ -71,6 +87,9 @@ public:
         { for (int i = 0; i < n; ++i) { b[i] = m_model.sample(t[i]) * s + o; } }
         float length() const override
         { return m_model.length(); }
+        virtual std::type_index typeId() const override
+        { return typeid(T); }
+        virtual const void* get() const override { return &m_model; }
         T m_model;
         TACT_SERIALIZE(TACT_PARENT(Concept), TACT_MEMBER(m_model));
     };
@@ -113,7 +132,7 @@ public:
 public:
     float value;
 private:
-    TACT_SERIALIZE(TACT_PARENT(ISignal), TACT_MEMBER(value));
+    TACT_SERIALIZE(TACT_MEMBER(value));
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -130,7 +149,7 @@ public:
     float initial;
     float rate;
 private:
-    TACT_SERIALIZE(TACT_PARENT(ISignal), TACT_MEMBER(initial), TACT_MEMBER(rate));
+    TACT_SERIALIZE(TACT_MEMBER(initial), TACT_MEMBER(rate));
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -143,9 +162,7 @@ public:
     float sample(float t) const;
     float length() const;
 private:
-    friend class cereal::access;
-    template <class Archive>
-    void serialize(Archive& archive) {}
+    TACT_SERIALIZABLE
 };
 
 ///////////////////////////////////////////////////////////////////////////////

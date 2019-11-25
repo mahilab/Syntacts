@@ -1,17 +1,15 @@
 # C++ API
 ## Must Do
 - realtime channel pitch adjustment
-- pop signals from channel when over
-- polyphony 
 
 ## Optimization
-- multi-sample functions
+- multi-sample functions (all the way down)
 - eliminate Tweens in favor of static bezier objects
-- profile memory usage and consider using unique_ptr in Signal with a clone method (see Sean's video)
-- move sum/prod machinery into signal itself (e.g. offset and scale factor) or template do template specializations 
+- consider using unique_ptr in Signal with a clone method
 
 ## Nice to Have
 - real-time manipulation of *any* parameter (see WebAudio AudioParam for inspiration)
+- channel polyphony 
 
 ## Completed
 - ~~remove Cue in favor of pure signals and operations~~
@@ -21,6 +19,9 @@
 - ~~finish implementing clone facilities (envelope, deep clone pointers, etc)~~ 
 - ~~Signal pool allocator~~ 
 - ~~add option to save Cues to chosen location~~
+- ~~move sum/prod machinery into signal itself (e.g. offset and scale factor) or template do template specializations~~ 
+- ~~pop signals from channel when over~~
+
 
 # GUI
 ## Must Do

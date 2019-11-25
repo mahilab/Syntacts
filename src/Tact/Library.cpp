@@ -5,6 +5,9 @@
 #include <Tact/Library.hpp>
 #include <Tact/Sequence.hpp>
 #include <Tact/Curve.hpp>
+#include <Tact/Oscillator.hpp>
+#include <Tact/Envelope.hpp>
+#include <Tact/Operator.hpp>
 
 #include <fstream>
 #include <filesystem>
@@ -28,32 +31,29 @@ namespace fs = std::filesystem;
 
 // Register Types (must be done in global namespace)
 
-// CEREAL_REGISTER_TYPE(tact::Scalar);
-// CEREAL_REGISTER_TYPE(tact::Ramp);
-// CEREAL_REGISTER_TYPE(tact::Noise);
+// CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::ZeroSignal>);
+// CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Scalar>);
+// CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Ramp>);
+// CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Noise>);
 
-// CEREAL_REGISTER_TYPE(tact::IOperator);
-// CEREAL_REGISTER_TYPE(tact::Sum);
-// CEREAL_REGISTER_TYPE(tact::Difference);
-// CEREAL_REGISTER_TYPE(tact::Product);
+// CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Sum>);
+// CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Product>);
 
-// CEREAL_REGISTER_TYPE(tact::Sequence);
+// CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Sequence>);
 
-// CEREAL_REGISTER_TYPE(tact::IOscillator);
-// CEREAL_REGISTER_TYPE(tact::Sine);
-// CEREAL_REGISTER_TYPE(tact::Square);
-// CEREAL_REGISTER_TYPE(tact::Saw);
-// CEREAL_REGISTER_TYPE(tact::Triangle);
-// CEREAL_REGISTER_TYPE(tact::SineFM);
-// CEREAL_REGISTER_TYPE(tact::Chirp);
-// CEREAL_REGISTER_TYPE(tact::PulseTrain);
+// CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Sine>);
+// CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Square>);
+// CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Saw>);
+// CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Triangle>);
+// CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::SineFM>);
+// CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Chirp>);
+// CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::PulseTrain>);
 
-// CEREAL_REGISTER_TYPE(tact::IEnvelope)
-// CEREAL_REGISTER_TYPE(tact::Envelope);
-// CEREAL_REGISTER_TYPE(tact::KeyedEnvelope);
-// CEREAL_REGISTER_TYPE(tact::ASR);
-// CEREAL_REGISTER_TYPE(tact::ADSR);
-// CEREAL_REGISTER_TYPE(tact::OscillatingEnvelope);
+// CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Envelope>);
+// CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::KeyedEnvelope>);
+// CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::ASR>);
+// CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::ADSR>);
+// CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::SignalEnvelope>);
 
 // CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Instant>);
 // CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Delayed>);
@@ -120,6 +120,10 @@ bool saveSignal(const Signal& signal, const std::string& name) {
         }
         return false;
     }
+    catch (cereal::Exception e) {
+        std::cout << e.what() << std::endl;
+        return false;
+    }
     catch (...) {
         return false;
     }
@@ -135,6 +139,10 @@ bool loadSignal(Signal& signal, const std::string& name) {
             archive(signal);
             return true;
         }
+        return false;
+    }
+    catch (cereal::Exception e) {
+        std::cout << e.what() << std::endl;
         return false;
     }
     catch (...) {
@@ -195,6 +203,10 @@ bool exportSignal(const Signal& signal, const std::string& filePath, FileFormat 
             file.close();
         }
         return true;
+    }
+    catch(cereal::Exception e) {
+        std::cout << e.what() << std::endl;
+        return false;
     }
     catch (...) {
         return false;
