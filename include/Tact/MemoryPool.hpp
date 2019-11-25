@@ -31,6 +31,9 @@ public:
     std::size_t blocksUsed() const;
     /// Returns the number of available blocks
     std::size_t blocksAvail() const;
+
+private:
+
     
 private:
     /// Block linked list node
@@ -55,7 +58,7 @@ private:
 ///////////////////////////////////////////////////////////////////////////////
 
 /// A stack allocated fixed-size block allocator
-template <size_t BlockSize, size_t NumBlocks>
+template <size_t BlockSize, size_t NumBlocks, class Friend>
 class StackPool
 {
 public:
@@ -64,34 +67,6 @@ public:
     { 
         static_assert(BlockSize >= 8, "Block size must be greater or equal to 8"); 
         reset(); 
-        std::cout << "StackPool Created" << std::endl;
-    }
-    // Destructor
-    ~StackPool() {
-        std::cout << "StackPool Destroyed" << std::endl;
-    }
-    /// Allocates a block of memory
-    void *allocate() {
-        // std::cout << "alloc" << std::endl;
-        Block *freePosition = pop();
-        assert(freePosition != nullptr && "The pool PoolAllocator is full");
-        m_blocksUsed++;
-        return (void *)freePosition;
-    }
-    /// Frees a block of memory
-    void deallocate(void *ptr) {
-        // std::cout << "dealloc" << std::endl;
-         m_blocksUsed--;
-        push((Block *)ptr);
-    }
-    /// Makes available all blocks in the pool
-    void reset() {
-        m_blocksUsed = 0;
-        for (std::size_t i = 0; i < NumBlocks; ++i)
-        {
-            std::size_t address = (std::size_t)m_memory + i * BlockSize;
-            push((Block *)address);
-        }
     }
 
     /// Returns the number of blocks
@@ -105,6 +80,32 @@ public:
     /// Returns the number of available blocks
     std::size_t blocksAvail() const {
         return NumBlocks - m_blocksUsed;
+    }
+
+private:
+
+    friend Friend;
+
+    /// Allocates a block of memory
+    void *allocate() {
+        Block *freePosition = pop();
+        assert(freePosition != nullptr && "The pool PoolAllocator is full");
+        m_blocksUsed++;
+        return (void *)freePosition;
+    }
+    /// Frees a block of memory
+    void deallocate(void *ptr) {
+         m_blocksUsed--;
+        push((Block *)ptr);
+    }
+    /// Makes available all blocks in the pool
+    void reset() {
+        m_blocksUsed = 0;
+        for (std::size_t i = 0; i < NumBlocks; ++i)
+        {
+            std::size_t address = (std::size_t)m_memory + i * BlockSize;
+            push((Block *)address);
+        }
     }
 
 private:

@@ -1,6 +1,7 @@
 # C++ API
 ## Must Do
 - realtime channel pitch adjustment
+- change oscillator ctors to do 2*pi*f scaling in Scalar 
 
 ## Optimization
 - multi-sample functions (all the way down)

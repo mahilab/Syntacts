@@ -19,10 +19,18 @@ constexpr std::size_t MAX_SIGNALS = 512;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// An signal that returns zero and has zero length
-struct ZeroSignal {
+/// An signal that returns zero every sample and has zero length
+struct Zero {
     constexpr float sample(float t) const { return 0; }
     constexpr float length() const { return 0; }
+private:
+    TACT_SERIALIZABLE
+};
+
+/// A signal that simple returns the time passed to it
+struct Time {
+    inline float sample(float t) const { return t; };
+    constexpr float length() const { return INF; }
 private:
     TACT_SERIALIZABLE
 };
@@ -42,7 +50,7 @@ public:
     { static_assert((2*sizeof(void*)+sizeof(Model<T>))<=SIGNAL_BLOCK_SIZE,"Signal allocation would exceed SIGNAL_BLOCK SIZE"); }    
 #endif 
     /// Default constructor
-    Signal() : Signal(ZeroSignal()) {}
+    Signal() : Signal(Zero()) {}
     /// Samples the Signal at time t in seconds
     inline float sample(float t) const 
     { return m_ptr->sample(t) * scale + offset; }
@@ -113,8 +121,7 @@ public:
         { Signal::pool().deallocate((void*)ptr); }
     };
     static inline auto& pool() {
-        static StackPool<SIGNAL_BLOCK_SIZE, MAX_SIGNALS> p;
-        // static HeapPool p(SIGNAL_BLOCK_SIZE, MAX_SIGNALS);
+        static StackPool<SIGNAL_BLOCK_SIZE, MAX_SIGNALS, Signal> p;
         return p;
     }
 #endif

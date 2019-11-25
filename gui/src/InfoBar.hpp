@@ -2,6 +2,7 @@
 
 #include <carnot>
 #include "helpers.hpp"
+#include <syntacts>
 
 using namespace carnot;
 
@@ -66,7 +67,10 @@ private:
     void updateInfoButtons() {
         bool modalOpen = true;
 
+        ImGui::SameLine(ImGui::GetWindowWidth() - 240);
+        ImGui::LabelText("SignalsUsed", "%i/%i", tact::Signal::pool().blocksUsed(), tact::Signal::pool().blocksTotal());
         ImGui::SameLine(ImGui::GetWindowWidth()-180);
+
         if (ImGui::Button(ICON_FA_GITHUB))
             openUrl("https://github.com/mahilab/Syntacts");   
         tooltip("Open GitHub Repository");

@@ -145,7 +145,7 @@ private:
         m_infoBar->tooltip("Delete Selected Cue");
 
         ImGui::SameLine();
-        if (ImGui::Button(ICON_FA_FILE_AUDIO)) {
+        if (ImGui::Button(ICON_FA_MUSIC)) {
             std::string filePath = m_selected;
             tact::Library::exportSignal(getSelectedCue(), filePath, tact::FileFormat::WAV);
             m_infoBar->pushMessage("Exported Cue " + m_selected + " to " + filePath);
@@ -153,7 +153,7 @@ private:
         m_infoBar->tooltip("Export Selected Cue to WAV");
 
         ImGui::SameLine();
-        if (ImGui::Button(ICON_FA_FILE_CSV)) {
+        if (ImGui::Button(ICON_FA_LIST_OL)) {
             std::string filePath = m_selected;
             tact::Library::exportSignal(getSelectedCue(), filePath, tact::FileFormat::CSV);
             m_infoBar->pushMessage("Exported Cue " + m_selected + " to " + filePath);

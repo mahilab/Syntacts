@@ -31,7 +31,7 @@ namespace fs = std::filesystem;
 
 // Register Types (must be done in global namespace)
 
-// CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::ZeroSignal>);
+// CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Zero>);
 // CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Scalar>);
 // CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Ramp>);
 // CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Noise>);
@@ -163,7 +163,6 @@ bool exportSignal(const Signal& signal, const std::string& filePath, FileFormat 
             path.replace_extension(".csv");
         else if (format == FileFormat::JSON)
             path.replace_extension(".json");
-
 
         // export using cereal if JSON
         if (format == FileFormat::JSON) {

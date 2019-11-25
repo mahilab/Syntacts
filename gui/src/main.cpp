@@ -1,4 +1,4 @@
-#define CARNOT_NO_CONSOLE
+// #define CARNOT_NO_CONSOLE
 #define CARNOT_USE_DISCRETE_GPU
 
 #include "VisualizerWindow.hpp"
@@ -10,7 +10,6 @@
 
 class SyntactsGui : public GameObject {
 public:
-
 
 
 private:

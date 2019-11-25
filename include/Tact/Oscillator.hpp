@@ -11,16 +11,18 @@ namespace tact
 class SYNTACTS_API Oscillator 
 {
 public:
-    /// Constructs an Oscillator with a scalar frequency
-    Oscillator(float frequency = 1.0f);
-    /// Constucts an Oscillator with a signal based frequency
-    Oscillator(Signal frequency);
+    /// Default constructor
+    Oscillator();
+    /// Constucts an Oscillator with a signal based input
+    Oscillator(Signal x);
+    /// Constructs an Oscillator with a scalar frequency in hertz
+    Oscillator(float hertz);
     /// Returns infinity
     float length() const;
 public:
-    Signal frequency; ///< the Oscillator's frequency       
+    Signal x; ///< the Oscillator's input       
 private:
-    TACT_SERIALIZE(TACT_MEMBER(frequency));
+    TACT_SERIALIZE(TACT_MEMBER(x));
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -58,7 +60,7 @@ class SYNTACTS_API Saw : public Oscillator
 {
 public:
     // Inherited Constructor
-    using Oscillator::Oscillator;
+    Saw(float hertz);
     /// Implements saw wave oscillation
     float sample(float t) const;
 private:

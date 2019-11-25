@@ -25,20 +25,16 @@ double toc() {
     return ns / 1000000000.0;
 }
 
+// Ramp Time = Ramp(0, 1);
+
 int main(int argc, char const *argv[])
 {
-    // Session s;
-    // s.open(8);
 
-    Signal x = Saw(440);
+    Signal x = Triangle(2) * Envelope(1);
 
-    std::cout << x.isType<Oscillator>() << std::endl;
-    std::cout << x.isType<Saw>() << std::endl;
+    Library::exportSignal(x,"x",FileFormat::CSV);
 
-    const void* y = x.get();
-
-
-
+    std::cout << Signal::pool().blocksUsed() << std::endl;
 
     return 0;
 }

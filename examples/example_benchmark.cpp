@@ -39,32 +39,32 @@ int main(int argc, char const *argv[])
   
     /////////////////////////////////////////////////////////////////////////
 
-    // Signal sig = 0.5f * Saw(440) * ( 0.5f * Sine(120) + 0.5 * Square(100) ) 
-    //                   * ADSR(1,1,1,1,1,0.5,Curves::Exponential::In(),Curves::Exponential::InOut(),Curves::Exponential::Out());
+    Signal sig = 0.5f * Saw(440) * ( 0.5f * Sine(120) + 0.5 * Square(100) ) 
+                      * ADSR(1,1,1,1,1,0.5,Curves::Exponential::In(),Curves::Exponential::InOut(),Curves::Exponential::Out());
 
-    // tic();
-    // float lenN = sig.length() / n;
-    // int v = 0;
-    // for (int i = 0; i < n; ++i) {
-    //     auto t = i * lenN;
-    //     sum += sig.sample(t);
-    //     v++;
-    // }
-    // std::cout << v << std::endl;
-    // display(toc(), n, sum, "Single Sample");
+    tic();
+    float lenN = sig.length() / n;
+    int v = 0;
+    for (int i = 0; i < n; ++i) {
+        auto t = i * lenN;
+        sum += sig.sample(t);
+        v++;
+    }
+    std::cout << v << std::endl;
+    display(toc(), n, sum, "Single Sample");
    
-    // sum = 0;
+    sum = 0;
     
-    // tic();
-    // for (int i = 0; i < n / bufferSize; ++i) {
-    //     for (int j = 0; j < bufferSize; ++ j)
-    //         tBuffer[j] = (i*bufferSize + j) * lenN;
-    //     sig.sample(&tBuffer[0], &sBuffer[0], bufferSize);
-    //     for (const auto& smp : sBuffer)
-    //         sum += smp;
-    // }
-    // std::cout << v << std::endl;
-    // display(toc(), n, sum, "Multi Sample");
+    tic();
+    for (int i = 0; i < n / bufferSize; ++i) {
+        for (int j = 0; j < bufferSize; ++ j)
+            tBuffer[j] = (i*bufferSize + j) * lenN;
+        sig.sample(&tBuffer[0], &sBuffer[0], bufferSize);
+        for (const auto& smp : sBuffer)
+            sum += smp;
+    }
+    std::cout << v << std::endl;
+    display(toc(), n, sum, "Multi Sample");
 
     // ///////////////////////////////////////////////////////////////////////////
     // sig = Signal();

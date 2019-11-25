@@ -1,15 +1,16 @@
 #include <Tact/Oscillator.hpp>
+#include <Tact/Operator.hpp>
 
 namespace tact
 {
 
 
-Oscillator::Oscillator(float _frequency) :
-    frequency(Scalar(_frequency))
+Oscillator::Oscillator(float hertz) :
+    x(2 * PI * hertz * Time())
 { }
 
-Oscillator::Oscillator(Signal _frequency) :
-    frequency(_frequency)
+Oscillator::Oscillator(Signal _x) :
+    x(std::move(x))
 { }
 
 float Oscillator::length() const {
@@ -17,19 +18,22 @@ float Oscillator::length() const {
 }
 
 float Sine::sample(float t) const {
-    return std::sin(TWO_PI * frequency.sample(t) * t);
+    return std::sin(x.sample(t));
 }
 
 float Square::sample(float t) const {
-    return std::sin(TWO_PI * frequency.sample(t) * t) > 0 ? 1.0f : -1.0f;
+    return std::sin(x.sample(t)) > 0 ? 1.0f : -1.0f;
 }
 
+Saw::Saw(float hertz) : Oscillator(Scalar(hertz)) { }
+
+
 float Saw::sample(float t) const {
-    return 2 * INV_PI * (frequency.sample(t) * PI * std::fmod(t, 1.0f / frequency.sample(t)) - HALF_PI);
+    return 2 * INV_PI * (x.sample(t) * PI * std::fmod(t, 1.0f / x.sample(t)) - HALF_PI);
 }
 
 float Triangle::sample(float t) const {
-    return 2 * INV_PI * std::asin(std::sin(TWO_PI * frequency.sample(t) * t));
+    return 2 * INV_PI * std::asin(std::sin(x.sample(t)));
 }
 
 SineFM::SineFM(float _frequency, float _modulation, float _index) :
@@ -41,7 +45,7 @@ SineFM::SineFM(float _frequency, float _modulation, float _index) :
 }
 
 float SineFM::sample(float t) const {
-    return std::sin(2.0f * PI * frequency.sample(t) * t + index * std::sin(2.0f * PI * modulation * t));
+    return std::sin(2.0f * PI * x.sample(t) * t + index * std::sin(2.0f * PI * modulation * t));
 }
 
 Chirp::Chirp(float _frequency, float _rate) :
@@ -52,7 +56,7 @@ Chirp::Chirp(float _frequency, float _rate) :
 }
 
 float Chirp::sample(float t) const {
-    float phi = 2 * PI * (frequency.sample(t) + 0.5f * rate * t) * t;
+    float phi = 2 * PI * (x.sample(t) + 0.5f * rate * t) * t;
     return std::sin(phi);
 }
 
@@ -65,7 +69,7 @@ PulseTrain::PulseTrain(float _frequency, float _dutyCycle) :
 }
 
 float PulseTrain::sample(float t) const {
-    float percentWithinPeriod = std::fmod(t, period) * frequency.sample(t);
+    float percentWithinPeriod = std::fmod(t, period) * x.sample(t);
     if (percentWithinPeriod < dutyCycle) 
         return 1;
     else 

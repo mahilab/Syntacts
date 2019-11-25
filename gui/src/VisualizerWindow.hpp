@@ -34,7 +34,6 @@ private:
         auto lib = m_library->getSelectedCue();
 
         auto nPoints = std::max(des.length() * 48000, lib.length() * 48000);
-        std::cout << nPoints << std::endl;
 
         m_desPlot.resize(nPoints); 
         m_libPlot.resize(nPoints);

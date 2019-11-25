@@ -95,7 +95,7 @@ public:
             }
         }
         if (time > signal.length()) {
-            signal = ZeroSignal();
+            signal = Zero();
             paused = true;
         }
         volume     = nextVolume;
