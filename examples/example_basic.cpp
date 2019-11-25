@@ -29,8 +29,10 @@ double toc() {
 
 int main(int argc, char const *argv[])
 {
+    
+    auto in = 175 * PI * 5 * Time() + 10 * Sine(2);
 
-    Signal x = Triangle(2) * Envelope(1);
+    Signal x = Square(Signal(in)) * ADSR();
 
     Library::exportSignal(x,"x",FileFormat::CSV);
 

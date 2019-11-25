@@ -59,8 +59,8 @@ private:
 class SYNTACTS_API Saw : public Oscillator
 {
 public:
-    // Inherited Constructor
-    Saw(float hertz);
+    // Constructor
+    Saw(float hertz = 100);
     /// Implements saw wave oscillation
     float sample(float t) const;
 private:

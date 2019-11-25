@@ -174,6 +174,15 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
+class SYNTACTS_API Expression {
+public:
+    Expression(const std::string& expr = "sin(2*pi*t)");
+    float sample(float t) const;
+    float length() const;
+private:
+    class Impl;
+    std::unique_ptr<Impl> m_impl;
+};
 
 } // namespace tact
 

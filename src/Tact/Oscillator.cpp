@@ -1,17 +1,23 @@
 #include <Tact/Oscillator.hpp>
 #include <Tact/Operator.hpp>
+#include <iostream>
 
 namespace tact
 {
 
+Oscillator::Oscillator() {
+
+}
 
 Oscillator::Oscillator(float hertz) :
-    x(2 * PI * hertz * Time())
-{ }
+    x(TWO_PI * hertz * Time())
+{ 
+}
 
 Oscillator::Oscillator(Signal _x) :
-    x(std::move(x))
-{ }
+    x(std::move(_x))
+{ 
+}
 
 float Oscillator::length() const {
     return INF;
