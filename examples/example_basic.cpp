@@ -7,21 +7,24 @@ using namespace tact;
 
 void sleep(float sec) {
     if (sec != INF)
-        std::this_thread::sleep_for(std::chrono::milliseconds((int)(sec * 1500)));
+        std::this_thread::sleep_for(std::chrono::milliseconds((int)(sec * 1000)));
     else
-        std::this_thread::sleep_for(std::chrono::milliseconds((int)(60 * 1500)));
+        std::this_thread::sleep_for(std::chrono::milliseconds((int)(60 * 1000)));
 }
+
+Signal g_sig = Sine(100);
 
 int main(int argc, char const *argv[])
 {
-    // Session session;
-    // session.open(8);    
+    // Session s;
+    // s.open(8);
+
+    // Signal x = Saw(440) * Sine(10) * ASR(1,3,1);
+    // s.playAll(x);
     
-    auto signal = Square(440) * 0.25f;
+    // std::cout << x.length() << std::endl;
 
-    Library::exportSignal(signal, "myFile", FileFormat::AIFF);  
-
-
+    // sleep(x.length());
 
     return 0;
 }

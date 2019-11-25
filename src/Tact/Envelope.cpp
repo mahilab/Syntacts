@@ -13,6 +13,10 @@ float Envelope::sample(float t) const {
     return t > duration ? 0.0f : amplitude;
 }
 
+float Envelope::length() const {
+    return duration;
+}
+
 KeyedEnvelope::KeyedEnvelope(float amplitude0)
 {
    addKey(0.0f, amplitude0, Curves::Linear());

@@ -1,21 +1,11 @@
+
+
 #include <Tact/Signal.hpp>
 #include <random>
 #include <ctime>
 
 namespace tact
 {
-
-Signal::Signal() : Signal(Scalar()) {}
-
-float Signal::sample(float t) const
-{
-    return m_ptr->sample(t);
-}
-
-float Signal::length() const
-{
-    return m_ptr->length();
-}
 
 Scalar::Scalar(float _value) : value(_value) {}
 float Scalar::sample(float t) const

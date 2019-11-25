@@ -41,6 +41,7 @@ set(SYNTACTS_INCLUDE
     "include/Tact/Sequence.hpp"
     "include/Tact/Curve.hpp"
     "include/Tact/Util.hpp"
+    "include/Tact/MemoryPool.hpp"
 )
 
 # gather private sources
@@ -53,8 +54,7 @@ set(SYNTACTS_SRC
     "src/Tact/Operator.cpp"
     "src/Tact/Sequence.cpp"
     "src/Tact/Curve.cpp"
-    "src/Tact/Util/SPSCQueue.hpp"
-    
+    "src/Tact/MemoryPool.cpp"
 )
 
 # find portaudio
@@ -72,7 +72,7 @@ set(portaudio_INCLUDE_DIR "${portaudio_INCLUDE_DIR}/include")
 add_library(syntacts "")
 add_library(syntacts::syntacts ALIAS syntacts)
 set_target_properties(syntacts PROPERTIES CXX_STANDARD 17 DEBUG_POSTFIX -d)
-set_target_properties(syntacts PROPERTIES COMPILE_FLAGS "/bigobj")
+set_target_properties(syntacts PROPERTIES COMPILE_FLAGS "/bigobj" )
 target_sources(syntacts PRIVATE ${SYNTACTS_INCLUDE})
 target_sources(syntacts PRIVATE ${SYNTACTS_SRC})
 target_compile_definitions(syntacts PUBLIC SYNTACTS_STATIC PA_USE_ASIO PRIVATE NOMINMAX)

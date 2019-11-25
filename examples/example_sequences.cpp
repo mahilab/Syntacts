@@ -1,4 +1,5 @@
-#include <Tact/Syntacts.hpp>
+// #define TACT_USE_MALLOC
+#include <syntacts>
 #include <chrono>
 #include <thread>
 #include <iostream>
@@ -10,26 +11,14 @@ void sleep(float sec) {
 }
 
 int main(int argc, char const *argv[])
-{
-    Session session;
-    session.open();
+{   
+    Sequence s = 2 << ASR() * Sine(440);
+    Sequence t = 3 << ADSR() * Saw(220) << 100;
 
-    auto cue1 = 2 << create<Saw>(660);
-    auto cue2 = create<Sine>(440) * create<Envelope>(2) << create<Sine>(880) * create<Envelope>(2);
+    t << s;
 
-    auto cue = cue1->clone();
-
-    std::cout << cue2->length() << std::endl;
-  
-    auto cuecue = create<Cue>();
-    cuecue->setEnvelope(cue->length());
-    cuecue->chain(cue);
-
-    std::cout << "here" << std::endl;
-
-    session.playAll(cuecue);
-    sleep(1.1 * 5);
-    
+    std::cout << s.length() << std::endl;
+    std::cout << t.length() << std::endl;
 
     return 0;
 }

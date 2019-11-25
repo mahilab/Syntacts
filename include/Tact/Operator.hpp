@@ -4,52 +4,60 @@
 
 namespace tact {
 
+///////////////////////////////////////////////////////////////////////////////
+
+/// A Signal which is the result of operating on two other Signals
 struct Operator {
     Operator() = default;
     Operator(Signal lhs, Signal rhs);
-    Signal lhs, rhs;
-    TACT_SERIALIZE(TACT_MEMBER(lhs), TACT_MEMBER(rhs));
+protected:
+    Signal m_lhs, m_rhs;
+private:
+    TACT_SERIALIZE(TACT_MEMBER(m_lhs), TACT_MEMBER(m_rhs));
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/// A Signal which is the sum or difference of two other signals
 struct Sum : public Operator {
     using Operator::Operator;
     float sample(float t) const;
     float length() const;
+private:
     TACT_SERIALIZE(TACT_PARENT(Operator));
 };
 
-Sum operator+(const Signal& lhs, const Signal& rhs);
-Sum operator+(float lhs, const Signal& rhs);
-Sum operator+(const Signal& lhs, float rhs);
-
 ///////////////////////////////////////////////////////////////////////////////
 
-struct Difference : public Operator {
-    using Operator::Operator;
-    float sample(float t) const;
-    float length() const;
-    TACT_SERIALIZE(TACT_PARENT(Operator));
-};
-
-Difference operator-(const Signal& lhs, const Signal& rhs);
-Difference operator-(float lhs, const Signal& rhs);
-Difference operator-(const Signal& lhs, float rhs);
-
-///////////////////////////////////////////////////////////////////////////////
-
+/// A Signal which is the product of two other signals
 struct Product : public Operator {
     using Operator::Operator;
     float sample(float t) const;
     float length() const;
+private:
     TACT_SERIALIZE(TACT_PARENT(Operator));
 };
 
-Product operator*(const Signal& lhs, const Signal& rhs);
-Product operator*(float lhs, const Signal& rhs);
-Product operator*(const Signal& lhs, float rhs);
+///////////////////////////////////////////////////////////////////////////////
+
+inline Signal operator+(Signal lhs, Signal rhs);
+inline Signal operator+(float lhs, Signal rhs);
+inline Signal operator+(Signal lhs, float rhs);
+inline Signal& operator+=(Signal& lhs, float rhs);
+
+inline Signal operator-(Signal lhs, Signal rhs);
+inline Signal operator-(float lhs, Signal rhs);
+inline Signal operator-(Signal lhs, float rhs);
+inline Signal& operator-=(Signal& lhs, float rhs);
+inline Signal operator-(Signal lhs);
+
+inline Signal operator*(Signal lhs, Signal rhs);
+inline Signal operator*(float lhs, Signal rhs);
+inline Signal operator*(Signal lhs, float rhs);
+inline Signal& operator*=(Signal& lhs, float rhs);
 
 ///////////////////////////////////////////////////////////////////////////////
 
 } // namespace tact
+
+#include <Tact/Detail/Operator.inl>

@@ -2,7 +2,7 @@
     #define PA_USE_ASIO 1
 #endif
 
-#include "Util/SPSCQueue.hpp"
+#include "misc/SPSCQueue.h"
 #include <Tact/Session.hpp>
 #include <cassert>
 #include "portaudio.h"
@@ -46,27 +46,62 @@ public:
     float    lastVolume = 1.0f;
     float    pitch  = 1.0f;
     bool     paused = true;
-    float nextSample() {
-        float sample = 0;
-        if (!paused) {
-            if (time >= 0 && time <= signal.length())
-                sample = volume * signal.sample(static_cast<float>(time));
-            time += sampleLength;
-        }
-        return sample;
-    }
+    
+    static float tBuff[2048];
+
+    // float nextSample() {
+    //     float sample = 0;
+    //     if (!paused) {
+    //         if (time >= 0 && time <= signal.length())
+    //             sample = volume * signal.sample(static_cast<float>(time));
+    //         time += sampleLength;
+    //     }
+    //     return sample;
+    // }
+    // void fillBuffer(float* buffer, unsigned long frames) {
+    //     float nextVolume = volume;
+    //     float volumeIncr = (nextVolume - lastVolume) / frames;
+    //     volume = lastVolume;        
+    //     for (unsigned long f = 0; f < frames; f++) {
+    //         volume += volumeIncr;
+    //         buffer[f] = nextSample();
+    //     }
+    //     volume     = nextVolume;
+    //     lastVolume = nextVolume;
+    // }
+
     void fillBuffer(float* buffer, unsigned long frames) {
         float nextVolume = volume;
         float volumeIncr = (nextVolume - lastVolume) / frames;
-        volume = lastVolume;        
-        for (unsigned long f = 0; f < frames; f++) {
-            volume += volumeIncr;
-            buffer[f] = nextSample();
+        volume = lastVolume;      
+        if (paused) {
+            for (unsigned long f = 0; f < frames; ++f) {
+                buffer[f] = 0;
+                volume += volumeIncr;
+            }
         }
+        else {
+            // fill time buffer and 
+            for (unsigned long f = 0; f < frames; ++f) {
+                tBuff[f] = static_cast<float>(time);
+                time += sampleLength;
+            }
+            // multisample signal
+            signal.sample(tBuff, buffer, (int)frames);
+            // apply volume
+            for (unsigned long f = 0; f < frames; ++f) {
+                volume += volumeIncr;
+                buffer[f] *= volume;
+            }
+        }
+        if (time > signal.length())
+            paused = true;
         volume     = nextVolume;
         lastVolume = nextVolume;
     }
 };
+
+float Channel::tBuff[2048];
 
 /// Interface for commands sent through command queue
 struct Command {
@@ -78,11 +113,10 @@ struct Command {
 struct Play : public Command {
     virtual void perform(Channel& channel) override {
         channel.paused = false;
-        channel.time   = -inSeconds;
+        channel.time   = 0;
         channel.signal = signal;
     }
     Signal signal;
-    double inSeconds;
 };
 
 /// Command to stop a channel
@@ -203,7 +237,7 @@ public:
         return Pa_IsStreamActive(m_stream) == 1;
     }
 
-    int play(int channel, Signal signal, double inSeconds) {
+    int play(int channel, Signal signal) {
         if (!isOpen())
             return SyntactsError_NotOpen;
         if (!(channel < m_channels.size()))
@@ -211,7 +245,6 @@ public:
         auto command = std::make_shared<Play>();
         command->signal = signal;
         command->channel = channel;
-        command->inSeconds = inSeconds;
         bool success = m_commands.try_push(std::move(command));
         assert(success);
         return SyntactsError_NoError;
@@ -255,14 +288,14 @@ public:
         return SyntactsError_NoError; 
     }
 
-    const Device& getCurrentDevcice() const {
+    const Device& getCurrentDevice() const {
         return m_device;
     }
 
     const Device& getDefaultDevice() const {
-        int default = Pa_GetDefaultOutputDevice();
-        assert(default != paNoDevice);
-        return m_devices.at(default);
+        int def = Pa_GetDefaultOutputDevice();
+        assert(def != paNoDevice);
+        return m_devices.at(def);
     }
 
     const std::map<int, Device>& getAvailableDevices() const {
@@ -456,11 +489,7 @@ bool Session::isOpen() const {
 }
 
 int Session::play(int channel, Signal signal) {
-    return m_impl->play(channel, signal, 0);
-}
-
-int Session::play(int channel, Signal signal, double inSeconds) {
-    return m_impl->play(channel, signal, inSeconds);
+    return m_impl->play(channel, signal);
 }
 
 int Session::playAll(Signal signal) {
@@ -512,7 +541,7 @@ int Session::setVolume(int channel, float volume) {
 }
 
 const Device& Session::getCurrentDevice() const {
-    return m_impl->getCurrentDevcice();
+    return m_impl->getCurrentDevice();
 }
 
 const Device& Session::getDefaultDevice() const {

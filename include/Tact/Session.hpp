@@ -55,9 +55,6 @@ public:
     /// Plays a signal on the specified channel of the current device
     int play(int channel, Signal signal);
 
-    /// Plays A signal on the specified channel of the current device with a delay in seconds
-    int play(int channel, Signal signal, double inSeconds);
-
     /// Plays a signal on all available channels of the current device
     int playAll(Signal signal);
 

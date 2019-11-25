@@ -22,7 +22,7 @@
 #include <cereal/types/map.hpp>
 #include <cereal/types/utility.hpp>
 
-#include <AudioFile/AudioFile.h>
+#include <misc/AudioFile.h>
 
 namespace fs = std::filesystem;
 
@@ -110,7 +110,7 @@ const std::string& getLibraryDirectory() {
 
 bool saveSignal(const Signal& signal, const std::string& name) {  
     try {  
-        static bool folderExists = ensureLibraryDirectoryExists();
+        ensureLibraryDirectoryExists();
         std::ofstream file;
         file.open(getLibraryDirectory() + name + ".tact", std::ios::binary);
         if (file) {
@@ -127,7 +127,7 @@ bool saveSignal(const Signal& signal, const std::string& name) {
 
 bool loadSignal(Signal& signal, const std::string& name) {
     try {
-        static bool folderExists = ensureLibraryDirectoryExists();
+        ensureLibraryDirectoryExists();
         std::ifstream file;
         file.open(getLibraryDirectory() + name + ".tact", std::ios::binary);
         if (file) {
