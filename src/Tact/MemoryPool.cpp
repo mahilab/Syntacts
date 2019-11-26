@@ -23,7 +23,7 @@ HeapPool::~HeapPool()
 
 void* HeapPool::allocate()
 {
-    // std::cout << "allocate" << std::endl;
+    std::cout << "allocate" << std::endl;
     Block *freePosition = pop();
     assert(freePosition != nullptr && "The pool PoolAllocator is full");
     m_blocksUsed++;
@@ -32,7 +32,7 @@ void* HeapPool::allocate()
 
 void HeapPool::deallocate(void *ptr)
 {
-    // std::cout << "deallocate" << std::endl;
+    std::cout << "deallocate" << std::endl;
     m_blocksUsed--;
     push((Block *)ptr);
 }

@@ -40,19 +40,19 @@ private:
 ///////////////////////////////////////////////////////////////////////////////
 
 // #define TACT_USE_MALLOC
-#define TACT_USE_SHARED
+#define TACT_USE_SHARED_PTR
 
-#ifdef TACT_USE_SHARED
+#ifdef TACT_USE_SHARED_PTR
     #ifdef TACT_USE_MALLOC
-        #define TACT_ALLOC_IMPL std::make_shared<Model<T>>(std::move(signal))
+        #define TACT_PTR_IMPL std::make_shared<Model<T>>(std::move(signal))
     #else
-        #define TACT_ALLOC_IMPL std::allocate_shared<Model<T>, Allocator<Concept>>(Allocator<Concept>(), std::move(signal))
+        #define TACT_PTR_IMPL std::allocate_shared<Model<T>, Allocator<Concept>>(Allocator<Concept>(), std::move(signal))
     #endif
 #else
     #ifdef TACT_USE_MALLOC
-        #define TACT_ALLOC_IMPL 
+        #define TACT_PTR_IMPL 
     #else
-        #define TACT_ALLOC_IMPL
+        #define TACT_PTR_IMPL 
     #endif
 #endif
 
@@ -62,8 +62,12 @@ public:
     /// Constructor
     template<typename T>
     Signal(T signal) : scale(1), offset(0),
-    m_ptr(TACT_ALLOC_IMPL)
-    { static_assert((2*sizeof(void*)+sizeof(Model<T>))<=SIGNAL_BLOCK_SIZE,"Signal allocation would exceed SIGNAL_BLOCK SIZE"); }    
+    m_ptr(TACT_PTR_IMPL)
+    { 
+#ifndef TACT_USE_MALLOC
+        static_assert((2*sizeof(void*)+sizeof(Model<T>))<=SIGNAL_BLOCK_SIZE,"Signal allocation would exceed SIGNAL_BLOCK SIZE"); 
+#endif
+    }    
     /// Default constructor
     Signal() : Signal(Zero()) {}
     /// Samples the Signal at time t in seconds
@@ -117,11 +121,16 @@ public:
         TACT_SERIALIZE(TACT_PARENT(Concept), TACT_MEMBER(m_model));
     };
 private:
+#ifdef TACT_USE_SHARED_PTR
     std::shared_ptr<const Concept> m_ptr;
+#else
+    std::unique_ptr<Concept> m_ptr;
+#endif
 private:
     TACT_SERIALIZE(TACT_MEMBER(scale), TACT_MEMBER(offset), TACT_MEMBER(m_ptr));
 public:
 #ifndef TACT_USE_MALLOC
+#ifdef  TACT_USE_SHARED_PTR
     /// Allocator
     template<typename T>
     struct Allocator
@@ -139,6 +148,7 @@ public:
         static StackPool<SIGNAL_BLOCK_SIZE, MAX_SIGNALS, Signal> p;
         return p;
     }
+#endif
 #endif
 };
 
