@@ -7,6 +7,8 @@
 #include <typeinfo>
 #include <typeindex>
 
+
+
 namespace tact
 {
 
@@ -37,18 +39,31 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
+// #define TACT_USE_MALLOC
+#define TACT_USE_SHARED
+
+#ifdef TACT_USE_SHARED
+    #ifdef TACT_USE_MALLOC
+        #define TACT_ALLOC_IMPL std::make_shared<Model<T>>(std::move(signal))
+    #else
+        #define TACT_ALLOC_IMPL std::allocate_shared<Model<T>, Allocator<Concept>>(Allocator<Concept>(), std::move(signal))
+    #endif
+#else
+    #ifdef TACT_USE_MALLOC
+        #define TACT_ALLOC_IMPL 
+    #else
+        #define TACT_ALLOC_IMPL
+    #endif
+#endif
+
 /// An object that returns time variant samples for a length of time
 class SYNTACTS_API Signal {
 public:
     /// Constructor
     template<typename T>
     Signal(T signal) : scale(1), offset(0),
-#ifdef TACT_USE_MALLOC
-    m_ptr(std::make_shared<Model<T>>(std::move(signal))) { }
-#else
-    m_ptr(std::allocate_shared<Model<T>, Allocator<Concept>>(Allocator<Concept>(), std::move(signal)))  
+    m_ptr(TACT_ALLOC_IMPL)
     { static_assert((2*sizeof(void*)+sizeof(Model<T>))<=SIGNAL_BLOCK_SIZE,"Signal allocation would exceed SIGNAL_BLOCK SIZE"); }    
-#endif 
     /// Default constructor
     Signal() : Signal(Zero()) {}
     /// Samples the Signal at time t in seconds
@@ -66,7 +81,7 @@ public:
     template <typename T>
     inline bool isType() const
     { return m_ptr->typeId() == typeid(T); }
-    /// Gets a pointer to the underlying type
+    /// Gets a pointer to the underlying type (you are advised not to use this)
     const void* get() const  
     { return m_ptr->get(); }
 public:
@@ -179,9 +194,20 @@ public:
     Expression(const std::string& expr = "sin(2*pi*t)");
     float sample(float t) const;
     float length() const;
+    bool setExpression(const std::string& expr);
+    bool operator=(const std::string& expr);
 private:
     class Impl;
     std::shared_ptr<Impl> m_impl;
+    std::string m_expr;
+private:
+    friend class cereal::access;
+    template<class Archive>
+    void save(Archive& archive) const 
+    { archive(TACT_MEMBER(m_expr)); }
+    template<class Archive>
+    void load(Archive& archive) 
+    { archive(TACT_MEMBER(m_expr)); setExpression(m_expr); }
 };
 
 } // namespace tact

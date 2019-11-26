@@ -1,6 +1,6 @@
 namespace tact {
 
-float Oscillator::length() const {
+float IOscillator::length() const {
     return INF;
 }
 
@@ -25,16 +25,24 @@ inline float SineFM::sample(float t) const {
 }
 
 inline float Chirp::sample(float t) const {
-    float phi = TWO_PI * (x.sample(t) + 0.5f * rate * t) * t;
+    float phi = x.sample(t) + PI * rate * t * t;
     return std::sin(phi);
 }
 
-inline float PulseTrain::sample(float t) const {
-    float percentWithinPeriod = std::fmod(t, period) * x.sample(t);
-    if (percentWithinPeriod < dutyCycle) 
-        return 1;
-    else 
-        return -1;
+inline float Pwm::sample(float t) const {
+    return std::fmod(t, 1.0f / frequency) * frequency < dutyCycle ? 1.0f : -1.0f;
+}
+
+inline float Pwm::length() const {
+    return INF;
+}
+
+inline float FM::sample(float t) const {
+    return 0;
+}
+
+inline float FM::length() const {
+    return INF;
 }
 
 } // namespace tact

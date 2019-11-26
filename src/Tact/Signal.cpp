@@ -40,17 +40,17 @@ float Noise::length() const
 
 class Expression::Impl {
 public:
-    Impl(const std::string& expr) :
-        m_t(0)
-    {
-        m_table.add_variable("t",m_t);
-        m_table.add_pi();
-        m_expr.register_symbol_table(m_table);
-        m_parser.compile(expr, m_expr);
-    }
+    Impl() : m_t(0) {}
+
     float sample(float t) const {
         m_t = t;
         return m_expr.value();
+    }
+    bool setExpression(const std::string& expr) {
+        m_table.add_variable("t",m_t);
+        m_table.add_pi();
+        m_expr.register_symbol_table(m_table);
+        return m_parser.compile(expr, m_expr);
     }
     exprtk::symbol_table<float> m_table;
     exprtk::expression<float> m_expr;
@@ -59,9 +59,9 @@ public:
 };
 
 Expression::Expression(const std::string& expr) :
-    m_impl(std::move(std::make_shared<Expression::Impl>(expr)))
+    m_impl(std::move(std::make_shared<Expression::Impl>()))
 {
-
+    setExpression(expr);
 }
 
 float Expression::sample(float t) const {
@@ -70,6 +70,15 @@ float Expression::sample(float t) const {
 
 float Expression::length() const {
     return INF;
+}
+
+bool Expression::setExpression(const std::string& expr) {
+    m_expr = expr;
+    return m_impl->setExpression(m_expr);
+}
+
+bool Expression::operator=(const std::string& expr) {
+    return setExpression(expr);
 }
 
 } // namespace tact

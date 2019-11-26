@@ -1,37 +1,16 @@
 #include <syntacts>
 #include <iostream>
-#include <thread>
-#include <chrono>
+
 #include <typeinfo>
 
 using namespace tact;
 
-void sleep(float sec) {
-    if (sec != INF)
-        std::this_thread::sleep_for(std::chrono::milliseconds((int)(sec * 1000)));
-    else
-        std::this_thread::sleep_for(std::chrono::milliseconds((int)(60 * 1000)));
-}
-
-std::chrono::time_point<std::chrono::high_resolution_clock> g_tic, g_toc;
-
-void tic() {
-    g_tic = std::chrono::high_resolution_clock::now();
-}
-
-double toc() {
-    g_toc = std::chrono::high_resolution_clock::now();
-    auto ns = std::chrono::duration_cast<std::chrono::nanoseconds>(g_toc - g_tic).count();
-    return ns / 1000000000.0;
-}
-
-// Ramp Time = Ramp(0, 1);
-
 int main(int argc, char const *argv[])
-{
-    
-    Expression e("sin(2*pi*t)");
-    std::cout << e.sample(1.2) << std::endl;
+{    
+    Signal x = Sine(440);
+    Signal y = x;
+    std::cout << x.get() << std::endl;
+    std::cout << y.get() << std::endl;
+    std::cout << Signal::pool().blocksUsed() << std::endl;
     return 0;
-
 }

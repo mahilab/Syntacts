@@ -31,29 +31,31 @@ namespace fs = std::filesystem;
 
 // Register Types (must be done in global namespace)
 
-// CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Zero>);
-// CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Scalar>);
-// CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Ramp>);
-// CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Noise>);
+CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Zero>);
+CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Scalar>);
+CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Time>);
+CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Ramp>);
+CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Noise>);
+CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Expression>);
 
-// CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Sum>);
-// CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Product>);
+CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Sum>);
+CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Product>);
+CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Sequence>);
 
-// CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Sequence>);
+CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Sine>);
+CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Square>);
+CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Saw>);
+CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Triangle>);
+CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::SineFM>);
+CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Chirp>);
+CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Pwm>);
+CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::FM>);
 
-// CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Sine>);
-// CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Square>);
-// CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Saw>);
-// CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Triangle>);
-// CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::SineFM>);
-// CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Chirp>);
-// CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::PulseTrain>);
-
-// CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Envelope>);
-// CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::KeyedEnvelope>);
-// CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::ASR>);
-// CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::ADSR>);
-// CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::SignalEnvelope>);
+CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Envelope>);
+CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::KeyedEnvelope>);
+CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::ASR>);
+CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::ADSR>);
+CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::SignalEnvelope>);
 
 // CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Instant>);
 // CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Delayed>);

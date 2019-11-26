@@ -55,6 +55,7 @@ set(SYNTACTS_SRC
     "src/Tact/Sequence.cpp"
     "src/Tact/Curve.cpp"
     "src/Tact/MemoryPool.cpp"
+    "src/Tact/Util.cpp"
 )
 
 # find portaudio

@@ -1,22 +1,8 @@
 #include <syntacts>
-#include <chrono>
-#include <thread>
 #include <iostream>
 #include <numeric>
 
 using namespace tact;
-
-std::chrono::time_point<std::chrono::high_resolution_clock> g_tic, g_toc;
-
-void tic() {
-    g_tic = std::chrono::high_resolution_clock::now();
-}
-
-double toc() {
-    g_toc = std::chrono::high_resolution_clock::now();
-    auto ns = std::chrono::duration_cast<std::chrono::nanoseconds>(g_toc - g_tic).count();
-    return ns / 1000000000.0;
-}
 
 void display(double t, int n, float sum, const std::string& benchmark) {
     std::cout << std::endl;

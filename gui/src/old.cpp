@@ -46,7 +46,7 @@ public:
 
     enum OscType : int { Sine = 0, Square = 1, Saw = 2, Triangle = 3, Chirp = 4 };
     enum ModMode : int { Off = 0, AM = 1, FM = 2 };
-    enum EnvMode : int { Basic = 0, ASR = 1, ADSR = 2, PulseTrain = 3, Custom = 4 };
+    enum EnvMode : int { Basic = 0, ASR = 1, ADSR = 2, PWM = 3, Custom = 4 };
 
     //--------------------------------------------------------------------------
     // Generic Functions
@@ -121,7 +121,7 @@ public:
         else if (m_envMode == EnvMode::ADSR)
             return make<tact::ADSR>(m_adsr[0]/1000.0f, m_adsr[1]/1000.0f, m_adsr[2]/1000.0f, m_adsr[3]/1000.f, m_amps[0], m_amps[1], g_tweenFuncs[m_tweenModes[0]], g_tweenFuncs[m_tweenModes[1]], g_tweenFuncs[m_tweenModes[3]]);
         else {
-            auto pulse = make<tact::PulseTrain>((float)m_pwmValues[0], (float)m_pwmValues[1] / 100.0f);
+            auto pulse = make<tact::PWM>((float)m_pwmValues[0], (float)m_pwmValues[1] / 100.0f);
             return make<tact::OscillatingEnvelope>(m_duration/1000.0f, m_amps[0], pulse);
         }
     }
@@ -156,8 +156,8 @@ public:
             code += "auto env = std::make_shared<tact::ASR>(" + str(m_asr[0]/1000.0f) + ", " + str(m_asr[1]/1000.0f) + ", " + str(m_asr[2]/1000.0f) + ", " + str(m_amps[0]) + ", tact::Tween::" + g_tweenStrings[m_tweenModes[0]] + ", tact::Tween::" + g_tweenStrings[m_tweenModes[2]] + ");\n";
         else if (m_envMode == EnvMode::ADSR)
             code += "auto env = std::make_shared<tact::ADSR>(" + str(m_adsr[0]/1000.0f) + ", " + str(m_adsr[1]/1000.0f) + ", " + str(m_adsr[2]/1000.0f) + ", " + str(m_adsr[3]/1000.0f) + ", " + str(m_amps[0]) + ", " + str(m_amps[1]) + ", tact::Tween::" + g_tweenStrings[m_tweenModes[0]] + ", tact::Tween::" + g_tweenStrings[m_tweenModes[1]] + ", tact::Tween::" + g_tweenStrings[m_tweenModes[3]] + ");\n";
-        else if (m_envMode == EnvMode::PulseTrain) {
-            code += "auto pulse = std::make_shared<tact::PulseTrain>(" + str(m_pwmValues[0]) + ", "  + str(m_pwmValues[1] / 100.0f) + ");\n";
+        else if (m_envMode == EnvMode::PWM) {
+            code += "auto pulse = std::make_shared<tact::PWM>(" + str(m_pwmValues[0]) + ", "  + str(m_pwmValues[1] / 100.0f) + ");\n";
             code += "auto env = std::make_shared<tact::Envelope>(" + str(m_duration/1000.0f) + ", " + str(m_amps[0]) + ", pulse);\n";
         }
         
@@ -401,7 +401,7 @@ public:
         ImGui::RadioButton("Basic",&m_envMode, EnvMode::Basic); ImGui::SameLine();
         ImGui::RadioButton("ASR",  &m_envMode, EnvMode::ASR);   ImGui::SameLine();
         ImGui::RadioButton("ADSR", &m_envMode, EnvMode::ADSR);  ImGui::SameLine();
-        ImGui::RadioButton("Pulse Train", &m_envMode, EnvMode::PulseTrain);
+        ImGui::RadioButton("Pulse Train", &m_envMode, EnvMode::PWM);
         int numTweens = 0;
         int skip = 0;
         if (m_envMode == EnvMode::Basic) {
@@ -430,7 +430,7 @@ public:
             m_asr[2] = m_adsr[3];
             m_duration = m_adsr[0] + m_adsr[1] + m_adsr[2] + m_adsr[3];
         }
-        else if (m_envMode == EnvMode::PulseTrain) {
+        else if (m_envMode == EnvMode::PWM) {
             numTweens = -1;
             skip = 0;
             ImGui::DragFloat("Amplitude", &m_amps[0], 0.005f, 0.0f, 1.0f);

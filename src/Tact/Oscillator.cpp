@@ -4,35 +4,37 @@
 namespace tact
 {
 
-Oscillator::Oscillator() { }
-
-Oscillator::Oscillator(float hertz) :
+IOscillator::IOscillator(float hertz) :
     x(TWO_PI * hertz * Time())
 { }
 
-Oscillator::Oscillator(Signal _x) :
+IOscillator::IOscillator(Signal _x) :
     x(std::move(_x))
 { }
 
 Saw::Saw(float hertz) : 
-    Oscillator(Scalar(hertz))
+    IOscillator(Scalar(hertz))
 { }
 
 SineFM::SineFM(float _frequency, float _modulation, float _index) :
-    Oscillator(_frequency),
+    IOscillator(_frequency),
     modulation(_modulation),
     index(_index) 
 { }
 
 Chirp::Chirp(float _frequency, float _rate) :
-    Oscillator(_frequency),
+    IOscillator(_frequency),
     rate(_rate)
 { }
 
-PulseTrain::PulseTrain(float _frequency, float _dutyCycle) :
-    Oscillator(_frequency), 
-    dutyCycle(clamp01(_dutyCycle)),
-    period(1.0f / _frequency)
+Pwm::Pwm(float _frequency, float _dutyCycle) :
+    frequency(_frequency), 
+    dutyCycle(clamp01(_dutyCycle))
+{ }
+
+FM::FM(Signal _carrier, Signal _modulation) :
+    carrier(std::move(_carrier)),
+    modulation(std::move(_modulation))
 { }
 
 } // namespace tact

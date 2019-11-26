@@ -36,4 +36,13 @@ inline float lerp(float a, float b, float t) {
     return a + (b - a) * t;
 }
 
+/// Sleeps the calling thread for seconds (accurate within a few milliseconds)
+void sleep(double seconds, double max = 60);
+
+/// Starts a  stopwatch timer. Consecutive calls will restart the timer.
+void tic();
+
+/// Returns the time in seconds since tic() was called.
+double toc();
+
 } // namespace tact

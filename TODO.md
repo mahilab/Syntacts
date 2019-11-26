@@ -1,7 +1,6 @@
 # C++ API
 ## Must Do
 - realtime channel pitch adjustment
-- change oscillator ctors to do 2*pi*f scaling in Scalar 
 
 ## Optimization
 - multi-sample functions (all the way down)
@@ -11,6 +10,7 @@
 ## Nice to Have
 - real-time manipulation of *any* parameter (see WebAudio AudioParam for inspiration)
 - channel polyphony 
+- look into cereal's minima load/save capabilities
 
 ## Completed
 - ~~remove Cue in favor of pure signals and operations~~
@@ -22,6 +22,7 @@
 - ~~add option to save Cues to chosen location~~
 - ~~move sum/prod machinery into signal itself (e.g. offset and scale factor) or template do template specializations~~ 
 - ~~pop signals from channel when over~~
+- ~~change oscillator ctors to do 2*pi*f scaling in Scalar~~
 
 
 # GUI

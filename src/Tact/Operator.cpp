@@ -4,7 +4,7 @@
 namespace tact
 {
 
-Operator::Operator(Signal _lhs, Signal _rhs) :
+IOperator::IOperator(Signal _lhs, Signal _rhs) :
     m_lhs(std::move(_lhs)), m_rhs(std::move(_rhs))
 { }
 

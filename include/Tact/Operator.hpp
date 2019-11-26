@@ -6,10 +6,10 @@ namespace tact {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// A Signal which is the result of operating on two other Signals
-struct Operator {
-    Operator() = default;
-    Operator(Signal lhs, Signal rhs);
+/// A signal which is the result of operating on two other Signals
+struct IOperator {
+    IOperator() = default;
+    IOperator(Signal lhs, Signal rhs);
 protected:
     Signal m_lhs, m_rhs;
 private:
@@ -19,23 +19,23 @@ private:
 ///////////////////////////////////////////////////////////////////////////////
 
 /// A Signal which is the sum or difference of two other signals
-struct Sum : public Operator {
-    using Operator::Operator;
+struct Sum : public IOperator {
+    using IOperator::IOperator;
     float sample(float t) const;
     float length() const;
 private:
-    TACT_SERIALIZE(TACT_PARENT(Operator));
+    TACT_SERIALIZE(TACT_PARENT(IOperator));
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /// A Signal which is the product of two other signals
-struct Product : public Operator {
-    using Operator::Operator;
+struct Product : public IOperator {
+    using IOperator::IOperator;
     float sample(float t) const;
     float length() const;
 private:
-    TACT_SERIALIZE(TACT_PARENT(Operator));
+    TACT_SERIALIZE(TACT_PARENT(IOperator));
 };
 
 ///////////////////////////////////////////////////////////////////////////////
