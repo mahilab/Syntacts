@@ -30,13 +30,8 @@ double toc() {
 int main(int argc, char const *argv[])
 {
     
-    auto in = 175 * PI * 5 * Time() + 10 * Sine(2);
-
-    Signal x = Square(Signal(in)) * ADSR();
-
-    Library::exportSignal(x,"x",FileFormat::CSV);
-
-    std::cout << Signal::pool().blocksUsed() << std::endl;
-
+    Expression e("sin(2*pi*t)");
+    std::cout << e.sample(1.2) << std::endl;
     return 0;
+
 }

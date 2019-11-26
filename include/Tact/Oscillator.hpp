@@ -18,7 +18,7 @@ public:
     /// Constructs an Oscillator with a scalar frequency in hertz
     Oscillator(float hertz);
     /// Returns infinity
-    float length() const;
+    inline float length() const;
 public:
     Signal x; ///< the Oscillator's input       
 private:
@@ -34,7 +34,7 @@ public:
     /// Inherited Constructor
     using Oscillator::Oscillator;
     /// Implements sine wave oscillation
-    float sample(float t) const;
+    inline float sample(float t) const;
 private:
     TACT_SERIALIZE(TACT_PARENT(Oscillator));
 };
@@ -48,7 +48,7 @@ public:
     // Inherited Constructor
     using Oscillator::Oscillator;
     /// Implements square wave oscillation
-    float sample(float t) const;
+    inline float sample(float t) const;
 private:
     TACT_SERIALIZE(TACT_PARENT(Oscillator));
 };
@@ -62,7 +62,7 @@ public:
     // Constructor
     Saw(float hertz = 100);
     /// Implements saw wave oscillation
-    float sample(float t) const;
+    inline float sample(float t) const;
 private:
     TACT_SERIALIZE(TACT_PARENT(Oscillator));
 };
@@ -76,7 +76,7 @@ public:
     // Inherited Constructor
     using Oscillator::Oscillator;
     /// Implements saw wave oscillation
-    float sample(float t) const;
+    inline float sample(float t) const;
 private:
     TACT_SERIALIZE(TACT_PARENT(Oscillator));
 };
@@ -90,7 +90,7 @@ public:
     /// Constructor
     SineFM(float frequency = 1, float modulation = 1, float index = 2);
     /// Implements FM sine wave oscillation
-    float sample(float t) const ;
+    inline float sample(float t) const ;
 public:
     float modulation; ///< modulation frequency
     float index;      ///< modulation index
@@ -105,7 +105,7 @@ public:
     /// Constructor
     Chirp(float frequency = 1, float rate = 0);
     /// Implements chirp wave oscillation
-    float sample(float t) const;
+    inline float sample(float t) const;
 public:
     float rate; ///< the chirp rate or (f1-f0)/T
 private:
@@ -121,7 +121,7 @@ public:
     /// Constructor
     PulseTrain(float frequency = 1.0f, float dutyCycle = 0.5f);
     /// Implements pulse train oscillation
-    float sample(float t) const;
+    inline float sample(float t) const;
 public:
     float dutyCycle;
     float period;
@@ -130,3 +130,5 @@ private:
 };
 
 } // namespace tact
+
+#include <Tact/Detail/Oscillator.inl>

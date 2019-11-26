@@ -3,6 +3,7 @@
 #include <Tact/Signal.hpp>
 #include <random>
 #include <ctime>
+#include <misc/exprtk.hpp>
 
 namespace tact
 {
@@ -34,6 +35,40 @@ float Noise::sample(float t) const
 
 float Noise::length() const
 {
+    return INF;
+}
+
+class Expression::Impl {
+public:
+    Impl(const std::string& expr) :
+        m_t(0)
+    {
+        m_table.add_variable("t",m_t);
+        m_table.add_pi();
+        m_expr.register_symbol_table(m_table);
+        m_parser.compile(expr, m_expr);
+    }
+    float sample(float t) const {
+        m_t = t;
+        return m_expr.value();
+    }
+    exprtk::symbol_table<float> m_table;
+    exprtk::expression<float> m_expr;
+    exprtk::parser<float> m_parser;
+    mutable float m_t;
+};
+
+Expression::Expression(const std::string& expr) :
+    m_impl(std::move(std::make_shared<Expression::Impl>(expr)))
+{
+
+}
+
+float Expression::sample(float t) const {
+    return m_impl->sample(t);
+}
+
+float Expression::length() const {
     return INF;
 }
 
