@@ -30,37 +30,37 @@ private:
     /// Updates the waveform plot
     void updatePlot() {
         
-        auto des = m_designer->buildCue();
-        auto lib = m_library->getSelectedCue();
+        // auto des = m_designer->buildCue();
+        // auto lib = m_library->getSelectedCue();
 
-        auto nPoints = std::max(des.length() * 48000, lib.length() * 48000);
+        // auto nPoints = std::max(des.length() * 48000, lib.length() * 48000);
 
-        m_desPlot.resize(nPoints); 
-        m_libPlot.resize(nPoints);
+        // m_desPlot.resize(nPoints); 
+        // m_libPlot.resize(nPoints);
 
-        float t = 0;
-        for (int i = 0; i < nPoints; ++i) {
-            m_desPlot[i] = des.sample(t) + 1;
-            m_libPlot[i] = lib.sample(t) - 1;
-            t += 0.0001f;
-        }   
+        // float t = 0;
+        // for (int i = 0; i < nPoints; ++i) {
+        //     m_desPlot[i] = des.sample(t) + 1;
+        //     m_libPlot[i] = lib.sample(t) - 1;
+        //     t += 0.0001f;
+        // }   
 
         
-        float avail = ImGui::GetContentRegionAvailWidth()+1;
-        m_width = Math::clamp(m_width, avail, 10000.0f);
-        ImGui::PushItemWidth(m_width);
-        ImGui::PushStyleColor(ImGuiCol_PlotLines, hexCode("cf94c2"));
-        ImGui::PushStyleColor(ImGuiCol_PlotLinesHovered, hexCode("cf94c2"));
-        ImGui::PlotLines2("", &m_desPlot[0], &m_libPlot[0], nPoints,  0, "", -2.0f, 2.0f, ImVec2(0, ImGui::GetContentRegionAvail().y));
+        // float avail = ImGui::GetContentRegionAvailWidth()+1;
+        // m_width = Math::clamp(m_width, avail, 10000.0f);
+        // ImGui::PushItemWidth(m_width);
+        // ImGui::PushStyleColor(ImGuiCol_PlotLines, hexCode("cf94c2"));
+        // ImGui::PushStyleColor(ImGuiCol_PlotLinesHovered, hexCode("cf94c2"));
+        // ImGui::PlotLines2("", &m_desPlot[0], &m_libPlot[0], nPoints,  0, "", -2.0f, 2.0f, ImVec2(0, ImGui::GetContentRegionAvail().y));
 
-        if (ImGui::IsItemHovered()) {
-            m_width -= Input::getScroll() * m_width / 20.0f; 
-            if (Input::getDoubleClick(MouseButton::Left))
-                m_width = avail;
-        }
-        ImGui::PopStyleColor();
-        ImGui::PopStyleColor();
-        ImGui::PopItemWidth();
+        // if (ImGui::IsItemHovered()) {
+        //     m_width -= Input::getScroll() * m_width / 20.0f; 
+        //     if (Input::getDoubleClick(MouseButton::Left))
+        //         m_width = avail;
+        // }
+        // ImGui::PopStyleColor();
+        // ImGui::PopStyleColor();
+        // ImGui::PopItemWidth();
     }
 
 public:

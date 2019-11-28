@@ -10,6 +10,7 @@ void display(double t, int n, float sum, const std::string& benchmark) {
     std::cout << " Time:      " << t << " s" << std::endl;
     std::cout << " Frequency: " << n / t / 1000 << " kHz" << std::endl;
     std::cout << " Channels:  " << (n / t) / 48000 << std::endl;
+    std::cout << " Sum:       " << sum << std::endl;
 }
 
 int main(int argc, char const *argv[])
@@ -57,9 +58,19 @@ int main(int argc, char const *argv[])
     for (int i = 0; i < n; ++i) {
         auto t = i * lenN;
         sum += std::sin(TWO_PI * 175 * t + 2 * std::sin(2.0f * PI * 10 * t)) * env.sample(t);
-
     }
     display(toc(), n, sum, "Best Case");  
+
+    ///////////////////////////////////////////////////////////////////////////
+
+    sum = 0;
+    tic();
+    for (int i = 0; i < n; ++i) {
+        sig = Sine(i) * Saw(i) * Envelope(5);
+        auto t = i * lenN / n;
+        sum += sig.sample(t);
+    }
+    display(toc(), n, sum, "Allocation");
 
     return 0;
 }

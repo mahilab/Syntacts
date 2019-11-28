@@ -1,97 +1,77 @@
 #pragma once
 
-#include <Tact/Macros.hpp>
+#include <Tact/General.hpp>
 #include <Tact/MemoryPool.hpp>
-#include <Tact/Util.hpp>
-#include <memory>
 #include <typeinfo>
 #include <typeindex>
-
-
 
 namespace tact
 {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// All Signals must occupy less than or equal this - 16 bytes (two void*)
+// If uncommented, Signal will use default malloc instead of memory pool
+// #define TACT_USE_MALLOC     
+
+// If uncommented, Signal will use shared pointers instead of unique pointers
+// #define TACT_USE_SHARED_PTR 
+
+///////////////////////////////////////////////////////////////////////////////
+
+/// The size of memory blocks available to store Signals
 constexpr std::size_t SIGNAL_BLOCK_SIZE  = 128;
-/// The maximum number of signals that can simultaneously exist.
+/// The maximum number of signals that can simultaneously exist
 constexpr std::size_t MAX_SIGNALS = 512;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// An signal that returns zero every sample and has zero length
-struct Zero {
-    constexpr float sample(float t) const { return 0; }
-    constexpr float length() const { return 0; }
-private:
-    TACT_SERIALIZABLE
-};
-
-/// A signal that simple returns the time passed to it
-struct Time {
-    inline float sample(float t) const { return t; };
-    constexpr float length() const { return INF; }
-private:
-    TACT_SERIALIZABLE
-};
-
-///////////////////////////////////////////////////////////////////////////////
-
-// #define TACT_USE_MALLOC
-#define TACT_USE_SHARED_PTR
-
-#ifdef TACT_USE_SHARED_PTR
-    #ifdef TACT_USE_MALLOC
-        #define TACT_PTR_IMPL std::make_shared<Model<T>>(std::move(signal))
-    #else
-        #define TACT_PTR_IMPL std::allocate_shared<Model<T>, Allocator<Concept>>(Allocator<Concept>(), std::move(signal))
-    #endif
-#else
-    #ifdef TACT_USE_MALLOC
-        #define TACT_PTR_IMPL 
-    #else
-        #define TACT_PTR_IMPL 
-    #endif
-#endif
-
 /// An object that returns time variant samples for a length of time
 class SYNTACTS_API Signal {
 public:
-    /// Constructor
-    template<typename T>
-    Signal(T signal) : scale(1), offset(0),
-    m_ptr(TACT_PTR_IMPL)
-    { 
-#ifndef TACT_USE_MALLOC
-        static_assert((2*sizeof(void*)+sizeof(Model<T>))<=SIGNAL_BLOCK_SIZE,"Signal allocation would exceed SIGNAL_BLOCK SIZE"); 
-#endif
-    }    
     /// Default constructor
-    Signal() : Signal(Zero()) {}
+    Signal();
+    /// Constructor
+    template<typename T> inline Signal(T signal);
+     
+#ifndef TACT_USE_SHARED_PTR
+    /// Copy constructor
+    Signal(const Signal& other);
+    /// Move constructor
+    Signal(Signal&&) noexcept = default;
+    /// Assignment operator
+    Signal& operator=(const Signal& other);
+    /// Assignment move operator
+    Signal& operator=(Signal&&) noexcept = default;
+#endif
+
     /// Samples the Signal at time t in seconds
-    inline float sample(float t) const 
-    { return m_ptr->sample(t) * scale + offset; }
-    inline void sample(const float* t, float* b, int n) const
-    { return m_ptr->sample(t,b,n,scale,offset); }
+    inline float sample(float t) const;
+    /// Samples the Signal at n times provided by t into output buffer b
+    inline void sample(const float* t, float* b, int n) const;
     /// Returns the length of the Signal in seconds
-    inline float length() const
-    { return m_ptr->length(); }
-    /// Returns the type_index of the underlying Signal type
-    inline std::type_index typeId() const
-    { return m_ptr->typeId(); }
+    inline float length() const;
+    /// Returns the type_index of the underlying Signal
+    std::type_index typeId() const;
     /// Returns true if the underlying Signal is type T
-    template <typename T>
-    inline bool isType() const
-    { return m_ptr->typeId() == typeid(T); }
+    template <typename T> inline bool isType() const;
     /// Gets a pointer to the underlying type (you are advised not to use this)
-    const void* get() const  
-    { return m_ptr->get(); }
+    const void* get() const;
+
 public:
-    float scale;
-    float offset;
+    using Pool = FriendlyStackPool<SIGNAL_BLOCK_SIZE, MAX_SIGNALS, Signal>;
+    /// Gets a reference to the Signal memory pool
+    static inline Pool& pool();
 public:
+    float scale;  // the signal will be scaled by this amount when sampled
+    float offset; // the signal will be offset by this amount when sampled
+public:
+    struct Concept;
+    /// Unique Pointer Deleter
+    struct Deleter {
+        void operator()(Concept* ptr)
+        { ptr->~Concept(); Signal::pool().deallocate(ptr); }
+    };    
+    /// Type Erasure Concept
     struct Concept {
         Concept() = default;
         virtual ~Concept() = default;
@@ -100,38 +80,40 @@ public:
         virtual float length() const = 0;
         virtual std::type_index typeId() const = 0;
         virtual const void* get() const = 0;
+#ifndef TACT_USE_SHARED_PTR
+#ifdef TACT_USE_MALLOC
+        virtual std::unique_ptr<Concept> copy() const = 0;
+#else
+        virtual std::unique_ptr<Concept, Deleter> copy() const = 0;
+#endif
+#endif
         template <class Archive>
         void serialize(Archive& archive) {}
     };
-    /// Model
+    /// Type Erasure Model
     template <typename T>
     struct Model final : Concept {
-        Model() = default;
-        Model(T model) : m_model(std::move(model)) { }
-        float sample(float t) const override 
-        { return m_model.sample(t); }
-        virtual void sample(const float* t, float* b, int n, float s, float o) const override
-        { for (int i = 0; i < n; ++i) { b[i] = m_model.sample(t[i]) * s + o; } }
-        float length() const override
-        { return m_model.length(); }
-        virtual std::type_index typeId() const override
-        { return typeid(T); }
-        virtual const void* get() const override { return &m_model; }
+        Model();
+        Model(T model);
+        float sample(float t) const override;
+        void sample(const float* t, float* b, int n, float s, float o) const override;
+        float length() const override;
+        std::type_index typeId() const override;
+        const void* get() const override;
+#ifndef TACT_USE_SHARED_PTR
+#ifdef TACT_USE_MALLOC
+        std::unique_ptr<Concept> copy() const override;
+#else
+        std::unique_ptr<Concept, Deleter> copy() const override;
+#endif
+#endif
         T m_model;
         TACT_SERIALIZE(TACT_PARENT(Concept), TACT_MEMBER(m_model));
     };
 private:
 #ifdef TACT_USE_SHARED_PTR
     std::shared_ptr<const Concept> m_ptr;
-#else
-    std::unique_ptr<Concept> m_ptr;
-#endif
-private:
-    TACT_SERIALIZE(TACT_MEMBER(scale), TACT_MEMBER(offset), TACT_MEMBER(m_ptr));
-public:
 #ifndef TACT_USE_MALLOC
-#ifdef  TACT_USE_SHARED_PTR
-    /// Allocator
     template<typename T>
     struct Allocator
     {
@@ -144,81 +126,21 @@ public:
         void deallocate(T* ptr, std::size_t n)
         { Signal::pool().deallocate((void*)ptr); }
     };
-    static inline auto& pool() {
-        static StackPool<SIGNAL_BLOCK_SIZE, MAX_SIGNALS, Signal> p;
-        return p;
-    }
+#endif
+#else
+#ifdef TACT_USE_MALLOC
+    std::unique_ptr<Concept> m_ptr;
+#else
+    std::unique_ptr<Concept, Deleter> m_ptr;
 #endif
 #endif
-};
-
-///////////////////////////////////////////////////////////////////////////////
-
-/// A Signal that emits a constant value over time
-class SYNTACTS_API Scalar
-{
-public:
-    Scalar(float value = 1);
-    float sample(float t) const;
-    float length() const;
-public:
-    float value;
-private:
-    TACT_SERIALIZE(TACT_MEMBER(value));
-};
-
-///////////////////////////////////////////////////////////////////////////////
-
-/// A Signal that increases or decreases over time
-class SYNTACTS_API Ramp 
-{
-public:
-    Ramp(float initial = 1, float rate = 0);
-    Ramp(float initial, float final, float span);
-    float sample(float t) const;
-    float length() const;
-public:
-    float initial;
-    float rate;
-private:
-    TACT_SERIALIZE(TACT_MEMBER(initial), TACT_MEMBER(rate));
-};
-
-///////////////////////////////////////////////////////////////////////////////
-
-/// A signal that generates white noise
-class SYNTACTS_API Noise
-{
-public:
-    Noise();
-    float sample(float t) const;
-    float length() const;
-private:
-    TACT_SERIALIZABLE
-};
-
-///////////////////////////////////////////////////////////////////////////////
-
-class SYNTACTS_API Expression {
-public:
-    Expression(const std::string& expr = "sin(2*pi*t)");
-    float sample(float t) const;
-    float length() const;
-    bool setExpression(const std::string& expr);
-    bool operator=(const std::string& expr);
-private:
-    class Impl;
-    std::shared_ptr<Impl> m_impl;
-    std::string m_expr;
-private:
     friend class cereal::access;
-    template<class Archive>
-    void save(Archive& archive) const 
-    { archive(TACT_MEMBER(m_expr)); }
-    template<class Archive>
-    void load(Archive& archive) 
-    { archive(TACT_MEMBER(m_expr)); setExpression(m_expr); }
+    template <class Archive> void save(Archive& archive) const;
+    template <class Archive> void load(Archive& archive);
 };
+
+///////////////////////////////////////////////////////////////////////////////
 
 } // namespace tact
 
+#include <Tact/Detail/Signal.inl> // inline and template implementations

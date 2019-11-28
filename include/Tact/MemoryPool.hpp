@@ -14,7 +14,7 @@ class HeapPool
 {
 public:
     /// Constructor
-    HeapPool(std::size_t blockSize, std::size_t numBlocks);
+    HeapPool(std::size_t blockSize, std::size_t BlockCount);
     /// Destructor
     ~HeapPool();
 
@@ -32,9 +32,6 @@ public:
     /// Returns the number of available blocks
     std::size_t blocksAvail() const;
 
-private:
-
-    
 private:
     /// Block linked list node
     struct Block
@@ -58,7 +55,7 @@ private:
 ///////////////////////////////////////////////////////////////////////////////
 
 /// A stack allocated fixed-size block allocator
-template <size_t BlockSize, size_t NumBlocks, class Friend>
+template <std::size_t BlockSize, std::size_t BlockCount>
 class StackPool
 {
 public:
@@ -71,7 +68,7 @@ public:
 
     /// Returns the number of blocks
     constexpr std::size_t blocksTotal() const {
-        return NumBlocks;
+        return BlockCount;
     }
     /// Returns the number of occupied blocks
     std::size_t blocksUsed() const {
@@ -79,33 +76,38 @@ public:
     }
     /// Returns the number of available blocks
     std::size_t blocksAvail() const {
-        return NumBlocks - m_blocksUsed;
+        return BlockCount - m_blocksUsed;
     }
-
-private:
-
-    friend Friend;
 
     /// Allocates a block of memory
     void *allocate() {
         Block *freePosition = pop();
-        assert(freePosition != nullptr && "The pool PoolAllocator is full");
+        assert(freePosition != nullptr && "The pool is full");
         m_blocksUsed++;
         return (void *)freePosition;
     }
     /// Frees a block of memory
     void deallocate(void *ptr) {
+        if (!contains(ptr))
+            std::cout << "Shitfire" << std::endl;
          m_blocksUsed--;
         push((Block *)ptr);
     }
     /// Makes available all blocks in the pool
     void reset() {
         m_blocksUsed = 0;
-        for (std::size_t i = 0; i < NumBlocks; ++i)
+        for (std::size_t i = 0; i < BlockCount; ++i)
         {
             std::size_t address = (std::size_t)m_memory + i * BlockSize;
             push((Block *)address);
         }
+    }
+    /// Returns true if the address of ptr is inside the memory pool
+    bool contains(void* ptr) {
+        std::size_t first = (std::size_t)m_memory;
+        std::size_t last  = first + BlockSize * (BlockCount - 1);
+        std::size_t addr  = (std::size_t)ptr; 
+        return addr >= first && addr <= last;
     }
 
 private:
@@ -132,7 +134,24 @@ private:
 private:
     std::size_t m_blocksUsed;
     Block *m_head;
-    char m_memory[BlockSize * NumBlocks];
+    char m_memory[BlockSize * BlockCount];
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+/// A StackPool where memory management is only available to Friend
+template <size_t BlockSize, size_t BlockCount, class Friend>
+class FriendlyStackPool : public StackPool<BlockSize, BlockCount> {
+public:
+    using StackPool::StackPool;
+    using StackPool::blocksTotal;
+    using StackPool::blocksUsed;
+    using StackPool::blocksAvail;
+protected:
+    friend Friend;
+    using StackPool::allocate;
+    using StackPool::deallocate;
+    using StackPool::reset;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -42,6 +42,10 @@ set(SYNTACTS_INCLUDE
     "include/Tact/Curve.hpp"
     "include/Tact/Util.hpp"
     "include/Tact/MemoryPool.hpp"
+    "include/Tact/General.hpp"
+    "include/Tact/Detail/Signal.inl"
+    "include/Tact/Detail/Oscillator.inl"
+    "include/Tact/Detail/Operator.inl"
 )
 
 # gather private sources
@@ -56,6 +60,7 @@ set(SYNTACTS_SRC
     "src/Tact/Curve.cpp"
     "src/Tact/MemoryPool.cpp"
     "src/Tact/Util.cpp"
+    "src/Tact/General.cpp"
 )
 
 # find portaudio
