@@ -22,7 +22,7 @@ std::type_index Signal::typeId() const
     return m_ptr->typeId(); 
 }
 
-const void* Signal::get() const  
+void* Signal::get()  
 { 
     return m_ptr->get(); 
 }

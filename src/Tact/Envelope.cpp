@@ -23,13 +23,13 @@ KeyedEnvelope::KeyedEnvelope(float amplitude0)
 }
 
 void KeyedEnvelope::addKey(float t, float amplitude, Curve curve) {
-    m_keys[t] = std::make_pair(amplitude, curve);
+    keys[t] = std::make_pair(amplitude, curve);
 }
 
 float KeyedEnvelope::sample(float t) const {
     if (t > length())
         return 0.0f;
-    auto b = m_keys.lower_bound(t);
+    auto b = keys.lower_bound(t);
     if (b->first == t)
         return b->second.first;
     auto a = std::prev(b);
@@ -39,7 +39,7 @@ float KeyedEnvelope::sample(float t) const {
 }
 
 float KeyedEnvelope::length() const {
-    return m_keys.rbegin()->first;
+    return keys.rbegin()->first;
 }
 
 ASR::ASR(float attackTime, float sustainTime, float releaseTime, float attackAmplitude, Curve attackCurve, Curve releaseCurve)

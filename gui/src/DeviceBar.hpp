@@ -11,36 +11,38 @@ using namespace carnot;
 class DeviceBar : public GameObject {
 public:
 
-    using GameObject::GameObject;
+    DeviceBar(const Name& name) : GameObject(name) {
+        initialize();
+    }
 
-     /// Restarts Syntacts session
+    /// Restarts Syntacts session
     void initialize() {
         session = make<tact::Session>();
-        if (!session->open())
+        if (!session->open() && m_infoBar)
             m_infoBar->pushMessage("Failed to initialize device!",InfoBar::Error);
         getCurrent();
         getAvailable();
-        onInitialize.emit();
+        onDeviceUpdated.emit();
     }
 
     void switchDevice(const tact::Device& dev) {
         session->close();
         session->open(dev);
         getCurrent();
-        onSwitchDevice.emit();
+        onDeviceUpdated.emit();
     }
 
     void switchSampleRate(double sampleRate) {
         session->close();
         session->open(m_currentDev, m_currentDev.maxChannels, sampleRate);
         m_infoBar->pushMessage("Changed sample rate to " + str(sampleRate, "Hz"));
+        onDeviceUpdated.emit();
     }
 
 private:
 
     void start() {
         m_infoBar = findSibling<InfoBar>();
-        initialize();
     }
 
     void update() override {
@@ -61,12 +63,14 @@ private:
         m_infoBar->tooltip("Refresh Device List");
         ImGui::EndGroup();
         if (ImGui::BeginDragDropTarget()) {
-            if (const ImGuiPayload* playload = ImGui::AcceptDragDropPayload("DND_HELP")) {
+            if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_HELP")) {
+
             }
             ImGui::EndDragDropTarget();
         }
         ImGui::End();
         ImGui::PopStyleVar();
+        m_infoBar->cpuLoad = session->getCpuLoad();
     }
 
     void updateApiSelection() {
@@ -83,8 +87,8 @@ private:
             }
             ImGui::EndCombo();
         }
-        m_infoBar->tooltip("Select API");
         ImGui::PopItemWidth();
+        m_infoBar->tooltip("Select API");
     }
 
     void updateDeviceSelection() {
@@ -101,8 +105,8 @@ private:
             }
             ImGui::EndCombo();
         }
-        m_infoBar->tooltip("Select Device");
         ImGui::PopItemWidth();
+        m_infoBar->tooltip("Select Device");
     }
 
     void updateDeviceSampleRates() {
@@ -120,6 +124,7 @@ private:
             }
             ImGui::EndCombo();
         }
+        ImGui::PopItemWidth();
     }
 
     void updateDeviceDetails() {
@@ -134,7 +139,7 @@ private:
             ImGui::Text("ID"); ImGui::SameLine(50);
             ImGui::Text("Name");  ImGui::SameLine(400);
             ImGui::Text("API"); ImGui::SameLine(500);
-            ImGui::Text("Ch.");
+            ImGui::Text("Channels");
             for (auto& pair : session->getAvailableDevices()) {
                 auto d = pair.second;
                 auto api = d.apiName;
@@ -183,8 +188,7 @@ private:
 public:
 
     FloatRect rect;
-    Signal<void(void)> onInitialize;
-    Signal<void(void)> onSwitchDevice;
+    Signal<void(void)> onDeviceUpdated;
     Ptr<tact::Session> session;
 
 private:

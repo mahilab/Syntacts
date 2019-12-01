@@ -10,10 +10,10 @@ namespace tact {
 struct IOperator {
     IOperator() = default;
     IOperator(Signal lhs, Signal rhs);
-protected:
-    Signal m_lhs, m_rhs;
+public:
+    Signal lhs, rhs;
 private:
-    TACT_SERIALIZE(TACT_MEMBER(m_lhs), TACT_MEMBER(m_rhs));
+    TACT_SERIALIZE(TACT_MEMBER(lhs), TACT_MEMBER(rhs));
 };
 
 ///////////////////////////////////////////////////////////////////////////////

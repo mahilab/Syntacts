@@ -11,6 +11,10 @@
 - real-time manipulation of *any* parameter (see WebAudio AudioParam for inspiration)
 - channel polyphony 
 - look into cereal's minima load/save capabilities
+- additional varaibles in expression
+
+## Redigns
+- use of std::map for KeyedEnvelope complicates GUI, consider vectors
 
 ## Completed
 - ~~remove Cue in favor of pure signals and operations~~

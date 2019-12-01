@@ -2,7 +2,6 @@
 
 #include <carnot>
 #include <syntacts>
-#include "gui-detail.hpp"
 #include "DesignerWindow.hpp"
 #include "LibraryWindow.hpp"
 
@@ -15,52 +14,68 @@ public:
 
 private:
 
+    Vector2f m_plotStart;
+    Vector2f m_plotEnd;
+    Handle<ShapeRenderer> m_bgRend;
+    Ptr<Shape> m_bg;
+    Handle<LineRenderer> m_plot;
+    float xDist;
+    float yScale;
+    int nPoints = 10000;
+
     void start() override {
         m_designer = findSibling<DesignerWindow>();
         m_library  = findSibling<LibraryWindow>();
+
+        m_bg = make<Shape>(4);
+        m_bg->setPoint(0, rect.getPosition() + Vector2f(5,5));
+        m_bg->setPoint(1, rect.getPosition() + Vector2f(rect.width, 0) + Vector2f(-5,5));
+        m_bg->setPoint(2, rect.getPosition() + rect.getSize() + Vector2f(-5,-5));
+        m_bg->setPoint(3, rect.getPosition() + Vector2f(0, rect.height) + Vector2f(5,-5));
+        // m_bg->setRadii(2);
+        m_bgRend = addComponent<ShapeRenderer>(m_bg);
+        m_bgRend->setColor(ImGui::GetStyle().Colors[ImGuiCol_Header]);
+
+        m_plotStart = Vector2f(rect.left + 5, rect.top + 0.5f * rect.height);
+        m_plotEnd   = Vector2f(rect.left + rect.width - 5, rect.top + 0.5f * rect.height);
+        xDist = (m_plotEnd - m_plotStart).x / nPoints;
+
+        yScale = -(rect.height - 10)/2 * 0.9f;
+
+        m_plot = addComponent<LineRenderer>();
+        m_plot->setColor(hexCode("cf94c2"));
+        m_plot->setPointCount(nPoints);
     }
 
     void update() override {
+        updatePlot2();
         helpers::setWindowRect(rect);
+        ImGui::PushStyleColor(ImGuiCol_WindowBg, Color::Transparent);
         ImGui::Begin(getName().c_str(), nullptr,  ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_HorizontalScrollbar);
-        updatePlot();
-        ImGui::End();        
+        ImGui::End();    
+        ImGui::PopStyleColor(); 
     }
 
-    /// Updates the waveform plot
-    void updatePlot() {
-        
-        // auto des = m_designer->buildCue();
-        // auto lib = m_library->getSelectedCue();
-
-        // auto nPoints = std::max(des.length() * 48000, lib.length() * 48000);
-
-        // m_desPlot.resize(nPoints); 
-        // m_libPlot.resize(nPoints);
-
-        // float t = 0;
-        // for (int i = 0; i < nPoints; ++i) {
-        //     m_desPlot[i] = des.sample(t) + 1;
-        //     m_libPlot[i] = lib.sample(t) - 1;
-        //     t += 0.0001f;
-        // }   
-
-        
-        // float avail = ImGui::GetContentRegionAvailWidth()+1;
-        // m_width = Math::clamp(m_width, avail, 10000.0f);
-        // ImGui::PushItemWidth(m_width);
-        // ImGui::PushStyleColor(ImGuiCol_PlotLines, hexCode("cf94c2"));
-        // ImGui::PushStyleColor(ImGuiCol_PlotLinesHovered, hexCode("cf94c2"));
-        // ImGui::PlotLines2("", &m_desPlot[0], &m_libPlot[0], nPoints,  0, "", -2.0f, 2.0f, ImVec2(0, ImGui::GetContentRegionAvail().y));
-
-        // if (ImGui::IsItemHovered()) {
-        //     m_width -= Input::getScroll() * m_width / 20.0f; 
-        //     if (Input::getDoubleClick(MouseButton::Left))
-        //         m_width = avail;
-        // }
-        // ImGui::PopStyleColor();
-        // ImGui::PopStyleColor();
-        // ImGui::PopItemWidth();
+    void updatePlot2() {
+        auto sig = m_designer->buildSignal();
+        auto len = sig.length();
+        if (len > 0) {
+            m_plot->setEnabled(true);
+            if (len == tact::INF)
+                len = 0.1f;
+            float tDist = len / nPoints;
+            float t = 0;
+            float x = m_plotStart.x;
+            for (int i = 0; i < nPoints; ++i) {                
+                float y = m_plotStart.y + sig.sample(t) * yScale;
+                m_plot->setPoint(i, x, y);
+                t += tDist;
+                x += xDist;
+            }
+        }
+        else {
+            m_plot->setEnabled(false);
+        }
     }
 
 public:

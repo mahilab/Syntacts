@@ -1,3 +1,5 @@
+#include <Tact/Oscillator.hpp>
+
 namespace tact {
 
 float IOscillator::length() const {
@@ -13,7 +15,7 @@ inline float Square::sample(float t) const {
 }
 
 inline float Saw::sample(float t) const {
-    return 2 * INV_PI * (x.sample(t) * PI * std::fmod(t, 1.0f / x.sample(t)) - HALF_PI);
+    return -2 * INV_PI * std::atan(std::cos(0.5f * x.sample(t)) / std::sin(0.5f * x.sample(t)));
 }
 
 inline float Triangle::sample(float t) const {

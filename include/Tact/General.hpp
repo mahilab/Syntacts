@@ -4,6 +4,7 @@
 #include <Tact/Util.hpp>
 #include <memory>
 #include <string>
+#include <random>
 
 namespace tact
 {
@@ -77,7 +78,9 @@ private:
 
 class SYNTACTS_API Expression {
 public:
-    Expression(const std::string& expr = "sin(2*pi*t)");
+    Expression(const std::string& expr = "sin(2*pi*100*t)");
+    Expression(const Expression& other);
+    ~Expression();
     float sample(float t) const;
     float length() const;
     bool setExpression(const std::string& expr);
@@ -85,7 +88,7 @@ public:
     bool operator=(const std::string& expr);
 private:
     class Impl;
-    std::shared_ptr<Impl> m_impl;
+    std::unique_ptr<Impl> m_impl;
 private:
     friend class cereal::access;
     template<class Archive>

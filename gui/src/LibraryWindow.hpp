@@ -8,6 +8,7 @@
 #include "DesignerWindow.hpp"
 #include <set>
 
+
 using namespace carnot;
 namespace fs = std::filesystem;
 
@@ -50,20 +51,31 @@ private:
     }
 
     void update() override {
+        helpers::signalHeld = false;
         helpers::setWindowRect(rect);
         ImGui::Begin(getName().c_str(), nullptr,  ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
-        ImGui::BeginGroup();
-        updateCreateCueDialog();
-        ImGui::Separator();
-        updateLibraryList();     
-        ImGui::Separator();   
-        updateListControls();
-        ImGui::EndGroup();
-        if (ImGui::BeginDragDropTarget()) {
-            if (const ImGuiPayload* playload = ImGui::AcceptDragDropPayload("DND_HELP")) {
-                    print("HEY!");
+        if (ImGui::BeginTabBar("LibraryWindowTabs")) {
+            if (ImGui::BeginTabItem("Pallette ##Tab")) {
+                updateSignalList();
+                ImGui::EndTabItem();
             }
-            ImGui::EndDragDropTarget();
+            if (ImGui::BeginTabItem("Library ##Tab")) {
+                ImGui::BeginGroup();
+                updateCreateCueDialog();
+                ImGui::Separator();
+                updateLibraryList();     
+                ImGui::Separator();   
+                updateListControls();
+                ImGui::EndGroup();
+                if (ImGui::BeginDragDropTarget()) {
+                    if (const ImGuiPayload* playload = ImGui::AcceptDragDropPayload("DND_HELP")) {
+                        print("HEY!");
+                    }
+                    ImGui::EndDragDropTarget();
+                }
+                ImGui::EndTabItem();
+            }
+            ImGui::EndTabBar();
         }
         ImGui::End();
     }
@@ -71,6 +83,7 @@ private:
     void updateCreateCueDialog() {
         ImGui::PushItemWidth(-30);
         bool entered = ImGui::InputText("##CueName", m_inputBuffer, 64, ImGuiInputTextFlags_CharsNoBlank | ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue);
+        ImGui::PopItemWidth();
         ImGui::SameLine(); 
         std::string filename(m_inputBuffer);
         bool valid = filename != "";
@@ -78,7 +91,7 @@ private:
         helpers::beginDisabled(!valid);
         if (ImGui::Button(ICON_FA_PLUS_SQUARE) || (entered && valid)) {
             if (!m_lib.count(filename)) {
-                auto cue = m_designer->buildCue();
+                auto cue = m_designer->buildSignal();
                 tact::Library::saveSignal(cue, filename);
                 sync();
                 m_infoBar->pushMessage("Created Cue " + filename);
@@ -91,6 +104,39 @@ private:
         }
         m_infoBar->tooltip("Create new Cue");
         helpers::endDisabled(!valid);
+    }
+
+    std::type_index m_payload = typeid(tact::Zero);
+
+    void updateSignalList() {
+        static std::vector<std::pair<std::string,std::vector<std::type_index>>> signals = {
+            {"Oscillators", {typeid(tact::Sine), typeid(tact::Square), typeid(tact::Saw), typeid(tact::Triangle), typeid(tact::Chirp) }},
+            {"Envelopes", {typeid(tact::Envelope), typeid(tact::ASR), typeid(tact::ADSR)}},
+            {"General", {typeid(tact::Time), typeid(tact::Scalar), typeid(tact::Ramp), typeid(tact::Noise), typeid(tact::Expression) }},
+            {"Processes", {typeid(tact::Sum), typeid(tact::Product) }}
+        };
+        for (auto& section : signals) {
+            // if (ImGui::TreeNode(section.first.c_str())) {
+                if (!ImGui::CollapsingHeader(section.first.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+                    continue;
+                // ImGui::Selectable(section.first.c_str(), true);
+                for (auto& sig : section.second) {                
+                    auto s = helpers::signalName(sig);
+                    ImGui::Selectable(s.c_str(), false);
+                    if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None)) {
+                        m_payload = sig;
+                        helpers::signalHeld = true;
+                        ImGui::SetDragDropPayload("DND_SIGNAL", &m_payload, sizeof(std::type_index));
+                        // ImGui::PushStyleColor(ImGuiCol_Text, Oranges::Orange);
+                        ImGui::Text(s.c_str());
+                        // ImGui::PopStyleColor();
+                        ImGui::EndDragDropSource();
+                    } 
+                }
+                // ImGui::TreePop();
+            // }
+            // ImGui::Separator();
+        }
     }
 
     void updateLibraryList() {
@@ -116,7 +162,7 @@ private:
         bool disabled = m_lib.count(m_selected) == 0;
         helpers::beginDisabled(disabled);
         if (ImGui::Button(ICON_FA_SAVE)) {
-            auto cue = m_designer->buildCue();
+            auto cue = m_designer->buildSignal();
             tact::Library::saveSignal(cue, m_selected);
             tact::Library::loadSignal(m_lib[m_selected].disk, m_selected);
             m_infoBar->pushMessage("Saved Cue " + m_selected);

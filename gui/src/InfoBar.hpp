@@ -3,6 +3,7 @@
 #include <carnot>
 #include "helpers.hpp"
 #include <syntacts>
+// #include "DeviceBar.hpp"
 
 using namespace carnot;
 
@@ -33,10 +34,15 @@ public:
         }
     }
 
+    float cpuLoad = 0.5;
+
 private:
+
+    // Handle<DeviceBar> m_deviceBar;
 
     void start() {
         pushMessage("Welcome to Syntacts!");
+        // m_deviceBar = 
     }
 
     void update() override {
@@ -67,10 +73,38 @@ private:
     void updateInfoButtons() {
         bool modalOpen = true;
 
-        ImGui::SameLine(ImGui::GetWindowWidth() - 240);
-        ImGui::LabelText("SignalsUsed", "%i/%i", tact::Signal::pool().blocksUsed(), tact::Signal::pool().blocksTotal());
-        ImGui::SameLine(ImGui::GetWindowWidth()-180);
+        ImGui::SameLine(ImGui::GetWindowWidth() - 360);
+        ImGui::ProgressBar(cpuLoad, ImVec2(100,0));
+        tooltip("Session CPU Load");
 
+#ifndef TACT_USE_MALLOC
+        ImGui::SameLine();
+        std::string used = str( "1024/") + str(tact::Signal::pool().blocksTotal());
+        if (ImGui::Button(used.c_str(), ImVec2(70,0)))
+            ImGui::OpenPopup("Signal Memory Pool");
+        if (ImGui::BeginPopupModal("Signal Memory Pool", &modalOpen, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove)) {
+            auto occupied = tact::Signal::pool().blocksOccupied();
+            int i = 0;
+            int rows = 16; 
+            int cols = tact::MAX_SIGNALS / rows;    
+            std::string rowText(tact::MAX_SIGNALS / 16, ' ');
+       
+            for (int r = 0; r < rows; ++r) {
+                for (int c = 0; c < cols; ++c) {
+                    if (occupied[i++])
+                        rowText[c] = 'X';
+                    else
+                        rowText[c] = '_';                    
+                }
+                ImGui::Text(rowText.c_str());
+            }
+            ImGui::EndPopup();
+        }
+        tooltip("View Signal Memory Pool Fragmentation");
+#endif
+
+
+        ImGui::SameLine();
         if (ImGui::Button(ICON_FA_GITHUB))
             openUrl("https://github.com/mahilab/Syntacts");   
         tooltip("Open GitHub Repository");

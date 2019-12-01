@@ -19,9 +19,9 @@ namespace tact
 ///////////////////////////////////////////////////////////////////////////////
 
 /// The size of memory blocks available to store Signals
-constexpr std::size_t SIGNAL_BLOCK_SIZE  = 128;
+constexpr std::size_t SIGNAL_BLOCK_SIZE  = 64;
 /// The maximum number of signals that can simultaneously exist
-constexpr std::size_t MAX_SIGNALS = 512;
+constexpr std::size_t MAX_SIGNALS = 1024;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -46,16 +46,16 @@ public:
 
     /// Samples the Signal at time t in seconds
     inline float sample(float t) const;
-    /// Samples the Signal at n times provided by t into output buffer b
+    /// Samples the Signal at n times give by t into output buffer b
     inline void sample(const float* t, float* b, int n) const;
-    /// Returns the length of the Signal in seconds
+    /// Returns the length of the Signal in seconds or infinity
     inline float length() const;
     /// Returns the type_index of the underlying Signal
     std::type_index typeId() const;
     /// Returns true if the underlying Signal is type T
     template <typename T> inline bool isType() const;
-    /// Gets a pointer to the underlying type (you are advised not to use this)
-    const void* get() const;
+    /// Gets a pointer to the underlying Signal type (use with caution)
+    void* get();
 
 public:
     using Pool = FriendlyStackPool<SIGNAL_BLOCK_SIZE, MAX_SIGNALS, Signal>;
@@ -79,7 +79,7 @@ public:
         virtual void sample(const float* t, float* b, int n, float s, float o) const = 0;
         virtual float length() const = 0;
         virtual std::type_index typeId() const = 0;
-        virtual const void* get() const = 0;
+        virtual void* get() = 0;
 #ifndef TACT_USE_SHARED_PTR
 #ifdef TACT_USE_MALLOC
         virtual std::unique_ptr<Concept> copy() const = 0;
@@ -99,7 +99,7 @@ public:
         void sample(const float* t, float* b, int n, float s, float o) const override;
         float length() const override;
         std::type_index typeId() const override;
-        const void* get() const override;
+        void* get() override;
 #ifndef TACT_USE_SHARED_PTR
 #ifdef TACT_USE_MALLOC
         std::unique_ptr<Concept> copy() const override;

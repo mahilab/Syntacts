@@ -89,11 +89,12 @@ float Signal::Model<T>::length() const
 template <typename T>
 std::type_index Signal::Model<T>::typeId() const
 { 
-    return typeid(T); 
+    static std::type_index id = typeid(T); 
+    return id;
 }
 
 template <typename T>
-const void* Signal::Model<T>::get() const 
+void* Signal::Model<T>::get() 
 { 
     return &m_model; 
 }

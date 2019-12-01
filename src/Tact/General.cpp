@@ -22,14 +22,14 @@ Ramp::Ramp(float _initial, float _final, float _span) : initial(_initial), rate(
 float Ramp::sample(float t) const { return initial + rate * t; }
 float Ramp::length() const { return INF; }
 
-Noise::Noise() {}
+Noise::Noise()
+{ }
 
 float Noise::sample(float t) const
 {
-    float R1 = (float)rand() / (float)RAND_MAX;
-    float R2 = (float)rand() / (float)RAND_MAX;
-    float X = (float)sqrt(-2.0f * log(R1)) * cos(2.0f * PI * R2);
-    return X;
+    static std::uniform_real_distribution<float> dist(-1,1);
+    static std::mt19937 rgen;
+    return dist(rgen);
 }
 
 float Noise::length() const
@@ -62,10 +62,18 @@ public:
     mutable float m_t;
 };
 
-Expression::Expression(const std::string &expr) : m_impl(std::move(std::make_shared<Expression::Impl>()))
+Expression::Expression(const std::string &expr) : m_impl(std::move(std::make_unique<Expression::Impl>()))
 {
     setExpression(expr);
 }
+
+Expression::~Expression() {
+    
+}
+
+Expression::Expression(const Expression& other) :
+    Expression(other.getExpression())
+{ }
 
 float Expression::sample(float t) const
 {

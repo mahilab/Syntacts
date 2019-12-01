@@ -1,8 +1,10 @@
 #pragma once
 
 #include <carnot>
+#include <syntacts>
 #include <Engine/ImGui/imgui_internal.h>
 #include <string>
+#include <unordered_map>
 
 using namespace carnot;
 
@@ -34,6 +36,93 @@ inline void endDisabled(bool disabled = true) {
 inline void setWindowRect(const FloatRect& rect) {
     ImGui::SetNextWindowPos(rect.getPosition(), ImGuiCond_Always);
     ImGui::SetNextWindowSize(rect.getSize(),    ImGuiCond_Always);
+}
+
+const std::unordered_map<std::type_index, std::string> nameMap() {
+    static std::unordered_map<std::type_index, std::string> names = {
+        {typeid(tact::Zero),           "Zero"},
+        {typeid(tact::Time),           "Time"},
+        {typeid(tact::Scalar),         "Scalar"},
+        {typeid(tact::Ramp),           "Ramp"},
+        {typeid(tact::Noise),          "Noise"},
+        {typeid(tact::Expression),     "Expression"},
+        {typeid(tact::Sum),            "Sum"},
+        {typeid(tact::Product),        "Product"},
+        {typeid(tact::Sine),           "Sine"},
+        {typeid(tact::Square),         "Square"},
+        {typeid(tact::Saw),            "Saw"},
+        {typeid(tact::Triangle),       "Triangle"},
+        {typeid(tact::SineFM),         "Sine FM"},
+        {typeid(tact::Chirp),          "Chirp"},
+        {typeid(tact::Pwm),            "PWM"},
+        {typeid(tact::Envelope),       "Envelope"},
+        {typeid(tact::ASR),            "ASR"},
+        {typeid(tact::ADSR),           "ADSR"},
+        {typeid(tact::KeyedEnvelope),  "Keyed Envelope"},
+        {typeid(tact::SignalEnvelope), "Signal Envelope"}
+    };
+    return names;
+}
+
+/// Returns the name of a Syntacts signal
+const std::string& signalName(std::type_index id) {
+    static std::string unkown = "Unkown";
+    static std::unordered_map<std::type_index, std::string> names = {
+        {typeid(tact::Zero),           "Zero"},
+        {typeid(tact::Time),           "Time"},
+        {typeid(tact::Scalar),         "Scalar"},
+        {typeid(tact::Ramp),           "Ramp"},
+        {typeid(tact::Noise),          "Noise"},
+        {typeid(tact::Expression),     "Expression"},
+        {typeid(tact::Sum),            "Sum"},
+        {typeid(tact::Product),        "Product"},
+        {typeid(tact::Sine),           "Sine"},
+        {typeid(tact::Square),         "Square"},
+        {typeid(tact::Saw),            "Saw"},
+        {typeid(tact::Triangle),       "Triangle"},
+        {typeid(tact::SineFM),         "Sine FM"},
+        {typeid(tact::Chirp),          "Chirp"},
+        {typeid(tact::Pwm),            "PWM"},
+        {typeid(tact::Envelope),       "Envelope"},
+        {typeid(tact::ASR),            "ASR"},
+        {typeid(tact::ADSR),           "ADSR"},
+        {typeid(tact::KeyedEnvelope),  "Keyed Envelope"},
+        {typeid(tact::SignalEnvelope), "Signal Envelope"}
+    };
+    if (names.count(id))
+        return names[id];
+    else
+        return unkown;    
+}
+
+const std::string& signalName(const tact::Signal& sig) {
+    return signalName(sig.typeId());
+}
+
+bool signalHeld = false;
+
+void beginSignalSink() {
+    if (signalHeld) {
+        ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyle().Colors[ImGuiCol_TabActive]);
+        // ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
+    }
+}
+
+bool endSignalSink(std::type_index& dropped) {
+    if (signalHeld) {
+        ImGui::PopStyleColor();
+        // ImGui::PopStyleVar();
+    }
+    bool ret = false;
+    
+    if (ImGui::BeginDragDropTarget()) {
+        if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_SIGNAL")) { 
+            dropped = *(std::type_index*)payload->Data;
+            ret = true;
+        }
+        ImGui::EndDragDropTarget();
+    }
+    return ret;
 }
 
 } // helpers

@@ -23,6 +23,9 @@ namespace tact {
 // IMPLEMENTATION
 ///////////////////////////////////////////////////////////////////////////////
 
+// NOTES:
+// - DO NOT INSTANTIATE SIGNALS IN THE AUDIO THREAD (MEMORY POOLS ARE NOT THREAD SAFE)
+
 namespace {
 
 constexpr int    QUEUE_SIZE        = 256;
@@ -38,7 +41,6 @@ using namespace rigtorp;
 /// Channel structure
 class Channel {
 public:
-    //Channel() : m_stretcher(SAMPLE_RATE, 1, RubberBand::RubberBandStretcher::OptionProcessRealTime) {}
     Signal   signal;
     double   time   = 0.0; 
     double   sampleLength = 0.0;
@@ -95,7 +97,6 @@ public:
             }
         }
         if (time > signal.length()) {
-            signal = Zero();
             paused = true;
         }
         volume     = nextVolume;
@@ -116,7 +117,7 @@ struct Play : public Command {
     virtual void perform(Channel& channel) override {
         channel.paused = false;
         channel.time   = 0;
-        channel.signal = signal;
+        channel.signal = std::move(signal);
     }
     Signal signal;
 };
@@ -126,7 +127,7 @@ struct Stop : public Command {
     virtual void perform(Channel& channel) override {
         channel.paused = true;
         channel.time   = 0;
-        channel.signal = Signal();
+        channel.signal = std::move(Signal());
     }
 };
 
@@ -138,6 +139,7 @@ struct Pause : public Command {
     bool paused;
 };
 
+/// Command to set channel volume
 struct Volume : public Command {
     virtual void perform(Channel& channel) override {
         channel.volume = volume;
@@ -147,7 +149,7 @@ struct Volume : public Command {
 
 } // private namespace
 
-/// Sesssion Implementation
+/// Session Implementation
 class Session::Impl {
 public:
 
@@ -173,7 +175,6 @@ public:
     }
 
     ~Impl() {
-        close();
         if (isOpen())
             close();
         int result = Pa_Terminate();
@@ -210,10 +211,8 @@ public:
 
         // resize vector of channels
         m_channels.resize(channels);
-        for (auto& c : m_channels) {
-            c.signal = Signal();
+        for (auto& c : m_channels) 
             c.sampleLength = 1.0 / m_sampleRate;
-        }
         // open stream
         int result;
         result = Pa_OpenStream(&m_stream, nullptr, &params, m_sampleRate, FRAMES_PER_BUFFER, paNoFlag, callback, this);
@@ -245,7 +244,7 @@ public:
         if (!(channel < m_channels.size()))
             return SyntactsError_InvalidChannel;
         auto command = std::make_shared<Play>();
-        command->signal = signal;
+        command->signal = std::move(signal);
         command->channel = channel;
         bool success = m_commands.try_push(std::move(command));
         assert(success);
@@ -491,7 +490,7 @@ bool Session::isOpen() const {
 }
 
 int Session::play(int channel, Signal signal) {
-    return m_impl->play(channel, signal);
+    return m_impl->play(channel, std::move(signal));
 }
 
 int Session::playAll(Signal signal) {

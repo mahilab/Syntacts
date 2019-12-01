@@ -12,7 +12,7 @@ class SYNTACTS_API IOscillator
 {
 public:
     /// Default constructor
-    IOscillator() = default;
+    IOscillator();
     /// Constucts an Oscillator with a signal based input
     IOscillator(Signal x);
     /// Constructs an Oscillator with a scalar frequency in hertz
@@ -55,9 +55,7 @@ private:
 class SYNTACTS_API Saw : public IOscillator
 {
 public:
-    // Constructor
-    Saw(float hertz = 100);
-    /// Implements saw wave oscillation
+    using IOscillator::IOscillator;
     inline float sample(float t) const;
 private:
     TACT_SERIALIZE(TACT_PARENT(IOscillator));
@@ -91,12 +89,15 @@ private:
     TACT_SERIALIZE(TACT_PARENT(IOscillator), TACT_MEMBER(modulation), TACT_MEMBER(index));
 };
 
+///////////////////////////////////////////////////////////////////////////////
+
 /// A linear chirp Oscillator
 class SYNTACTS_API Chirp : public IOscillator
 {
 public:
     /// Constructor
-    Chirp(float frequency = 1, float rate = 0);
+    Chirp();
+    Chirp(float frequency, float rate);
     inline float sample(float t) const;
 public:
     float rate; ///< the chirp rate or (f1-f0)/T
@@ -120,6 +121,8 @@ public:
 private:
     TACT_SERIALIZE(TACT_MEMBER(frequency), TACT_MEMBER(dutyCycle));
 };
+
+///////////////////////////////////////////////////////////////////////////////
 
 /// A frequency modulator (WIP)
 class SYNTACTS_API FM {
