@@ -50,6 +50,7 @@ public:
     inline void sample(const float* t, float* b, int n) const;
     /// Returns the length of the Signal in seconds or infinity
     inline float length() const;
+
     /// Returns the type_index of the underlying Signal
     std::type_index typeId() const;
     /// Returns true if the underlying Signal is type T

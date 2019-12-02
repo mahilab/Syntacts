@@ -11,16 +11,6 @@ namespace tact
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// An signal that returns zero every sample and has zero length
-struct Zero {
-    constexpr float sample(float t) const { return 0; }
-    constexpr float length() const { return 0; }
-private:
-    TACT_SERIALIZABLE
-};
-
-///////////////////////////////////////////////////////////////////////////////
-
 /// A signal that simple returns the time passed to it
 struct Time {
     inline float sample(float t) const { return t; };

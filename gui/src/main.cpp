@@ -1,5 +1,5 @@
 // #define CARNOT_NO_CONSOLE
-#define CARNOT_USE_DISCRETE_GPU
+// #define CARNOT_USE_DISCRETE_GPU
 
 #include "VisualizerWindow.hpp"
 #include "ChannelWindow.hpp"
@@ -14,10 +14,10 @@ public:
     SyntactsGui() {
         m_device     = makeChild<DeviceBar>("Device");
         m_info       = makeChild<InfoBar>("Info");
-        m_library    = makeChild<LibraryWindow>("Library");
         m_designer   = makeChild<DesignerWindow>("Designer");
         m_channel    = makeChild<ChannelWindow>("Channel");
         m_visualizer = makeChild<VisualizerWindow>("Visualizer");
+        m_library    = makeChild<LibraryWindow>("Library");
         positionWindows();
     }
 
@@ -31,18 +31,11 @@ private:
     Handle<VisualizerWindow> m_visualizer;
 
     void start() override {
-
-
         ImGuiStyle * imStyle = &ImGui::GetStyle();
         ImVec4* colors = ImGui::GetStyle().Colors;
         colors[ImGuiCol_Border] = colors[ImGuiCol_TabActive];
         colors[ImGuiCol_Separator] = colors[ImGuiCol_TabActive];
         colors[ImGuiCol_DragDropTarget] = colors[ImGuiCol_Text];
-
-    }
-
-    void lateUpdate() override {
-        // positionWindows();
     }
 
     void positionWindows() {

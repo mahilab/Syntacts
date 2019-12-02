@@ -66,8 +66,9 @@ private:
             float tDist = len / nPoints;
             float t = 0;
             float x = m_plotStart.x;
-            for (int i = 0; i < nPoints; ++i) {                
-                float y = m_plotStart.y + sig.sample(t) * yScale;
+            for (int i = 0; i < nPoints; ++i) {     
+                float s = Math::clamp<float>(sig.sample(t),-1,1);    
+                float y = m_plotStart.y + s * yScale;
                 m_plot->setPoint(i, x, y);
                 t += tDist;
                 x += xDist;

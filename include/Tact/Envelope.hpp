@@ -42,7 +42,7 @@ public:
 public:
     std::map<float, std::pair<float, Curve>> keys; ///< keys
 private:
-    TACT_SERIALIZE(TACT_MEMBER(m_keys));
+    TACT_SERIALIZE(TACT_MEMBER(keys));
 };
 
 ///////////////////////////////////////////////////////////////////////////////

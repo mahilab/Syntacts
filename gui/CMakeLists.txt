@@ -6,7 +6,7 @@ add_executable(syntacts-gui
     src/DeviceBar.hpp
     src/LibraryWindow.hpp
     src/VisualizerWindow.hpp
-    src/SignalNode.hpp
+    src/SignalNodes.hpp
     src/InfoBar.hpp
     src/helpers.hpp
     src/ImGui/ImSequencer.hpp

@@ -3,7 +3,7 @@
 namespace tact
 {
 
-Signal::Signal() : Signal(Zero()) {}
+Signal::Signal() : Signal(Scalar(0)) {}
 
 #ifndef TACT_USE_SHARED_PTR
     Signal::Signal(const Signal& other) :

@@ -106,13 +106,13 @@ private:
         helpers::endDisabled(!valid);
     }
 
-    std::type_index m_payload = typeid(tact::Zero);
+    std::type_index m_payload = typeid(tact::Scalar(0));
 
     void updateSignalList() {
         static std::vector<std::pair<std::string,std::vector<std::type_index>>> signals = {
-            {"Oscillators", {typeid(tact::Sine), typeid(tact::Square), typeid(tact::Saw), typeid(tact::Triangle), typeid(tact::Chirp) }},
+            {"Oscillators", {typeid(tact::Sine), typeid(tact::Square), typeid(tact::Saw), typeid(tact::Triangle), typeid(tact::Chirp), typeid(tact::Noise) }},
             {"Envelopes", {typeid(tact::Envelope), typeid(tact::ASR), typeid(tact::ADSR)}},
-            {"General", {typeid(tact::Time), typeid(tact::Scalar), typeid(tact::Ramp), typeid(tact::Noise), typeid(tact::Expression) }},
+            {"General", {typeid(tact::Time), typeid(tact::Scalar), typeid(tact::Ramp), typeid(tact::Expression) }},
             {"Processes", {typeid(tact::Sum), typeid(tact::Product) }}
         };
         for (auto& section : signals) {
@@ -199,12 +199,20 @@ private:
         m_infoBar->tooltip("Export Selected Cue to WAV");
 
         ImGui::SameLine();
-        if (ImGui::Button(ICON_FA_LIST_OL)) {
+        if (ImGui::Button(ICON_FA_TABLE)) {
             std::string filePath = m_selected;
             tact::Library::exportSignal(getSelectedCue(), filePath, tact::FileFormat::CSV);
             m_infoBar->pushMessage("Exported Cue " + m_selected + " to " + filePath);
         }
         m_infoBar->tooltip("Export Selected Cue to CSV");
+
+        // ImGui::SameLine();
+        // if (ImGui::Button(ICON_FA_FILE_EXPORT)) {
+        //     std::string filePath = m_selected;
+        //     tact::Library::exportSignal(getSelectedCue(), filePath, tact::FileFormat::JSON);
+        //     m_infoBar->pushMessage("Exported Cue " + m_selected + " to " + filePath);
+        // }
+        // m_infoBar->tooltip("Export Selected Cue to JSON");
 
         helpers::endDisabled(disabled);
     }

@@ -40,7 +40,7 @@ inline void setWindowRect(const FloatRect& rect) {
 
 const std::unordered_map<std::type_index, std::string> nameMap() {
     static std::unordered_map<std::type_index, std::string> names = {
-        {typeid(tact::Zero),           "Zero"},
+        // {typeid(tact::Zero),           "Zero"},
         {typeid(tact::Time),           "Time"},
         {typeid(tact::Scalar),         "Scalar"},
         {typeid(tact::Ramp),           "Ramp"},
@@ -68,7 +68,7 @@ const std::unordered_map<std::type_index, std::string> nameMap() {
 const std::string& signalName(std::type_index id) {
     static std::string unkown = "Unkown";
     static std::unordered_map<std::type_index, std::string> names = {
-        {typeid(tact::Zero),           "Zero"},
+        // {typeid(tact::Zero),           "Zero"},
         {typeid(tact::Time),           "Time"},
         {typeid(tact::Scalar),         "Scalar"},
         {typeid(tact::Ramp),           "Ramp"},
@@ -101,20 +101,18 @@ const std::string& signalName(const tact::Signal& sig) {
 
 bool signalHeld = false;
 
-void beginSignalSink() {
-    if (signalHeld) {
-        ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyle().Colors[ImGuiCol_TabActive]);
-        // ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
+void nodeSlot(bool renderAlways = false) {
+    if (signalHeld || renderAlways) {
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImGui::GetStyle().Colors[ImGuiCol_TabActive]);
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered,ImGui::GetStyle().Colors[ImGuiCol_TabActive]);
+        ImGui::PushStyleColor(ImGuiCol_Button,       ImGui::GetStyle().Colors[ImGuiCol_TabActive]);
+        ImGui::Button("##SignalDND", ImVec2(-1, 0));
+        ImGui::PopStyleColor(3);
     }
 }
 
-bool endSignalSink(std::type_index& dropped) {
-    if (signalHeld) {
-        ImGui::PopStyleColor();
-        // ImGui::PopStyleVar();
-    }
-    bool ret = false;
-    
+bool nodeDropped(std::type_index& dropped) {
+    bool ret = false;    
     if (ImGui::BeginDragDropTarget()) {
         if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_SIGNAL")) { 
             dropped = *(std::type_index*)payload->Data;

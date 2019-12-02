@@ -73,13 +73,13 @@ private:
     void updateInfoButtons() {
         bool modalOpen = true;
 
-        ImGui::SameLine(ImGui::GetWindowWidth() - 360);
+        ImGui::SameLine(ImGui::GetWindowWidth() - 365);
         ImGui::ProgressBar(cpuLoad, ImVec2(100,0));
-        tooltip("Session CPU Load");
+        tooltip("Session CPU Thread Load");
 
 #ifndef TACT_USE_MALLOC
         ImGui::SameLine();
-        std::string used = str( "1024/") + str(tact::Signal::pool().blocksTotal());
+        std::string used = str(tact::Signal::pool().blocksUsed()) + "/" + str(tact::Signal::pool().blocksTotal());
         if (ImGui::Button(used.c_str(), ImVec2(70,0)))
             ImGui::OpenPopup("Signal Memory Pool");
         if (ImGui::BeginPopupModal("Signal Memory Pool", &modalOpen, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove)) {
