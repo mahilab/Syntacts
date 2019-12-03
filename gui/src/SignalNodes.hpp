@@ -23,7 +23,7 @@ Ptr<Node> makeNode(std::type_index id);
 
 ///////////////////////////////////////////////////////////////////////////////
 
-struct NodeList : public Node {
+struct NodeList : public Node { 
     void gui()
     {
         // render nodes
