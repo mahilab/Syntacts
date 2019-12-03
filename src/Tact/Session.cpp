@@ -202,8 +202,17 @@ public:
 
         m_sampleRate = sampleRate == 0 ? Pa_GetDeviceInfo(params.device)->defaultSampleRate : sampleRate;
 
+        std::cout << m_sampleRate << std::endl;
+        std::cout << params.device << std::endl;
+        std::cout << params.channelCount << std::endl;
+        std::cout << params.suggestedLatency << std::endl;
+
+
+        params.channelCount = 8;
         if (Pa_IsFormatSupported(nullptr, &params, m_sampleRate) != paFormatIsSupported)
-            return SyntactsError_InvalidSampleRate;
+        {
+            std::cout << "aint supported" << std::endl;
+        }
 
         // resize vector of channels
         m_channels.clear();
@@ -348,14 +357,14 @@ public:
                  PaStreamCallbackFlags statusFlags,
                  void *userData)
     {
-        Session::Impl* session = (Session::Impl*)userData;
-        auto& channels = session->m_channels;
-        session->performCommands();
-        (void)inputBuffer;     
-        float** out = (float**)outputBuffer;
-        for (std::size_t c = 0; c < channels.size(); ++c) {
-            channels[c].fillBuffer(out[c], framesPerBuffer);
-        }
+        // Session::Impl* session = (Session::Impl*)userData;
+        // auto& channels = session->m_channels;
+        // session->performCommands();
+        // (void)inputBuffer;     
+        // float** out = (float**)outputBuffer;
+        // for (std::size_t c = 0; c < channels.size(); ++c) {
+        //     channels[c].fillBuffer(out[c], framesPerBuffer);
+        // }
         return paContinue;
     }
 

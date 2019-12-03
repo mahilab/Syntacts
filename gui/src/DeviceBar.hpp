@@ -29,21 +29,31 @@ public:
     void switchDevice(const tact::Device& dev) {
         int result = session->close();
         if (result != SyntactsError_NoError && m_infoBar)
-            return m_infoBar->pushMessage("Failed to close device! Error: " + str(result), InfoBar::Error);
+            m_infoBar->pushMessage("Failed to close device! Error: " + str(result), InfoBar::Error);
         result = session->open(dev);
         if (result != SyntactsError_NoError && m_infoBar)
-            return m_infoBar->pushMessage("Failed to open device! Error: " + str(result), InfoBar::Error);
+            m_infoBar->pushMessage("Failed to open device! Error: " + str(result), InfoBar::Error);
         getCurrent();
         onDeviceUpdated.emit();
+        std::cout << m_currentDev.name << std::endl;
+    }
+
+    void switchApi(const std::string& api) {
+        if (m_currentApi != api)
+        {
+            m_currentApi = api;
+            switchDevice(m_available[m_currentApi][0]);
+            // m_infoBar->pushMessage("Switched API to " + m_currentApi);
+        }        
     }
 
     void switchSampleRate(double sampleRate) {
         int result = session->close();
         if (result != SyntactsError_NoError && m_infoBar)
-            return m_infoBar->pushMessage("Failed to close device! Error: " + str(result), InfoBar::Error);
+            m_infoBar->pushMessage("Failed to close device! Error: " + str(result), InfoBar::Error);
         result = session->open(m_currentDev, m_currentDev.maxChannels, sampleRate);
         if (result != SyntactsError_NoError && m_infoBar)
-            return m_infoBar->pushMessage("Failed to open device! Error: " + str(result), InfoBar::Error);        
+            m_infoBar->pushMessage("Failed to open device! Error: " + str(result), InfoBar::Error);        
         m_infoBar->pushMessage("Changed sample rate to " + str(sampleRate, "Hz"));
         onDeviceUpdated.emit();
     }
@@ -185,14 +195,7 @@ private:
         }
     }
 
-    void switchApi(const std::string& api) {
-        if (m_currentApi != api)
-        {
-            m_currentApi = api;
-            switchDevice(m_available[m_currentApi][0]);
-            m_infoBar->pushMessage("Switched API to " + m_currentApi);
-        }        
-    }
+
 
 public:
 
