@@ -36,13 +36,19 @@ public:
 
     float cpuLoad = 0.5;
 
+    Sequence<Color> m_cpuGradient;
+
 private:
 
     // Handle<DeviceBar> m_deviceBar;
 
     void start() {
         pushMessage("Welcome to Syntacts!");
-        // m_deviceBar = 
+        m_cpuGradient[0.00f] = ImGui::GetStyle().Colors[ImGuiCol_PlotHistogram];
+        m_cpuGradient[0.25f] = ImGui::GetStyle().Colors[ImGuiCol_PlotHistogram];
+        m_cpuGradient[0.50f] = Yellows::Gold;
+        m_cpuGradient[0.75f] = Oranges::OrangeRed;
+        m_cpuGradient[1.00f] = Reds::DarkRed;
     }
 
     void update() override {
@@ -74,7 +80,9 @@ private:
         bool modalOpen = true;
 
         ImGui::SameLine(ImGui::GetWindowWidth() - 365);
+        ImGui::PushStyleColor(ImGuiCol_PlotHistogram, m_cpuGradient(Math::clamp01(cpuLoad)));
         ImGui::ProgressBar(cpuLoad, ImVec2(100,0));
+        ImGui::PopStyleColor();
         tooltip("Session CPU Thread Load");
 
 #ifndef TACT_USE_MALLOC
@@ -122,7 +130,7 @@ private:
         ImGui::SameLine();
         if (ImGui::Button(ICON_FA_PALETTE))
         {
-            // TODO
+            pushMessage("This doesn't work yet :(");
         }
         tooltip("Customize Theme");
 
@@ -155,9 +163,9 @@ private:
             // ImGui::Spacing();
             // ImGui::BulletText("Build cues by changing parameters in the Carrier, Modulation, and Envelope dialogs.\nYou can change values by dragging or double clicking the numeric entries.");
             // ImGui::Spacing();
-            ImGui::Text("To get helpful information and");
-            ImGui::Text("tips, simply drag the " ICON_FA_QUESTION);
-            ImGui::Text("button over areas of interest.");
+            ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + 250);
+            ImGui::TextWrapped("To get helpful information and tips, simply drag the " ICON_FA_QUESTION " button over areas of interest.");
+            ImGui::PopTextWrapPos();
             ImGui::EndPopup();
 
         }
@@ -167,20 +175,24 @@ private:
         tooltip("Show General Info");
         if (ImGui::BeginPopupModal("Syntacts GUI v1.0.0", &modalOpen, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove))
         {
-            ImGui::Text("Mechatronics and Haptic Interfaces Lab");
-            ImGui::Text("Rice University, Houston, TX");
-            // ImGui::SameLine(150);
+            ImGui::Text("MAHI Lab");
+            ImGui::SameLine(150);
             if (ImGui::Button(ICON_FA_HOME"##MAHI"))
                 openUrl("https://mahilab.rice.edu/"); 
-            ImGui::SameLine(175);       
+            ImGui::SameLine(175);
+            if (ImGui::Button(ICON_FA_GITHUB"##MAHI"))
+                openUrl("https://github.com/mahilab");
+
             ImGui::Text("Evan Pezent"); 
             ImGui::SameLine(150);
             if (ImGui::Button(ICON_FA_HOME"##Evan"))
                 openUrl("http://www.evanpezent.com");         
-            ImGui::SameLine(175);
+            ImGui::SameLine(125);
             if (ImGui::Button(ICON_FA_ENVELOPE"##Evan"))
                 openEmail("epezent@rice.edu","Syntacts");
-            ImGui::Text("Brandon Cambio");
+            ImGui::SameLine(175);
+            if (ImGui::Button(ICON_FA_GITHUB"##Evan"))
+                openUrl("https://github.com/epezent");
             ImGui::EndPopup();
         }
     }

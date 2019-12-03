@@ -18,23 +18,32 @@ public:
     /// Restarts Syntacts session
     void initialize() {
         session = make<tact::Session>();
-        if (!session->open() && m_infoBar)
-            m_infoBar->pushMessage("Failed to initialize device!",InfoBar::Error);
+        int result = session->open();
+        if (result != SyntactsError_NoError && m_infoBar)
+            return m_infoBar->pushMessage("Failed to open device! Error: " + str(result), InfoBar::Error);
         getCurrent();
         getAvailable();
         onDeviceUpdated.emit();
     }
 
     void switchDevice(const tact::Device& dev) {
-        session->close();
-        session->open(dev);
+        int result = session->close();
+        if (result != SyntactsError_NoError && m_infoBar)
+            return m_infoBar->pushMessage("Failed to close device! Error: " + str(result), InfoBar::Error);
+        result = session->open(dev);
+        if (result != SyntactsError_NoError && m_infoBar)
+            return m_infoBar->pushMessage("Failed to open device! Error: " + str(result), InfoBar::Error);
         getCurrent();
         onDeviceUpdated.emit();
     }
 
     void switchSampleRate(double sampleRate) {
-        session->close();
-        session->open(m_currentDev, m_currentDev.maxChannels, sampleRate);
+        int result = session->close();
+        if (result != SyntactsError_NoError && m_infoBar)
+            return m_infoBar->pushMessage("Failed to close device! Error: " + str(result), InfoBar::Error);
+        result = session->open(m_currentDev, m_currentDev.maxChannels, sampleRate);
+        if (result != SyntactsError_NoError && m_infoBar)
+            return m_infoBar->pushMessage("Failed to open device! Error: " + str(result), InfoBar::Error);        
         m_infoBar->pushMessage("Changed sample rate to " + str(sampleRate, "Hz"));
         onDeviceUpdated.emit();
     }

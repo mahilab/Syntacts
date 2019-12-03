@@ -1,4 +1,4 @@
-// #define CARNOT_NO_CONSOLE
+#define CARNOT_NO_CONSOLE
 // #define CARNOT_USE_DISCRETE_GPU
 
 #include "VisualizerWindow.hpp"
@@ -13,10 +13,10 @@ public:
 
     SyntactsGui() {
         m_device     = makeChild<DeviceBar>("Device");
+        m_visualizer = makeChild<VisualizerWindow>("Visualizer");
         m_info       = makeChild<InfoBar>("Info");
         m_designer   = makeChild<DesignerWindow>("Designer");
         m_channel    = makeChild<ChannelWindow>("Channel");
-        m_visualizer = makeChild<VisualizerWindow>("Visualizer");
         m_library    = makeChild<LibraryWindow>("Library");
         positionWindows();
     }
@@ -64,9 +64,6 @@ private:
         m_channel->rect = FloatRect(l, t, columnWidth, columnHeight);
     }
 };
-
-
-
 
 int main(int argc, char const *argv[])
 {

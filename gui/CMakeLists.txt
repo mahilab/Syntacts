@@ -11,6 +11,8 @@ add_executable(syntacts-gui
     src/helpers.hpp
     src/ImGui/ImSequencer.hpp
     src/ImGui/ImSequencer.cpp
+    src/ImGui/CustomWidgets.hpp
+    src/ImGui/CustomWidgets.cpp
     ${ICON}
 )
 target_link_libraries(syntacts-gui syntacts carnot)

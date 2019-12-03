@@ -41,52 +41,37 @@ using namespace rigtorp;
 /// Channel structure
 class Channel {
 public:
-    Signal   signal;
-    double   time   = 0.0; 
-    double   sampleLength = 0.0;
-    float    volume = 1.0f;
-    float    lastVolume = 1.0f;
-    float    pitch  = 1.0f;
-    bool     paused = true;
+    Signal signal;
+    double time   = 0.0; 
+    double sampleLength = 0.0;
+    float  volume = 1.0f;
+    float  lastVolume = 1.0f;
+    float  pitch  = 1.0f;
+    float  lastPitch = 1.0f;
+    bool   paused = true;
     
     static float tBuff[2048];
 
-    // float nextSample() {
-    //     float sample = 0;
-    //     if (!paused) {
-    //         if (time >= 0 && time <= signal.length())
-    //             sample = volume * signal.sample(static_cast<float>(time));
-    //         time += sampleLength;
-    //     }
-    //     return sample;
-    // }
-    // void fillBuffer(float* buffer, unsigned long frames) {
-    //     float nextVolume = volume;
-    //     float volumeIncr = (nextVolume - lastVolume) / frames;
-    //     volume = lastVolume;        
-    //     for (unsigned long f = 0; f < frames; f++) {
-    //         volume += volumeIncr;
-    //         buffer[f] = nextSample();
-    //     }
-    //     volume     = nextVolume;
-    //     lastVolume = nextVolume;
-    // }
-
     void fillBuffer(float* buffer, unsigned long frames) {
+        // interp volume
         float nextVolume = volume;
         float volumeIncr = (nextVolume - lastVolume) / frames;
-        volume = lastVolume;      
+        volume = lastVolume;   
+        // interp pitch
+        float nextPitch = pitch;
+        float pitchIncr = (nextPitch - lastPitch) / frames;
+        pitch = lastPitch;
+
         if (paused) {
-            for (unsigned long f = 0; f < frames; ++f) {
+            for (unsigned long f = 0; f < frames; ++f) 
                 buffer[f] = 0;
-                volume += volumeIncr;
-            }
         }
         else {
             // fill time buffer and 
             for (unsigned long f = 0; f < frames; ++f) {
+                pitch += pitchIncr;
                 tBuff[f] = static_cast<float>(time);
-                time += sampleLength;
+                time += sampleLength * pitch;
             }
             // multisample signal
             signal.sample(tBuff, buffer, (int)frames);
@@ -99,8 +84,11 @@ public:
         if (time > signal.length()) {
             paused = true;
         }
+
         volume     = nextVolume;
         lastVolume = nextVolume;
+        pitch      = nextPitch;
+        lastPitch  = nextPitch;
     }
 };
 
@@ -145,6 +133,14 @@ struct Volume : public Command {
         channel.volume = volume;
     }
     float volume;
+};
+
+/// Command to set channel volume
+struct Pitch : public Command {
+    virtual void perform(Channel& channel) override {
+        channel.pitch = pitch;
+    }
+    float pitch;
 };
 
 } // private namespace
@@ -210,6 +206,7 @@ public:
             return SyntactsError_InvalidSampleRate;
 
         // resize vector of channels
+        m_channels.clear();
         m_channels.resize(channels);
         for (auto& c : m_channels) 
             c.sampleLength = 1.0 / m_sampleRate;
@@ -287,6 +284,19 @@ public:
         bool success = m_commands.try_push(std::move(command));
         assert(success);
         return SyntactsError_NoError; 
+    }
+
+    int setPitch(int channel, float pitch) {
+        if (!isOpen())
+            return SyntactsError_NotOpen;
+        if (!(channel < m_channels.size()))
+            return SyntactsError_InvalidChannel;
+        auto command = std::make_shared<Pitch>();
+        command->channel = channel;
+        command->pitch   = pitch;
+        bool success = m_commands.try_push(std::move(command));
+        assert(success);
+        return SyntactsError_NoError;       
     }
 
     const Device& getCurrentDevice() const {
@@ -539,6 +549,11 @@ int Session::resumeAll() {
 
 int Session::setVolume(int channel, float volume) {
     return m_impl->setVolume(channel, volume);
+}
+
+
+int Session::setPitch(int channel, float pitch) {
+    return m_impl->setPitch(channel, pitch);
 }
 
 const Device& Session::getCurrentDevice() const {

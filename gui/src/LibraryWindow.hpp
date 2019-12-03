@@ -24,7 +24,7 @@ public:
         bool saved;
     };
 
-    tact::Signal getSelectedCue() {
+    tact::Signal getSelectedSignal() {
         if (m_lib.count(m_selected)) {
             return m_lib[m_selected].disk;
         }   
@@ -37,6 +37,7 @@ private:
         fs::create_directories(tact::Library::getLibraryDirectory());
         m_infoBar =  findSibling<InfoBar>();
         m_designer = findSibling<DesignerWindow>();
+        m_vis      = findSibling<VisualizerWindow>();
         sync();
         if (m_lib.size() > 0)
             m_selected = m_lib.begin()->first;
@@ -55,7 +56,7 @@ private:
         helpers::setWindowRect(rect);
         ImGui::Begin(getName().c_str(), nullptr,  ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
         if (ImGui::BeginTabBar("LibraryWindowTabs")) {
-            if (ImGui::BeginTabItem("Pallette ##Tab")) {
+            if (ImGui::BeginTabItem("Pallette##Tab")) {
                 updateSignalList();
                 ImGui::EndTabItem();
             }
@@ -82,7 +83,7 @@ private:
 
     void updateCreateCueDialog() {
         ImGui::PushItemWidth(-30);
-        bool entered = ImGui::InputText("##CueName", m_inputBuffer, 64, ImGuiInputTextFlags_CharsNoBlank | ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue);
+        bool entered = ImGui::InputText("##SignalName", m_inputBuffer, 64, ImGuiInputTextFlags_CharsNoBlank | ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue);
         ImGui::PopItemWidth();
         ImGui::SameLine(); 
         std::string filename(m_inputBuffer);
@@ -94,15 +95,15 @@ private:
                 auto cue = m_designer->buildSignal();
                 tact::Library::saveSignal(cue, filename);
                 sync();
-                m_infoBar->pushMessage("Created Cue " + filename);
+                m_infoBar->pushMessage("Created Signal " + filename);
                 memset(m_inputBuffer, 0, 64);
                 m_selected = filename;
             }
             else {
-                m_infoBar->pushMessage("Cue " + filename + " already exists", InfoBar::Error);
+                m_infoBar->pushMessage("Signal " + filename + " already exists", InfoBar::Error);
             }
         }
-        m_infoBar->tooltip("Create new Cue");
+        m_infoBar->tooltip("Create new Signal");
         helpers::endDisabled(!valid);
     }
 
@@ -152,6 +153,8 @@ private:
                 ImGui::Text(entry.name.c_str());
                 ImGui::EndDragDropSource();
             } 
+            if (ImGui::IsItemHovered())
+                m_vis->setRenderedSignal(entry.disk, Blues::LightBlue);
         }
 
         ImGui::EndChild();
@@ -161,22 +164,23 @@ private:
     void updateListControls() {
         bool disabled = m_lib.count(m_selected) == 0;
         helpers::beginDisabled(disabled);
+        float space = 27;
         if (ImGui::Button(ICON_FA_SAVE)) {
             auto cue = m_designer->buildSignal();
             tact::Library::saveSignal(cue, m_selected);
             tact::Library::loadSignal(m_lib[m_selected].disk, m_selected);
-            m_infoBar->pushMessage("Saved Cue " + m_selected);
+            m_infoBar->pushMessage("Saved Signal " + m_selected);
             sync();
         }
-        m_infoBar->tooltip("Save Selected Cue");
+        m_infoBar->tooltip("Save Selected Signal");
 
-        ImGui::SameLine();
+        ImGui::SameLine(1*space);
         if (ImGui::Button(ICON_FA_TRASH))
         {
-            m_infoBar->pushMessage("Deleted Cue " + m_selected);
+            m_infoBar->pushMessage("Deleted Signal " + m_selected);
             auto it = m_lib.find(m_selected);
             auto next = std::next(it);
-            auto prev = std::prev(it);
+            auto prev = it == m_lib.begin() ? it : std::prev(it);
             if (next != m_lib.end())
                 m_selected = next->second.name;
             else if (prev != m_lib.end())
@@ -188,31 +192,31 @@ private:
 
             sync();
         }
-        m_infoBar->tooltip("Delete Selected Cue");
+        m_infoBar->tooltip("Delete Selected Signal");
 
-        ImGui::SameLine();
+        ImGui::SameLine(2*space);
         if (ImGui::Button(ICON_FA_MUSIC)) {
             std::string filePath = m_selected;
-            tact::Library::exportSignal(getSelectedCue(), filePath, tact::FileFormat::WAV);
-            m_infoBar->pushMessage("Exported Cue " + m_selected + " to " + filePath);
+            tact::Library::exportSignal(getSelectedSignal(), filePath, tact::FileFormat::WAV);
+            m_infoBar->pushMessage("Exported Signal " + m_selected + " to " + filePath + ".wav");
         }
-        m_infoBar->tooltip("Export Selected Cue to WAV");
+        m_infoBar->tooltip("Export Selected Signal to WAV");
 
-        ImGui::SameLine();
+        ImGui::SameLine(3*space);
         if (ImGui::Button(ICON_FA_TABLE)) {
             std::string filePath = m_selected;
-            tact::Library::exportSignal(getSelectedCue(), filePath, tact::FileFormat::CSV);
-            m_infoBar->pushMessage("Exported Cue " + m_selected + " to " + filePath);
+            tact::Library::exportSignal(getSelectedSignal(), filePath, tact::FileFormat::CSV);
+            m_infoBar->pushMessage("Exported Signal " + m_selected + " to " + filePath + ".csv");
         }
-        m_infoBar->tooltip("Export Selected Cue to CSV");
+        m_infoBar->tooltip("Export Selected Signal to CSV");
 
-        // ImGui::SameLine();
-        // if (ImGui::Button(ICON_FA_FILE_EXPORT)) {
-        //     std::string filePath = m_selected;
-        //     tact::Library::exportSignal(getSelectedCue(), filePath, tact::FileFormat::JSON);
-        //     m_infoBar->pushMessage("Exported Cue " + m_selected + " to " + filePath);
-        // }
-        // m_infoBar->tooltip("Export Selected Cue to JSON");
+        ImGui::SameLine(4*space);
+        if (ImGui::Button(ICON_FA_CODE)) {
+            std::string filePath = m_selected;
+            tact::Library::exportSignal(getSelectedSignal(), filePath, tact::FileFormat::JSON);
+            m_infoBar->pushMessage("Exported Signal " + m_selected + " to " + filePath + ".json");
+        }
+        m_infoBar->tooltip("Export Selected Signal to JSON");
 
         helpers::endDisabled(disabled);
     }
@@ -259,4 +263,5 @@ private:
 
     Handle<InfoBar> m_infoBar;
     Handle<DesignerWindow> m_designer;
+    Handle<VisualizerWindow> m_vis;
 };

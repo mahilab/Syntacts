@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ImGui/CustomWidgets.hpp"
 #include <carnot>
 #include <syntacts>
 #include "DeviceBar.hpp"
@@ -53,28 +54,47 @@ private:
     void updateChannels() {
         ImGui::PushStyleColor(ImGuiCol_Border, Color::Transparent);
         ImGui::BeginChild("Channels", ImVec2(0,0), false, ImGuiWindowFlags_NoBackground);
+        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2( ImGui::GetStyle().FramePadding.x,  ImGui::GetStyle().FramePadding.y * 2 ));
+
         for (int i = 0; i < m_deviceBar->session->getCurrentDevice().maxChannels; ++i)
         {
             auto label = str(i + 1);
+
+
             if (ImGui::Button(label.c_str(), ImVec2(25,0)))
                 playCh(i);
-            ImGui::SameLine();
+            if (ImGui::IsItemClicked(1)) 
+                m_deviceBar->session->stop(i);
+
             ImGui::PushItemWidth(-1);
-            if (ImGui::SliderFloat(str("##", i).c_str(), &m_channelVol[i], 0, 1, "")) {
-                m_deviceBar->session->setVolume(i, Math::pow(m_channelVol[i],4));
-            }
-            ImGui::PopItemWidth();
+
+            ImGui::SameLine(30);
+            if (ImGui::MiniSliderFloat(str("##Volume", i).c_str(), &m_channelVol[i], 0, 1, true))
+                m_deviceBar->session->setVolume(i, m_channelVol[i]);
             if (ImGui::IsItemClicked(1)) {
                 m_channelVol[i] = m_channelVol[i] == 0.0f ? 1.0f : m_channelVol[i] == 1.0f ? 0.0f : m_channelVol[i] < 0.5f ? 0.0f : 1.0f;
-                m_deviceBar->session->setVolume(i, Math::pow(m_channelVol[i],1));
+                m_deviceBar->session->setVolume(i, m_channelVol[i]);
             }
+
+            ImGui::SameLine(30);
+            if (ImGui::MiniSliderFloat(str("##Pitch", i).c_str(), &m_channelPitch[i], -1, 1, false))
+                m_deviceBar->session->setPitch(i, std::pow(10,m_channelPitch[i]));
+            if (ImGui::IsItemClicked(1)) {
+                m_channelPitch[i] = 0;
+                m_deviceBar->session->setPitch(i, m_channelPitch[i]);
+            }
+
+            ImGui::PopItemWidth();
+
         }
+        ImGui::PopStyleVar();
+
         ImGui::EndChild();
         ImGui::PopStyleColor(); 
 
     }
 
-    /// Creats and plays the user's cue
+    /// Creates and plays the user's cue
     void playCh(int ch) {
         auto cue =  m_designer->buildSignal();
         m_deviceBar->session->play(ch, cue);
@@ -82,15 +102,14 @@ private:
 
     /// Plays all selected channels
     void playSelected() {
-        for (int i = 0; i < m_deviceBar->session->getCurrentDevice().maxChannels; ++i) {
-            if (m_channelVol[i] > 0)
-                playCh(i);
-        }
+        for (int i = 0; i < m_deviceBar->session->getCurrentDevice().maxChannels; ++i)
+            playCh(i);
     }
 
     /// Gets number of channels from current Syntacts device and resizes accordingly
     void rechannel() {
-        m_channelVol = std::vector<float>(m_deviceBar->session->getCurrentDevice().maxChannels, 1.0f);
+        m_channelVol   = std::vector<float>(m_deviceBar->session->getCurrentDevice().maxChannels, 1.0f);
+        m_channelPitch = std::vector<float>(m_deviceBar->session->getCurrentDevice().maxChannels, 0.0f);
     }
 
 public:
@@ -101,5 +120,6 @@ private:
 
     float              m_masterVol = 1.0f;
     std::vector<float> m_channelVol;
+    std::vector<float> m_channelPitch;
 
 };

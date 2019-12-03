@@ -12,8 +12,9 @@
 - channel polyphony 
 - look into cereal's minima load/save capabilities
 - additional varaibles in expression
+- Repeater signal
 
-## Redigns
+## Redesigns
 - use of std::map for KeyedEnvelope complicates GUI, consider vectors
 
 ## Completed
@@ -28,23 +29,28 @@
 - ~~pop signals from channel when over~~
 - ~~change oscillator ctors to do 2*pi*f scaling in Scalar~~
 
-
 # GUI
 ## Must Do
-- Abstracted signal nodes in Designer tab
+- ~~Abstracted signal nodes in Designer tab~~
 - Sequencer tab
 - drag/drop help dialogs
-- fix Info dialog
+- ~~fix Info dialog~~
+- dual sliders for pitch/vol
+- improved slot header
+- render selected library item
+- fix library delete..
+- don't load all lib items automatically
+
 
 ## Nice to Have
-- CPU usage meter
+- ~~CPU usage meter~~
 - faster startup
 - copy/rename library items
 - drag/drop lib to channel
 - select device from Details listing
 - custom theme
 - last use memory (e.g. boot with last used device)
-- custom plot renderer without decimation
+- ~~custom plot renderer without decimation~~
 
 # Plugin DLL / C# API
 ## Must Do
