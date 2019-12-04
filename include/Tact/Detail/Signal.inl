@@ -56,6 +56,10 @@ inline Signal::Pool& Signal::pool() {
     return p;
 }
 
+inline int Signal::count() {
+    return Concept::count();
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 template <typename T>
@@ -94,9 +98,9 @@ std::type_index Signal::Model<T>::typeId() const
 }
 
 template <typename T>
-void* Signal::Model<T>::get() 
+void* Signal::Model<T>::get() const
 { 
-    return &m_model; 
+    return (void*)&m_model; 
 }
 
 #ifndef TACT_USE_SHARED_PTR
@@ -105,6 +109,7 @@ void* Signal::Model<T>::get()
 template <typename T>
 std::unique_ptr<Signal::Concept> Signal::Model<T>::copy() const 
 { 
+    s_count++;
     return std::make_unique<Signal::Model<T>>(*this); 
 }
 
@@ -113,6 +118,7 @@ std::unique_ptr<Signal::Concept> Signal::Model<T>::copy() const
 template <typename T>
 std::unique_ptr<Signal::Concept, Signal::Deleter> Signal::Model<T>::copy() const
 { 
+    s_count++;
     return std::unique_ptr<Signal::Concept, Signal::Deleter>(new (Signal::pool().allocate()) Model(*this)); 
 }
 

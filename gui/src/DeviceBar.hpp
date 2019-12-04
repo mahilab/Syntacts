@@ -59,8 +59,6 @@ private:
     void start() {
         m_infoBar = findSibling<InfoBar>();
                 initialize();
-        std::cout << std::this_thread::get_id() << std::endl;
-
     }
 
     void update() override {

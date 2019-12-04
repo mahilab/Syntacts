@@ -10,18 +10,21 @@ EXPORT Handle Session_create();
 EXPORT void Session_delete(Handle session);
 EXPORT int Session_open(Handle session, int index, int channelCount, double sampleRate);
 EXPORT int Session_close(Handle session);
-EXPORT int Session_play(Handle session, int channel, Handle cue);
+EXPORT int Session_play(Handle session, int channel, Handle signal);
 EXPORT int Session_stop(Handle session, int channel);
 EXPORT int Session_pause(Handle session, int channel);
 EXPORT int Session_resume(Handle session, int channel);
 EXPORT int Session_setVolume(Handle session, int channel, float volume);
+EXPORT int Session_setPitch(Handle session, int channel, float pitch);
 EXPORT bool Session_isOpen(Handle session);
+EXPORT int Session_count();
 
 ///////////////////////////////////////////////////////////////////////////////
 
 EXPORT bool Signal_valid(Handle sig);
 EXPORT void Signal_delete(Handle sig);
 EXPORT float Signal_sample(Handle sig, float t);
+EXPORT float Signal_length(Handle sig);
 EXPORT int Signal_count();
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -44,19 +47,16 @@ EXPORT Handle Triangle_create(float frequency);
 
 ///////////////////////////////////////////////////////////////////////////////
 
-EXPORT Handle Cue_create();
-EXPORT void Cue_setEnvelope(Handle cue, Handle env);
-EXPORT void Cue_chain(Handle cue, Handle sig);
+EXPORT Handle Product_create(Handle lhs, Handle rhs);
+EXPORT Handle Sum_create(Handle lhs, Handle rhs);
 
 ///////////////////////////////////////////////////////////////////////////////
 
-EXPORT bool Library_saveCue(Handle cue, const char* name);
-EXPORT Handle Library_loadCue(const char* name);
+EXPORT bool Library_saveSignal(Handle signal, const char* name);
+EXPORT Handle Library_loadSignal(const char* name);
 
 ///////////////////////////////////////////////////////////////////////////////
 
-EXPORT int Debug_oscMapSize();
-EXPORT int Debug_envMapSize();
-EXPORT int Debug_cueMapSize();
+EXPORT int Debug_sigMapSize();
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -82,7 +82,7 @@ private:
 #ifndef TACT_USE_MALLOC
         ImGui::SameLine(ImGui::GetWindowWidth() - 365);
 #else
-        ImGui::SameLine(ImGui::GetWindowWidth() - 295);
+        ImGui::SameLine(ImGui::GetWindowWidth() - 325);
 #endif
         ImGui::PushStyleColor(ImGuiCol_PlotHistogram, m_cpuGradient(Math::clamp01(cpuLoad)));
         ImGui::ProgressBar(cpuLoad, ImVec2(100,0));
@@ -113,6 +113,10 @@ private:
             ImGui::EndPopup();
         }
         tooltip("View Signal Memory Pool Fragmentation");
+#else
+        ImGui::SameLine();
+        ImGui::Button(str(tact::Signal::count()).c_str(),ImVec2(30,0));
+        tooltip("Global Signal Count");
 #endif
 
 

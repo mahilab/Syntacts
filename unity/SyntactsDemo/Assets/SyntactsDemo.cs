@@ -10,42 +10,47 @@ using Syntacts;
 public class SyntactsDemo : MonoBehaviour
 {
 
-    public string cueName;
+    public int device;
+    public int channels;
+    public string signalName;
+    public bool open;
+
+    [Range(0,10)]
+    public float pitch = 1;
 
     Session session;
-
-    public bool open = false;
 
     // Start is called before the first frame update
     void Start()
     {
         session = new Session();
-        session.Open(3,1);
+        session.Open(device, channels);
     }
 
     // Update is called once per frame
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space)) {
-            Cue cue = new Cue();
-            cue.SetEnvelope(new ASR(1,3,1));
-            cue.Chain(new Sine(440));
-            if (Input.GetKey(KeyCode.LeftControl)) {
-                cue.Chain(new Sine(20));
-                cue.Chain(new Sine(5));
-            }
-            session.Play(0, cue);
+            var sine = new Sine(440);
+            var mod  = new Sine(10);
+            var adsr = new ADSR(1,1,1,1);
+            var prod = sine * mod;
+            session.Play(0, prod);
         }
+
+        if (Input.GetKeyDown(KeyCode.X))
+            session.Stop(0);
 
         if (Input.GetKeyDown(KeyCode.C)) {
             print(Signal.Count());
         }
 
         if (Input.GetKeyDown(KeyCode.L)) {
-            var cue = Dll.Library_loadCue(cueName);
-            Dll.Session_play(session.handle, 0, cue);
-            Dll.Signal_delete(cue);
+            var sig = Library.LoadSignal(signalName);
+            session.Play(0, sig);
         }
+
+        session.SetPitch(0, pitch);
 
         open = session.IsOpen();
     }

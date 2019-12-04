@@ -35,22 +35,21 @@ namespace Syntacts
             }
         }
 
+        public static Signal operator*(Signal lhs, Signal rhs) {
+            return new Product(lhs, rhs);
+        }
+
         internal Handle handle = Handle.Zero;
     }
 
-    class IEnvelope : Signal {
-
-    }
-
-    class Envelope : IEnvelope
+    class Envelope : Signal
     {
-        public Envelope(float duration)
-        {
+        public Envelope(float duration) {
             handle = Dll.Envelope_create(duration);
         }
     }
 
-    class ASR : IEnvelope {
+    class ASR : Signal {
         public ASR(float a, float s, float r) {
             handle = Dll.ASR_create(a,s,r);
         }
@@ -69,22 +68,16 @@ namespace Syntacts
         }
     }
 
-    class Cue : Signal
-    {
-        public Cue() {
-            handle = Dll.Cue_create();
+    class Product : Signal {
+        public Product(Signal lhs, Signal rhs) {
+            handle = Dll.Product_create(lhs.handle, rhs.handle);
         }
+    }
 
-        public void SetEnvelope(IEnvelope env)
-        {
-            Dll.Cue_setEnvelope(handle, env.handle);
+    class Sum : Signal {
+        public Sum(Signal lhs, Signal rhs) {
+            handle = Dll.Sum_create(lhs.handle, rhs.handle);
         }
-
-        public void Chain(Signal sig) 
-        {
-            Dll.Cue_chain(handle, sig.handle);
-        }
-
     }
 
     class Session : IDisposable
@@ -94,9 +87,9 @@ namespace Syntacts
             handle = Dll.Session_create();
         }
 
-        public int Open(int index, int channelCount)
+        public int Open(int index, int channelCount, double sampleRate = 0)
         {
-            return Dll.Session_open(handle, index, channelCount);
+            return Dll.Session_open(handle, index, channelCount, sampleRate);
         }
 
         public int Close()
@@ -104,8 +97,8 @@ namespace Syntacts
             return Dll.Session_close(handle);
         }
 
-        public int Play(int channel, Cue cue) {
-            return Dll.Session_play(handle, channel, cue.handle);
+        public int Play(int channel, Signal signal) {
+            return Dll.Session_play(handle, channel, signal.handle);
         }
 
         public int Stop(int channel)
@@ -126,6 +119,11 @@ namespace Syntacts
         public int SetVolume(int channel, float volume)
         {
             return Dll.Session_setVolume(handle, channel, volume);
+        }
+
+        public int SetPitch(int channel, float pitch)
+        {
+            return Dll.Session_setPitch(handle, channel, pitch);
         }
 
         public bool IsOpen() {
@@ -156,6 +154,14 @@ namespace Syntacts
 
     }
 
+    class Library {
+        public static Signal LoadSignal(string name) {
+            Signal sig = new Signal();
+            sig.handle = Dll.Library_loadSignal(name);
+            return sig;
+        }
+    }
+
     class Dll
     {
 
@@ -164,7 +170,7 @@ namespace Syntacts
         [DllImport("syntacts-plugin")]
         public static extern void Session_delete(Handle session);
         [DllImport("syntacts-plugin")]
-        public static extern int Session_open(Handle session, int index, int channelCount);
+        public static extern int Session_open(Handle session, int index, int channelCount, double sampeRate);
         [DllImport("syntacts-plugin")]
         public static extern int Session_close(Handle session);
         [DllImport("syntacts-plugin")]
@@ -178,7 +184,11 @@ namespace Syntacts
         [DllImport("syntacts-plugin")]
         public static extern int Session_setVolume(Handle session, int channel, float volume);
         [DllImport("syntacts-plugin")]
+        public static extern int Session_setPitch(Handle session, int channel, float pitch);
+        [DllImport("syntacts-plugin")]
         public static extern bool Session_isOpen(Handle session);
+        [DllImport("syntacts-plugin")]
+        public static extern int Session_count();
 
         [DllImport("syntacts-plugin")]
         public static extern bool Signal_valid(Handle sig);
@@ -186,6 +196,8 @@ namespace Syntacts
         public static extern void Signal_delete(Handle sig);
         [DllImport("syntacts-plugin")]
         public static extern float Signal_sample(Handle sig, float t);
+        [DllImport("syntacts-plugin")]
+        public static extern float Signal_length(Handle sig);
         [DllImport("syntacts-plugin")]
         public static extern int Signal_count();
 
@@ -211,23 +223,18 @@ namespace Syntacts
         public static extern Handle Triangle_create(float frequency);
 
         [DllImport("syntacts-plugin")]
-        public static extern Handle Cue_create();
+        public static extern Handle Product_create(Handle lhs, Handle rhs);
         [DllImport("syntacts-plugin")]
-        public static extern void Cue_setEnvelope(Handle cue, Handle env);
-        [DllImport("syntacts-plugin")]
-        public static extern void Cue_chain(Handle cue, Handle sig);
+        public static extern Handle Sum_create(Handle lhs, Handle rhs);
+
 
         [DllImport("syntacts-plugin", CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool Library_saveCue(Handle cue, string name);
+        public static extern bool Library_saveSignal(Handle signal, string name);
         [DllImport("syntacts-plugin", CallingConvention = CallingConvention.Cdecl)]
-        public static extern Handle Library_loadCue(string name);
+        public static extern Handle Library_loadSignal(string name);
 
         [DllImport("syntacts-plugin")]
-        public static extern int Debug_oscMapSize();
-        [DllImport("syntacts-plugin")]
-        public static extern int Debug_envMapSize();
-        [DllImport("syntacts-plugin")]
-        public static extern int Debug_cueMapSize();
+        public static extern int Debug_sigMapSize();
 
     }
 }

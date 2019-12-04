@@ -1,4 +1,4 @@
-// #define CARNOT_NO_CONSOLE
+#define CARNOT_NO_CONSOLE
 // #define CARNOT_USE_DISCRETE_GPU
 
 #include "VisualizerWindow.hpp"
@@ -67,7 +67,6 @@ private:
 
 int main(int argc, char const *argv[])
 {
-    std::cout << "Main: " << std::this_thread::get_id() << std::endl;
     try {
         Engine::makeRoot<SyntactsGui>();
         Engine::init(900, 540, WindowStyle::Close);

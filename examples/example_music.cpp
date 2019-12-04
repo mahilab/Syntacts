@@ -51,6 +51,7 @@ int main(int argc, char const *argv[])
     Session session;
     session.open();    
     auto f = funktown();
+    Library::saveSignal(f, "funky");
     session.playAll(f);
     sleep(f.length() + 0.25f);
     auto d = dixie();

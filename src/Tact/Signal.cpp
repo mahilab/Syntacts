@@ -22,9 +22,11 @@ std::type_index Signal::typeId() const
     return m_ptr->typeId(); 
 }
 
-void* Signal::get()  
+void* Signal::get() const
 { 
     return m_ptr->get(); 
 }
+
+int Signal::Concept::s_count = 0;
 
 } // namespace tact

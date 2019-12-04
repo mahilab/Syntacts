@@ -56,12 +56,13 @@ public:
     /// Returns true if the underlying Signal is type T
     template <typename T> inline bool isType() const;
     /// Gets a pointer to the underlying Signal type (use with caution)
-    void* get();
+    void* get() const;
 
 public:
     using Pool = FriendlyStackPool<SIGNAL_BLOCK_SIZE, MAX_SIGNALS, Signal>;
     /// Gets a reference to the Signal memory pool
     static inline Pool& pool();
+    static inline int count();
 public:
     float scale;  // the signal will be scaled by this amount when sampled
     float offset; // the signal will be offset by this amount when sampled
@@ -74,13 +75,13 @@ public:
     };    
     /// Type Erasure Concept
     struct Concept {
-        Concept() = default;
-        virtual ~Concept() = default;
+        Concept() { s_count++; }
+        virtual ~Concept() { s_count--; }
         virtual float sample(float t) const = 0;
         virtual void sample(const float* t, float* b, int n, float s, float o) const = 0;
         virtual float length() const = 0;
         virtual std::type_index typeId() const = 0;
-        virtual void* get() = 0;
+        virtual void* get() const = 0;
 #ifndef TACT_USE_SHARED_PTR
 #ifdef TACT_USE_MALLOC
         virtual std::unique_ptr<Concept> copy() const = 0;
@@ -88,8 +89,11 @@ public:
         virtual std::unique_ptr<Concept, Deleter> copy() const = 0;
 #endif
 #endif
+        static inline int count() {return s_count; }
         template <class Archive>
         void serialize(Archive& archive) {}
+    protected:
+        static int s_count;
     };
     /// Type Erasure Model
     template <typename T>
@@ -100,7 +104,7 @@ public:
         void sample(const float* t, float* b, int n, float s, float o) const override;
         float length() const override;
         std::type_index typeId() const override;
-        void* get() override;
+        void* get() const override;
 #ifndef TACT_USE_SHARED_PTR
 #ifdef TACT_USE_MALLOC
         std::unique_ptr<Concept> copy() const override;
@@ -135,6 +139,7 @@ private:
     std::unique_ptr<Concept, Deleter> m_ptr;
 #endif
 #endif
+private:
     friend class cereal::access;
     template <class Archive> void save(Archive& archive) const;
     template <class Archive> void load(Archive& archive);

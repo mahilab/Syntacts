@@ -1,34 +1,18 @@
 #include "plugin.hpp"
-#include <Tact/Syntacts.hpp>
-#include <Tact/Session.hpp>
+#include <syntacts>
 #include <unordered_map>
 #include <iostream>
 
 using namespace tact;
 
-std::unordered_map<void*, Ptr<ISignal>>     g_sigs;
-std::unordered_map<void*, Ptr<IOscillator>> g_oscs;
-std::unordered_map<void*, Ptr<IEnvelope>>   g_envs; 
-std::unordered_map<void*, Ptr<Cue>>            g_cues;
+std::unordered_map<void*, Signal> g_sigs;
 
-template <typename P, typename M>
-inline Handle store(P p, M& m) {
-    Handle hand = p.get(); 
-    m[hand] = move(p);
-    return hand;
-}
-
-inline Ptr<ISignal> findSignal(Handle sig) {
-    if (g_sigs.count(sig))
-        return g_sigs[sig];
-    else if (g_oscs.count(sig))
-        return g_oscs[sig];
-    else if (g_envs.count(sig))
-        return g_envs[sig];
-    else if (g_cues.count(sig))
-        return g_cues[sig];
-    else
-        return nullptr;
+template <typename S>
+inline Handle store(const S& s) {
+    Signal sig(s);
+    Handle h = sig.get();
+    g_sigs.emplace(h, std::move(sig));
+    return h;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -50,8 +34,8 @@ int Session_close(Handle session) {
     return static_cast<Session*>(session)->close();
 }
 
-int Session_play(Handle session, int channel, Handle cue) {
-    return static_cast<Session*>(session)->play(channel, g_cues.at(cue));
+int Session_play(Handle session, int channel, Handle signal) {
+    return static_cast<Session*>(session)->play(channel, g_sigs.at(signal));
 }
 
 int Session_stop(Handle session, int channel) {
@@ -70,118 +54,113 @@ int Session_setVolume(Handle session, int channel, float volume) {
     return static_cast<Session*>(session)->setVolume(channel, volume);
 }
 
+int Session_setPitch(Handle session, int channel, float pitch) {
+    return static_cast<Session*>(session)->setPitch(channel, pitch);
+}
+
 bool Session_isOpen(Handle session) {
     return static_cast<Session*>(session)->isOpen();
+}
+
+int Session_count() {
+    return Session::count();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 bool Signal_valid(Handle sig) {
-    return findSignal(sig) != nullptr ? true : false;
+    return g_sigs.count(sig) > 0;
 }
 
 void Signal_delete(Handle sig) {
     g_sigs.erase(sig);
-    g_oscs.erase(sig);
-    g_envs.erase(sig);
-    g_cues.erase(sig);
 }
 
 float Signal_sample(Handle sig, float t) {
-    if (auto s = findSignal(sig))
-        return s->sample(t);
-    else
-        return std::numeric_limits<float>::infinity();
+    return g_sigs.at(sig).sample(t);
+}
+
+float Signal_length(Handle sig) {
+    return g_sigs.at(sig).length();
 }
 
 int Signal_count() {
-    return ISignal::count();
+    return Signal::count();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 Handle Scalar_create(float value) {
-    return store(create<Scalar>(value), g_sigs);
+    return store(Scalar(value));
 }
 
 Handle Ramp_create(float initial, float rate) {
-    return store(create<Ramp>(initial, rate), g_sigs);
+    return store(Ramp(initial, rate));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 
 Handle Envelope_create(float duration) {
-    return store(create<Envelope>(duration), g_envs);
+    return store(Envelope(duration));
 }
 
 Handle ASR_create(float a, float s, float r) {
-    return store(create<ASR>(a,s,r), g_envs);
+    return store(ASR(a,s,r));
 }
 
 Handle ADSR_create(float a, float d, float s, float r) {
-    return store(create<ADSR>(a,d,s,r), g_envs);
+    return store(ADSR(a,d,s,r));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 Handle Sine_create(float frequency) {
-    return store(create<Sine>(frequency), g_oscs);
+    return store(Sine(frequency));
 }
 
 Handle Square_create(float frequency) {
-    return store(create<Square>(frequency), g_oscs);
+    return store(Square(frequency));
 }
 
 Handle Saw_create(float frequency) {
-    return store(create<Saw>(frequency), g_oscs);
+    return store(Saw(frequency));
 }
 
 Handle Triangle_create(float frequency) {
-    return store(create<Triangle>(frequency), g_oscs);
+    return store(Triangle(frequency));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Handle Cue_create() {
-    return store(create<Cue>(), g_cues);
+Handle Product_create(Handle lhs, Handle rhs) {
+    return store(Product(g_sigs.at(lhs), g_sigs.at(rhs)));
 }
 
-void Cue_setEnvelope(Handle cue, Handle env) {
-    g_cues.at(cue)->setEnvelope(g_envs.at(env));
-}
-
-void Cue_chain(Handle cue, Handle sig) {
-    if (auto s = findSignal(sig))
-        g_cues.at(cue)->chain(s);
+Handle Sum_create(Handle lhs, Handle rhs) {
+    return store(Sum(g_sigs.at(lhs), g_sigs.at(rhs)));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool Library_saveCue(Handle cue, const char* name) {
-    return Library::saveCue(g_cues.at(cue), name);
+bool Library_saveSignal(Handle signal, const char* name) {
+    return Library::saveSignal(g_sigs.at(signal), name);
 } 
 
-Handle Library_loadCue(const char* name) {
-    auto cue = Library::loadCue(name);
-    if (cue != nullptr)
-        return store(cue, g_cues);
-    else
+Handle Library_loadSignal(const char* name) {
+    Signal sig;
+    if (Library::loadSignal(sig, name)) {
+        return store(sig);
+    }
+    else {
         return nullptr;
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-int Debug_oscMapSize() {
-    return static_cast<int>(g_oscs.size());
-}
-
-int Debug_envMapSize() {
-    return static_cast<int>(g_envs.size());
-}
-
-int Debug_cueMapSize() {
-    return static_cast<int>(g_cues.size());
+int Debug_sigMapSize() {
+    return static_cast<int>(g_sigs.size());
 }
 
 ///////////////////////////////////////////////////////////////////////////////

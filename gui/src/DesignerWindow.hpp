@@ -27,42 +27,42 @@ private:
         m_vis = findSibling<VisualizerWindow>();
     }
 
-    // void test() {
+    void test() {
 
-    //     ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
-    //     ImGui::Button("##TestingHover", ImVec2(-1,0));
+        ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
+        ImGui::Button("##TestingHover", ImVec2(-1,0));
         
-    //     ImGui::PopItemFlag();  
-    //     if (ImGui::IsItemHovered()) 
-    //         ImGui::PushStyleColor(ImGuiCol_Button,       ImGui::GetStyle().Colors[ImGuiCol_TabHovered]);
-    //     else 
-    //         ImGui::PushStyleColor(ImGuiCol_Button,       ImGui::GetStyle().Colors[ImGuiCol_TabActive]);
-    //     ImGui::PushStyleColor(ImGuiCol_FrameBg, Color::Transparent);
-    //     ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, Color::Transparent);
-    //     ImGui::PushStyleColor(ImGuiCol_FrameBgActive,  Color::Transparent);   
+        ImGui::PopItemFlag();  
+        if (ImGui::IsItemHovered()) 
+            ImGui::PushStyleColor(ImGuiCol_Button,       ImGui::GetStyle().Colors[ImGuiCol_TabHovered]);
+        else 
+            ImGui::PushStyleColor(ImGuiCol_Button,       ImGui::GetStyle().Colors[ImGuiCol_TabActive]);
+        ImGui::PushStyleColor(ImGuiCol_FrameBg, Color::Transparent);
+        ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, Color::Transparent);
+        ImGui::PushStyleColor(ImGuiCol_FrameBgActive,  Color::Transparent);   
 
-    //     ImGui::SameLine(1);
-    //     ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
-    //     ImGui::Button("##Testing", ImVec2(-1,0));
-    //     ImGui::PopItemFlag();  
+        ImGui::SameLine(1);
+        ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
+        ImGui::Button("##Testing", ImVec2(-1,0));
+        ImGui::PopItemFlag();  
         
-    //     ImGui::SameLine(1);
+        ImGui::SameLine(1);
 
-    //     ImGui::ArrowButton("##Arrow", ImGuiDir_Right);
-    //     ImGui::SameLine();
-    //     ImGui::Text("Product");
-    //     ImGui::SameLine(420);
-    //     static float x = 1.0f;
-    //     static float o = 0;
-    //     ImGui::PushItemWidth(50);
-    //     ImGui::DragFloat("##GAIN", &x, 0.01, -1, 1, "x%.2f");
-    //     ImGui::SameLine();
-    //     ImGui::DragFloat("##OFF", &o, 0.01, -10, 10, o >= 0 ? "+%.2f" : "%.2f");
-    //     ImGui::PopItemWidth();
-    //     ImGui::SameLine(540);
-    //     ImGui::Button(ICON_FA_MINUS_CIRCLE);
-    //             ImGui::PopStyleColor(4);
-    // }
+        ImGui::ArrowButton("##Arrow", ImGuiDir_Right);
+        ImGui::SameLine();
+        ImGui::Text("Product");
+        ImGui::SameLine(420);
+        static float x = 1.0f;
+        static float o = 0;
+        ImGui::PushItemWidth(50);
+        ImGui::DragFloat("##GAIN", &x, 0.01, -1, 1, "x%.2f");
+        ImGui::SameLine();
+        ImGui::DragFloat("##OFF", &o, 0.01, -10, 10, o >= 0 ? "+%.2f" : "%.2f");
+        ImGui::PopItemWidth();
+        ImGui::SameLine(540);
+        ImGui::Button(ICON_FA_MINUS_CIRCLE);
+                ImGui::PopStyleColor(4);
+    }
 
     void update() override {
         helpers::setWindowRect(rect);
@@ -72,7 +72,7 @@ private:
             if (ImGui::BeginTabItem("Designer##Tab")) {
                 ImGui::PushStyleColor(ImGuiCol_ChildBg, Color::Transparent);
                 ImGui::BeginChild("Designer##TabScroll");
-                // test();
+                test();
                 m_root.gui();
                 ImGui::EndChild();
                 ImGui::PopStyleColor();
