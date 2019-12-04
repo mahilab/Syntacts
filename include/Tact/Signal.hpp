@@ -11,7 +11,7 @@ namespace tact
 ///////////////////////////////////////////////////////////////////////////////
 
 // If uncommented, Signal will use default malloc instead of memory pool
-// #define TACT_USE_MALLOC     
+#define TACT_USE_MALLOC     
 
 // If uncommented, Signal will use shared pointers instead of unique pointers
 // #define TACT_USE_SHARED_PTR 

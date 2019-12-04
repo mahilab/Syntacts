@@ -79,7 +79,11 @@ private:
     void updateInfoButtons() {
         bool modalOpen = true;
 
+#ifndef TACT_USE_MALLOC
         ImGui::SameLine(ImGui::GetWindowWidth() - 365);
+#else
+        ImGui::SameLine(ImGui::GetWindowWidth() - 295);
+#endif
         ImGui::PushStyleColor(ImGuiCol_PlotHistogram, m_cpuGradient(Math::clamp01(cpuLoad)));
         ImGui::ProgressBar(cpuLoad, ImVec2(100,0));
         ImGui::PopStyleColor();

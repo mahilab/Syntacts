@@ -9,7 +9,7 @@ endmacro()
 
 syntacts_example(basic)
 syntacts_example(benchmark)
-# syntacts_example(devices)
+syntacts_example(devices)
 syntacts_example(library)
 # syntacts_example(cp)
 syntacts_example(music)

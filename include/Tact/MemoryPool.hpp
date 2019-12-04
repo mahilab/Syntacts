@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <iostream>
 #include <vector>
+#include <mutex>
 
 namespace tact {
 
@@ -80,6 +81,7 @@ public:
 
   /// Allocates a block of memory
   void *allocate() {
+    // std::lock_guard<std::mutex> lock(m_mutex);
     // std::cout << "allocate()" << std::endl;
     Block *freePosition = pop();
     assert(freePosition != nullptr && "The pool is full");
@@ -88,6 +90,7 @@ public:
   }
   /// Frees a block of memory
   void deallocate(void *ptr) {
+    // std::lock_guard<std::mutex> lock(m_mutex);
     // std::cout << "deallocate()" << std::endl;
     assert(contains(ptr) && "The pool doesn't manage this address");
     if (!contains(ptr))
@@ -97,6 +100,7 @@ public:
   }
   /// Makes available all blocks in the pool
   void reset() {
+    // std::lock_guard<std::mutex> lock(m_mutex);
     m_blocksUsed = 0;
     for (std::size_t i = 0; i < BlockCount; ++i) {
       std::size_t address = (std::size_t)m_memory + i * BlockSize;
@@ -135,6 +139,7 @@ private:
   std::size_t m_blocksUsed;
   Block *m_head;
   char m_memory[BlockSize * BlockCount];
+  std::mutex m_mutex;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

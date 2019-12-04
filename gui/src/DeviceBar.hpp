@@ -5,37 +5,39 @@
 #include "InfoBar.hpp"
 #include "helpers.hpp"
 #include <deque>
+#include <thread>
 
 using namespace carnot;
 
 class DeviceBar : public GameObject {
 public:
 
-    DeviceBar(const Name& name) : GameObject(name) {
-        initialize();
-    }
+    using GameObject::GameObject;
 
     /// Restarts Syntacts session
     void initialize() {
+        // make new session
         session = make<tact::Session>();
-        int result = session->open();
-        if (result != SyntactsError_NoError && m_infoBar)
-            return m_infoBar->pushMessage("Failed to open device! Error: " + str(result), InfoBar::Error);
-        getCurrent();
         getAvailable();
-        onDeviceUpdated.emit();
+        switchDevice(session->getDefaultDevice());
     }
 
-    void switchDevice(const tact::Device& dev) {
-        int result = session->close();
-        if (result != SyntactsError_NoError && m_infoBar)
+    void switchDevice(const tact::Device& dev, double sampleRate = 0) {
+        int result = SyntactsError_NoError;
+        // close if open
+        if (session->isOpen()) 
+            result = session->close();
+        if (result != SyntactsError_NoError) {
             m_infoBar->pushMessage("Failed to close device! Error: " + str(result), InfoBar::Error);
-        result = session->open(dev);
-        if (result != SyntactsError_NoError && m_infoBar)
+        }
+        // open requested device
+        result = session->open(dev, dev.maxChannels, sampleRate);
+        if (result != SyntactsError_NoError) {
             m_infoBar->pushMessage("Failed to open device! Error: " + str(result), InfoBar::Error);
+        }
+        /// update current and available
         getCurrent();
         onDeviceUpdated.emit();
-        std::cout << m_currentDev.name << std::endl;
     }
 
     void switchApi(const std::string& api) {
@@ -43,25 +45,22 @@ public:
         {
             m_currentApi = api;
             switchDevice(m_available[m_currentApi][0]);
-            // m_infoBar->pushMessage("Switched API to " + m_currentApi);
+            m_infoBar->pushMessage("Switched API to " + m_currentApi);
         }        
     }
 
     void switchSampleRate(double sampleRate) {
-        int result = session->close();
-        if (result != SyntactsError_NoError && m_infoBar)
-            m_infoBar->pushMessage("Failed to close device! Error: " + str(result), InfoBar::Error);
-        result = session->open(m_currentDev, m_currentDev.maxChannels, sampleRate);
-        if (result != SyntactsError_NoError && m_infoBar)
-            m_infoBar->pushMessage("Failed to open device! Error: " + str(result), InfoBar::Error);        
+        switchDevice(m_currentDev, sampleRate);
         m_infoBar->pushMessage("Changed sample rate to " + str(sampleRate, "Hz"));
-        onDeviceUpdated.emit();
     }
 
 private:
 
     void start() {
         m_infoBar = findSibling<InfoBar>();
+                initialize();
+        std::cout << std::this_thread::get_id() << std::endl;
+
     }
 
     void update() override {
