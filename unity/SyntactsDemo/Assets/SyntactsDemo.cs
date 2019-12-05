@@ -11,7 +11,8 @@ public class SyntactsDemo : MonoBehaviour
 {
 
     public int device;
-    public int channels;
+    public int channeCount;
+    public int channel = 0;
     public string signalName;
     public bool open;
 
@@ -24,7 +25,7 @@ public class SyntactsDemo : MonoBehaviour
     void Start()
     {
         session = new Session();
-        session.Open(device, channels);
+        session.Open(device, channeCount);
     }
 
     // Update is called once per frame
@@ -35,11 +36,11 @@ public class SyntactsDemo : MonoBehaviour
             var mod  = new Sine(10);
             var adsr = new ADSR(1,1,1,1);
             var prod = sine * mod;
-            session.Play(0, prod);
+            session.Play(channel, prod);
         }
 
         if (Input.GetKeyDown(KeyCode.X))
-            session.Stop(0);
+            session.Stop(channel);
 
         if (Input.GetKeyDown(KeyCode.C)) {
             print(Signal.Count());
@@ -47,10 +48,10 @@ public class SyntactsDemo : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.L)) {
             var sig = Library.LoadSignal(signalName);
-            session.Play(0, sig);
+            session.Play(channel, sig);
         }
 
-        session.SetPitch(0, pitch);
+        session.SetPitch(channel, pitch);
 
         open = session.IsOpen();
     }

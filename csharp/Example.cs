@@ -5,6 +5,11 @@ class Example
 {
     static void Main(string[] args)
     {
-        Console.WriteLine("Hello, World");
+        Session s = new Session();
+        s.Open(8, 24);
+        Signal x = new Sine(175);
+        s.Play(0, x);
+        System.Threading.Thread.Sleep(10000);
     }
 }
+

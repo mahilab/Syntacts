@@ -152,6 +152,7 @@ private:
         bool modalOpen = true;
         if (ImGui::BeginPopupModal("Device Details", &modalOpen, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove))
         {
+            // ImGui::SameLine(1);
             ImGui::Text("ID"); ImGui::SameLine(50);
             ImGui::Text("Name");  ImGui::SameLine(400);
             ImGui::Text("API"); ImGui::SameLine(500);
@@ -164,7 +165,12 @@ private:
                 std::string id = str(d.index);
                 if (d.isDefault)
                     id += "*";
-                ImGui::Separator();
+                // ImGui::Separator();
+                if (ImGui::Button(str("##",d.index).c_str(), ImVec2(-1,0))) {
+                    switchDevice(d);
+                    ImGui::CloseCurrentPopup();
+                }
+                ImGui::SameLine(9);
                 ImGui::Text(id.c_str());   ImGui::SameLine(50);
                 ImGui::Text(d.name.c_str()); ImGui::SameLine(400);
                 ImGui::Text(api.c_str());  ImGui::SameLine(500);

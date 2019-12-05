@@ -163,4 +163,22 @@ int Debug_sigMapSize() {
     return static_cast<int>(g_sigs.size());
 }
 
+#include <thread>
+#include <fstream>
+
+void func() {
+    std::ofstream f("file.csv");
+    int i = 0;
+    while (true) {
+        f << i++ << std::endl;
+        sleep(0.1);
+    }
+}
+
+int Debug_thread() {
+    static std::thread x(func);
+    x.detach();
+    return 0;
+}
+
 ///////////////////////////////////////////////////////////////////////////////

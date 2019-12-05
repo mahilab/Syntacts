@@ -72,7 +72,7 @@ private:
             if (ImGui::BeginTabItem("Designer##Tab")) {
                 ImGui::PushStyleColor(ImGuiCol_ChildBg, Color::Transparent);
                 ImGui::BeginChild("Designer##TabScroll");
-                test();
+                // test();
                 m_root.gui();
                 ImGui::EndChild();
                 ImGui::PopStyleColor();

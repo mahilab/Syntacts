@@ -59,4 +59,6 @@ EXPORT Handle Library_loadSignal(const char* name);
 
 EXPORT int Debug_sigMapSize();
 
+EXPORT int Debug_thread();
+
 ///////////////////////////////////////////////////////////////////////////////
