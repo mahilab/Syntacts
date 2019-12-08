@@ -1,4 +1,4 @@
-#include "plugin.hpp"
+#include "dll.hpp"
 #include <syntacts>
 #include <unordered_map>
 #include <iostream>
@@ -68,20 +68,20 @@ int Session_count() {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool Signal_valid(Handle sig) {
-    return g_sigs.count(sig) > 0;
+bool Signal_valid(Handle signal) {
+    return g_sigs.count(signal) > 0;
 }
 
-void Signal_delete(Handle sig) {
-    g_sigs.erase(sig);
+void Signal_delete(Handle signal) {
+    g_sigs.erase(signal);
 }
 
-float Signal_sample(Handle sig, float t) {
-    return g_sigs.at(sig).sample(t);
+float Signal_sample(Handle signal, float t) {
+    return g_sigs.at(signal).sample(t);
 }
 
-float Signal_length(Handle sig) {
-    return g_sigs.at(sig).length();
+float Signal_length(Handle signal) {
+    return g_sigs.at(signal).length();
 }
 
 int Signal_count() {
@@ -161,24 +161,6 @@ Handle Library_loadSignal(const char* name) {
 
 int Debug_sigMapSize() {
     return static_cast<int>(g_sigs.size());
-}
-
-#include <thread>
-#include <fstream>
-
-void func() {
-    std::ofstream f("file.csv");
-    int i = 0;
-    while (true) {
-        f << i++ << std::endl;
-        sleep(0.1);
-    }
-}
-
-int Debug_thread() {
-    static std::thread x(func);
-    x.detach();
-    return 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

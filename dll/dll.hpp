@@ -21,10 +21,10 @@ EXPORT int Session_count();
 
 ///////////////////////////////////////////////////////////////////////////////
 
-EXPORT bool Signal_valid(Handle sig);
-EXPORT void Signal_delete(Handle sig);
-EXPORT float Signal_sample(Handle sig, float t);
-EXPORT float Signal_length(Handle sig);
+EXPORT bool Signal_valid(Handle signal);
+EXPORT void Signal_delete(Handle signal);
+EXPORT float Signal_sample(Handle signal, float t);
+EXPORT float Signal_length(Handle signal);
 EXPORT int Signal_count();
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -58,7 +58,5 @@ EXPORT Handle Library_loadSignal(const char* name);
 ///////////////////////////////////////////////////////////////////////////////
 
 EXPORT int Debug_sigMapSize();
-
-EXPORT int Debug_thread();
 
 ///////////////////////////////////////////////////////////////////////////////
