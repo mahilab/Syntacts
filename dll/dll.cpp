@@ -143,6 +143,43 @@ Handle Sum_create(Handle lhs, Handle rhs) {
 
 ///////////////////////////////////////////////////////////////////////////////
 
+Handle Sequence_create() {
+    return store(Sequence());
+}
+
+Handle Sequence_SigSig(Handle lhs, Handle rhs) {
+    auto s = g_sigs.at(lhs) << g_sigs.at(rhs);
+    return store(s);
+}
+
+Handle Sequence_SigFlt(Handle lhs, float rhs) {
+    auto s = g_sigs.at(lhs) << rhs;
+    return store(s);
+}
+
+Handle Sequence_FltSig(float lhs, Handle rhs) {
+    auto s = lhs << g_sigs.at(rhs);
+    return store(s);
+}
+
+void Sequence_SeqFlt(Handle lhs, float rhs) {
+    Sequence& s = *(Sequence*)g_sigs.at(lhs).get();
+    s << rhs;
+}
+
+void Sequence_SeqSig(Handle lhs, Handle rhs) {
+    Sequence& s = *(Sequence*)g_sigs.at(lhs).get();
+    s << g_sigs.at(rhs);
+}
+
+void Sequence_SeqSeq(Handle lhs, Handle rhs) {
+    Sequence& s1 = *(Sequence*)g_sigs.at(lhs).get();
+    Sequence& s2 = *(Sequence*)g_sigs.at(rhs).get();
+    s1 << s2;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 bool Library_saveSignal(Handle signal, const char* name) {
     return Library::saveSignal(g_sigs.at(signal), name);
 } 

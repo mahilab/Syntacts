@@ -94,11 +94,40 @@ _syntacts.Sum_create.argtypes = [c_void_p, c_void_p]
 
 ###############################################################################
 
+_syntacts.Sequence_create.restype = c_void_p
+_syntacts.Sequence_create.argtypes = None
+
+_syntacts.Sequence_SigSig.restype = c_void_p
+_syntacts.Sequence_SigSig.argtypes = [c_void_p, c_void_p]
+
+_syntacts.Sequence_SigFlt.restype = c_void_p
+_syntacts.Sequence_SigFlt.argtypes = [c_void_p, c_float]
+
+_syntacts.Sequence_FltSig.restype = c_void_p
+_syntacts.Sequence_FltSig.argtypes = [c_float, c_void_p]
+
+_syntacts.Sequence_SeqFlt.restype = None
+_syntacts.Sequence_SeqFlt.argtypes = [c_void_p, c_float]
+
+_syntacts.Sequence_SeqSig.restype = None
+_syntacts.Sequence_SeqSig.argtypes = [c_void_p, c_void_p]
+
+_syntacts.Sequence_SeqSeq.restype = None
+_syntacts.Sequence_SeqSeq.argtypes = [c_void_p, c_void_p]
+
+###############################################################################
 _syntacts.Library_saveSignal.restype  = c_bool
 _syntacts.Library_saveSignal.argtypes = [c_void_p, c_char_p]
 
 _syntacts.Library_loadSignal.restype  = c_void_p
 _syntacts.Library_loadSignal.argtypes = [c_char_p]
+
+###############################################################################
+
+_syntacts.Debug_sigMapSize.restype = c_int
+_syntacts.Debug_sigMapSize.argtypes = None
+
+###############################################################################
 
 class Session:
     def __init__(self):
@@ -155,6 +184,20 @@ class Signal:
     def __add__(self, other):
         return Sum(self, other)
 
+    def __lshift__(self, other):
+        if isinstance(other, Signal):
+            return Sequence(_syntacts.Sequence_SigSig(self._handle, other._handle))
+        elif isinstance(other, (int, float)):
+            return Sequence(_syntacts.Sequence_SigFlt(self._handle, other))
+        else:
+            raise TypeError("other must be Signal, int, or float")
+
+    def __rlshift__(self, other):
+        if isinstance(other, (int, float)):
+            return Sequence(_syntacts.Sequence_FltSig(other, self._handle))
+        else:
+            raise TypeError("other must be int or float")
+
     @staticmethod
     def count():
         return _syntacts.Signal_count()
@@ -203,6 +246,26 @@ class Sum(Signal):
 
 ###############################################################################
 
+class Sequence(Signal):
+    def __init__(self, handle = None):
+        if handle:
+            self._handle = handle
+        else:
+            self._handle =  _syntacts.Sequence_create()
+    
+    def __lshift__(self, other):
+        if isinstance(other, Sequence):
+            _syntacts.Sequence_SeqSeq(self._handle, other._handle)
+        elif isinstance(other, Signal):
+            _syntacts.Sequence_SeqSig(self._handle, other._handle)
+        elif isinstance(other, (int, float)):
+            _syntacts.Sequence_SeqFlt(self._handle, other)
+        else:
+            raise TypeError("other must be Sequence, Signal, int, or float")
+        return self
+
+###############################################################################
+
 class Library:
     @staticmethod
     def save_signal(signal, name):
@@ -213,5 +276,12 @@ class Library:
         sig = Signal()
         sig._handle = _syntacts.Library_loadSignal(c_char_p(name.encode()))
         return sig
+
+###############################################################################
+
+class Debug:
+    @staticmethod
+    def sigMapSize():
+        return _syntacts.Debug_sigMapSize()
 
 ###############################################################################

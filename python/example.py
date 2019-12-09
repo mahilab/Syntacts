@@ -4,18 +4,17 @@ from time import sleep
 session = Session()
 session.open(10,2,48000)
 
-s = Square(440)
-m = Sine(10)
-e = ASR(3,3,1)
+a = Sine(100) * ASR(.1,.1,.1)
+b = Square(100) * ASR(.1,.1,.1)
+c = Sine(100) * ASR(.1,.1,.1)
 
-p = s * m * e
 
-Library.save_signal(p, "python2")
+x = 1 << a << b << 1 << c
 
-l = Library.load_signal("meow")
+# session.play(0, x)
+# sleep(x.length())
 
-session.play(0,l)
-
-sleep(l.length()+1)
+Library.save_signal(x, "pythonX")
 
 session.close()
+

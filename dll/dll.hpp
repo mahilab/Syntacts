@@ -52,6 +52,18 @@ EXPORT Handle Sum_create(Handle lhs, Handle rhs);
 
 ///////////////////////////////////////////////////////////////////////////////
 
+EXPORT Handle Sequence_create();
+
+EXPORT Handle Sequence_SigSig(Handle lhs, Handle rhs);
+EXPORT Handle Sequence_SigFlt(Handle lhs, float rhs);
+EXPORT Handle Sequence_FltSig(float lhs, Handle rhs);
+
+EXPORT void Sequence_SeqFlt(Handle lhs, float rhs);
+EXPORT void Sequence_SeqSig(Handle lhs, Handle rhs);
+EXPORT void Sequence_SeqSeq(Handle lhs, Handle rhs);
+
+///////////////////////////////////////////////////////////////////////////////
+
 EXPORT bool Library_saveSignal(Handle signal, const char* name);
 EXPORT Handle Library_loadSignal(const char* name);
 
