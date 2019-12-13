@@ -154,7 +154,7 @@ private:
                 ImGui::EndDragDropSource();
             } 
             if (ImGui::IsItemHovered())
-                m_vis->setRenderedSignal(entry.disk, Blues::LightBlue);
+                m_vis->setRenderedSignal(entry.disk, Oranges::Coral );
         }
 
         ImGui::EndChild();

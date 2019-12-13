@@ -323,11 +323,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77e34b00483bd734ca11aa4cf57f4395, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  device: 24
-  channeCount: 24
-  channel: 5
-  signalName: demo
-  open: 0
+  device: 4
+  channeCount: 8
+  channel: 0
+  signalName: demo2
+  open: 1
   pitch: 1
 --- !u!4 &1990230288
 Transform:

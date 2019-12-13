@@ -61,6 +61,37 @@ _syntacts.Signal_count.argtypes = None
 
 ###############################################################################
 
+_syntacts.Mul_SigFlt.restype = c_void_p
+_syntacts.Mul_SigFlt.argtypes = [c_void_p, c_float]
+
+_syntacts.Mul_FltSig.restype = c_void_p
+_syntacts.Mul_FltSig.argtypes = [c_float, c_void_p]
+
+_syntacts.Add_SigFlt.restype = c_void_p
+_syntacts.Add_SigFlt.argtypes = [c_void_p, c_float]
+
+_syntacts.Add_FltSig.restype = c_void_p
+_syntacts.Add_FltSig.argtypes = [c_float, c_void_p]
+
+_syntacts.Sub_SigFlt.restype = c_void_p
+_syntacts.Sub_SigFlt.argtypes = [c_void_p, c_float]
+
+_syntacts.Sub_FltSig.restype = c_void_p
+_syntacts.Sub_FltSig.argtypes = [c_float, c_void_p]
+
+_syntacts.Neg_Sig.restype = c_void_p
+_syntacts.Neg_Sig.argtypes = [c_void_p]
+
+###############################################################################
+
+_syntacts.Product_create.restype = c_void_p
+_syntacts.Product_create.argtypes = [c_void_p, c_void_p]
+
+_syntacts.Sum_create.restype = c_void_p
+_syntacts.Sum_create.argtypes = [c_void_p, c_void_p]
+
+###############################################################################
+
 _syntacts.Envelope_create.restype  = c_void_p
 _syntacts.Envelope_create.argtypes = [c_float]
 
@@ -83,14 +114,6 @@ _syntacts.Saw_create.argtypes = [c_float]
 
 _syntacts.Triangle_create.restype  = c_void_p
 _syntacts.Triangle_create.argtypes = [c_float]
-
-###############################################################################
-
-_syntacts.Product_create.restype = c_void_p
-_syntacts.Product_create.argtypes = [c_void_p, c_void_p]
-
-_syntacts.Sum_create.restype = c_void_p
-_syntacts.Sum_create.argtypes = [c_void_p, c_void_p]
 
 ###############################################################################
 
@@ -166,8 +189,8 @@ class Session:
 ###############################################################################
 
 class Signal:    
-    def __init__(self):
-        self._handle = 0
+    def __init__(self, handle):
+        self._handle = handle
 
     def __del__(self):
         _syntacts.Signal_delete(self._handle)
@@ -179,10 +202,44 @@ class Signal:
         return _syntacts.Signal_length(self._handle)
 
     def __mul__(self, other):
-        return Product(self, other)
+        if isinstance(other, Signal):
+            return Product(self, other)
+        elif isinstance(other, (int, float)):
+            return Signal(_syntacts.Mul_SigFlt(self._handle, other))
+        else:
+            raise TypeError("other must be Signal, int, or float")
+
+    def __rmul__(self, other):
+        if isinstance(other, (int, float)):
+            return Signal(_syntacts.Mul_FltSig(other, self._handle))
+        else:
+            raise TypeError("other must be int or float")
 
     def __add__(self, other):
-        return Sum(self, other)
+        if isinstance(other, Signal):
+            return Sum(self, other)
+        elif isinstance(other, (int, float)):
+            return Signal(_syntacts.Add_SigFlt(self._handle, other))
+        else:
+            raise TypeError("other must be Signal, int, or float")  
+
+    def __radd__(self, other):
+        if isinstance(other, (int, float)):
+            return Signal(_syntacts.Add_FltSig(other, self._handle))
+        else:
+            raise TypeError("other must be int or float")
+
+    def __sub__(self, other):
+        if isinstance(other, (int, float)):
+            return Signal(_syntacts.Sub_SigFlt(self._handle, other))
+        else:
+            raise TypeError("other must be Signal, int, or float")  
+
+    def __rsub__(self, other):
+        if isinstance(other, (int, float)):
+            return Signal(_syntacts.Sub_FltSig(other, self._handle))
+        else:
+            raise TypeError("other must be int or float")         
 
     def __lshift__(self, other):
         if isinstance(other, Signal):
@@ -273,9 +330,7 @@ class Library:
 
     @staticmethod
     def load_signal(name):
-        sig = Signal()
-        sig._handle = _syntacts.Library_loadSignal(c_char_p(name.encode()))
-        return sig
+        return Signal(_syntacts.Library_loadSignal(c_char_p(name.encode())))
 
 ###############################################################################
 

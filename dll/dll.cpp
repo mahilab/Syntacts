@@ -90,6 +90,48 @@ int Signal_count() {
 
 ///////////////////////////////////////////////////////////////////////////////
 
+Handle Mul_SigFlt(Handle lhs, float rhs) {
+    return store(g_sigs.at(lhs) * rhs);
+}
+
+Handle Mul_FltSig(float lhs, Handle rhs) {
+    return store(lhs * g_sigs.at(rhs));
+}
+
+Handle Add_SigFlt(Handle lhs, float rhs) {
+    return store(g_sigs.at(lhs) + rhs);
+}
+
+Handle Add_FltSig(float lhs, Handle rhs) {
+    return store(lhs + g_sigs.at(rhs));
+}
+
+Handle Sub_SigFlt(Handle lhs, float rhs) {
+    return store(g_sigs.at(lhs) - rhs);
+}
+
+Handle Sub_FltSig(float lhs, Handle rhs) {
+    return store(lhs - g_sigs.at(rhs));
+}
+
+Handle Neg_Sig(Handle signal) {
+    return store(-g_sigs.at(signal));
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+Handle Product_create(Handle lhs, Handle rhs) {
+    return store(Product(g_sigs.at(lhs), g_sigs.at(rhs)));
+}
+
+Handle Sum_create(Handle lhs, Handle rhs) {
+    return store(Sum(g_sigs.at(lhs), g_sigs.at(rhs)));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 Handle Scalar_create(float value) {
     return store(Scalar(value));
 }
@@ -129,16 +171,6 @@ Handle Saw_create(float frequency) {
 
 Handle Triangle_create(float frequency) {
     return store(Triangle(frequency));
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Handle Product_create(Handle lhs, Handle rhs) {
-    return store(Product(g_sigs.at(lhs), g_sigs.at(rhs)));
-}
-
-Handle Sum_create(Handle lhs, Handle rhs) {
-    return store(Sum(g_sigs.at(lhs), g_sigs.at(rhs)));
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -4,6 +4,9 @@
 #include <syntacts>
 #include "helpers.hpp"
 
+
+///////////////////////////////////////////////////////////////////////////////
+
 using namespace carnot;
 
 class VisualizerWindow : public GameObject {
@@ -32,6 +35,7 @@ private:
     float yScale;
     int nPoints = 10000;
 
+
     void start() override {
         m_bg = make<Shape>(4);
         m_bg->setPoint(0, rect.getPosition() + Vector2f(5,5));
@@ -46,6 +50,8 @@ private:
         yScale = -(rect.height - 10)/2 * 0.9f;
         m_plot = addComponent<LineRenderer>();
         m_plot->setPointCount(nPoints);
+
+
     }
 
     void update() override {

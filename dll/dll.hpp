@@ -27,6 +27,24 @@ EXPORT float Signal_sample(Handle signal, float t);
 EXPORT float Signal_length(Handle signal);
 EXPORT int Signal_count();
 
+/////////////////////////////////////////////////////////////////////////////
+
+EXPORT Handle Mul_SigFlt(Handle lhs, float rhs);
+EXPORT Handle Mul_FltSig(float lhs, Handle rhs);
+
+EXPORT Handle Add_SigFlt(Handle lhs, float rhs);
+EXPORT Handle Add_FltSig(float lhs, Handle rhs);
+
+EXPORT Handle Sub_SigFlt(Handle lhs, float rhs);
+EXPORT Handle Sub_FltSig(float lhs, Handle rhs);
+
+EXPORT Handle Neg_Sig(Handle signal);
+
+///////////////////////////////////////////////////////////////////////////////
+
+EXPORT Handle Product_create(Handle lhs, Handle rhs);
+EXPORT Handle Sum_create(Handle lhs, Handle rhs);
+
 ///////////////////////////////////////////////////////////////////////////////
 
 EXPORT Handle Scalar_create(float value);
@@ -44,11 +62,6 @@ EXPORT Handle Sine_create(float frequency);
 EXPORT Handle Square_create(float frequency);
 EXPORT Handle Saw_create(float frequency);
 EXPORT Handle Triangle_create(float frequency);
-
-///////////////////////////////////////////////////////////////////////////////
-
-EXPORT Handle Product_create(Handle lhs, Handle rhs);
-EXPORT Handle Sum_create(Handle lhs, Handle rhs);
 
 ///////////////////////////////////////////////////////////////////////////////
 

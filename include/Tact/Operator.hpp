@@ -40,6 +40,11 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
+inline Signal operator*(Signal lhs, Signal rhs);
+inline Signal operator*(float lhs, Signal rhs);
+inline Signal operator*(Signal lhs, float rhs);
+inline Signal& operator*=(Signal& lhs, float rhs);
+
 inline Signal operator+(Signal lhs, Signal rhs);
 inline Signal operator+(float lhs, Signal rhs);
 inline Signal operator+(Signal lhs, float rhs);
@@ -49,12 +54,8 @@ inline Signal operator-(Signal lhs, Signal rhs);
 inline Signal operator-(float lhs, Signal rhs);
 inline Signal operator-(Signal lhs, float rhs);
 inline Signal& operator-=(Signal& lhs, float rhs);
-inline Signal operator-(Signal lhs);
 
-inline Signal operator*(Signal lhs, Signal rhs);
-inline Signal operator*(float lhs, Signal rhs);
-inline Signal operator*(Signal lhs, float rhs);
-inline Signal& operator*=(Signal& lhs, float rhs);
+inline Signal operator-(Signal lhs);
 
 ///////////////////////////////////////////////////////////////////////////////
 
