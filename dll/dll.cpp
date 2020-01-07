@@ -1,4 +1,4 @@
-#include "plugin.hpp"
+#include "dll.hpp"
 #include <syntacts>
 #include <unordered_map>
 #include <iostream>
@@ -68,24 +68,66 @@ int Session_count() {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool Signal_valid(Handle sig) {
-    return g_sigs.count(sig) > 0;
+bool Signal_valid(Handle signal) {
+    return g_sigs.count(signal) > 0;
 }
 
-void Signal_delete(Handle sig) {
-    g_sigs.erase(sig);
+void Signal_delete(Handle signal) {
+    g_sigs.erase(signal);
 }
 
-float Signal_sample(Handle sig, float t) {
-    return g_sigs.at(sig).sample(t);
+float Signal_sample(Handle signal, float t) {
+    return g_sigs.at(signal).sample(t);
 }
 
-float Signal_length(Handle sig) {
-    return g_sigs.at(sig).length();
+float Signal_length(Handle signal) {
+    return g_sigs.at(signal).length();
 }
 
 int Signal_count() {
     return Signal::count();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Handle Mul_SigFlt(Handle lhs, float rhs) {
+    return store(g_sigs.at(lhs) * rhs);
+}
+
+Handle Mul_FltSig(float lhs, Handle rhs) {
+    return store(lhs * g_sigs.at(rhs));
+}
+
+Handle Add_SigFlt(Handle lhs, float rhs) {
+    return store(g_sigs.at(lhs) + rhs);
+}
+
+Handle Add_FltSig(float lhs, Handle rhs) {
+    return store(lhs + g_sigs.at(rhs));
+}
+
+Handle Sub_SigFlt(Handle lhs, float rhs) {
+    return store(g_sigs.at(lhs) - rhs);
+}
+
+Handle Sub_FltSig(float lhs, Handle rhs) {
+    return store(lhs - g_sigs.at(rhs));
+}
+
+Handle Neg_Sig(Handle signal) {
+    return store(-g_sigs.at(signal));
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+Handle Product_create(Handle lhs, Handle rhs) {
+    return store(Product(g_sigs.at(lhs), g_sigs.at(rhs)));
+}
+
+Handle Sum_create(Handle lhs, Handle rhs) {
+    return store(Sum(g_sigs.at(lhs), g_sigs.at(rhs)));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -133,12 +175,39 @@ Handle Triangle_create(float frequency) {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Handle Product_create(Handle lhs, Handle rhs) {
-    return store(Product(g_sigs.at(lhs), g_sigs.at(rhs)));
+Handle Sequence_create() {
+    return store(Sequence());
 }
 
-Handle Sum_create(Handle lhs, Handle rhs) {
-    return store(Sum(g_sigs.at(lhs), g_sigs.at(rhs)));
+Handle Sequence_SigSig(Handle lhs, Handle rhs) {
+    auto s = g_sigs.at(lhs) << g_sigs.at(rhs);
+    return store(s);
+}
+
+Handle Sequence_SigFlt(Handle lhs, float rhs) {
+    auto s = g_sigs.at(lhs) << rhs;
+    return store(s);
+}
+
+Handle Sequence_FltSig(float lhs, Handle rhs) {
+    auto s = lhs << g_sigs.at(rhs);
+    return store(s);
+}
+
+void Sequence_SeqFlt(Handle lhs, float rhs) {
+    Sequence& s = *(Sequence*)g_sigs.at(lhs).get();
+    s << rhs;
+}
+
+void Sequence_SeqSig(Handle lhs, Handle rhs) {
+    Sequence& s = *(Sequence*)g_sigs.at(lhs).get();
+    s << g_sigs.at(rhs);
+}
+
+void Sequence_SeqSeq(Handle lhs, Handle rhs) {
+    Sequence& s1 = *(Sequence*)g_sigs.at(lhs).get();
+    Sequence& s2 = *(Sequence*)g_sigs.at(rhs).get();
+    s1 << s2;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -161,24 +230,6 @@ Handle Library_loadSignal(const char* name) {
 
 int Debug_sigMapSize() {
     return static_cast<int>(g_sigs.size());
-}
-
-#include <thread>
-#include <fstream>
-
-void func() {
-    std::ofstream f("file.csv");
-    int i = 0;
-    while (true) {
-        f << i++ << std::endl;
-        sleep(0.1);
-    }
-}
-
-int Debug_thread() {
-    static std::thread x(func);
-    x.detach();
-    return 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

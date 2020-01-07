@@ -22,10 +22,6 @@ inline float Triangle::sample(float t) const {
     return 2 * INV_PI * std::asin(std::sin(x.sample(t)));
 }
 
-inline float SineFM::sample(float t) const {
-    return std::sin(x.sample(t) + index * std::sin(TWO_PI * modulation * t));
-}
-
 inline float Chirp::sample(float t) const {
     float phi = x.sample(t) + PI * rate * t * t;
     return std::sin(phi);
@@ -36,14 +32,6 @@ inline float Pwm::sample(float t) const {
 }
 
 inline float Pwm::length() const {
-    return INF;
-}
-
-inline float FM::sample(float t) const {
-    return 0;
-}
-
-inline float FM::length() const {
     return INF;
 }
 

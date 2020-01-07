@@ -5,6 +5,7 @@
 #include <memory>
 #include <string>
 #include <random>
+#include <map>
 
 namespace tact
 {
@@ -93,6 +94,44 @@ private:
         std::string expr;
         archive(TACT_MEMBER(expr)); 
         setExpression(expr); 
+    }
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+/// A signal that generates white noise
+class SYNTACTS_API PolyBezier
+{
+public:
+    /// Point
+    struct Point {
+        float t, y;
+        TACT_SERIALIZE(TACT_MEMBER(t), TACT_MEMBER(y));
+    };
+    /// A point and left and right control points
+    struct PointGroup {
+        Point cpL, p, cpR;
+        TACT_SERIALIZE(TACT_MEMBER(cpL), TACT_MEMBER(p), TACT_MEMBER(cpR));
+    };
+public:
+    float sample(float t) const;
+    float length() const;
+    void solve();
+public:
+    std::vector<PointGroup> points;
+    std::vector<Point> solution;
+private:
+    friend class cereal::access;
+    template<class Archive>
+    void save(Archive& archive) const 
+    { 
+        archive(TACT_MEMBER(points)); 
+    }
+    template<class Archive>
+    void load(Archive& archive) 
+    { 
+        archive(TACT_MEMBER(points)); 
+        solve();
     }
 };
 

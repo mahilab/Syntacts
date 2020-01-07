@@ -21,11 +21,29 @@ EXPORT int Session_count();
 
 ///////////////////////////////////////////////////////////////////////////////
 
-EXPORT bool Signal_valid(Handle sig);
-EXPORT void Signal_delete(Handle sig);
-EXPORT float Signal_sample(Handle sig, float t);
-EXPORT float Signal_length(Handle sig);
+EXPORT bool Signal_valid(Handle signal);
+EXPORT void Signal_delete(Handle signal);
+EXPORT float Signal_sample(Handle signal, float t);
+EXPORT float Signal_length(Handle signal);
 EXPORT int Signal_count();
+
+/////////////////////////////////////////////////////////////////////////////
+
+EXPORT Handle Mul_SigFlt(Handle lhs, float rhs);
+EXPORT Handle Mul_FltSig(float lhs, Handle rhs);
+
+EXPORT Handle Add_SigFlt(Handle lhs, float rhs);
+EXPORT Handle Add_FltSig(float lhs, Handle rhs);
+
+EXPORT Handle Sub_SigFlt(Handle lhs, float rhs);
+EXPORT Handle Sub_FltSig(float lhs, Handle rhs);
+
+EXPORT Handle Neg_Sig(Handle signal);
+
+///////////////////////////////////////////////////////////////////////////////
+
+EXPORT Handle Product_create(Handle lhs, Handle rhs);
+EXPORT Handle Sum_create(Handle lhs, Handle rhs);
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -47,8 +65,15 @@ EXPORT Handle Triangle_create(float frequency);
 
 ///////////////////////////////////////////////////////////////////////////////
 
-EXPORT Handle Product_create(Handle lhs, Handle rhs);
-EXPORT Handle Sum_create(Handle lhs, Handle rhs);
+EXPORT Handle Sequence_create();
+
+EXPORT Handle Sequence_SigSig(Handle lhs, Handle rhs);
+EXPORT Handle Sequence_SigFlt(Handle lhs, float rhs);
+EXPORT Handle Sequence_FltSig(float lhs, Handle rhs);
+
+EXPORT void Sequence_SeqFlt(Handle lhs, float rhs);
+EXPORT void Sequence_SeqSig(Handle lhs, Handle rhs);
+EXPORT void Sequence_SeqSeq(Handle lhs, Handle rhs);
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -58,7 +83,5 @@ EXPORT Handle Library_loadSignal(const char* name);
 ///////////////////////////////////////////////////////////////////////////////
 
 EXPORT int Debug_sigMapSize();
-
-EXPORT int Debug_thread();
 
 ///////////////////////////////////////////////////////////////////////////////

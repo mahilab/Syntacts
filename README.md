@@ -42,6 +42,7 @@
 
 ```shell
 > git clone https://github.com/mahilab/Syntacts
+> cd Syntacts
 > mkdir build
 > cd build
 > cmake .. -A x64

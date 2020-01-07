@@ -18,7 +18,7 @@
 cmake_minimum_required(VERSION 3.13.0)
 
 # user options
-option(SYNTACTS_PLUGIN   "Turn ON to build Syntacts plugin DLL" ON )
+option(SYNTACTS_C_DLL    "Turn ON to build Syntacts C DLL"      ON )
 option(SYNTACTS_EXAMPLES "Turn ON to build Syntacts example(s)" ON )
 option(SYNTACTS_TEST     "Turn ON to build Syntacts test(s)"    ON )
 
@@ -36,6 +36,7 @@ set(SYNTACTS_INCLUDE
     "include/Tact/Signal.hpp"
     "include/Tact/Macros.hpp"
     "include/Tact/Session.hpp"
+    "include/Tact/Spatializer.hpp"
     "include/Tact/Library.hpp"
     "include/Tact/Operator.hpp"
     "include/Tact/Sequence.hpp"
@@ -55,6 +56,7 @@ set(SYNTACTS_SRC
     "src/Tact/Signal.cpp"
     "src/Tact/Library.cpp"
     "src/Tact/Session.cpp"
+    "src/Tact/Spatializer.cpp"
     "src/Tact/Operator.cpp"
     "src/Tact/Sequence.cpp"
     "src/Tact/Curve.cpp"
@@ -97,8 +99,8 @@ target_link_libraries(syntacts PUBLIC portaudio_static PRIVATE) # rubberband-lib
 # Syntacts Plugin DLL
 #===============================================================================
 
-if (SYNTACTS_PLUGIN)
-    add_subdirectory("plugin")
+if (SYNTACTS_C_DLL)
+    add_subdirectory("dll")
 endif()
 
 #===============================================================================

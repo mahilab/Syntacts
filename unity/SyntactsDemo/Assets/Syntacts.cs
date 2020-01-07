@@ -165,75 +165,75 @@ namespace Syntacts
     class Dll
     {
 
-        [DllImport("syntacts-plugin")]
+        [DllImport("syntacts-c")]
         public static extern Handle Session_create();
-        [DllImport("syntacts-plugin")]
+        [DllImport("syntacts-c")]
         public static extern void Session_delete(Handle session);
-        [DllImport("syntacts-plugin")]
+        [DllImport("syntacts-c")]
         public static extern int Session_open(Handle session, int index, int channelCount, double sampeRate);
-        [DllImport("syntacts-plugin")]
+        [DllImport("syntacts-c")]
         public static extern int Session_close(Handle session);
-        [DllImport("syntacts-plugin")]
+        [DllImport("syntacts-c")]
         public static extern int Session_play(Handle session, int channel, Handle cue);
-        [DllImport("syntacts-plugin")]
+        [DllImport("syntacts-c")]
         public static extern int Session_stop(Handle session, int channel);
-        [DllImport("syntacts-plugin")]
+        [DllImport("syntacts-c")]
         public static extern int Session_pause(Handle session, int channel);
-        [DllImport("syntacts-plugin")]
+        [DllImport("syntacts-c")]
         public static extern int Session_resume(Handle session, int channel);
-        [DllImport("syntacts-plugin")]
+        [DllImport("syntacts-c")]
         public static extern int Session_setVolume(Handle session, int channel, float volume);
-        [DllImport("syntacts-plugin")]
+        [DllImport("syntacts-c")]
         public static extern int Session_setPitch(Handle session, int channel, float pitch);
-        [DllImport("syntacts-plugin")]
+        [DllImport("syntacts-c")]
         public static extern bool Session_isOpen(Handle session);
-        [DllImport("syntacts-plugin")]
+        [DllImport("syntacts-c")]
         public static extern int Session_count();
 
-        [DllImport("syntacts-plugin")]
+        [DllImport("syntacts-c")]
         public static extern bool Signal_valid(Handle sig);
-        [DllImport("syntacts-plugin")]
+        [DllImport("syntacts-c")]
         public static extern void Signal_delete(Handle sig);
-        [DllImport("syntacts-plugin")]
+        [DllImport("syntacts-c")]
         public static extern float Signal_sample(Handle sig, float t);
-        [DllImport("syntacts-plugin")]
+        [DllImport("syntacts-c")]
         public static extern float Signal_length(Handle sig);
-        [DllImport("syntacts-plugin")]
+        [DllImport("syntacts-c")]
         public static extern int Signal_count();
 
-        [DllImport("syntacts-plugin")]
+        [DllImport("syntacts-c")]
         public static extern Handle Scalar_create(float value);
-        [DllImport("syntacts-plugin")]
+        [DllImport("syntacts-c")]
         public static extern Handle Ramp_create(float initial, float rate);
 
-        [DllImport("syntacts-plugin")]
+        [DllImport("syntacts-c")]
         public static extern Handle Envelope_create(float duration);
-        [DllImport("syntacts-plugin")]
+        [DllImport("syntacts-c")]
         public static extern Handle ASR_create(float a, float s, float r);
-        [DllImport("syntacts-plugin")]
+        [DllImport("syntacts-c")]
         public static extern Handle ADSR_create(float a, float d, float s, float r);
 
-        [DllImport("syntacts-plugin")]
+        [DllImport("syntacts-c")]
         public static extern Handle Sine_create(float frequency);
-        [DllImport("syntacts-plugin")]
+        [DllImport("syntacts-c")]
         public static extern Handle Square_create(float frequency);
-        [DllImport("syntacts-plugin")]
+        [DllImport("syntacts-c")]
         public static extern Handle Saw_create(float frequency);
-        [DllImport("syntacts-plugin")]
+        [DllImport("syntacts-c")]
         public static extern Handle Triangle_create(float frequency);
 
-        [DllImport("syntacts-plugin")]
+        [DllImport("syntacts-c")]
         public static extern Handle Product_create(Handle lhs, Handle rhs);
-        [DllImport("syntacts-plugin")]
+        [DllImport("syntacts-c")]
         public static extern Handle Sum_create(Handle lhs, Handle rhs);
 
 
-        [DllImport("syntacts-plugin", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("syntacts-c", CallingConvention = CallingConvention.Cdecl)]
         public static extern bool Library_saveSignal(Handle signal, string name);
-        [DllImport("syntacts-plugin", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("syntacts-c", CallingConvention = CallingConvention.Cdecl)]
         public static extern Handle Library_loadSignal(string name);
 
-        [DllImport("syntacts-plugin")]
+        [DllImport("syntacts-c")]
         public static extern int Debug_sigMapSize();
 
     }
