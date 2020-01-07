@@ -11,6 +11,10 @@
 - ~~pop signals from channel when over~~
 - ~~change oscillator ctors to do 2*pi*f scaling in Scalar~~
 - ~~realtime channel pitch adjustment~~
+- import audio/csv files
+- spatializer class
+- change to bias/gain
+
 
 ## Optimization
 - ~~consider using unique_ptr in Signal with a clone method~~
@@ -22,8 +26,8 @@
 - real-time manipulation of *any* parameter (see WebAudio AudioParam for inspiration)
 - channel polyphony 
 - look into cereal's minima load/save capabilities
-- additional varaibles in expression
-- Repeater signal
+- additional variables in expression
+- Repeater, Stretcher signal
 
 # GUI
 ## Must Do
@@ -36,7 +40,8 @@
 - ~~render selected library item~~
 - ~~fix library delete~~
 - don't load all lib items automatically
-
+- pop-up visualizer
+- refresh library
 
 ## Nice to Have
 - ~~CPU usage meter~~

@@ -3,8 +3,8 @@
 #endif
 
 #include "ImSequencer.hpp"
-#include <Engine/ImGui/imgui.h>
-#include <Engine/ImGui/imgui_internal.h>
+#include <ImGui/imgui.h>
+#include <ImGui/imgui_internal.h>
 #include <Engine/IconsFontAwesome5.hpp>
 #include <Graphics/Color.hpp>
 #include <cstdlib>

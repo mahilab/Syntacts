@@ -36,6 +36,7 @@ CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Time>);
 CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Ramp>);
 CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Noise>);
 CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Expression>);
+CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::PolyBezier>);
 
 CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Sum>);
 CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Product>);
@@ -45,10 +46,9 @@ CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Sine>);
 CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Square>);
 CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Saw>);
 CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Triangle>);
-CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::SineFM>);
 CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Chirp>);
 CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Pwm>);
-CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::FM>);
+// CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::FM>);
 
 CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Envelope>);
 CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::KeyedEnvelope>);

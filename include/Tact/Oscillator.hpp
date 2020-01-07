@@ -17,6 +17,8 @@ public:
     IOscillator(Signal x);
     /// Constructs an Oscillator with a scalar frequency in hertz
     IOscillator(float hertz);
+    /// Constructs an Oscillator with frequency modulation (FM)
+    IOscillator(float hertz, Signal modulation, float index = 2.0f);
     /// Returns infinity
     inline float length() const;
 public:
@@ -75,22 +77,6 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// A frequency modulated sine wave Oscillator
-class SYNTACTS_API SineFM : public IOscillator
-{
-public:
-    /// Constructor
-    SineFM(float frequency = 1, float modulation = 1, float index = 2);
-    inline float sample(float t) const ;
-public:
-    float modulation; ///< modulation frequency
-    float index;      ///< modulation index
-private:
-    TACT_SERIALIZE(TACT_PARENT(IOscillator), TACT_MEMBER(modulation), TACT_MEMBER(index));
-};
-
-///////////////////////////////////////////////////////////////////////////////
-
 /// A linear chirp Oscillator
 class SYNTACTS_API Chirp : public IOscillator
 {
@@ -124,18 +110,7 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// A frequency modulator (WIP)
-class SYNTACTS_API FM {
-public:
-    FM() = default;
-    FM(Signal carrier, Signal modulation);
-    inline float sample(float t) const;
-    inline float length() const;
-public:    
-    Signal carrier, modulation;
-private:
-    TACT_SERIALIZE(TACT_MEMBER(carrier), TACT_MEMBER(modulation));
-};
+
 
 } // namespace tact
 

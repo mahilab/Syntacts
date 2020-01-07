@@ -16,10 +16,8 @@ IOscillator::IOscillator(Signal _x) :
     x(std::move(_x))
 { }
 
-SineFM::SineFM(float _frequency, float _modulation, float _index) :
-    IOscillator(_frequency),
-    modulation(_modulation),
-    index(_index) 
+IOscillator::IOscillator(float hertz, Signal modulation, float index) :
+    x(std::move(TWO_PI * hertz * Time() + index * modulation))
 { }
 
 Chirp::Chirp() :
@@ -34,11 +32,6 @@ Chirp::Chirp(float _frequency, float _rate) :
 Pwm::Pwm(float _frequency, float _dutyCycle) :
     frequency(_frequency), 
     dutyCycle(clamp01(_dutyCycle))
-{ }
-
-FM::FM(Signal _carrier, Signal _modulation) :
-    carrier(std::move(_carrier)),
-    modulation(std::move(_modulation))
 { }
 
 } // namespace tact

@@ -16,6 +16,8 @@ public class SyntactsDemo : MonoBehaviour
     public string signalName;
     public bool open;
 
+    public AnimationCurve curve;
+
     [Range(0,10)]
     public float pitch = 1;
 
