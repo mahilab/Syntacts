@@ -137,6 +137,8 @@ const std::string &signalName(std::type_index id)
         {typeid(tact::ADSR), "ADSR"},
         {typeid(tact::KeyedEnvelope), "Keyed Envelope"},
         {typeid(tact::SignalEnvelope), "Signal Envelope"},
+        {typeid(tact::Stretcher), "Stretcher"},
+        {typeid(tact::Repeater), "Repeater"},
         {typeid(tact::PolyBezier), "PolyBezier"}};
     if (names.count(id))
         return names[id];
@@ -259,6 +261,37 @@ void LibrarySignalNode::gui() {
 
 }
 
+///////////////////////////////////////////////////////////////////////////////
+
+void StretcherNode::gui() {
+    auto cast = (tact::Stretcher *)sig.get();
+    ImGui::NodeSlot(m_sigName.c_str(), ImVec2(ImGui::CalcItemWidth(), 0));
+    if (ImGui::NodeDroppedL()) {
+        m_sigName = ImGui::NodePayloadL();
+        tact::Library::loadSignal(cast->signal, m_sigName);
+    }
+    ImGui::SameLine(); ImGui::Text("Signal");
+    float factor = (float)cast->factor;
+    if (ImGui::SliderFloat("Factor", &factor, 0, 10))
+        cast->factor = factor;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+void RepeaterNode::gui() {
+    auto cast = (tact::Repeater *)sig.get();
+    ImGui::NodeSlot(m_sigName.c_str(), ImVec2(ImGui::CalcItemWidth(), 0));
+    if (ImGui::NodeDroppedL()) {
+        m_sigName = ImGui::NodePayloadL();
+        tact::Library::loadSignal(cast->signal, m_sigName);
+    }
+    ImGui::SameLine(); ImGui::Text("Signal");    
+    ImGui::SliderInt("Repetitions", &cast->repetitions, 1, 100);
+    float delay = (float)cast->delay;
+    if (ImGui::SliderFloat("Delay", &delay, 0, 1))
+        cast->delay = delay;
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -324,6 +357,18 @@ void ChirpNode::gui()
     float rate = (float)cast->rate;
     ImGui::DragFloat("Rate", &rate, 1, 0, 0, "%.0f Hz/s");
     cast->rate = rate;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void PwmNode::gui() {
+    auto cast = (tact::Pwm*)sig.get();
+    float f = (float)cast->frequency;
+    float d = (float)cast->dutyCycle;
+    if (ImGui::DragFloat("Frequency", &f, 1, 0, 1000))
+        cast->frequency = f;
+    if (ImGui::DragFloat("Duty Cycle", &d, 0.001f, 0, 1.0f))
+        cast->dutyCycle = d;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -525,6 +570,12 @@ Ptr<Node> makeNode(PItem id)
         return make<ADSRNode>();
     if (id == PItem::PolyBezier)
         return make<PolyBezierNode>();
+    if (id == PItem::Stretcher) 
+        return make<StretcherNode>();
+    if (id == PItem::Repeater)
+        return make<RepeaterNode>();
+    if (id == PItem::Pwm)
+        return make<PwmNode>();
     static auto gui = Engine::getRoot().as<Gui>();
     gui->status->pushMessage("Failed to create Node!", StatusBar::Error);
     return nullptr;

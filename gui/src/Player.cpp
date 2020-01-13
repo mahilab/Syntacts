@@ -59,7 +59,7 @@ void Player::renderChannels()
             ImGui::PushID(i);
             bool playing = gui->device->session->isPlaying(i);
             if (playing)
-                ImGui::PushStyleColor(ImGuiCol_Button, Purples::Plum);
+                ImGui::PushStyleColor(ImGuiCol_Button, Grays::Gray50);
             auto label = str(i);
             ImGui::BeginNodeTarget();
             if (ImGui::Button(label.c_str(), ImVec2(25, 0)))

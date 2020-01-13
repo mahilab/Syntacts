@@ -17,7 +17,9 @@ public:
     IOscillator(Signal x);
     /// Constructs an Oscillator with a scalar frequency in hertz
     IOscillator(double hertz);
-    /// Constructs an Oscillator with frequency modulation (FM)
+    /// Constructs a "chirp" Oscillator with an initial frequency and ramp rate in hertx
+    IOscillator(double initial, double rate);
+    /// Constructs frequency modulated (FM) Oscillator 
     IOscillator(double hertz, Signal modulation, double index = 2.0);
     /// Returns infinity
     inline double length() const;

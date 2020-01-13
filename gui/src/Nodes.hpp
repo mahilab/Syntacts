@@ -93,6 +93,20 @@ protected:
 
 ///////////////////////////////////////////////////////////////////////////////
 
+struct StretcherNode : public SignalNode<tact::Stretcher> {
+    void gui() override;
+    std::string m_sigName = "##Empty";
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+struct RepeaterNode : public SignalNode<tact::Repeater> {
+    void gui() override;
+    std::string m_sigName = "##Empty";
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
 struct OscillatorNode : public SignalNode<tact::Sine> {
     OscillatorNode(tact::Signal osc);
     void gui() override;
@@ -101,6 +115,12 @@ struct OscillatorNode : public SignalNode<tact::Sine> {
 ///////////////////////////////////////////////////////////////////////////////
 
 struct ChirpNode : public SignalNode<tact::Chirp> {    
+    void gui() override;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+struct PwmNode : public SignalNode<tact::Pwm> {
     void gui() override;
 };
 

@@ -52,11 +52,11 @@ int Session_resume(Handle session, int channel) {
     return static_cast<Session*>(session)->resume(channel);
 }
 
-int Session_setVolume(Handle session, int channel, float volume) {
+int Session_setVolume(Handle session, int channel, double volume) {
     return static_cast<Session*>(session)->setVolume(channel, volume);
 }
 
-int Session_setPitch(Handle session, int channel, float pitch) {
+int Session_setPitch(Handle session, int channel, double pitch) {
     return static_cast<Session*>(session)->setPitch(channel, pitch);
 }
 
@@ -78,11 +78,11 @@ void Signal_delete(Handle signal) {
     g_sigs.erase(signal);
 }
 
-float Signal_sample(Handle signal, float t) {
+double Signal_sample(Handle signal, double t) {
     return g_sigs.at(signal).sample(t);
 }
 
-float Signal_length(Handle signal) {
+double Signal_length(Handle signal) {
     return g_sigs.at(signal).length();
 }
 
@@ -92,27 +92,27 @@ int Signal_count() {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Handle Mul_SigFlt(Handle lhs, float rhs) {
+Handle Mul_SigFlt(Handle lhs, double rhs) {
     return store(g_sigs.at(lhs) * rhs);
 }
 
-Handle Mul_FltSig(float lhs, Handle rhs) {
+Handle Mul_FltSig(double lhs, Handle rhs) {
     return store(lhs * g_sigs.at(rhs));
 }
 
-Handle Add_SigFlt(Handle lhs, float rhs) {
+Handle Add_SigFlt(Handle lhs, double rhs) {
     return store(g_sigs.at(lhs) + rhs);
 }
 
-Handle Add_FltSig(float lhs, Handle rhs) {
+Handle Add_FltSig(double lhs, Handle rhs) {
     return store(lhs + g_sigs.at(rhs));
 }
 
-Handle Sub_SigFlt(Handle lhs, float rhs) {
+Handle Sub_SigFlt(Handle lhs, double rhs) {
     return store(g_sigs.at(lhs) - rhs);
 }
 
-Handle Sub_FltSig(float lhs, Handle rhs) {
+Handle Sub_FltSig(double lhs, Handle rhs) {
     return store(lhs - g_sigs.at(rhs));
 }
 
@@ -134,44 +134,44 @@ Handle Sum_create(Handle lhs, Handle rhs) {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Handle Scalar_create(float value) {
+Handle Scalar_create(double value) {
     return store(Scalar(value));
 }
 
-Handle Ramp_create(float initial, float rate) {
+Handle Ramp_create(double initial, double rate) {
     return store(Ramp(initial, rate));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 
-Handle Envelope_create(float duration) {
+Handle Envelope_create(double duration) {
     return store(Envelope(duration));
 }
 
-Handle ASR_create(float a, float s, float r) {
+Handle ASR_create(double a, double s, double r) {
     return store(ASR(a,s,r));
 }
 
-Handle ADSR_create(float a, float d, float s, float r) {
+Handle ADSR_create(double a, double d, double s, double r) {
     return store(ADSR(a,d,s,r));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Handle Sine_create(float frequency) {
+Handle Sine_create(double frequency) {
     return store(Sine(frequency));
 }
 
-Handle Square_create(float frequency) {
+Handle Square_create(double frequency) {
     return store(Square(frequency));
 }
 
-Handle Saw_create(float frequency) {
+Handle Saw_create(double frequency) {
     return store(Saw(frequency));
 }
 
-Handle Triangle_create(float frequency) {
+Handle Triangle_create(double frequency) {
     return store(Triangle(frequency));
 }
 
@@ -186,17 +186,17 @@ Handle Sequence_SigSig(Handle lhs, Handle rhs) {
     return store(s);
 }
 
-Handle Sequence_SigFlt(Handle lhs, float rhs) {
+Handle Sequence_SigFlt(Handle lhs, double rhs) {
     auto s = g_sigs.at(lhs) << rhs;
     return store(s);
 }
 
-Handle Sequence_FltSig(float lhs, Handle rhs) {
+Handle Sequence_FltSig(double lhs, Handle rhs) {
     auto s = lhs << g_sigs.at(rhs);
     return store(s);
 }
 
-void Sequence_SeqFlt(Handle lhs, float rhs) {
+void Sequence_SeqFlt(Handle lhs, double rhs) {
     Sequence& s = *(Sequence*)g_sigs.at(lhs).get();
     s << rhs;
 }

@@ -11,14 +11,12 @@ int main(int argc, char const *argv[])
     Session session;
     session.open();
 
+    Signal s = Sine(440, Sine(10, 20)) * ASR(0.5,0.5,0.5);
 
-    session.setVolume(0, 0.55);
-
-    std::cout << session.getVolume(0) << std::endl;
+    session.play(0, s);
 
     sleep(2);
 
-    std::cout << "no crash" << std::endl;
 
     // sleep(35);
 

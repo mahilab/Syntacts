@@ -8,6 +8,7 @@
 #include <Tact/Oscillator.hpp>
 #include <Tact/Envelope.hpp>
 #include <Tact/Operator.hpp>
+#include <Tact/Process.hpp>
 
 #include <fstream>
 #include <filesystem>
@@ -55,6 +56,9 @@ CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::KeyedEnvelope>);
 CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::ASR>);
 CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::ADSR>);
 CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::SignalEnvelope>);
+
+CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Repeater>);
+CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Stretcher>);
 
 CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Instant>);
 CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Delayed>);

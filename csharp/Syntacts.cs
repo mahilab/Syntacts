@@ -8,7 +8,7 @@ namespace Syntacts
     class Signal : IDisposable
     {
 
-        public float sample(float t) {
+        public double sample(double t) {
             return Dll.Signal_sample(handle, t);
         }
 
@@ -44,25 +44,25 @@ namespace Syntacts
 
     class Envelope : Signal
     {
-        public Envelope(float duration) {
+        public Envelope(double duration) {
             handle = Dll.Envelope_create(duration);
         }
     }
 
     class ASR : Signal {
-        public ASR(float a, float s, float r) {
+        public ASR(double a, double s, double r) {
             handle = Dll.ASR_create(a,s,r);
         }
     }
 
     class ADSR : Signal {
-        public ADSR(float a, float d, float s, float r) {
+        public ADSR(double a, double d, double s, double r) {
             handle = Dll.ADSR_create(a,d,s,r);
         }
     }
 
     class Sine : Signal {
-        public Sine(float frequency) 
+        public Sine(double frequency) 
         {
             handle = Dll.Sine_create(frequency);
         }
@@ -116,12 +116,12 @@ namespace Syntacts
             return Dll.Session_resume(handle, channel);
         }
 
-        public int SetVolume(int channel, float volume)
+        public int SetVolume(int channel, double volume)
         {
             return Dll.Session_setVolume(handle, channel, volume);
         }
 
-        public int SetPitch(int channel, float pitch)
+        public int SetPitch(int channel, double pitch)
         {
             return Dll.Session_setPitch(handle, channel, pitch);
         }
@@ -182,9 +182,9 @@ namespace Syntacts
         [DllImport("syntacts-c")]
         public static extern int Session_resume(Handle session, int channel);
         [DllImport("syntacts-c")]
-        public static extern int Session_setVolume(Handle session, int channel, float volume);
+        public static extern int Session_setVolume(Handle session, int channel, double volume);
         [DllImport("syntacts-c")]
-        public static extern int Session_setPitch(Handle session, int channel, float pitch);
+        public static extern int Session_setPitch(Handle session, int channel, double pitch);
         [DllImport("syntacts-c")]
         public static extern bool Session_isOpen(Handle session);
         [DllImport("syntacts-c")]
@@ -195,32 +195,32 @@ namespace Syntacts
         [DllImport("syntacts-c")]
         public static extern void Signal_delete(Handle sig);
         [DllImport("syntacts-c")]
-        public static extern float Signal_sample(Handle sig, float t);
+        public static extern double Signal_sample(Handle sig, double t);
         [DllImport("syntacts-c")]
-        public static extern float Signal_length(Handle sig);
+        public static extern double Signal_length(Handle sig);
         [DllImport("syntacts-c")]
         public static extern int Signal_count();
 
         [DllImport("syntacts-c")]
-        public static extern Handle Scalar_create(float value);
+        public static extern Handle Scalar_create(double value);
         [DllImport("syntacts-c")]
-        public static extern Handle Ramp_create(float initial, float rate);
+        public static extern Handle Ramp_create(double initial, double rate);
 
         [DllImport("syntacts-c")]
-        public static extern Handle Envelope_create(float duration);
+        public static extern Handle Envelope_create(double duration);
         [DllImport("syntacts-c")]
-        public static extern Handle ASR_create(float a, float s, float r);
+        public static extern Handle ASR_create(double a, double s, double r);
         [DllImport("syntacts-c")]
-        public static extern Handle ADSR_create(float a, float d, float s, float r);
+        public static extern Handle ADSR_create(double a, double d, double s, double r);
 
         [DllImport("syntacts-c")]
-        public static extern Handle Sine_create(float frequency);
+        public static extern Handle Sine_create(double frequency);
         [DllImport("syntacts-c")]
-        public static extern Handle Square_create(float frequency);
+        public static extern Handle Square_create(double frequency);
         [DllImport("syntacts-c")]
-        public static extern Handle Saw_create(float frequency);
+        public static extern Handle Saw_create(double frequency);
         [DllImport("syntacts-c")]
-        public static extern Handle Triangle_create(float frequency);
+        public static extern Handle Triangle_create(double frequency);
 
         [DllImport("syntacts-c")]
         public static extern Handle Product_create(Handle lhs, Handle rhs);

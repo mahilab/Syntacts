@@ -31,10 +31,10 @@ _syntacts.Session_resume.restype  = c_int
 _syntacts.Session_resume.argtypes = [c_void_p, c_int]
 
 _syntacts.Session_setVolume.restype  = c_int
-_syntacts.Session_setVolume.argtypes = [c_void_p, c_int, c_float]
+_syntacts.Session_setVolume.argtypes = [c_void_p, c_int, c_double]
 
 _syntacts.Session_setPitch.restype  = c_int
-_syntacts.Session_setPitch.argtypes = [c_void_p, c_int, c_float]
+_syntacts.Session_setPitch.argtypes = [c_void_p, c_int, c_double]
 
 _syntacts.Session_isOpen.restype  = c_bool
 _syntacts.Session_isOpen.argtypes = [c_void_p]
@@ -50,10 +50,10 @@ _syntacts.Signal_valid.argtypes = [c_void_p]
 _syntacts.Signal_delete.restype  = None
 _syntacts.Signal_delete.argtypes = [c_void_p]
 
-_syntacts.Signal_sample.restype  = c_float
-_syntacts.Signal_sample.argtypes = [c_void_p, c_float]
+_syntacts.Signal_sample.restype  = c_double
+_syntacts.Signal_sample.argtypes = [c_void_p, c_double]
 
-_syntacts.Signal_length.restype  = c_float
+_syntacts.Signal_length.restype  = c_double
 _syntacts.Signal_length.argtypes = [c_void_p]
 
 _syntacts.Signal_count.restype = c_int
@@ -62,22 +62,22 @@ _syntacts.Signal_count.argtypes = None
 ###############################################################################
 
 _syntacts.Mul_SigFlt.restype = c_void_p
-_syntacts.Mul_SigFlt.argtypes = [c_void_p, c_float]
+_syntacts.Mul_SigFlt.argtypes = [c_void_p, c_double]
 
 _syntacts.Mul_FltSig.restype = c_void_p
-_syntacts.Mul_FltSig.argtypes = [c_float, c_void_p]
+_syntacts.Mul_FltSig.argtypes = [c_double, c_void_p]
 
 _syntacts.Add_SigFlt.restype = c_void_p
-_syntacts.Add_SigFlt.argtypes = [c_void_p, c_float]
+_syntacts.Add_SigFlt.argtypes = [c_void_p, c_double]
 
 _syntacts.Add_FltSig.restype = c_void_p
-_syntacts.Add_FltSig.argtypes = [c_float, c_void_p]
+_syntacts.Add_FltSig.argtypes = [c_double, c_void_p]
 
 _syntacts.Sub_SigFlt.restype = c_void_p
-_syntacts.Sub_SigFlt.argtypes = [c_void_p, c_float]
+_syntacts.Sub_SigFlt.argtypes = [c_void_p, c_double]
 
 _syntacts.Sub_FltSig.restype = c_void_p
-_syntacts.Sub_FltSig.argtypes = [c_float, c_void_p]
+_syntacts.Sub_FltSig.argtypes = [c_double, c_void_p]
 
 _syntacts.Neg_Sig.restype = c_void_p
 _syntacts.Neg_Sig.argtypes = [c_void_p]
@@ -93,27 +93,27 @@ _syntacts.Sum_create.argtypes = [c_void_p, c_void_p]
 ###############################################################################
 
 _syntacts.Envelope_create.restype  = c_void_p
-_syntacts.Envelope_create.argtypes = [c_float]
+_syntacts.Envelope_create.argtypes = [c_double]
 
 _syntacts.ASR_create.restype  = c_void_p
-_syntacts.ASR_create.argtypes = [c_float, c_float, c_float]
+_syntacts.ASR_create.argtypes = [c_double, c_double, c_double]
 
 _syntacts.ADSR_create.restype  = c_void_p
-_syntacts.ADSR_create.argtypes = [c_float, c_float, c_float, c_float]
+_syntacts.ADSR_create.argtypes = [c_double, c_double, c_double, c_double]
 
 ###############################################################################
 
 _syntacts.Sine_create.restype  = c_void_p
-_syntacts.Sine_create.argtypes = [c_float]
+_syntacts.Sine_create.argtypes = [c_double]
 
 _syntacts.Square_create.restype  = c_void_p
-_syntacts.Square_create.argtypes = [c_float]
+_syntacts.Square_create.argtypes = [c_double]
 
 _syntacts.Saw_create.restype  = c_void_p
-_syntacts.Saw_create.argtypes = [c_float]
+_syntacts.Saw_create.argtypes = [c_double]
 
 _syntacts.Triangle_create.restype  = c_void_p
-_syntacts.Triangle_create.argtypes = [c_float]
+_syntacts.Triangle_create.argtypes = [c_double]
 
 ###############################################################################
 
@@ -124,13 +124,13 @@ _syntacts.Sequence_SigSig.restype = c_void_p
 _syntacts.Sequence_SigSig.argtypes = [c_void_p, c_void_p]
 
 _syntacts.Sequence_SigFlt.restype = c_void_p
-_syntacts.Sequence_SigFlt.argtypes = [c_void_p, c_float]
+_syntacts.Sequence_SigFlt.argtypes = [c_void_p, c_double]
 
 _syntacts.Sequence_FltSig.restype = c_void_p
-_syntacts.Sequence_FltSig.argtypes = [c_float, c_void_p]
+_syntacts.Sequence_FltSig.argtypes = [c_double, c_void_p]
 
 _syntacts.Sequence_SeqFlt.restype = None
-_syntacts.Sequence_SeqFlt.argtypes = [c_void_p, c_float]
+_syntacts.Sequence_SeqFlt.argtypes = [c_void_p, c_double]
 
 _syntacts.Sequence_SeqSig.restype = None
 _syntacts.Sequence_SeqSig.argtypes = [c_void_p, c_void_p]

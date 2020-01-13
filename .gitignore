@@ -4,4 +4,6 @@ ipch/
 .vscode/
 .vs/
 
-syntacts-c.dll
+*.dll
+*.lib
+*.exe

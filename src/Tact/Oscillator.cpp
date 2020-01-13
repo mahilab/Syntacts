@@ -12,6 +12,10 @@ IOscillator::IOscillator(double hertz) :
     x(std::move(TWO_PI * hertz * Time()))
 { }
 
+IOscillator::IOscillator(double initial, double rate) :
+    x(std::move( ( TWO_PI * initial + PI * rate * Time() ) * Time() ))
+{ }
+
 IOscillator::IOscillator(Signal _x) :
     x(std::move(_x))
 { }

@@ -5,6 +5,7 @@
 #include <Tact/Envelope.hpp>
 #include <Tact/Sequence.hpp>
 #include <Tact/Operator.hpp>
+#include <Tact/Process.hpp>
 #include <string>
 
 namespace tact {
