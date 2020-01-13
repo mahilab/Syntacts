@@ -19,6 +19,7 @@ inline Handle store(const S& s) {
 
 Handle Session_create() {
     Session* session = new Session();
+    std::cout << session << std::endl;
     return static_cast<void*>(session);
 }
 
@@ -27,6 +28,7 @@ void Session_delete(Handle session) {
 }
 
 int Session_open(Handle session, int index, int channelCount, double sampleRate) {
+    std::cout << session << std::endl;
     return static_cast<Session*>(session)->open(index, channelCount, sampleRate);
 }
 
