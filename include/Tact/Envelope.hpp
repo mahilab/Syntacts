@@ -15,13 +15,13 @@ namespace tact
 class SYNTACTS_API Envelope
 {
 public:
-    Envelope(float duration = 0.1f, float amplitude = 1.0f);
-    float sample(float t) const;
-    float length() const;
+    Envelope(double duration = 0.1, double amplitude = 1.0);
+    double sample(double t) const;
+    double length() const;
 
 public:
-    float duration;
-    float amplitude;
+    double duration;
+    double amplitude;
 
 private:
     TACT_SERIALIZE(TACT_MEMBER(duration), TACT_MEMBER(amplitude));
@@ -34,13 +34,13 @@ class SYNTACTS_API KeyedEnvelope
 {
 public:
     /// Constucts Envelope with initial amplitude
-    KeyedEnvelope(float amplitude0 = 0.0f);
+    KeyedEnvelope(double amplitude0 = 0.0);
     /// Adds a new amplitude at time t seconds. Uses curve to interpolate from previous amplitude.
-    void addKey(float t, float amplitude, Curve curve = Curves::Linear());
-    float sample(float t) const;
-    float length() const;
+    void addKey(double t, double amplitude, Curve curve = Curves::Linear());
+    double sample(double t) const;
+    double length() const;
 public:
-    std::map<float, std::pair<float, Curve>> keys; ///< keys
+    std::map<double, std::pair<double, Curve>> keys; ///< keys
 private:
     TACT_SERIALIZE(TACT_MEMBER(keys));
 };
@@ -52,8 +52,8 @@ class SYNTACTS_API ASR : public KeyedEnvelope
 {
 public:
     /// Constructs ASR Envelope with specified attack, sustain, and release times
-    ASR(float attackTime = 0.025f, float sustainTime = 0.05f,
-        float releaseTime = 0.025f, float attackAmplitude = 1.0f,
+    ASR(double attackTime = 0.025, double sustainTime = 0.05,
+        double releaseTime = 0.025, double attackAmplitude = 1.0,
         Curve attackCurve = Curves::Linear(),
         Curve releaseCurve = Curves::Linear());
 private:
@@ -67,9 +67,9 @@ class SYNTACTS_API ADSR : public KeyedEnvelope
 {
 public:
     /// Constructs ASR Envelope with specified attack, sustain, and release times
-    ADSR(float attackTime = 0.025f, float decayTime = 0.025f,
-         float sustainTime = 0.025f, float releaseTime = 0.025f,
-         float attackAmplitude = 1.0f, float decayAmplitude = 0.5f,
+    ADSR(double attackTime = 0.025, double decayTime = 0.025,
+         double sustainTime = 0.025, double releaseTime = 0.025,
+         double attackAmplitude = 1.0, double decayAmplitude = 0.5,
          Curve attackCurve = Curves::Linear(),
          Curve decayCurve = Curves::Linear(),
          Curve releaseCurve = Curves::Linear());
@@ -85,15 +85,15 @@ class SYNTACTS_API SignalEnvelope
 {
 public:
     /// Constructs an Envelope with a specified length, positive oscillator type and frequency
-    SignalEnvelope(Signal signal = Sine(), float duration = 1.0f,
-                   float amplitude = 1.0f);
-    float sample(float t) const;
-    float length() const;
+    SignalEnvelope(Signal signal = Sine(), double duration = 1.0,
+                   double amplitude = 1.0);
+    double sample(double t) const;
+    double length() const;
 
 public:
     Signal signal;
-    float duration;
-    float amplitude;
+    double duration;
+    double amplitude;
 
 private:
     TACT_SERIALIZE(TACT_MEMBER(signal), TACT_MEMBER(duration),

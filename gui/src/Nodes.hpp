@@ -38,8 +38,6 @@ struct Node {
     virtual tact::Signal signal() = 0;
     virtual const std::string& name() = 0;
     virtual bool empty() { return false; };
-    virtual float* gain() = 0;
-    virtual float* bias() = 0;
 };
 
 std::shared_ptr<Node> makeNode(PItem id);
@@ -48,8 +46,6 @@ std::shared_ptr<Node> makeNode(PItem id);
 
 struct NodeList : public Node { 
     void gui();
-    float* gain() override;
-    float* bias() override;
     std::vector<std::shared_ptr<Node>> m_nodes;
     std::deque<bool> m_closeHandles;
     std::vector<int> m_ids;
@@ -80,8 +76,6 @@ struct LibrarySignalNode : public Node {
     tact::Signal signal() override;
     const std::string& name() override;
     void gui() override;
-    float* gain() override;
-    float* bias() override;
 protected:
     std::string libName;
     tact::Signal sig;    
@@ -93,8 +87,6 @@ template <typename T>
 struct SignalNode : public Node {
     tact::Signal signal() override { return sig; }
     const std::string& name() override { return signalName(sig.typeId()); }
-    float* gain() override { return &sig.scale; }
-    float* bias() override { return &sig.offset; }
 protected:
     tact::Signal sig = T();
 };

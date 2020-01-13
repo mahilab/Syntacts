@@ -25,7 +25,7 @@ bool saveSignal(const Signal& signal, const std::string& name);
 bool loadSignal(Signal& signal, const std::string& name);
 
 /// Saves a Signal to an audio file or CSV
-bool exportSignal(const Signal& signal, const std::string& filePath, FileFormat format, int sampleRate = 48000, float maxLength = 60); 
+bool exportSignal(const Signal& signal, const std::string& filePath, FileFormat format, int sampleRate = 48000, double maxLength = 60); 
 
 } // namespace Library
 

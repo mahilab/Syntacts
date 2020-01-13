@@ -20,7 +20,7 @@ private:
     bool m_1d   = false;
     float m_volume = 1;
     float m_pitch = 1;
-    bool rowsFirst = true;
+    bool xFirst = false;
     char m_inputBuffer[64] = "";
     std::map<int, ImGui::SpatializerNode> m_channels;
     ImGui::SpatializerTarget m_target;

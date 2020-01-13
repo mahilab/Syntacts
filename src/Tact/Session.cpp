@@ -44,22 +44,20 @@ public:
     Signal signal;
     double time   = 0.0; 
     double sampleLength = 0.0;
-    float  volume = 1.0f;
-    float  lastVolume = 1.0f;
-    float  pitch  = 1.0f;
-    float  lastPitch = 1.0f;
+    double  volume = 1.0f;
+    double  lastVolume = 1.0f;
+    double  pitch  = 1.0f;
+    double  lastPitch = 1.0f;
     bool   paused = true;
     
-    static float tBuff[2048];
-
     void fillBuffer(float* buffer, unsigned long frames) {
         // interp volume
-        float nextVolume = volume;
-        float volumeIncr = (nextVolume - lastVolume) / frames;
+        double nextVolume = volume;
+        double volumeIncr = (nextVolume - lastVolume) / frames;
         volume = lastVolume;   
         // interp pitch
-        float nextPitch = pitch;
-        float pitchIncr = (nextPitch - lastPitch) / frames;
+        double nextPitch = pitch;
+        double pitchIncr = (nextPitch - lastPitch) / frames;
         pitch = lastPitch;
 
         if (paused) {
@@ -67,18 +65,12 @@ public:
                 buffer[f] = 0;
         }
         else {
-            // fill time buffer and 
+            // fill buffer
             for (unsigned long f = 0; f < frames; ++f) {
                 pitch += pitchIncr;
-                tBuff[f] = static_cast<float>(time);
-                time += sampleLength * pitch;
-            }
-            // multisample signal
-            signal.sample(tBuff, buffer, (int)frames);
-            // apply volume
-            for (unsigned long f = 0; f < frames; ++f) {
                 volume += volumeIncr;
-                buffer[f] *= volume;
+                buffer[f] = static_cast<float>( signal.sample(time) * volume );
+                time += sampleLength * pitch;
             }
         }
         if (time > signal.length()) {
@@ -91,8 +83,6 @@ public:
         lastPitch  = nextPitch;
     }
 };
-
-float Channel::tBuff[2048];
 
 /// Interface for commands sent through command queue
 struct Command {
@@ -132,7 +122,7 @@ struct Volume : public Command {
     virtual void perform(Channel& channel) override {
         channel.volume = volume;
     }
-    float volume;
+    double volume;
 };
 
 /// Command to set channel volume
@@ -140,7 +130,7 @@ struct Pitch : public Command {
     virtual void perform(Channel& channel) override {
         channel.pitch = pitch;
     }
-    float pitch;
+    double pitch;
 };
 
 } // private namespace
@@ -276,7 +266,7 @@ public:
         return SyntactsError_NoError;       
     }
 
-    int setVolume(int channel, float volume) {
+    int setVolume(int channel, double volume) {
         if (!isOpen())
             return SyntactsError_NotOpen;
         if (!(channel < m_channels.size()))
@@ -289,7 +279,7 @@ public:
         return SyntactsError_NoError; 
     }
 
-    int setPitch(int channel, float pitch) {
+    int setPitch(int channel, double pitch) {
         if (!isOpen())
             return SyntactsError_NotOpen;
         if (!(channel < m_channels.size()))
@@ -550,12 +540,12 @@ int Session::resumeAll() {
     return SyntactsError_NoError;
 }
 
-int Session::setVolume(int channel, float volume) {
+int Session::setVolume(int channel, double volume) {
     return m_impl->setVolume(channel, volume);
 }
 
 
-int Session::setPitch(int channel, float pitch) {
+int Session::setPitch(int channel, double pitch) {
     return m_impl->setPitch(channel, pitch);
 }
 

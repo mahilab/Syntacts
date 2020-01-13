@@ -10,10 +10,12 @@ int main(int argc, char const *argv[])
 
     Session session;
     session.open();
-    Signal sineFm = Sine(250, Sine(10), 10) * ASR(.1,.3,.1);
-    Library::saveSignal(sineFm, "sineFM");
-    session.playAll(sineFm);
-    sleep(sineFm.length()+1);
-    return 0;
+
+    Signal x = Sine(440) * Envelope(10);
+
+    // session.play(0, x);
+    Library::exportSignal(x, "evan.wav", FileFormat::WAV);
+
+    sleep(35);
 
 }

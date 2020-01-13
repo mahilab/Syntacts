@@ -10,7 +10,7 @@ void printSignal(Signal sig, int pos = 0);
 
 void printTime(Signal sig, int pos) {
     auto cast = static_cast<Time*>(sig.get());
-    std::cout << string(pos*2,' ') << "Time: " << sig.scale << std::endl;
+    std::cout << string(pos*2,' ') << "Time: " << sig.gain << std::endl;
 }
 
 void printScalar(Signal sig, int pos = 0) {

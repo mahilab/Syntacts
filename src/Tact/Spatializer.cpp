@@ -34,7 +34,7 @@ namespace tact {
         m_session = nullptr;
     }
 
-    void Spatializer::setPosition(int channel, float x, float y) {
+    void Spatializer::setPosition(int channel, double x, double y) {
         x = clamp01(x);
         y = clamp01(y);
         m_positions[channel] = {x,y};
@@ -50,7 +50,7 @@ namespace tact {
         return m_positions.at(channel);
     }
 
-    void Spatializer::setTarget(float x, float y) {
+    void Spatializer::setTarget(double x, double y) {
         x = clamp01(x);
         y = clamp01(y);
         m_target = {x,y};
@@ -66,13 +66,13 @@ namespace tact {
         return m_target;
     }
 
-    void Spatializer::setRadius(float r) {
+    void Spatializer::setRadius(double r) {
         assert(r > 0);
         m_radius = r;
         update();
     }
 
-    float Spatializer::getRadius() const {
+    double Spatializer::getRadius() const {
         return m_radius;
     }
 
@@ -133,12 +133,12 @@ namespace tact {
         }
     }
 
-    void Spatializer::setVolume(float volume) {
+    void Spatializer::setVolume(double volume) {
         m_volume = volume;
         update();
     }
 
-    void Spatializer::setPitch(float pitch) {
+    void Spatializer::setPitch(double pitch) {
         for (auto& pair : m_positions) {
             m_session->setPitch(pair.first, pitch);
         }
@@ -151,8 +151,8 @@ namespace tact {
             Point v;
             v.x = pair.second.x - m_target.x;
             v.y = pair.second.y - m_target.y;
-            float d = std::sqrt(v.x*v.x + v.y*v.y);
-            float vol = 1.0 - clamp01(d / m_radius);
+            double d = std::sqrt(v.x*v.x + v.y*v.y);
+            double vol = 1.0 - clamp01(d / m_radius);
             vol = m_rollOff(vol);
             vol *= m_volume;
             // std::cout << vol << std::endl;

@@ -151,7 +151,7 @@ bool loadSignal(Signal& signal, const std::string& name) {
      }
 }
 
-bool exportSignal(const Signal& signal, const std::string& filePath, FileFormat format, int sampleRate, float maxLength) {
+bool exportSignal(const Signal& signal, const std::string& filePath, FileFormat format, int sampleRate, double maxLength) {
     try {
 
         auto path = fs::path(filePath);
@@ -179,7 +179,7 @@ bool exportSignal(const Signal& signal, const std::string& filePath, FileFormat 
         std::vector<double> buffer(static_cast<std::size_t>(length * sampleRate));
         double t = 0;
         for (auto& sample : buffer) {
-            sample = signal.sample(static_cast<float>(t));  
+            sample = signal.sample(t);  
             t += sampleLength;
         }
 

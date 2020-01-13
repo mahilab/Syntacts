@@ -14,8 +14,8 @@ namespace tact
 
 /// A signal that simple returns the time passed to it
 struct Time {
-    inline float sample(float t) const { return t; };
-    constexpr float length() const { return INF; }
+    inline double sample(double t) const { return t; };
+    constexpr double length() const { return INF; }
 private:
     TACT_SERIALIZABLE
 };
@@ -26,11 +26,11 @@ private:
 class SYNTACTS_API Scalar
 {
 public:
-    Scalar(float value = 1);
-    float sample(float t) const;
-    float length() const;
+    Scalar(double value = 1);
+    double sample(double t) const;
+    double length() const;
 public:
-    float value;
+    double value;
 private:
     TACT_SERIALIZE(TACT_MEMBER(value));
 };
@@ -41,13 +41,13 @@ private:
 class SYNTACTS_API Ramp 
 {
 public:
-    Ramp(float initial = 1, float rate = 0);
-    Ramp(float initial, float final, float span);
-    float sample(float t) const;
-    float length() const;
+    Ramp(double initial = 1, double rate = 0);
+    Ramp(double initial, double final, double span);
+    double sample(double t) const;
+    double length() const;
 public:
-    float initial;
-    float rate;
+    double initial;
+    double rate;
 private:
     TACT_SERIALIZE(TACT_MEMBER(initial), TACT_MEMBER(rate));
 };
@@ -59,8 +59,8 @@ class SYNTACTS_API Noise
 {
 public:
     Noise();
-    float sample(float t) const;
-    float length() const;
+    double sample(double t) const;
+    double length() const;
 private:
     TACT_SERIALIZABLE
 };
@@ -72,8 +72,8 @@ public:
     Expression(const std::string& expr = "sin(2*pi*100*t)");
     Expression(const Expression& other);
     ~Expression();
-    float sample(float t) const;
-    float length() const;
+    double sample(double t) const;
+    double length() const;
     bool setExpression(const std::string& expr);
     const std::string& getExpression() const;
     bool operator=(const std::string& expr);
@@ -105,7 +105,7 @@ class SYNTACTS_API PolyBezier
 public:
     /// Point
     struct Point {
-        float t, y;
+        double t, y;
         TACT_SERIALIZE(TACT_MEMBER(t), TACT_MEMBER(y));
     };
     /// A point and left and right control points
@@ -114,8 +114,8 @@ public:
         TACT_SERIALIZE(TACT_MEMBER(cpL), TACT_MEMBER(p), TACT_MEMBER(cpR));
     };
 public:
-    float sample(float t) const;
-    float length() const;
+    double sample(double t) const;
+    double length() const;
     void solve();
 public:
     std::vector<PointGroup> points;

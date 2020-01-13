@@ -77,10 +77,10 @@ public:
     int resumeAll();
 
     /// Sets the volume on the specified channel of the current device
-    int setVolume(int channel, float volume);
+    int setVolume(int channel, double volume);
 
     /// Sets the pitch on the specified channel of the current device
-    int setPitch(int channel, float pitch);
+    int setPitch(int channel, double pitch);
 
     /// Gets info for the currently opened device
     const Device& getCurrentDevice() const;

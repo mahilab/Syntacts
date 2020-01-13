@@ -204,8 +204,6 @@ void NodeList::gui()
     m_closeHandles = std::deque<bool>(m_nodes.size(), true);
 }
 
-float *NodeList::gain() { return &m_scale; }
-float *NodeList::bias() { return &m_offset; }
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -255,8 +253,8 @@ LibrarySignalNode::LibrarySignalNode(const std::string& name) : libName(name) {
 
 tact::Signal LibrarySignalNode::signal() { return sig; }
 const std::string& LibrarySignalNode::name() { return libName; }
-float* LibrarySignalNode::gain() { return &sig.scale; }
-float* LibrarySignalNode::bias() { return &sig.offset; }
+// float* LibrarySignalNode::gain() { return &sig.scale; }
+// float* LibrarySignalNode::bias() { return &sig.offset; }
 void LibrarySignalNode::gui() {
 
 }
@@ -294,7 +292,7 @@ void OscillatorNode::gui()
     cast = (tact::IOscillator *)sig.get();
     if (cast->x.isType<tact::Time>())
     {
-        float f = cast->x.scale / tact::TWO_PI;
+        float f = (float)cast->x.gain / (float)tact::TWO_PI;
         ImGui::BeginNodeTarget();
         ImGui::DragFloat("##Frequency", &f, 1, 0, 1000, "%.0f Hz");
         ImGui::EndNodeTarget();
@@ -302,7 +300,7 @@ void OscillatorNode::gui()
 
         }
         ImGui::SameLine(); ImGui::Text("Frequency");
-        cast->x.scale = f * tact::TWO_PI;
+        cast->x.gain = f * tact::TWO_PI;
     }
     else
     {
@@ -319,11 +317,13 @@ void ChirpNode::gui()
     auto cast = (tact::Chirp *)sig.get();
     if (cast->x.isType<tact::Time>())
     {
-        float f = cast->x.scale / tact::TWO_PI;
+        float f = (float)cast->x.gain / (float)tact::TWO_PI;
         ImGui::DragFloat("Frequency", &f, 1, 0, 1000, "%.0f Hz");
-        cast->x.scale = f * tact::TWO_PI;
+        cast->x.gain = f * tact::TWO_PI;
     }
-    ImGui::DragFloat("Rate", &cast->rate, 1, 0, 0, "%.0f Hz/s");
+    float rate = (float)cast->rate;
+    ImGui::DragFloat("Rate", &rate, 1, 0, 0, "%.0f Hz/s");
+    cast->rate = rate;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -386,9 +386,13 @@ int PolyBezierNode::colorIdx = 0;
 
 void EnvelopeNode::gui()
 {
-    auto cast = (tact::Envelope *)sig.get();
-    ImGui::DragFloat("Duration", &cast->duration, 0.001f, 0, 1, "%0.3f s");
-    ImGui::DragFloat("Amplitude", &cast->amplitude, 0.01f, 0, 1);
+    auto cast = (tact::Envelope*)sig.get();
+    float duration  = (float)cast->duration;
+    float amplitude = (float)cast->amplitude;
+    ImGui::DragFloat("Duration", &duration, 0.001f, 0, 1, "%0.3f s");
+    ImGui::DragFloat("Amplitude", &amplitude, 0.01f, 0, 1);
+    cast->amplitude = amplitude;
+    cast->duration = duration;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -451,8 +455,11 @@ void ADSRNode::gui()
 
 void NoiseNode::gui()
 {
-    ImGui::DragFloat("Gain", &sig.scale, 0.001f, -1, 1, "%0.3f");
-    ImGui::DragFloat("Bias", &sig.offset, 0.001f, -1, 1, "%0.3f");
+    float gain = (float)sig.gain;
+    float bias = (float)sig.bias;
+    ImGui::DragFloat("Gain", &gain, 0.001f, -1, 1, "%0.3f");
+    ImGui::DragFloat("Bias", &bias, 0.001f, -1, 1, "%0.3f");
+    sig.gain = gain; sig.bias = bias;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -464,7 +471,9 @@ void TimeNode::gui() {}
 void ScalarNode::gui()
 {
     auto cast = (tact::Scalar *)sig.get();
-    ImGui::DragFloat("Value", &cast->value, 0.01f, -10, 10);
+    float value = (float)cast->value;
+    ImGui::DragFloat("Value", &value, 0.01f, -10, 10);
+    cast->value = value;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -472,8 +481,12 @@ void ScalarNode::gui()
 void RampNode::gui()
 {
     auto cast = (tact::Ramp *)sig.get();
-    ImGui::DragFloat("Initial", &cast->initial, 0.01f, -10, 10);
-    ImGui::DragFloat("Rate", &cast->rate, 0.01f, -10, 10);
+    float initial = (float)cast->initial;
+    float rate = (float)cast->rate;
+    ImGui::DragFloat("Initial", &initial, 0.01f, -10, 10);
+    ImGui::DragFloat("Rate", &rate, 0.01f, -10, 10);
+    cast->initial = initial;
+    cast->rate = rate;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
