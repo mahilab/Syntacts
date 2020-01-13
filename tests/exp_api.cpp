@@ -128,13 +128,13 @@ CEREAL_REGISTER_TYPE(Signal::Model<Sum>);
 CEREAL_REGISTER_TYPE(Signal::Model<Product>);
 
 void save(const Signal& signal, const std::string& name) {
-    ofstream file(name + ".tact", std::ios::binary);
+    ofstream file(name + ".sig", std::ios::binary);
     cereal::BinaryOutputArchive archive(file);
     archive(signal); 
 }
 
 void load(Signal& signal, const std::string& name) {
-    std::ifstream file(name + ".tact", std::ios::binary);
+    std::ifstream file(name + ".sig", std::ios::binary);
     cereal::BinaryInputArchive archive(file);
     archive(signal);
 }

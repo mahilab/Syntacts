@@ -36,19 +36,26 @@ public:
 
     void play(Signal signal);   
     void stop();
+
     void setVolume(double volume);
+    double getVolume() const;
+
     void setPitch(double pitch);
+    double getPitch() const;
 
     void save(const std::string& name);
     void load(const std::string& name);
-private:
+
+    void autoUpdate(bool enable);
     void update();
 private:
     Session* m_session;
     Point m_target;
     double m_radius;
     double m_volume;
+    double m_pitch;
     Curve m_rollOff;
+    bool m_autoUpdate;
     std::map<int,Point> m_positions;
 };
     

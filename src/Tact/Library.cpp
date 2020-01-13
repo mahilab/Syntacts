@@ -113,7 +113,7 @@ bool saveSignal(const Signal& signal, const std::string& name) {
     try {  
         ensureLibraryDirectoryExists();
         std::ofstream file;
-        file.open(getLibraryDirectory() + name + ".tact", std::ios::binary);
+        file.open(getLibraryDirectory() + name + ".sig", std::ios::binary);
         if (file) {
             cereal::BinaryOutputArchive archive(file);
             archive(signal);  
@@ -134,7 +134,7 @@ bool loadSignal(Signal& signal, const std::string& name) {
     try {
         ensureLibraryDirectoryExists();
         std::ifstream file;
-        file.open(getLibraryDirectory() + name + ".tact", std::ios::binary);
+        file.open(getLibraryDirectory() + name + ".sig", std::ios::binary);
         if (file) {
             cereal::BinaryInputArchive archive(file);
             archive(signal);

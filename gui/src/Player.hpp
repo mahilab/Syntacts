@@ -23,8 +23,5 @@ public:
 
 private:
     int m_payload;
-    float              m_masterVol = 1.0f;
-    std::vector<float> m_channelVol;
-    std::vector<float> m_channelPitch;
-
+    float m_masterVol = 1.0f;
 };

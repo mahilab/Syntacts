@@ -7,7 +7,7 @@ namespace tact {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-constexpr double PI      = 3.14159265358979;
+constexpr double PI      = 3.14159265358979323846;
 constexpr double HALF_PI = 0.5 * PI;
 constexpr double TWO_PI  = 2.0 * PI;
 constexpr double INV_PI  = 1.0 / PI;

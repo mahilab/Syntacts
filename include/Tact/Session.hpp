@@ -52,6 +52,12 @@ public:
     /// Returns true if a device is open, false otherwise
     bool isOpen() const;
 
+    /// Returns true if a signal is playing on the specified channel
+    bool isPlaying(int channel);
+
+    /// Returns true if the specified channel is in a paused state
+    bool isPaused(int channel);
+
     /// Plays a signal on the specified channel of the current device
     int play(int channel, Signal signal);
 
@@ -79,8 +85,14 @@ public:
     /// Sets the volume on the specified channel of the current device
     int setVolume(int channel, double volume);
 
+    /// Gets the volume on the specified channel of the current device
+    double getVolume(int channel);
+
     /// Sets the pitch on the specified channel of the current device
     int setPitch(int channel, double pitch);
+
+    /// Gets the pitch on the specified channel of the current device
+    double getPitch(int channel);
 
     /// Gets info for the currently opened device
     const Device& getCurrentDevice() const;

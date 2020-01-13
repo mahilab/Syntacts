@@ -49,6 +49,7 @@ public:
     double  pitch  = 1.0f;
     double  lastPitch = 1.0f;
     bool   paused = true;
+    bool   stopped = true;
     
     void fillBuffer(float* buffer, unsigned long frames) {
         // interp volume
@@ -60,7 +61,7 @@ public:
         double pitchIncr = (nextPitch - lastPitch) / frames;
         pitch = lastPitch;
 
-        if (paused) {
+        if (paused || stopped) {
             for (unsigned long f = 0; f < frames; ++f) 
                 buffer[f] = 0;
         }
@@ -75,6 +76,7 @@ public:
         }
         if (time > signal.length()) {
             paused = true;
+            stopped = true;
         }
 
         volume     = nextVolume;
@@ -87,48 +89,73 @@ public:
 /// Interface for commands sent through command queue
 struct Command {
     int channel;
-    virtual void perform(Channel& channel) = 0;
+    std::atomic_flag flag = ATOMIC_FLAG_INIT;
+
+    Command() { flag.test_and_set(std::memory_order_acquire); }
+
+    void perform(Channel& channel) {
+        performImpl(channel);
+        flag.clear(std::memory_order_release);
+    }
+
+    void wait() {
+        while (flag.test_and_set(std::memory_order_acquire)) { 
+        }
+    }
+
+    virtual void performImpl(Channel& channel) = 0;
 };
 
-/// Commands to play a new cue
 struct Play : public Command {
-    virtual void perform(Channel& channel) override {
+    virtual void performImpl(Channel& channel) override {
         channel.paused = false;
+        channel.stopped = false;
         channel.time   = 0;
         channel.signal = std::move(signal);
     }
     Signal signal;
 };
 
-/// Command to stop a channel
 struct Stop : public Command {
-    virtual void perform(Channel& channel) override {
-        channel.paused = true;
+    virtual void performImpl(Channel& channel) override {
+        channel.paused  = true;
+        channel.stopped = true;
         channel.time   = 0;
         channel.signal = std::move(Signal());
     }
 };
 
-/// Command to pause a channel
-struct Pause : public Command {
-    virtual void perform(Channel& channel) override {
+struct SetPause : public Command {
+    virtual void performImpl(Channel& channel) override {
         channel.paused = paused;
     }
     bool paused;
 };
 
-/// Command to set channel volume
-struct Volume : public Command {
-    virtual void perform(Channel& channel) override {
+struct SetVolume : public Command {
+    virtual void performImpl(Channel& channel) override {
         channel.volume = volume;
     }
     double volume;
 };
 
-/// Command to set channel volume
-struct Pitch : public Command {
-    virtual void perform(Channel& channel) override {
+struct GetVolume : public Command {
+    virtual void performImpl(Channel& channel) override {
+        volume = channel.volume;
+    }
+    double volume;
+};
+
+struct SetPitch : public Command {
+    virtual void performImpl(Channel& channel) override {
         channel.pitch = pitch;
+    }
+    double pitch;
+};
+
+struct GetPitch : public Command {
+    virtual void performImpl(Channel& channel) override {
+        pitch = channel.pitch;
     }
     double pitch;
 };
@@ -228,6 +255,14 @@ public:
         return Pa_IsStreamActive(m_stream) == 1;
     }
 
+    bool isPlaying(int channel) {
+        return !m_channels[channel].paused && !m_channels[channel].stopped; // this *should* be thread safe, TBD
+    }
+
+    bool isPaused(int channel) {
+        return m_channels[channel].paused; // this *should* be thread safe, TBD
+    }
+
     int play(int channel, Signal signal) {
         if (!isOpen())
             return SyntactsError_NotOpen;
@@ -258,7 +293,7 @@ public:
             return SyntactsError_NotOpen;
         if (!(channel < m_channels.size()))
             return SyntactsError_InvalidChannel;
-        auto command = std::make_shared<Pause>();
+        auto command = std::make_shared<SetPause>();
         command->channel = channel;   
         command->paused  = paused;
         bool success = m_commands.try_push(std::move(command));
@@ -267,11 +302,8 @@ public:
     }
 
     int setVolume(int channel, double volume) {
-        if (!isOpen())
-            return SyntactsError_NotOpen;
-        if (!(channel < m_channels.size()))
-            return SyntactsError_InvalidChannel;
-        auto command = std::make_shared<Volume>();
+        
+        auto command = std::make_shared<SetVolume>();
         command->channel = channel;
         command->volume  = clamp01(volume);
         bool success = m_commands.try_push(std::move(command));
@@ -279,17 +311,33 @@ public:
         return SyntactsError_NoError; 
     }
 
+    double getVolume(int channel) {
+        if (!isOpen())
+            return SyntactsError_NotOpen;
+        if (!(channel < m_channels.size()))
+            return SyntactsError_InvalidChannel;
+        return m_channels[channel].volume; // this *should* be thread safe, TBD
+    }
+
     int setPitch(int channel, double pitch) {
         if (!isOpen())
             return SyntactsError_NotOpen;
         if (!(channel < m_channels.size()))
             return SyntactsError_InvalidChannel;
-        auto command = std::make_shared<Pitch>();
+        auto command = std::make_shared<SetPitch>();
         command->channel = channel;
         command->pitch   = pitch;
         bool success = m_commands.try_push(std::move(command));
         assert(success);
         return SyntactsError_NoError;       
+    }
+
+    double getPitch(int channel) {
+        if (!isOpen())
+            return SyntactsError_NotOpen;
+        if (!(channel < m_channels.size()))
+            return SyntactsError_InvalidChannel;
+        return m_channels[channel].pitch; // this *should* be thread safe, TBD
     }
 
     const Device& getCurrentDevice() const {
@@ -477,11 +525,17 @@ int Session::open(const Device& device, int channelCount, double sampleRate) {
 }
 
 int Session::open(int index) {
-    return open(getAvailableDevices().at(index));
+    if (getAvailableDevices().count(index) > 0)
+        return open(getAvailableDevices().at(index));
+    else
+        return SyntactsError_InvalidDevice;
 }
 
 int Session::open(int index, int channelCount, double sampleRate) {
-    return open(getAvailableDevices().at(index),channelCount, sampleRate);
+    if (getAvailableDevices().count(index) > 0)
+        return open(getAvailableDevices().at(index),channelCount, sampleRate);
+    else
+        return SyntactsError_InvalidDevice;
 }
 
 int Session::close() {
@@ -494,6 +548,14 @@ bool Session::isOpen() const {
 
 int Session::play(int channel, Signal signal) {
     return m_impl->play(channel, std::move(signal));
+}
+
+bool Session::isPlaying(int channel) {
+    return m_impl->isPlaying(channel);
+}
+
+bool Session::isPaused(int channel) {
+    return m_impl->isPaused(channel);
 }
 
 int Session::playAll(Signal signal) {
@@ -544,9 +606,17 @@ int Session::setVolume(int channel, double volume) {
     return m_impl->setVolume(channel, volume);
 }
 
+double Session::getVolume(int channel) {
+    return m_impl->getVolume(channel);
+}
+
 
 int Session::setPitch(int channel, double pitch) {
     return m_impl->setPitch(channel, pitch);
+}
+
+double Session::getPitch(int channel) {
+    return m_impl->getPitch(channel);
 }
 
 const Device& Session::getCurrentDevice() const {

@@ -11,9 +11,10 @@ Library::Library(Gui *gui) : Widget(gui),
 }
 
 const std::string& Library::getSelectedName() {
+    static std::string nothing = "";
     if (m_lib.count(m_selected))
         return m_selected;
-    return "";
+    return nothing;
 }
 
 tact::Signal Library::getSelectedSignal()
@@ -51,7 +52,7 @@ void Library::sync()
     std::set<std::string> diskNames;
     for (const auto &dir_entry : fs::directory_iterator(tact::Library::getLibraryDirectory()))
     {
-        if (dir_entry.path().has_extension() && dir_entry.path().extension() == ".tact")
+        if (dir_entry.path().has_extension() && dir_entry.path().extension() == ".sig")
         {
             std::string name = dir_entry.path().stem().generic_string();
             diskNames.insert(name);

@@ -11,11 +11,15 @@ int main(int argc, char const *argv[])
     Session session;
     session.open();
 
-    Signal x = Sine(440) * Envelope(10);
 
-    // session.play(0, x);
-    Library::exportSignal(x, "evan.wav", FileFormat::WAV);
+    session.setVolume(0, 0.55);
 
-    sleep(35);
+    std::cout << session.getVolume(0) << std::endl;
+
+    sleep(2);
+
+    std::cout << "no crash" << std::endl;
+
+    // sleep(35);
 
 }

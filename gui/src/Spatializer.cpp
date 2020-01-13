@@ -10,13 +10,13 @@ Spatializer::Spatializer(Gui* gui) :
     m_target.pos.y = m_spatializer.getTarget().y;
     m_target.radius =m_spatializer.getRadius();
     gui->device->onSessionInit.connect(this, &Spatializer::onSessionInit);
-
+    m_spatializer.autoUpdate(false);
 }
 
 void Spatializer::render()
 {
     if (ImGui::Spatializer("Spatializer##Grid", m_target, m_channels, 10, Greens::Chartreuse, ImVec2(260, -1), "DND_CHANNEL", m_divs[0], m_1d ? 1 : m_divs[1], m_snap)) {
-        m_spatializer.clear();
+        sync();
     }
     ImGui::SameLine();
     ImGui::BeginGroup();
@@ -83,9 +83,14 @@ void Spatializer::render()
         m_spatializer.stop();
     ImGui::SameLine(75);
     ImGui::PushItemWidth(125);
-    ImGui::MiniSliderFloat("##Volume", &m_volume, 0, 1, true);
+    float v = m_spatializer.getVolume();
+    if (ImGui::MiniSliderFloat("##Volume", &v, 0, 1, true))
+        m_spatializer.setVolume(v);
     ImGui::SameLine(75);
-    ImGui::MiniSliderFloat("##Pitch", &m_pitch, -1, 1, false);
+    float p = m_spatializer.getPitch();
+    p = std::log10(p);
+    if (ImGui::MiniSliderFloat("##Pitch", &p, -1, 1, false))
+        m_spatializer.setPitch(std::pow(10, p));
     ImGui::PopItemWidth();
     ImGui::PopStyleVar();
     ImGui::PopItemWidth();
@@ -98,12 +103,24 @@ void Spatializer::onSessionInit() {
     m_spatializer.bind(gui->device->session.get());
 }
 
-void Spatializer::update() {
-    for (auto& chan : m_channels) {
-        m_spatializer.setPosition(chan.first, chan.second.pos.x, chan.second.pos.y);
+void Spatializer::sync() {
+    auto existing = m_spatializer.getChannels();
+    std::vector<int> remove;
+    for (auto& e : existing) {
+        if (m_channels.count(e) == 0)
+            remove.push_back(e);
     }
+    for (auto& r : remove)
+        m_spatializer.remove(r);
+    update();
+}
+
+void Spatializer::update() {
+    for (auto& chan : m_channels) 
+        m_spatializer.setPosition(chan.first, chan.second.pos.x, chan.second.pos.y);
     m_spatializer.setTarget(m_target.pos.x, m_target.pos.y);
     m_spatializer.setRadius(m_target.radius);
+    m_spatializer.update();
 }
 
 void Spatializer::fillGrid() {
@@ -114,7 +131,7 @@ void Spatializer::fillGrid() {
         float div[2] = {1.0f / (m_divs[0]-1), 1.0f / (m_divs[1]-1)};
         int k = 0;
         xFirst = !xFirst;
-        if (xFirst)
+        if (xFirst || m_1d)
         {
             for (int y = 0; y < m_divs[1]; ++y)
             {
@@ -133,7 +150,6 @@ void Spatializer::fillGrid() {
         }
         else
         {
-            print("derp");
             for (int x = 0; x < m_divs[0]; ++x)
             {
                 for (int y = 0; y < m_divs[1]; ++y)

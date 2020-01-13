@@ -7,7 +7,9 @@ namespace tact {
         m_target({0.5,0.5}),
         m_radius(0.25),
         m_volume(1),
-        m_rollOff(Curves::Linear())
+        m_pitch(1),
+        m_rollOff(Curves::Linear()),
+        m_autoUpdate(true)
     {
         
     }
@@ -38,12 +40,14 @@ namespace tact {
         x = clamp01(x);
         y = clamp01(y);
         m_positions[channel] = {x,y};
-        update();
+        if (m_autoUpdate)
+            update();
     }
 
     void Spatializer::setPosition(int channel, Point p) {
         m_positions[channel] = p;
-        update();
+        if (m_autoUpdate)
+            update();
     }
 
     Spatializer::Point Spatializer::getPosition(int channel) const {
@@ -54,12 +58,14 @@ namespace tact {
         x = clamp01(x);
         y = clamp01(y);
         m_target = {x,y};
-        update();
+        if (m_autoUpdate)
+            update();
     }
 
     void Spatializer::setTarget(Point p) {
         m_target = p;
-        update();
+        if (m_autoUpdate)
+            update();
     }
 
     Spatializer::Point Spatializer::getTarget() const {
@@ -69,7 +75,8 @@ namespace tact {
     void Spatializer::setRadius(double r) {
         assert(r > 0);
         m_radius = r;
-        update();
+        if (m_autoUpdate)
+            update();
     }
 
     double Spatializer::getRadius() const {
@@ -78,7 +85,8 @@ namespace tact {
 
     void Spatializer::setRollOff(Curve rollOff) {
         m_rollOff = rollOff;
-        update();
+        if (m_autoUpdate)
+            update();
     }
 
     Curve Spatializer::getRollOff() const {
@@ -86,20 +94,24 @@ namespace tact {
     }
 
     void Spatializer::clear() {
-        for (auto& pair : m_positions) {
-            int ch = pair.first;
-            m_session->stop(ch);
-            m_session->setVolume(ch, 1.0f);
-            m_session->setPitch(ch, 1.0f);
-        }
+        if (m_session) {
+            for (auto& pair : m_positions) {
+                int ch = pair.first;
+                m_session->stop(ch);
+                m_session->setVolume(ch, 1.0);
+                m_session->setPitch(ch, 1.0);
+            }
+        } 
         m_positions.clear();        
     }
 
     void Spatializer::remove(int channel) {
         if (m_positions.count(channel)) {
-            m_session->stop(channel);
-            m_session->setVolume(channel, 1.0f);
-            m_session->setPitch(channel, 1.0f);
+            if (m_session) {
+                m_session->stop(channel);
+                m_session->setVolume(channel, 1.0);
+                m_session->setPitch(channel, 1.0);
+            }
             m_positions.erase(channel);
         }
     }
@@ -121,31 +133,48 @@ namespace tact {
     }
 
     void Spatializer::play(Signal signal) {
-        update();
-        for (auto& pair : m_positions) {
+        if (m_session == nullptr)
+            return;
+        for (auto& pair : m_positions) 
             m_session->play(pair.first, signal);
-        }
     }
 
     void Spatializer::stop() {
-        for (auto& pair : m_positions) {
+        if (m_session == nullptr)
+            return;
+        for (auto& pair : m_positions) 
             m_session->stop(pair.first);
-        }
     }
 
     void Spatializer::setVolume(double volume) {
         m_volume = volume;
-        update();
+        if (m_autoUpdate)
+            update();
+    }
+
+    double Spatializer::getVolume() const {
+        return m_volume;
     }
 
     void Spatializer::setPitch(double pitch) {
-        for (auto& pair : m_positions) {
-            m_session->setPitch(pair.first, pitch);
-        }
+        m_pitch = pitch;
+        if (m_session == nullptr)
+            return;
+        for (auto& pair : m_positions) 
+            m_session->setPitch(pair.first, m_pitch);
     }    
 
+    double Spatializer::getPitch() const {
+        return m_pitch;
+    }
+
+    void Spatializer::autoUpdate(bool enable) {
+        m_autoUpdate = enable;
+    }
+
     void Spatializer::update() {
-        // std::cout << "------------------" << std::endl; 
+        if (m_session == nullptr)
+            return;
         for (auto& pair : m_positions) {
             int ch = pair.first;
             Point v;
@@ -155,7 +184,6 @@ namespace tact {
             double vol = 1.0 - clamp01(d / m_radius);
             vol = m_rollOff(vol);
             vol *= m_volume;
-            // std::cout << vol << std::endl;
             m_session->setVolume(ch, vol);
         }
     }

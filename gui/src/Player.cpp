@@ -39,7 +39,6 @@ void Player::render()
     {
         for (int i = 0; i < gui->device->session->getCurrentDevice().maxChannels; ++i)
         {
-            m_channelVol[i] = m_masterVol;
             gui->device->session->setVolume(i, m_masterVol);
         }
     }
@@ -57,11 +56,18 @@ void Player::renderChannels()
     if (gui->device->session) {
         for (int i = 0; i < gui->device->session->getCurrentDevice().maxChannels; ++i)
         {
+            ImGui::PushID(i);
+            bool playing = gui->device->session->isPlaying(i);
+            if (playing)
+                ImGui::PushStyleColor(ImGuiCol_Text, Purples::Plum);
             auto label = str(i);
             ImGui::BeginNodeTarget();
             if (ImGui::Button(label.c_str(), ImVec2(25, 0)))
                 playCh(i);
             ImGui::EndNodeTarget();
+            if (playing)
+                ImGui::PopStyleColor();
+
             if (ImGui::NodeDroppedL()) {
                 tact::Signal sig;
                 tact::Library::loadSignal(sig, ImGui::NodePayloadL());
@@ -77,27 +83,33 @@ void Player::renderChannels()
                 ImGui::EndDragDropSource();
             }
 
+            ImGui::SameLine();
+            ImGui::Button("",ImVec2(10,0));
+
             ImGui::PushItemWidth(-1);
 
-            ImGui::SameLine(30);
-            if (ImGui::MiniSliderFloat(str("##Volume", i).c_str(), &m_channelVol[i], 0, 1, true))
-                gui->device->session->setVolume(i, m_channelVol[i]);
+            ImGui::SameLine(43);
+            float v = (float)gui->device->session->getVolume(i);
+            if (ImGui::MiniSliderFloat(str("##Volume", i).c_str(), &v, 0, 1, true))
+                gui->device->session->setVolume(i, v);
             if (ImGui::IsItemClicked(1))
             {
-                m_channelVol[i] = m_channelVol[i] == 0.0f ? 1.0f : m_channelVol[i] == 1.0f ? 0.0f : m_channelVol[i] < 0.5f ? 0.0f : 1.0f;
-                gui->device->session->setVolume(i, m_channelVol[i]);
+                v = v == 0.0f ? 1.0f : v == 1.0f ? 0.0f : v < 0.5f ? 0.0f : 1.0f;
+                gui->device->session->setVolume(i, v);
             }
 
-            ImGui::SameLine(30);
-            if (ImGui::MiniSliderFloat(str("##Pitch", i).c_str(), &m_channelPitch[i], -1, 1, false))
-                gui->device->session->setPitch(i, (float)std::pow(10, m_channelPitch[i]));
+            ImGui::SameLine(43);
+            float p = (float)gui->device->session->getPitch(i);
+            p = std::log10(p);
+            if (ImGui::MiniSliderFloat(str("##Pitch", i).c_str(), &p, -1, 1, false))
+                gui->device->session->setPitch(i, std::pow(10, p));
             if (ImGui::IsItemClicked(1))
             {
-                m_channelPitch[i] = 0;
-                gui->device->session->setPitch(i, (float)std::pow(10, m_channelPitch[i]));
+                gui->device->session->setPitch(i, 1);
             }
 
             ImGui::PopItemWidth();
+            ImGui::PopID();
         }
     }
     ImGui::PopStyleVar();
@@ -121,6 +133,4 @@ void Player::playSelected()
 void Player::rechannel()
 {
     int maxChannels = gui->device->session ? gui->device->session->getCurrentDevice().maxChannels : 0;
-    m_channelVol = std::vector<float>(maxChannels, 1.0f);
-    m_channelPitch = std::vector<float>(maxChannels, 0.0f);
 }
