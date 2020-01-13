@@ -8,33 +8,33 @@
 namespace tact
 {
 
-Scalar::Scalar(float _value) : value(_value) {}
-float Scalar::sample(float t) const
+Scalar::Scalar(double _value) : value(_value) {}
+double Scalar::sample(double t) const
 {
     return value;
 }
 
-float Scalar::length() const
+double Scalar::length() const
 {
     return INF;
 }
 
-Ramp::Ramp(float _initial, float _rate) : initial(_initial), rate(_rate) {}
-Ramp::Ramp(float _initial, float _final, float _span) : initial(_initial), rate((_final - _initial) / _span) {}
-float Ramp::sample(float t) const { return initial + rate * t; }
-float Ramp::length() const { return INF; }
+Ramp::Ramp(double _initial, double _rate) : initial(_initial), rate(_rate) {}
+Ramp::Ramp(double _initial, double _final, double _span) : initial(_initial), rate((_final - _initial) / _span) {}
+double Ramp::sample(double t) const { return initial + rate * t; }
+double Ramp::length() const { return INF; }
 
 Noise::Noise()
 { }
 
-float Noise::sample(float t) const
+double Noise::sample(double t) const
 {
-    static std::uniform_real_distribution<float> dist(-1,1);
+    static std::uniform_real_distribution<double> dist(-1,1);
     static std::mt19937 rgen;
     return dist(rgen);
 }
 
-float Noise::length() const
+double Noise::length() const
 {
     return INF;
 }
@@ -44,7 +44,7 @@ class Expression::Impl
 public:
     Impl() : m_t(0) {}
 
-    float sample(float t) const
+    double sample(double t) const
     {
         m_t = t;
         return m_expr.value();
@@ -57,11 +57,11 @@ public:
         m_expr.register_symbol_table(m_table);
         return m_parser.compile(m_str, m_expr);
     }
-    exprtk::symbol_table<float> m_table;
-    exprtk::expression<float> m_expr;
-    exprtk::parser<float> m_parser;
+    exprtk::symbol_table<double> m_table;
+    exprtk::expression<double> m_expr;
+    exprtk::parser<double> m_parser;
     std::string m_str;
-    mutable float m_t;
+    mutable double m_t;
 };
 
 Expression::Expression(const std::string &expr) : m_impl(std::move(std::make_unique<Expression::Impl>()))
@@ -77,12 +77,12 @@ Expression::Expression(const Expression& other) :
     Expression(other.getExpression())
 { }
 
-float Expression::sample(float t) const
+double Expression::sample(double t) const
 {
     return m_impl->sample(t);
 }
 
-float Expression::length() const
+double Expression::length() const
 {
     return INF;
 }
@@ -101,7 +101,7 @@ bool Expression::operator=(const std::string &expr)
     return setExpression(expr);
 }
 
-float PolyBezier::sample(float t) const {
+double PolyBezier::sample(double t) const {
     if (solution.size() < 2)
         return 0; 
     else {
@@ -116,7 +116,7 @@ float PolyBezier::sample(float t) const {
     }
 }
 
-float PolyBezier::length() const {
+double PolyBezier::length() const {
     if (points.size() > 0) 
         return points.back().p.t;
     return 0;
@@ -132,14 +132,14 @@ void PolyBezier::solve() {
             for (int i = 0; i < segments; ++i) {
                 auto& l = points[b];
                 auto& r = points[b+1];
-                float t = (float)i / (float)(segments-1);
-                float u = 1.0f - t;
-                float w1 = u*u*u;
-                float w2 = 3*u*u*t;
-                float w3 = 3*u*t*t;
-                float w4 = t*t*t;
-                float x = w1*l.p.t + w2*l.cpR.t + w3*r.cpL.t + w4*r.p.t;
-                float y = w1*l.p.y + w2*l.cpR.y + w3*r.cpL.y + w4*r.p.y;
+                double t = (double)i / (double)(segments-1);
+                double u = 1.0f - t;
+                double w1 = u*u*u;
+                double w2 = 3*u*u*t;
+                double w3 = 3*u*t*t;
+                double w4 = t*t*t;
+                double x = w1*l.p.t + w2*l.cpR.t + w3*r.cpL.t + w4*r.p.t;
+                double y = w1*l.p.y + w2*l.cpR.y + w3*r.cpL.y + w4*r.p.y;
                 solution.push_back({x,y});
             }
         }

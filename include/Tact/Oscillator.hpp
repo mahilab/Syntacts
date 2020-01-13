@@ -16,11 +16,11 @@ public:
     /// Constucts an Oscillator with a signal based input
     IOscillator(Signal x);
     /// Constructs an Oscillator with a scalar frequency in hertz
-    IOscillator(float hertz);
+    IOscillator(double hertz);
     /// Constructs an Oscillator with frequency modulation (FM)
-    IOscillator(float hertz, Signal modulation, float index = 2.0f);
+    IOscillator(double hertz, Signal modulation, double index = 2.0);
     /// Returns infinity
-    inline float length() const;
+    inline double length() const;
 public:
     Signal x; ///< the Oscillator's input       
 private:
@@ -34,7 +34,7 @@ class SYNTACTS_API Sine : public IOscillator
 {
 public:
     using IOscillator::IOscillator;
-    inline float sample(float t) const;
+    inline double sample(double t) const;
 private:
     TACT_SERIALIZE(TACT_PARENT(IOscillator));
 };
@@ -46,7 +46,7 @@ class SYNTACTS_API Square : public IOscillator
 {
 public:
     using IOscillator::IOscillator;
-    inline float sample(float t) const;
+    inline double sample(double t) const;
 private:
     TACT_SERIALIZE(TACT_PARENT(IOscillator));
 };
@@ -58,7 +58,7 @@ class SYNTACTS_API Saw : public IOscillator
 {
 public:
     using IOscillator::IOscillator;
-    inline float sample(float t) const;
+    inline double sample(double t) const;
 private:
     TACT_SERIALIZE(TACT_PARENT(IOscillator));
 };
@@ -70,7 +70,7 @@ class SYNTACTS_API Triangle : public IOscillator
 {
 public:
     using IOscillator::IOscillator;
-    inline float sample(float t) const;
+    inline double sample(double t) const;
 private:
     TACT_SERIALIZE(TACT_PARENT(IOscillator));
 };
@@ -83,10 +83,10 @@ class SYNTACTS_API Chirp : public IOscillator
 public:
     /// Constructor
     Chirp();
-    Chirp(float frequency, float rate);
-    inline float sample(float t) const;
+    Chirp(double frequency, double rate);
+    inline double sample(double t) const;
 public:
-    float rate; ///< the chirp rate or (f1-f0)/T
+    double rate; ///< the chirp rate or (f1-f0)/T
 private:
     TACT_SERIALIZE(TACT_PARENT(IOscillator), TACT_MEMBER(rate));
 };
@@ -98,12 +98,12 @@ class SYNTACTS_API Pwm
 {
 public:
     /// Constructor
-    Pwm(float frequency = 1.0f, float dutyCycle = 0.5f);
-    inline float sample(float t) const;
-    inline float length() const;
+    Pwm(double frequency = 1.0, double dutyCycle = 0.5);
+    inline double sample(double t) const;
+    inline double length() const;
 public:
-    float frequency;
-    float dutyCycle;
+    double frequency;
+    double dutyCycle;
 private:
     TACT_SERIALIZE(TACT_MEMBER(frequency), TACT_MEMBER(dutyCycle));
 };

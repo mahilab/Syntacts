@@ -4,29 +4,29 @@
 
 namespace tact {
 
-Envelope::Envelope(float _duration, float _amplitude) :
+Envelope::Envelope(double _duration, double _amplitude) :
     duration(_duration),
     amplitude(_amplitude)
 { }
 
-float Envelope::sample(float t) const {
+double Envelope::sample(double t) const {
     return t > duration ? 0.0f : amplitude;
 }
 
-float Envelope::length() const {
+double Envelope::length() const {
     return duration;
 }
 
-KeyedEnvelope::KeyedEnvelope(float amplitude0)
+KeyedEnvelope::KeyedEnvelope(double amplitude0)
 {
    addKey(0.0f, amplitude0, Curves::Linear());
 }
 
-void KeyedEnvelope::addKey(float t, float amplitude, Curve curve) {
+void KeyedEnvelope::addKey(double t, double amplitude, Curve curve) {
     keys[t] = std::make_pair(amplitude, curve);
 }
 
-float KeyedEnvelope::sample(float t) const {
+double KeyedEnvelope::sample(double t) const {
     if (t > length())
         return 0.0f;
     auto b = keys.lower_bound(t);
@@ -34,15 +34,15 @@ float KeyedEnvelope::sample(float t) const {
         return b->second.first;
     auto a = std::prev(b);
     t = (t - a->first) / (b->first - a->first);
-    float sample = b->second.second(a->second.first, b->second.first, t);    
+    double sample = b->second.second(a->second.first, b->second.first, t);    
     return sample;
 }
 
-float KeyedEnvelope::length() const {
+double KeyedEnvelope::length() const {
     return keys.rbegin()->first;
 }
 
-ASR::ASR(float attackTime, float sustainTime, float releaseTime, float attackAmplitude, Curve attackCurve, Curve releaseCurve)
+ASR::ASR(double attackTime, double sustainTime, double releaseTime, double attackAmplitude, Curve attackCurve, Curve releaseCurve)
 {
     addKey(attackTime, attackAmplitude, attackCurve);
     addKey(attackTime + sustainTime, attackAmplitude, Curves::Instant());
@@ -50,7 +50,7 @@ ASR::ASR(float attackTime, float sustainTime, float releaseTime, float attackAmp
 }
 
 
-ADSR::ADSR(float attackTime, float decayTime, float sustainTime, float releaseTime, float attackAmplitude, float decayAmplitude, Curve attackCurve, Curve decayCurve, Curve releaseCurve)
+ADSR::ADSR(double attackTime, double decayTime, double sustainTime, double releaseTime, double attackAmplitude, double decayAmplitude, Curve attackCurve, Curve decayCurve, Curve releaseCurve)
 {
     addKey(attackTime, attackAmplitude, attackCurve);
     addKey(attackTime + decayTime, decayAmplitude, decayCurve);
@@ -58,19 +58,19 @@ ADSR::ADSR(float attackTime, float decayTime, float sustainTime, float releaseTi
     addKey(attackTime + decayTime + sustainTime + releaseTime, 0.0f, releaseCurve);
 }
 
-SignalEnvelope::SignalEnvelope(Signal _signal, float _duration , float _amplitude) :
+SignalEnvelope::SignalEnvelope(Signal _signal, double _duration , double _amplitude) :
     signal(_signal), duration(_duration), amplitude(_amplitude)
 { }
 
-float SignalEnvelope::sample(float t) const {
+double SignalEnvelope::sample(double t) const {
     if (t > length())
         return 0.0f;
-    float value = signal.sample(t);  
+    double value = signal.sample(t);  
     value = remap(value, -1, 1 , 0 , amplitude);
     return value;
 }
 
-float SignalEnvelope::length() const {
+double SignalEnvelope::length() const {
     return duration;
 }
 

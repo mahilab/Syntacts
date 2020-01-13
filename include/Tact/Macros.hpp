@@ -42,7 +42,7 @@ namespace cereal {
 ///////////////////////////////////////////////////////////////////////////////
 
 #define TACT_CURVE(T) struct T { \
-                          float operator()(float t) const; \
+                          double operator()(double t) const; \
                           template <class Archive> void serialize(Archive& archive) {} \
                       };
 

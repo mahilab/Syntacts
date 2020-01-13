@@ -145,7 +145,7 @@ void PlotSignal(const char *label, const tact::Signal &sig, std::vector<ImVec2> 
 
         for (int i = 0; i < points.size(); ++i)
         {
-            float s = ImClamp(sig.sample(t), -1.0f, 1.0f);
+            float s = ImClamp((float)sig.sample(t), -1.0f, 1.0f);
             float y = start.y + s * ys;
             points[i].x = x;
             points[i].y = y;
@@ -165,7 +165,7 @@ bool Spatializer(const char *label, SpatializerTarget &target, std::map<int, Spa
     static ImU32 gridColor = GetColorU32(ImGuiCol_WindowBg);
     static ImU32 gridBg = GetColorU32(ImGuiCol_FrameBgHovered, 0.1f);
 
-    bool ret = false;
+    bool changed = false;
     // skip render if SkipItems on
     ImGuiWindow *window = GetCurrentWindow();
     if (window->SkipItems)
@@ -247,9 +247,12 @@ bool Spatializer(const char *label, SpatializerTarget &target, std::map<int, Spa
         // drag
         if (node.held)
         {
-            posPx += IO.MouseDelta;
-            posPx.x = ImClamp(posPx.x, xdivs == 1 ? grid_cntr.x : grid.Min.x, xdivs == 1 ? grid_cntr.x : grid.Max.x);
-            posPx.y = ImClamp(posPx.y, ydivs == 1 ? grid_cntr.y : grid.Min.y, ydivs == 1 ? grid_cntr.y : grid.Max.y);
+            if (IO.MouseDelta.x != 0 || IO.MouseDelta.y != 0) {
+                // changed = true;
+                posPx += IO.MouseDelta;
+                posPx.x = ImClamp(posPx.x, xdivs == 1 ? grid_cntr.x : grid.Min.x, xdivs == 1 ? grid_cntr.x : grid.Max.x);
+                posPx.y = ImClamp(posPx.y, ydivs == 1 ? grid_cntr.y : grid.Min.y, ydivs == 1 ? grid_cntr.y : grid.Max.y);
+            }
         }
         node.pos = toNm(posPx);
         if (snap && !node.held)
@@ -274,7 +277,7 @@ bool Spatializer(const char *label, SpatializerTarget &target, std::map<int, Spa
     if (toDelete != -1)
     {
         nodes.erase(toDelete);
-        ret = true;
+        changed = true;
     }
     // render target
     ImVec2 targetPosPx = toPx(target.pos);
@@ -339,11 +342,11 @@ bool Spatializer(const char *label, SpatializerTarget &target, std::map<int, Spa
             if (snap)
                 snapNode(node);
             nodes[node.index] = node;
-            ret = true;
+            changed = true;
         }
         ImGui::EndDragDropTarget();
     }
-    return ret;
+    return changed;
 }
 
 } // namespace ImGui

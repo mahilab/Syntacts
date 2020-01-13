@@ -8,21 +8,21 @@ inline Signal operator+(Signal lhs, Signal rhs)
     return Sum(std::move(lhs), std::move(rhs));
 }
 
-inline Signal operator+(float lhs, Signal rhs)
+inline Signal operator+(double lhs, Signal rhs)
 {
-    rhs.offset += lhs;
+    rhs.bias += lhs;
     return rhs;
 }
 
-inline Signal operator+(Signal lhs, float rhs)
+inline Signal operator+(Signal lhs, double rhs)
 {
-    lhs.offset += rhs;
+    lhs.bias += rhs;
     return lhs;
 }
 
-inline Signal &operator+=(Signal &lhs, float rhs)
+inline Signal &operator+=(Signal &lhs, double rhs)
 {
-    lhs.offset += rhs;
+    lhs.bias += rhs;
     return lhs;
 }
 
@@ -32,20 +32,20 @@ inline Signal operator-(Signal lhs, Signal rhs)
     return Sum(std::move(lhs), std::move(rhs));
 }
 
-inline Signal operator-(float lhs, Signal rhs)
+inline Signal operator-(double lhs, Signal rhs)
 {
     return lhs + -1 * rhs;
 }
 
-inline Signal operator-(Signal lhs, float rhs)
+inline Signal operator-(Signal lhs, double rhs)
 {
-    lhs.offset -= rhs;
+    lhs.bias -= rhs;
     return lhs;
 }
 
-inline Signal &operator-=(Signal &lhs, float rhs)
+inline Signal &operator-=(Signal &lhs, double rhs)
 {
-    lhs.offset -= rhs;
+    lhs.bias -= rhs;
     return lhs;
 }
 
@@ -59,24 +59,24 @@ inline Signal operator*(Signal lhs, Signal rhs)
     return Product(std::move(lhs), std::move(rhs));
 }
 
-inline Signal operator*(float lhs, Signal rhs)
+inline Signal operator*(double lhs, Signal rhs)
 {
-    rhs.scale  *= lhs;
-    rhs.offset *= lhs;
+    rhs.gain  *= lhs;
+    rhs.bias *= lhs;
     return rhs;
 }
 
-inline Signal operator*(Signal lhs, float rhs)
+inline Signal operator*(Signal lhs, double rhs)
 {
-    lhs.scale  *= rhs;
-    lhs.offset *= rhs;
+    lhs.gain  *= rhs;
+    lhs.bias *= rhs;
     return lhs;
 }
 
-inline Signal &operator*=(Signal &lhs, float rhs)
+inline Signal &operator*=(Signal &lhs, double rhs)
 {
-    lhs.scale  *= rhs;
-    lhs.offset *= rhs;
+    lhs.gain  *= rhs;
+    lhs.bias *= rhs;
     return lhs;
 }
 

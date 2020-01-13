@@ -16,14 +16,14 @@ public:
     template <typename T>
     Curve(T curve) : m_ptr(std::make_shared<Model<T>>(std::move(curve))) { }
     /// Transforms interpolant t in range [0,1] 
-    float operator()(float t) const;
+    double operator()(double t) const;
     /// Returns value in between a and b given interpolant t in range [0,1]
-    float operator()(float a, float b, float t) const;    
+    double operator()(double a, double b, double t) const;    
 public:
     struct Concept {
         Concept() = default;
         virtual ~Concept() = default;
-        virtual float operator()(float t) const = 0;
+        virtual double operator()(double t) const = 0;
         template <class Archive>
         void serialize(Archive& archive) {}
     };
@@ -31,7 +31,7 @@ public:
     struct Model final : Concept {
         Model() = default;
         Model(T model) : m_model(std::move(model)) { }
-        float operator()(float t) const override
+        double operator()(double t) const override
         { return m_model(t); }
         T m_model;
         TACT_SERIALIZE(TACT_PARENT(Concept), TACT_MEMBER(m_model));

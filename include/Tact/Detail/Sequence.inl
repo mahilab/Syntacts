@@ -1,7 +1,7 @@
 namespace tact
 {
 
-inline Sequence& Sequence::operator<<(float rhs) {
+inline Sequence& Sequence::operator<<(double rhs) {
     head += rhs;
     return *this;
 }
@@ -23,14 +23,14 @@ inline Sequence operator<<(Signal lhs, Signal rhs) {
     return seq;
 }
 
-inline Sequence operator<<(Signal lhs, float rhs) {
+inline Sequence operator<<(Signal lhs, double rhs) {
     Sequence seq;
     seq.push(lhs);
     seq.head += rhs;
     return seq;
 }
 
-inline Sequence operator<<(float lhs, Signal rhs) {
+inline Sequence operator<<(double lhs, Signal rhs) {
     Sequence seq;
     seq.head += lhs;
     seq.push(rhs);

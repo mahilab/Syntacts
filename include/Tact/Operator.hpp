@@ -21,8 +21,8 @@ private:
 /// A Signal which is the sum or difference of two other signals
 struct Sum : public IOperator {
     using IOperator::IOperator;
-    float sample(float t) const;
-    float length() const;
+    double sample(double t) const;
+    double length() const;
 private:
     TACT_SERIALIZE(TACT_PARENT(IOperator));
 };
@@ -32,8 +32,8 @@ private:
 /// A Signal which is the product of two other signals
 struct Product : public IOperator {
     using IOperator::IOperator;
-    float sample(float t) const;
-    float length() const;
+    double sample(double t) const;
+    double length() const;
 private:
     TACT_SERIALIZE(TACT_PARENT(IOperator));
 };
@@ -41,19 +41,19 @@ private:
 ///////////////////////////////////////////////////////////////////////////////
 
 inline Signal operator*(Signal lhs, Signal rhs);
-inline Signal operator*(float lhs, Signal rhs);
-inline Signal operator*(Signal lhs, float rhs);
-inline Signal& operator*=(Signal& lhs, float rhs);
+inline Signal operator*(double lhs, Signal rhs);
+inline Signal operator*(Signal lhs, double rhs);
+inline Signal& operator*=(Signal& lhs, double rhs);
 
 inline Signal operator+(Signal lhs, Signal rhs);
-inline Signal operator+(float lhs, Signal rhs);
-inline Signal operator+(Signal lhs, float rhs);
-inline Signal& operator+=(Signal& lhs, float rhs);
+inline Signal operator+(double lhs, Signal rhs);
+inline Signal operator+(Signal lhs, double rhs);
+inline Signal& operator+=(Signal& lhs, double rhs);
 
 inline Signal operator-(Signal lhs, Signal rhs);
-inline Signal operator-(float lhs, Signal rhs);
-inline Signal operator-(Signal lhs, float rhs);
-inline Signal& operator-=(Signal& lhs, float rhs);
+inline Signal operator-(double lhs, Signal rhs);
+inline Signal operator-(Signal lhs, double rhs);
+inline Signal& operator-=(Signal& lhs, double rhs);
 
 inline Signal operator-(Signal lhs);
 

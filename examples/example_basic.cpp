@@ -10,10 +10,16 @@ int main(int argc, char const *argv[])
 
     Session session;
     session.open();
-    Signal sineFm = Sine(250, Sine(10), 10) * ASR(.1,.3,.1);
-    Library::saveSignal(sineFm, "sineFM");
-    session.playAll(sineFm);
-    sleep(sineFm.length()+1);
-    return 0;
+
+
+    session.setVolume(0, 0.55);
+
+    std::cout << session.getVolume(0) << std::endl;
+
+    sleep(2);
+
+    std::cout << "no crash" << std::endl;
+
+    // sleep(35);
 
 }

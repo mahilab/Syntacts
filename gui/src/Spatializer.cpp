@@ -10,12 +10,14 @@ Spatializer::Spatializer(Gui* gui) :
     m_target.pos.y = m_spatializer.getTarget().y;
     m_target.radius =m_spatializer.getRadius();
     gui->device->onSessionInit.connect(this, &Spatializer::onSessionInit);
-
+    m_spatializer.autoUpdate(false);
 }
 
 void Spatializer::render()
 {
-    ImGui::Spatializer("Spatializer##Grid", m_target, m_channels, 10, Greens::Chartreuse, ImVec2(260, -1), "DND_CHANNEL", m_divs[0], m_1d ? 1 : m_divs[1], m_snap);
+    if (ImGui::Spatializer("Spatializer##Grid", m_target, m_channels, 10, Greens::Chartreuse, ImVec2(260, -1), "DND_CHANNEL", m_divs[0], m_1d ? 1 : m_divs[1], m_snap)) {
+        sync();
+    }
     ImGui::SameLine();
     ImGui::BeginGroup();
     ImGui::PushItemWidth(200);
@@ -36,10 +38,14 @@ void Spatializer::render()
     ImGui::Checkbox("##Snap", &m_snap);
     ImGui::SameLine(260);
     ImGui::Checkbox("##1D", &m_1d);
-    if (ImGui::Button("Fill", ImVec2(200, 0)))
+    if (ImGui::Button("Fill", ImVec2(200, 0))) {
+        m_spatializer.clear();
         fillGrid();
-    if (ImGui::Button("Clear", ImVec2(200, 0)))
+    }
+    if (ImGui::Button("Clear", ImVec2(200, 0))) {
+        m_spatializer.clear();
         m_channels.clear();
+    }
     ImGui::PushItemWidth(175);
 
     bool entered = ImGui::InputText("##SignalName", m_inputBuffer, 64, ImGuiInputTextFlags_CharsNoBlank | ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue);
@@ -67,54 +73,74 @@ void Spatializer::render()
     ImGui::SameLine();
     ImGui::Text("Signal");
     ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(ImGui::GetStyle().FramePadding.x, ImGui::GetStyle().FramePadding.y * 2));
-    if (ImGui::Button(ICON_FA_PLAY, ImVec2(25,0))) {
-        for (auto& pair : m_channels) 
-            print(pair.first, pair.second.pos.x, pair.second.pos.y);
-    }
+    if (ImGui::Button(ICON_FA_PLAY, ImVec2(25,0)))
+        m_spatializer.play(signal);
     ImGui::SameLine();
-    ImGui::Button(ICON_FA_PAUSE);
+    if (ImGui::Button(ICON_FA_PAUSE))
+    { }
     ImGui::SameLine();
-    ImGui::Button(ICON_FA_STOP);
+    if (ImGui::Button(ICON_FA_STOP))
+        m_spatializer.stop();
     ImGui::SameLine(75);
     ImGui::PushItemWidth(125);
-    ImGui::MiniSliderFloat("##Volume", &m_volume, 0, 1, true);
+    float v = m_spatializer.getVolume();
+    if (ImGui::MiniSliderFloat("##Volume", &v, 0, 1, true))
+        m_spatializer.setVolume(v);
     ImGui::SameLine(75);
-    ImGui::MiniSliderFloat("##Pitch", &m_pitch, -1, 1, false);
+    float p = m_spatializer.getPitch();
+    p = std::log10(p);
+    if (ImGui::MiniSliderFloat("##Pitch", &p, -1, 1, false))
+        m_spatializer.setPitch(std::pow(10, p));
     ImGui::PopItemWidth();
     ImGui::PopStyleVar();
     ImGui::PopItemWidth();
     ImGui::EndGroup();
+
+    update();
 }
 
 void Spatializer::onSessionInit() {
     m_spatializer.bind(gui->device->session.get());
 }
 
-void Spatializer::update() {
+void Spatializer::sync() {
+    auto existing = m_spatializer.getChannels();
+    std::vector<int> remove;
+    for (auto& e : existing) {
+        if (m_channels.count(e) == 0)
+            remove.push_back(e);
+    }
+    for (auto& r : remove)
+        m_spatializer.remove(r);
+    update();
+}
 
+void Spatializer::update() {
+    for (auto& chan : m_channels) 
+        m_spatializer.setPosition(chan.first, chan.second.pos.x, chan.second.pos.y);
+    m_spatializer.setTarget(m_target.pos.x, m_target.pos.y);
+    m_spatializer.setRadius(m_target.radius);
+    m_spatializer.update();
 }
 
 void Spatializer::fillGrid() {
         m_channels.clear();
         if (!gui->device->session)
             return;
-        int chs = gui->device->session->getChannelCount();
-        
+        int chs = gui->device->session->getChannelCount();        
         float div[2] = {1.0f / (m_divs[0]-1), 1.0f / (m_divs[1]-1)};
-
         int k = 0;
-        rowsFirst = !rowsFirst;
-
-        if (rowsFirst)
+        xFirst = !xFirst;
+        if (xFirst || m_1d)
         {
-            for (int j = 0; j < m_divs[0]; ++j)
+            for (int y = 0; y < m_divs[1]; ++y)
             {
-                for (int i = 0; i < m_divs[1]; ++i)
+                for (int x = 0; x < m_divs[0]; ++x)
                 {
                     ImGui::SpatializerNode node;
                     node.index = k;
-                    node.pos.x = i * div[0];
-                    node.pos.y = j * div[1];
+                    node.pos.x = x * div[0];
+                    node.pos.y = y * div[1];
                     node.held = false;
                     m_channels[k] = node;
                     if (++k == chs)
@@ -124,18 +150,18 @@ void Spatializer::fillGrid() {
         }
         else
         {
-            for (int i = 0; i < m_divs[1] + 1; ++i)
+            for (int x = 0; x < m_divs[0]; ++x)
             {
-                for (int j = 0; j < m_divs[0] + 1; ++j)
+                for (int y = 0; y < m_divs[1]; ++y)
                 {
                     ImGui::SpatializerNode node;
                     node.index = k;
-                    node.pos.x = i * div[1];
-                    node.pos.y = j * div[0];
+                    node.pos.x = x * div[0];
+                    node.pos.y = y * div[1];
                     node.held = false;
-                    m_channels[k] = node;                    
+                    m_channels[k] = node;
                     if (++k == chs)
-                        return;                
+                        return;
                 }
             }
         }

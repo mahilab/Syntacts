@@ -7,8 +7,8 @@ Signal::Signal() : Signal(Scalar(0)) {}
 
 #ifndef TACT_USE_SHARED_PTR
     Signal::Signal(const Signal& other) :
-        scale(other.scale),
-        offset(other.offset),
+        gain(other.gain),
+        bias(other.bias),
         m_ptr(other.m_ptr->copy())
     {  }
     Signal& Signal::operator=(const Signal& other)

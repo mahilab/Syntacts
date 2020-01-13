@@ -45,11 +45,11 @@ public:
 #endif
 
     /// Samples the Signal at time t in seconds
-    inline float sample(float t) const;
+    inline double sample(double t) const;
     /// Samples the Signal at n times give by t into output buffer b
-    inline void sample(const float* t, float* b, int n) const;
+    inline void sample(const double* t, double* b, int n) const;
     /// Returns the length of the Signal in seconds or infinity
-    inline float length() const;
+    inline double length() const;
 
     /// Returns the type_index of the underlying Signal
     std::type_index typeId() const;
@@ -64,8 +64,8 @@ public:
     static inline Pool& pool();
     static inline int count();
 public:
-    float scale;  // the signal will be scaled by this amount when sampled
-    float offset; // the signal will be offset by this amount when sampled
+    double gain; // the signal will be scaled by this amount when sampled
+    double bias; // the signal will be offset by this amount when sampled
 public:
     struct Concept;
     /// Unique Pointer Deleter
@@ -77,9 +77,9 @@ public:
     struct Concept {
         Concept() { s_count++; }
         virtual ~Concept() { s_count--; }
-        virtual float sample(float t) const = 0;
-        virtual void sample(const float* t, float* b, int n, float s, float o) const = 0;
-        virtual float length() const = 0;
+        virtual double sample(double t) const = 0;
+        virtual void sample(const double* t, double* b, int n, double s, double o) const = 0;
+        virtual double length() const = 0;
         virtual std::type_index typeId() const = 0;
         virtual void* get() const = 0;
 #ifndef TACT_USE_SHARED_PTR
@@ -100,9 +100,9 @@ public:
     struct Model final : Concept {
         Model();
         Model(T model);
-        float sample(float t) const override;
-        void sample(const float* t, float* b, int n, float s, float o) const override;
-        float length() const override;
+        double sample(double t) const override;
+        void sample(const double* t, double* b, int n, double s, double o) const override;
+        double length() const override;
         std::type_index typeId() const override;
         void* get() const override;
 #ifndef TACT_USE_SHARED_PTR

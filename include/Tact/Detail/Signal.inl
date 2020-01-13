@@ -5,8 +5,8 @@ namespace tact
 
 template <typename T>
 Signal::Signal(T signal) : 
-    scale(1), 
-    offset(0), 
+    gain(1), 
+    bias(0), 
 #ifdef TACT_USE_MALLOC
 #ifdef TACT_USE_SHARED_PTR
     m_ptr(std::make_shared<Model<T>>(std::move(signal)))
@@ -30,17 +30,17 @@ Signal::Signal(T signal) :
 #endif
 }
 
-inline float Signal::sample(float t) const
+inline double Signal::sample(double t) const
 {
-    return m_ptr->sample(t) * scale + offset;
+    return m_ptr->sample(t) * gain + bias;
 }
 
-inline void Signal::sample(const float *t, float *b, int n) const
+inline void Signal::sample(const double *t, double *b, int n) const
 {
-    return m_ptr->sample(t, b, n, scale, offset);
+    return m_ptr->sample(t, b, n, gain, bias);
 }
 
-inline float Signal::length() const
+inline double Signal::length() const
 {
     return m_ptr->length();
 }
@@ -72,20 +72,20 @@ Signal::Model<T>::Model(T model) :
 { }
 
 template <typename T>
-float Signal::Model<T>::sample(float t) const 
+double Signal::Model<T>::sample(double t) const 
 { 
     return m_model.sample(t); 
 }
 
 template <typename T>
-void Signal::Model<T>::sample(const float* t, float* b, int n, float s, float o) const 
+void Signal::Model<T>::sample(const double* t, double* b, int n, double s, double o) const 
 { 
     for (int i = 0; i < n; ++i) 
         b[i] = m_model.sample(t[i]) * s + o;
 }
 
 template <typename T>
-float Signal::Model<T>::length() const
+double Signal::Model<T>::length() const
 { 
     return m_model.length(); 
 }
@@ -129,17 +129,17 @@ std::unique_ptr<Signal::Concept, Signal::Deleter> Signal::Model<T>::copy() const
 
 template <class Archive>
 void Signal::save(Archive& archive) const {
-    archive(TACT_MEMBER(scale), TACT_MEMBER(offset), TACT_MEMBER(m_ptr));
+    archive(TACT_MEMBER(gain), TACT_MEMBER(bias), TACT_MEMBER(m_ptr));
 }
 
 template <class Archive>
 void Signal::load(Archive& archive) {
 #if !defined TACT_USE_MALLOC && !defined TACT_USE_SHARED_PTR
     std::unique_ptr<Concept> ptr;
-    archive(TACT_MEMBER(scale), TACT_MEMBER(offset), TACT_MEMBER(ptr));
+    archive(TACT_MEMBER(gain), TACT_MEMBER(bias), TACT_MEMBER(ptr));
     m_ptr = ptr->copy();
 #else
-    archive(TACT_MEMBER(scale), TACT_MEMBER(offset), TACT_MEMBER(m_ptr));
+    archive(TACT_MEMBER(gain), TACT_MEMBER(bias), TACT_MEMBER(m_ptr));
 #endif
 }
 

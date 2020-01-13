@@ -8,7 +8,7 @@ namespace tact
 class SYNTACTS_API Spatializer {
 public:
     struct Point {
-        float x,y;
+        double x,y;
     };
     Spatializer(Session* session = nullptr);
     ~Spatializer();
@@ -16,15 +16,15 @@ public:
     void bind(Session* session);
     void unbind();
 
-    void setPosition(int channel, float x, float y = 0);
+    void setPosition(int channel, double x, double y = 0);
     void setPosition(int channel, Point p);
     Point getPosition(int channel) const;
 
-    void setTarget(float x, float y = 0);
+    void setTarget(double x, double y = 0);
     void setTarget(Point p);
     Point getTarget() const;
-    void setRadius(float r);
-    float getRadius() const;
+    void setRadius(double r);
+    double getRadius() const;
     void setRollOff(Curve rollOff);
     Curve getRollOff() const;
 
@@ -36,20 +36,26 @@ public:
 
     void play(Signal signal);   
     void stop();
-    void setVolume(float volume);
-    void setPitch(float pitch);
+
+    void setVolume(double volume);
+    double getVolume() const;
+
+    void setPitch(double pitch);
+    double getPitch() const;
 
     void save(const std::string& name);
     void load(const std::string& name);
-private:
+
+    void autoUpdate(bool enable);
     void update();
 private:
-
     Session* m_session;
     Point m_target;
-    float m_radius;
-    float m_volume;
+    double m_radius;
+    double m_volume;
+    double m_pitch;
     Curve m_rollOff;
+    bool m_autoUpdate;
     std::map<int,Point> m_positions;
 };
     
