@@ -107,6 +107,13 @@ struct RepeaterNode : public SignalNode<tact::Repeater> {
 
 ///////////////////////////////////////////////////////////////////////////////
 
+struct ReverserNode : public SignalNode<tact::Reverser> {
+    void gui() override;
+    std::string m_sigName = "##Empty";
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
 struct OscillatorNode : public SignalNode<tact::Sine> {
     OscillatorNode(tact::Signal osc);
     void gui() override;

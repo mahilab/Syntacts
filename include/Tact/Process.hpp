@@ -44,4 +44,19 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/// A Signal which reverses the input Signal
+class SYNTACTS_API Reverser {
+public:
+    Reverser();
+    Reverser(Signal signal);
+    double sample(double t) const;
+    double length() const;
+public:
+    Signal signal;
+private:
+    TACT_SERIALIZE(TACT_MEMBER(signal));
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
 } // namespace tact

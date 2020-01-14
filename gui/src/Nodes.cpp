@@ -148,6 +148,7 @@ const std::string &signalName(std::type_index id)
         {typeid(tact::SignalEnvelope), "Signal Envelope"},
         {typeid(tact::Stretcher), "Stretcher"},
         {typeid(tact::Repeater), "Repeater"},
+        {typeid(tact::Reverser), "Reverser"},
         {typeid(tact::PolyBezier), "PolyBezier"}};
     if (names.count(id))
         return names[id];
@@ -198,6 +199,8 @@ Ptr<Node> makeNode(PItem id)
         return make<StretcherNode>();
     if (id == PItem::Repeater)
         return make<RepeaterNode>();
+    if (id == PItem::Reverser)
+        return make<ReverserNode>();
     if (id == PItem::Pwm)
         return make<PwmNode>();
     if (id == PItem::FM)
@@ -355,6 +358,22 @@ void RepeaterNode::gui()
     if (ImGui::SliderFloat("Delay", &delay, 0, 1))
         cast->delay = delay;
 }
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ReverserNode::gui()
+{
+    auto cast = (tact::Repeater *)sig.get();
+    ImGui::NodeSlot(m_sigName.c_str(), ImVec2(ImGui::CalcItemWidth(), 0));
+    if (ImGui::NodeDroppedL())
+    {
+        m_sigName = ImGui::NodePayloadL();
+        tact::Library::loadSignal(cast->signal, m_sigName);
+    }
+    ImGui::SameLine();
+    ImGui::Text("Signal");
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////
 

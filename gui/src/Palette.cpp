@@ -20,6 +20,7 @@ const std::string &palletteString(PItem id)
         {PItem::Filter, "Filter"},
         {PItem::Repeater, "Repeater"},
         {PItem::Stretcher, "Stretcher"},
+        {PItem::Reverser, "Reverser"},
         {PItem::Sine, "Sine"},
         {PItem::Square, "Square"},
         {PItem::Saw, "Saw"},
@@ -48,7 +49,7 @@ void Palette::render()
     static std::vector<std::pair<std::string, std::vector<PItem>>> signals = {
         {"Oscillators", {PItem::Sine, PItem::Square, PItem::Saw, PItem::Triangle, PItem::Chirp, PItem::FM, PItem::Pwm, PItem::Noise}},
         {"Envelopes", {PItem::Envelope, PItem::ASR, PItem::ADSR, PItem::PolyLine, PItem::PolyBezier}},
-        {"Processes", {PItem::Sum, PItem::Product, PItem::Filter, PItem::Repeater, PItem::Stretcher}},
+        {"Processes", {PItem::Sum, PItem::Product, PItem::Filter, PItem::Repeater, PItem::Stretcher, PItem::Reverser}},
         {"General", {PItem::Expression, PItem::Ramp, PItem::Scalar}}};
     for (auto &section : signals)
     {

@@ -3,19 +3,44 @@
 
 using namespace carnot;
 
+namespace {
+    std::vector<std::pair<std::string, tact::Curve>> g_curveMap = {
+        {"Linear", tact::Curves::Linear()},
+        {"Smoothstep", tact::Curves::Smoothstep()},
+        {"Smootherstep", tact::Curves::Smootherstep()},
+        {"Smootheststep", tact::Curves::Smootheststep()},
+        {"Logarithmic", tact::Curves::Exponential::In()},
+        {"Exponential", tact::Curves::Exponential::Out()}
+
+    };
+
+    class CurveSignal {
+    public:
+        CurveSignal(tact::Curve curve) : m_curve(curve) { }
+        double sample(double t) const { 
+            double s = 1 - std::abs(t - 1);
+            return 2*m_curve(s)-1;
+        }
+        
+        double length() const { return 2.0; }
+        tact::Curve m_curve;
+    };
+
+}
+
 Spatializer::Spatializer(Gui* gui) :
     Widget(gui)
 {
-    m_target.pos.x = m_spatializer.getTarget().x;
-    m_target.pos.y = m_spatializer.getTarget().y;
-    m_target.radius =m_spatializer.getRadius();
+    m_target.pos.x = (float)m_spatializer.getTarget().x;
+    m_target.pos.y = (float)m_spatializer.getTarget().y;
+    m_target.radius =(float)m_spatializer.getRadius();
     gui->device->onSessionInit.connect(this, &Spatializer::onSessionInit);
     m_spatializer.autoUpdate(false);
 }
 
 void Spatializer::render()
 {
-    if (ImGui::Spatializer("Spatializer##Grid", m_target, m_channels, 10, Greens::Chartreuse, ImVec2(260, -1), "DND_CHANNEL", m_divs[0], m_1d ? 1 : m_divs[1], m_snap)) {
+    if (ImGui::Spatializer("Spatializer##Grid", m_target, g_curveMap[m_rollOffIndex].second, m_channels, 10, Greens::Chartreuse, ImVec2(260, -1), "DND_CHANNEL", m_divs[0], m_1d ? 1 : m_divs[1], m_snap)) {
         sync();
     }
     ImGui::SameLine();
@@ -59,8 +84,24 @@ void Spatializer::render()
     else
         ImGui::DragFloat2("Position", &m_target.pos.x, 0.005f, 0.0f, 1.0f);
     ImGui::DragFloat("Radius", &m_target.radius, 0.005f, 0.0f, 1.0f);
-    if (ImGui::BeginCombo("Roll-Off", "Lograthmic"))
+    if (ImGui::BeginCombo("Roll-Off", g_curveMap[m_rollOffIndex].first.c_str()))
     {
+        for (int i = 0; i < g_curveMap.size(); ++i) {
+            bool selected = i == m_rollOffIndex;
+            if (ImGui::Selectable(g_curveMap[i].first.c_str(), selected)) {
+                m_rollOffIndex = i;
+                m_spatializer.setRollOff(g_curveMap[m_rollOffIndex].second);
+            }
+            if (selected)
+                ImGui::SetItemDefaultFocus();
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::BeginTooltip();
+                static std::vector<ImVec2> points(100);
+                ImGui::PlotSignal("##Empty", CurveSignal(g_curveMap[i].second), points, Greens::Chartreuse, 1, ImVec2(200,50), false);      
+                ImGui::EndTooltip();        
+            }
+        }
         ImGui::EndCombo();
     }
 
@@ -68,13 +109,13 @@ void Spatializer::render()
     ImGui::NodeSlot(m_sigName.c_str(), ImVec2(200, 0));
     if (ImGui::NodeDroppedL()) {
         m_sigName = ImGui::NodePayloadL();
-        tact::Library::loadSignal(signal, m_sigName);
+        tact::Library::loadSignal(m_signal, m_sigName);
     }
     ImGui::SameLine();
     ImGui::Text("Signal");
     ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(ImGui::GetStyle().FramePadding.x, ImGui::GetStyle().FramePadding.y * 2));
     if (ImGui::Button(ICON_FA_PLAY, ImVec2(25,0)))
-        m_spatializer.play(signal);
+        m_spatializer.play(m_signal);
     ImGui::SameLine();
     if (ImGui::Button(ICON_FA_PAUSE))
     { }
@@ -83,11 +124,11 @@ void Spatializer::render()
         m_spatializer.stop();
     ImGui::SameLine(75);
     ImGui::PushItemWidth(125);
-    float v = m_spatializer.getVolume();
+    float v = (float)m_spatializer.getVolume();
     if (ImGui::MiniSliderFloat("##Volume", &v, 0, 1, true))
         m_spatializer.setVolume(v);
     ImGui::SameLine(75);
-    float p = m_spatializer.getPitch();
+    float p = (float)m_spatializer.getPitch();
     p = std::log10(p);
     if (ImGui::MiniSliderFloat("##Pitch", &p, -1, 1, false))
         m_spatializer.setPitch(std::pow(10, p));
@@ -97,6 +138,10 @@ void Spatializer::render()
     ImGui::EndGroup();
 
     update();
+}
+
+tact::Signal Spatializer::getSignal() {
+    return m_signal;
 }
 
 void Spatializer::onSessionInit() {

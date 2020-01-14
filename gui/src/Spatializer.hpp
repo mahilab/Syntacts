@@ -6,14 +6,16 @@ class Spatializer : public Widget {
 public:
     Spatializer(Gui* gui);
     void render() override;
+    tact::Signal getSignal();
+
 private:
     void sync();
     void update();
     void fillGrid();
     void onSessionInit();
-public:
-    tact::Signal signal;
 private:
+    tact::Signal m_signal;
+    int m_rollOffIndex = 0;
     std::string m_sigName = "##Empty";
     tact::Spatializer m_spatializer;
     int m_divs[2] = {5,5};

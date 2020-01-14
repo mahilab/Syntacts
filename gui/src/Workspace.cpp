@@ -32,7 +32,7 @@ void Workspace::render()
         {
             spatializer.render();
             ImGui::EndTabItem();
-            gui->visualizer->setRenderedSignal(spatializer.signal, Greens::YellowGreen);
+            gui->visualizer->setRenderedSignal(spatializer.getSignal(), Greens::YellowGreen);
         }
         ImGui::EndTabBar();
     }

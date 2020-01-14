@@ -158,7 +158,7 @@ void PlotSignal(const char *label, const tact::Signal &sig, std::vector<ImVec2> 
     DrawList->Flags |= ImDrawListFlags_AntiAliasedLines;
 }
 
-bool Spatializer(const char *label, SpatializerTarget &target, std::map<int, SpatializerNode> &nodes, float nodeRadius,
+bool Spatializer(const char *label, SpatializerTarget &target, tact::Curve rolloff, std::map<int, SpatializerNode> &nodes, float nodeRadius,
                  ImVec4 color, ImVec2 size, const char *dnd, int xdivs, int ydivs, bool snap)
 {
 
@@ -264,8 +264,10 @@ bool Spatializer(const char *label, SpatializerTarget &target, std::map<int, Spa
         SpatializerNode &node = it->second;
         float dtarget = std::sqrt(ImLengthSqr(node.pos - target.pos));
         float ttarget = ImClamp(dtarget / target.radius, 0.0f, 1.0f);
-        ImVec4 heldColor = ImLerp(color, style.Colors[ImGuiCol_ButtonActive], ttarget);
-        ImVec4 normColor = ImLerp(color, style.Colors[ImGuiCol_ButtonHovered], ttarget);
+        ttarget = 1.0f - ttarget;
+        ttarget = (float)rolloff(ttarget);
+        ImVec4 heldColor = ImLerp(style.Colors[ImGuiCol_ButtonActive], color, ttarget);
+        ImVec4 normColor = ImLerp(style.Colors[ImGuiCol_ButtonHovered], color, ttarget);
         auto posPx = toPx(node.pos);
         DrawList->AddCircleFilled(posPx, nodeRadius, node.held ? ColorConvertFloat4ToU32(heldColor) : ColorConvertFloat4ToU32(normColor), 25);
         std::string id_label = std::to_string(node.index);
@@ -298,9 +300,16 @@ bool Spatializer(const char *label, SpatializerTarget &target, std::map<int, Spa
     }
 
     DrawList->PushClipRect(grid.Min, grid.Max, true);
-    color.w = 0.05f;
-    if (xdivs > 1 && ydivs > 1)
-        DrawList->AddCircleFilled(targetPosPx, r, ColorConvertFloat4ToU32(color), 50);
+    if (xdivs > 1 && ydivs > 1) {
+        int rings = 20;
+        color.w = 0.2f;
+        DrawList->AddCircleFilled(targetPosPx, 0.5f * r / rings, ColorConvertFloat4ToU32(color), 25);
+        for (int i = 0; i < rings+1; ++i) {
+            float t = (i + 1.0f) / rings;
+            color.w = rolloff(1-t) * 0.2f;
+            DrawList->AddCircle(targetPosPx, t * r, ColorConvertFloat4ToU32(color), 25, r / rings);
+        }
+    }
     else
     {
         ImVec2 boxMin = targetPosPx - ImVec2(r, r);
