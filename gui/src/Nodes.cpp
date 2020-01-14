@@ -3,7 +3,8 @@
 
 using namespace carnot;
 
-namespace ImGui {
+namespace ImGui
+{
 
 namespace
 {
@@ -11,7 +12,7 @@ bool g_nodeHeld = false;
 PItem g_pPayload;
 std::string g_lPayload;
 float g_nodeTime;
-}
+} // namespace
 
 void SetNodeHeld(bool held)
 {
@@ -20,34 +21,38 @@ void SetNodeHeld(bool held)
         g_nodeTime = 0;
 }
 
-bool NodeHeld() {
+bool NodeHeld()
+{
     return g_nodeHeld;
 }
 
-void NodeSlot(const char* label, const ImVec2& size, ImGuiCol col)
+void NodeSlot(const char *label, const ImVec2 &size, ImGuiCol col)
 {
-    BeginNodeTarget(col);   
+    BeginNodeTarget(col);
     ImGui::Button(label, size);
     EndNodeTarget();
 }
 
-void BeginNodeTarget(ImGuiCol col) {
+void BeginNodeTarget(ImGuiCol col)
+{
     ImVec4 color = ImGui::GetStyle().Colors[col];
     if (g_nodeHeld)
-    {        
+    {
         static float f = 1.0f;
         float t = 0.5f + 0.5f * std::sin(2.0f * IM_PI * f * (float)GetTime());
-        color = ImLerp(color, ImVec4(0,0,0,0), t * 0.25f);
+        color = ImLerp(color, ImVec4(0, 0, 0, 0), t * 0.25f);
     }
-    ImGui::PushStyleColor(ImGuiCol_Button, color);   
+    ImGui::PushStyleColor(ImGuiCol_Button, color);
     ImGui::PushStyleColor(ImGuiCol_FrameBg, color);
 }
 
-void EndNodeTarget() {
+void EndNodeTarget()
+{
     ImGui::PopStyleColor(2);
 }
 
-void NodeSourceP(PItem pItem) {
+void NodeSourceP(PItem pItem)
+{
     if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
     {
         g_pPayload = pItem;
@@ -55,10 +60,11 @@ void NodeSourceP(PItem pItem) {
         ImGui::SetDragDropPayload("DND_PITEM", &g_pPayload, sizeof(PItem));
         ImGui::Text(palletteString(pItem).c_str());
         ImGui::EndDragDropSource();
-    }  
+    }
 }
 
-void NodeSourceL(const std::string& name) {
+void NodeSourceL(const std::string &name)
+{
     if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
     {
         g_lPayload = name;
@@ -83,7 +89,8 @@ bool NodeDroppedP()
     return ret;
 }
 
-bool NodeDroppedL() {
+bool NodeDroppedL()
+{
     bool ret = false;
     if (ImGui::BeginDragDropTarget())
     {
@@ -96,20 +103,23 @@ bool NodeDroppedL() {
     return ret;
 }
 
-PItem NodePayloadP() {
+PItem NodePayloadP()
+{
     return g_pPayload;
 }
 
-const std::string& NodePayloadL() {
+const std::string &NodePayloadL()
+{
     return g_lPayload;
 }
 
-void NodeUpdate() {
+void NodeUpdate()
+{
     SetNodeHeld(false);
     g_nodeTime = Engine::deltaTime();
 }
 
-}
+} // namespace ImGui
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -130,7 +140,6 @@ const std::string &signalName(std::type_index id)
         {typeid(tact::Square), "Square"},
         {typeid(tact::Saw), "Saw"},
         {typeid(tact::Triangle), "Triangle"},
-        {typeid(tact::Chirp), "Chirp"},
         {typeid(tact::Pwm), "PWM"},
         {typeid(tact::Envelope), "Envelope"},
         {typeid(tact::ASR), "ASR"},
@@ -149,6 +158,53 @@ const std::string &signalName(std::type_index id)
 const std::string &signalName(const tact::Signal &sig)
 {
     return signalName(sig.typeId());
+}
+
+Ptr<Node> makeNode(PItem id)
+{
+    if (id == PItem::Time)
+        return make<TimeNode>();
+    if (id == PItem::Scalar)
+        return make<ScalarNode>();
+    if (id == PItem::Ramp)
+        return make<RampNode>();
+    if (id == PItem::Noise)
+        return make<NoiseNode>();
+    if (id == PItem::Expression)
+        return make<ExpressionNode>();
+    if (id == PItem::Sum)
+        return make<SumNode>();
+    if (id == PItem::Product)
+        return make<ProductNode>();
+    if (id == PItem::Sine)
+        return make<OscillatorNode>(tact::Sine());
+    if (id == PItem::Square)
+        return make<OscillatorNode>(tact::Square());
+    if (id == PItem::Saw)
+        return make<OscillatorNode>(tact::Saw());
+    if (id == PItem::Triangle)
+        return make<OscillatorNode>(tact::Triangle());
+    if (id == PItem::Chirp)
+        return make<ChirpNode>();
+    if (id == PItem::Envelope)
+        return make<EnvelopeNode>();
+    if (id == PItem::ASR)
+        return make<ASRNode>();
+    if (id == PItem::ADSR)
+        return make<ADSRNode>();
+    if (id == PItem::PolyBezier)
+        return make<PolyBezierNode>();
+    if (id == PItem::Stretcher)
+        return make<StretcherNode>();
+    if (id == PItem::Repeater)
+        return make<RepeaterNode>();
+    if (id == PItem::Pwm)
+        return make<PwmNode>();
+    if (id == PItem::FM)
+        return make<FmNode>();
+    static auto gui = Engine::getRoot().as<Gui>();
+    gui->status->pushMessage("Failed to create Node!", StatusBar::Error);
+    return nullptr;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -172,19 +228,21 @@ void NodeList::gui()
     }
     // node slot
     if (m_nodes.size() == 0 || ImGui::NodeHeld())
-        ImGui::NodeSlot("##EmpySlot",ImVec2(-1,0),ImGuiCol_TabActive);
+        ImGui::NodeSlot("##EmpySlot", ImVec2(-1, 0), ImGuiCol_TabActive);
     // check for incomming palette items
     if (ImGui::NodeDroppedP())
     {
         auto node = makeNode(ImGui::NodePayloadP());
-        if (node) {
+        if (node)
+        {
             m_nodes.emplace_back(node);
             m_closeHandles.emplace_back(true);
             m_ids.push_back(m_nextId++);
         }
     }
     // check for incomming library items
-    if (ImGui::NodeDroppedL()) {
+    if (ImGui::NodeDroppedL())
+    {
         auto node = make<LibrarySignalNode>(ImGui::NodePayloadL());
         m_nodes.emplace_back(node);
         m_closeHandles.emplace_back(true);
@@ -206,7 +264,6 @@ void NodeList::gui()
     m_closeHandles = std::deque<bool>(m_nodes.size(), true);
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////
 
 tact::Signal ProductNode::signal()
@@ -221,7 +278,7 @@ tact::Signal ProductNode::signal()
     return tact::Signal();
 }
 
-const std::string& ProductNode::name()
+const std::string &ProductNode::name()
 {
     static std::string n = "Product";
     return n;
@@ -241,7 +298,7 @@ tact::Signal SumNode::signal()
     return tact::Signal();
 }
 
-const std::string& SumNode::name()
+const std::string &SumNode::name()
 {
     static std::string n = "Sum";
     return n;
@@ -249,28 +306,32 @@ const std::string& SumNode::name()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-LibrarySignalNode::LibrarySignalNode(const std::string& name) : libName(name) {
+LibrarySignalNode::LibrarySignalNode(const std::string &name) : libName(name)
+{
     tact::Library::loadSignal(sig, libName);
 }
 
 tact::Signal LibrarySignalNode::signal() { return sig; }
-const std::string& LibrarySignalNode::name() { return libName; }
+const std::string &LibrarySignalNode::name() { return libName; }
 // float* LibrarySignalNode::gain() { return &sig.scale; }
 // float* LibrarySignalNode::bias() { return &sig.offset; }
-void LibrarySignalNode::gui() {
-
+void LibrarySignalNode::gui()
+{
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void StretcherNode::gui() {
+void StretcherNode::gui()
+{
     auto cast = (tact::Stretcher *)sig.get();
     ImGui::NodeSlot(m_sigName.c_str(), ImVec2(ImGui::CalcItemWidth(), 0));
-    if (ImGui::NodeDroppedL()) {
+    if (ImGui::NodeDroppedL())
+    {
         m_sigName = ImGui::NodePayloadL();
         tact::Library::loadSignal(cast->signal, m_sigName);
     }
-    ImGui::SameLine(); ImGui::Text("Signal");
+    ImGui::SameLine();
+    ImGui::Text("Signal");
     float factor = (float)cast->factor;
     if (ImGui::SliderFloat("Factor", &factor, 0, 10))
         cast->factor = factor;
@@ -278,15 +339,17 @@ void StretcherNode::gui() {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-
-void RepeaterNode::gui() {
+void RepeaterNode::gui()
+{
     auto cast = (tact::Repeater *)sig.get();
     ImGui::NodeSlot(m_sigName.c_str(), ImVec2(ImGui::CalcItemWidth(), 0));
-    if (ImGui::NodeDroppedL()) {
+    if (ImGui::NodeDroppedL())
+    {
         m_sigName = ImGui::NodePayloadL();
         tact::Library::loadSignal(cast->signal, m_sigName);
     }
-    ImGui::SameLine(); ImGui::Text("Signal");    
+    ImGui::SameLine();
+    ImGui::Text("Signal");
     ImGui::SliderInt("Repetitions", &cast->repetitions, 1, 100);
     float delay = (float)cast->delay;
     if (ImGui::SliderFloat("Delay", &delay, 0, 1))
@@ -329,10 +392,11 @@ void OscillatorNode::gui()
         ImGui::BeginNodeTarget();
         ImGui::DragFloat("##Frequency", &f, 1, 0, 1000, "%.0f Hz");
         ImGui::EndNodeTarget();
-        if (ImGui::NodeDroppedP()) {
-
+        if (ImGui::NodeDroppedP())
+        {
         }
-        ImGui::SameLine(); ImGui::Text("Frequency");
+        ImGui::SameLine();
+        ImGui::Text("Frequency");
         cast->x.gain = f * tact::TWO_PI;
     }
     else
@@ -345,24 +409,80 @@ void OscillatorNode::gui()
 
 ///////////////////////////////////////////////////////////////////////////////
 
+namespace {
+
+const std::string& oscName(int type) {
+    static std::vector<std::string> types = {"Sine", "Square", "Saw", "Triangle"};
+    return types[type];
+}
+
+template <typename ... Args> 
+tact::Signal makeOsc(int type, Args ... args) {
+    if (type == 0)
+        return tact::Sine(args ...);
+    else if (type == 1) 
+        return tact::Square(args ...);
+    else if (type == 2)
+        return tact::Saw(args ...);
+    else 
+        return tact::Triangle(args ...);
+}
+}
+
 void ChirpNode::gui()
 {
-    auto cast = (tact::Chirp *)sig.get();
-    if (cast->x.isType<tact::Time>())
-    {
-        float f = (float)cast->x.gain / (float)tact::TWO_PI;
-        ImGui::DragFloat("Frequency", &f, 1, 0, 1000, "%.0f Hz");
-        cast->x.gain = f * tact::TWO_PI;
+    for (int i = 0; i < 4; ++i) {
+        if (ImGui::RadioButton(oscName(i).c_str(), ftype == i))
+            ftype = i;
+        if (i != 3)
+            ImGui::SameLine();
     }
-    float rate = (float)cast->rate;
-    ImGui::DragFloat("Rate", &rate, 1, 0, 0, "%.0f Hz/s");
-    cast->rate = rate;
+    ImGui::DragFloat("Frequency", &f, 1, 0, 1000, "%.0f Hz");
+    ImGui::DragFloat("Rate", &r, 1, 0, 1000, "%.0f Hz/s");
+}
+
+tact::Signal ChirpNode::signal()
+{
+    return makeOsc(ftype, f, r);
+}
+
+const std::string &ChirpNode::name()
+{
+    static std::string fmName = "Chirp";
+    return fmName;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void PwmNode::gui() {
-    auto cast = (tact::Pwm*)sig.get();
+void FmNode::gui()
+{
+    for (int i = 0; i < 4; ++i) {
+        if (ImGui::RadioButton(oscName(i).c_str(), ftype == i))
+            ftype = i;
+        if (i != 3)
+            ImGui::SameLine();
+    }
+    ImGui::DragFloat("Frequency", &f, 1, 0, 1000, "%.0f Hz");
+    ImGui::DragFloat("Modulation", &m, 0.1f, 0, 100, "%.0f Hz");
+    ImGui::DragFloat("Index", &index, 0.01f, 0, 10);
+}
+
+tact::Signal FmNode::signal()
+{
+    return makeOsc(ftype, f, tact::Sine(m), index);
+}
+
+const std::string &FmNode::name()
+{
+    static std::string fmName = "FM";
+    return fmName;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void PwmNode::gui()
+{
+    auto cast = (tact::Pwm *)sig.get();
     float f = (float)cast->frequency;
     float d = (float)cast->dutyCycle;
     if (ImGui::DragFloat("Frequency", &f, 1, 0, 1000))
@@ -405,12 +525,27 @@ void ExpressionNode::gui()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-PolyBezierNode::PolyBezierNode() : pb(colors[(colorIdx++) % colors.size()], ImVec2(0, 0), ImVec2(1, 1)) {}
+PolyBezierNode::PolyBezierNode() : pb(Blues::DeepSkyBlue, ImVec2(0, 0), ImVec2(1, 1)) {
+    update();
+}
 
 void PolyBezierNode::gui()
 {
-    auto cast = (tact::PolyBezier *)sig.get();
+    ImGui::PushItemWidth(-1);
+
     ImGui::PolyBezierEdit("PolyBezier", &pb, 10, 10, ImVec2(-1, 125));
+    ImGui::PushItemWidth(-1);
+    ImGui::DragFloat4("##Bounds", bounds, 0.01f, -10, 10);
+    pb.min.x = bounds[0];
+    pb.min.y = bounds[1];
+    pb.max.x = bounds[2];
+    pb.max.y = bounds[3];
+    ImGui::PopItemWidth();
+    update();
+}
+
+void PolyBezierNode::update() {
+    auto cast = (tact::PolyBezier *)sig.get();
     int points = pb.pointCount();
     cast->points.resize(points);
     for (int i = 0; i < points; ++i)
@@ -424,15 +559,13 @@ void PolyBezierNode::gui()
     cast->solve();
 }
 
-std::vector<Color> PolyBezierNode::colors = std::vector<Color>({Blues::DeepSkyBlue, Greens::Chartreuse, Reds::FireBrick});
-int PolyBezierNode::colorIdx = 0;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void EnvelopeNode::gui()
 {
-    auto cast = (tact::Envelope*)sig.get();
-    float duration  = (float)cast->duration;
+    auto cast = (tact::Envelope *)sig.get();
+    float duration = (float)cast->duration;
     float amplitude = (float)cast->amplitude;
     ImGui::DragFloat("Duration", &duration, 0.001f, 0, 1, "%0.3f s");
     ImGui::DragFloat("Amplitude", &amplitude, 0.01f, 0, 1);
@@ -452,11 +585,11 @@ void ASRNode::gui()
     auto &r = *(it++);
 
     float asr[3];
-    asr[0]  = a.first;
+    asr[0] = a.first;
     asr[1] = s.first - a.first;
     asr[2] = r.first - s.first;
 
-    float amp     = a.second.first;
+    float amp = a.second.first;
 
     bool changed = false;
     if (ImGui::DragFloat3("Durations", asr, 0.001f, 0.0001f, 1.0f, "%0.3f s"))
@@ -504,7 +637,8 @@ void NoiseNode::gui()
     float bias = (float)sig.bias;
     ImGui::DragFloat("Gain", &gain, 0.001f, -1, 1, "%0.3f");
     ImGui::DragFloat("Bias", &bias, 0.001f, -1, 1, "%0.3f");
-    sig.gain = gain; sig.bias = bias;
+    sig.gain = gain;
+    sig.bias = bias;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -536,47 +670,3 @@ void RampNode::gui()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Ptr<Node> makeNode(PItem id)
-{
-    if (id == PItem::Time)
-        return make<TimeNode>();
-    if (id == PItem::Scalar)
-        return make<ScalarNode>();
-    if (id == PItem::Ramp)
-        return make<RampNode>();
-    if (id == PItem::Noise)
-        return make<NoiseNode>();
-    if (id == PItem::Expression)
-        return make<ExpressionNode>();
-    if (id == PItem::Sum)
-        return make<SumNode>();
-    if (id == PItem::Product)
-        return make<ProductNode>();
-    if (id == PItem::Sine)
-        return make<OscillatorNode>(tact::Sine());
-    if (id == PItem::Square)
-        return make<OscillatorNode>(tact::Square());
-    if (id == PItem::Saw)
-        return make<OscillatorNode>(tact::Saw());
-    if (id == PItem::Triangle)
-        return make<OscillatorNode>(tact::Triangle());
-    if (id == PItem::Chirp)
-        return make<ChirpNode>();
-    if (id == PItem::Envelope)
-        return make<EnvelopeNode>();
-    if (id == PItem::ASR)
-        return make<ASRNode>();
-    if (id == PItem::ADSR)
-        return make<ADSRNode>();
-    if (id == PItem::PolyBezier)
-        return make<PolyBezierNode>();
-    if (id == PItem::Stretcher) 
-        return make<StretcherNode>();
-    if (id == PItem::Repeater)
-        return make<RepeaterNode>();
-    if (id == PItem::Pwm)
-        return make<PwmNode>();
-    static auto gui = Engine::getRoot().as<Gui>();
-    gui->status->pushMessage("Failed to create Node!", StatusBar::Error);
-    return nullptr;
-}

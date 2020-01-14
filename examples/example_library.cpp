@@ -1,27 +1,31 @@
 #include <syntacts>
 #include <thread>
+#include <iomanip>
 
 using namespace tact;
 
 int main(int argc, char const *argv[])
 {
 
-    // std::cout << Signal::pool().blocksUsed() << std::endl;
-    // {
-    //     Signal x;    
-    //     std::cout << Signal::pool().blocksUsed() << std::endl;
-    //     Library::loadSignal(x,"x");
-    //     std::cout << Signal::pool().blocksUsed() << std::endl;
-    // }
-    // std::cout << Signal::pool().blocksUsed() << std::endl;
-    
-    {
-        Signal x = Sine(440) * ASR(1,3,1);
-        Library::saveSignal(x,"x");
-        Signal y;
-        Library::loadSignal(y, "x");
-    }
-    std::cout << Signal::pool().blocksUsed();
+    Session session;
+    session.open();
+
+    Signal x = Sine(440) * ASR(1,1,1);
+
+    std::cout << std::boolalpha << Library::exportSignal(x, "signals/xy.wav", FileFormat::WAV, 44100) << std::endl;
+
+    Signal y;
+
+    std::cout << Library::importSignal(y, "signals/bensound-summer.wav") << std::endl;
+
+    Library::saveSignal(y, "loaded");
+
+    Signal z;
+    Library::loadSignal(z, "loaded");
+
+    session.play(0, z);
+
+    sleep(z.length());
 
 
     return 0;

@@ -137,4 +137,24 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/// A Signal defined by an array of recorded samples (use internally for Library::importSignal)
+class SYNTACTS_API Samples {
+public:
+    Samples();
+    Samples(const std::vector<float>& samples, double sampleRate);
+    double sample(double t) const;
+    double length() const;
+    int sampleCount() const;
+    double sampleRate() const;
+    double getSample(int i) const;
+private:
+    double m_sampleRate;
+    std::shared_ptr<const std::vector<float>> m_samples;
+private:
+    TACT_SERIALIZE(TACT_MEMBER(m_sampleRate), TACT_MEMBER(m_samples));
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+
 } // namespace tact

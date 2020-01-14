@@ -79,22 +79,6 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// A linear chirp Oscillator
-class SYNTACTS_API Chirp : public IOscillator
-{
-public:
-    /// Constructor
-    Chirp();
-    Chirp(double frequency, double rate);
-    inline double sample(double t) const;
-public:
-    double rate; ///< the chirp rate or (f1-f0)/T
-private:
-    TACT_SERIALIZE(TACT_PARENT(IOscillator), TACT_MEMBER(rate));
-};
-
-///////////////////////////////////////////////////////////////////////////////
-
 /// A PWM square wave with adjustable frequency and duty cycle
 class SYNTACTS_API Pwm
 {

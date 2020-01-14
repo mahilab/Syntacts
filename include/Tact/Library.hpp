@@ -5,12 +5,14 @@
 
 namespace tact {
 
-/// Formats used for exporting Signals
+/// Formats used for exporting/importing Signals
 enum class FileFormat {
-    WAV,   ///< WAV audio file format
-    AIFF,  ///< AIFF audio file format
-    CSV,   ///< comman-separated-value format,
-    JSON   ///< human readable serialized format
+    WAV,    ///< WAV audio file format
+    AIFF,   ///< AIFF audio file format
+    CSV,    ///< comman-separated-value format,
+    JSON,   ///< human readable serialized format,
+    Auto,   ///< automatic detection from file path extension
+    Unknown ///< unknown format (for internal use only)
 };
 
 namespace Library {
@@ -24,8 +26,11 @@ bool saveSignal(const Signal& signal, const std::string& name);
 /// Loads a serialized Signal from the global Syntacts Signal library
 bool loadSignal(Signal& signal, const std::string& name);
 
-/// Saves a Signal to an audio file or CSV
-bool exportSignal(const Signal& signal, const std::string& filePath, FileFormat format, int sampleRate = 48000, double maxLength = 60); 
+/// Saves a Signal as a specified file format
+bool exportSignal(const Signal& signal, const std::string& filePath, FileFormat format = FileFormat::Auto, int sampleRate = 48000, double maxLength = 60); 
+
+/// Imports a Signal of a specifi file format
+bool importSignal(Signal& signal, const std::string& filePath, FileFormat format = FileFormat::Auto, int sampleRate = 48000);
 
 } // namespace Library
 

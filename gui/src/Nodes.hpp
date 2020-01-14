@@ -114,8 +114,25 @@ struct OscillatorNode : public SignalNode<tact::Sine> {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-struct ChirpNode : public SignalNode<tact::Chirp> {    
-    void gui() override;
+struct ChirpNode : public Node {    
+    virtual void gui() override;
+    virtual tact::Signal signal() override;
+    virtual const std::string& name() override;
+    float f = 100;
+    float r = 100;
+    int ftype = 0;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+struct FmNode : public Node {
+    virtual void gui() override;
+    virtual tact::Signal signal() override;
+    virtual const std::string& name() override;
+    float f = 100;
+    float m = 10;
+    int ftype = 0;
+    float index = 2;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -138,9 +155,9 @@ struct ExpressionNode : public SignalNode<tact::Expression> {
 struct PolyBezierNode : public SignalNode<tact::PolyBezier> {
     PolyBezierNode();
     void gui();
+    void update();
     ImGui::PolyBezier pb;
-    static std::vector<carnot::Color> colors; 
-    static int colorIdx;
+    float bounds[4] = {0,0,1,1};
 };
 
 ///////////////////////////////////////////////////////////////////////////////

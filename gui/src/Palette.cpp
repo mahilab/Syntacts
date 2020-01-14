@@ -46,7 +46,7 @@ void Palette::render()
     ImGui::PushStyleColor(ImGuiCol_ChildBg, Color::Transparent);
     ImGui::BeginChild("PalleteList", ImVec2(0, avail.y));
     static std::vector<std::pair<std::string, std::vector<PItem>>> signals = {
-        {"Oscillators", {PItem::Sine, PItem::Square, PItem::Saw, PItem::Triangle, PItem::Pwm, PItem::Chirp, PItem::FM, PItem::Noise}},
+        {"Oscillators", {PItem::Sine, PItem::Square, PItem::Saw, PItem::Triangle, PItem::Chirp, PItem::FM, PItem::Pwm, PItem::Noise}},
         {"Envelopes", {PItem::Envelope, PItem::ASR, PItem::ADSR, PItem::PolyLine, PItem::PolyBezier}},
         {"Processes", {PItem::Sum, PItem::Product, PItem::Filter, PItem::Repeater, PItem::Stretcher}},
         {"General", {PItem::Expression, PItem::Ramp, PItem::Scalar}}};

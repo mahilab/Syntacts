@@ -31,6 +31,7 @@ private:
     void renderCreateDialog();
     void renderLibraryList();
     void renderLibraryControls();
+    void onFileDrop(const std::string& filePath, const carnot::Vector2u& pos);
 public:
     carnot::FloatRect rect;
     Palette palette;

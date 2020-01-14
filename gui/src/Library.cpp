@@ -30,6 +30,7 @@ tact::Signal Library::getSelectedSignal()
 
 void Library::start()
 {
+    Engine::onFileDrop.connect(this, &Library::onFileDrop);
     fs::create_directories(tact::Library::getLibraryDirectory());
     sync();
     if (m_lib.size() > 0)
@@ -236,4 +237,19 @@ void Library::renderLibraryControls()
     gui->status->showTooltip("Export Selected Signal to JSON");
 
     ImGui::EndDisabled(disabled);
+}
+
+void Library::onFileDrop(const std::string& filePath, const carnot::Vector2u& pos) {
+    tact::Signal imported;
+    auto path = fs::path(filePath);
+    std::string filename = path.filename().string();
+    if (tact::Library::importSignal(imported, filePath))
+    {
+        tact::Library::saveSignal(imported, path.stem().string());
+        gui->status->pushMessage("Imported " + filename);
+
+    }
+    else {
+        gui->status->pushMessage("Failed to import " + filename, StatusBar::Error);
+    }
 }

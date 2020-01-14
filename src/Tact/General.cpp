@@ -148,4 +148,35 @@ void PolyBezier::solve() {
 
 // https://math.stackexchange.com/questions/26846/is-there-an-explicit-form-for-cubic-b%c3%a9zier-curves/348645#348645
 
+
+Samples::Samples() : m_sampleRate(44100), m_samples() { }
+
+Samples::Samples(const std::vector<float>& samples, double sampleRate) :
+    m_samples(std::make_shared<std::vector<float>>(std::move(samples))),
+    m_sampleRate(sampleRate)
+{ }
+
+double Samples::sample(double t) const {
+    std::size_t i = static_cast<std::size_t>(t * m_sampleRate);
+    if (i < m_samples->size())
+        return m_samples->operator[](i);
+    return 0;
+}
+
+double Samples::length() const {
+    return static_cast<double>(m_samples->size()) / m_sampleRate;
+}
+
+int Samples::sampleCount() const {
+    return static_cast<int>(m_samples->size());
+}
+
+double Samples::sampleRate() const {
+    return m_sampleRate;
+}
+
+double Samples::getSample(int i) const {
+    return m_samples->operator[](i);
+}
+
 } // namespace tact
