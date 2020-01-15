@@ -211,3 +211,4 @@ void Spatializer::fillGrid() {
             }
         }
     }
+

@@ -20,9 +20,11 @@ private:
     void render() override;
     void renderText();
     void renderButtons();
+    void toggleTheme();
 public:
     carnot::FloatRect rect;
 private:
+    bool dark = true;
     float m_cpuLoad = 0.0;
     carnot::Sequence<carnot::Color> m_cpuGradient;
     carnot::Sequence<carnot::Color> m_fadeColors;

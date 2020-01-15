@@ -116,7 +116,8 @@ int main()
    std::shared_ptr<concrete> c = std::make_shared<concrete>();
    std::shared_ptr<concrete> cc = c->clone();
  
-   std::shared_ptr<abstracted> aa = c->clone();
+   auto aa = c->clone();
  
    std::shared_ptr<cloneable> pp = c->clone();
+   pp->
 }

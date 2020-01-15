@@ -33,6 +33,8 @@ add_executable(syntacts-gui
     src/ImGui/Custom.cpp
     src/ImGui/PolyBezier.hpp
     src/ImGui/PolyBezier.cpp
+    src/ImGui/Theme.hpp
+    src/ImGui/Theme.cpp
     ${ICON}
 )
 target_link_libraries(syntacts-gui syntacts carnot)

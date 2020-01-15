@@ -196,11 +196,10 @@ bool Spatializer(const char *label, SpatializerTarget &target, tact::Curve rollo
     const float grid_width = grid.GetWidth();
     const float grid_height = grid.GetHeight();
     RenderGrid(grid, xdivs - 1, ydivs - 1, gridColor, gridBg);
-    if (xdivs == 1)
-        DrawList->AddLine(ImVec2(grid_cntr.x, grid.Min.y), ImVec2(grid_cntr.x, grid.Max.y), gridColor, 1.0f);
-    if (ydivs == 1)
-        DrawList->AddLine(ImVec2(grid.Min.x, grid_cntr.y), ImVec2(grid.Max.x, grid_cntr.y), gridColor, 1.0f);
-
+    // if (xdivs == 1)
+    //     DrawList->AddLine(ImVec2(grid_cntr.x, grid.Min.y), ImVec2(grid_cntr.x, grid.Max.y), gridColor, 1.0f);
+    // if (ydivs == 1)
+    //     DrawList->AddLine(ImVec2(grid.Min.x, grid_cntr.y), ImVec2(grid.Max.x, grid_cntr.y), gridColor, 1.0f);
     // transform lambdas
     auto toPx = [&](const ImVec2 &nm) -> ImVec2 {
         float pxX = xdivs > 1 ? grid.Min.x + nm.x * grid_width : grid_cntr.x;
@@ -300,31 +299,61 @@ bool Spatializer(const char *label, SpatializerTarget &target, tact::Curve rollo
     }
 
     DrawList->PushClipRect(grid.Min, grid.Max, true);
+            color.w = 0.2f;
+
     if (xdivs > 1 && ydivs > 1) {
-        int rings = 20;
         color.w = 0.2f;
-        DrawList->AddCircleFilled(targetPosPx, 0.5f * r / rings, ColorConvertFloat4ToU32(color), 25);
+        int rings = 25;
+        DrawList->AddCircleFilled(targetPosPx, 0.5f * r / rings, ColorConvertFloat4ToU32(color), 20);
         for (int i = 0; i < rings+1; ++i) {
             float t = (i + 1.0f) / rings;
-            color.w = rolloff(1-t) * 0.2f;
-            DrawList->AddCircle(targetPosPx, t * r, ColorConvertFloat4ToU32(color), 25, r / rings);
+            color.w = rolloff(1 - t) * 0.1f;
+            DrawList->AddCircleFilled(targetPosPx, t * r, ColorConvertFloat4ToU32(color), 20);
         }
     }
     else
     {
-        ImVec2 boxMin = targetPosPx - ImVec2(r, r);
-        ImVec2 boxMax = targetPosPx + ImVec2(r, r);
-        if (xdivs == 1)
-        {
-            boxMin.x = grid.Min.x;
-            boxMax.x = grid.Max.x;
+        color.w = 1;
+        ImRect box;
+        box.Min = targetPosPx - ImVec2(r, r);
+        box.Max = targetPosPx + ImVec2(r, r);
+        if (xdivs == 1 && ydivs == 1) {
+            DrawList->AddRectFilled(grid.Min, grid.Max, ColorConvertFloat4ToU32(color));
         }
-        if (ydivs == 1)
+        else if (xdivs == 1)
         {
-            boxMin.y = grid.Min.y;
-            boxMax.y = grid.Max.y;
+            int n = 50;
+            box.Min.x = grid.Min.x;
+            box.Max.x = grid.Max.x;
+            float H = box.GetHeight();
+            float h = H / n;
+            ImRect b = ImRect(box.Min, ImVec2(box.Max.x, box.Min.y + h));
+            float C = box.GetCenter().y;
+            for (int i = 0; i < n; ++i) {
+                float c = b.GetCenter().y;
+                float t = 1 - std::abs(C-c) / (0.5 * H);
+                color.w = rolloff(t) * 0.5f;
+                DrawList->AddRectFilled(b.Min, b.Max, ColorConvertFloat4ToU32(color));
+                b.Min.y += h; b.Max.y += h;
+            }
         }
-        DrawList->AddRectFilled(boxMin, boxMax, ColorConvertFloat4ToU32(color));
+        else if (ydivs == 1)
+        {
+            int n = 50;
+            box.Min.y = grid.Min.y;
+            box.Max.y = grid.Max.y;
+            float W = box.GetWidth();
+            float w = W / n;
+            ImRect b = ImRect(box.Min, ImVec2(box.Min.x + w, box.Max.y));
+            float C = box.GetCenter().x;
+            for (int i = 0; i < n; ++i) {
+                float c = b.GetCenter().x;
+                float t = 1 - std::abs(C-c) / (0.5 * W);
+                color.w = rolloff(t) * 0.5f;
+                DrawList->AddRectFilled(b.Min, b.Max, ColorConvertFloat4ToU32(color));
+                b.Min.x += w; b.Max.x += w;
+            }
+        }
     }
     DrawList->PopClipRect();
     target.pos = toNm(targetPosPx);
