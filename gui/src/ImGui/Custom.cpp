@@ -162,8 +162,8 @@ bool Spatializer(const char *label, SpatializerTarget &target, tact::Curve rollo
                  ImVec4 color, ImVec2 size, const char *dnd, int xdivs, int ydivs, bool snap)
 {
 
-    static ImU32 gridColor = GetColorU32(ImGuiCol_WindowBg);
-    static ImU32 gridBg = GetColorU32(ImGuiCol_FrameBgHovered, 0.1f);
+    ImU32 gridColor = GetColorU32(ImGuiCol_FrameBg);
+    ImU32 gridBg    = GetColorU32(ImGuiCol_WindowBg);
 
     bool changed = false;
     // skip render if SkipItems on
@@ -195,7 +195,7 @@ bool Spatializer(const char *label, SpatializerTarget &target, tact::Curve rollo
     const ImVec2 grid_cntr = grid.GetCenter();
     const float grid_width = grid.GetWidth();
     const float grid_height = grid.GetHeight();
-    RenderGrid(grid, xdivs - 1, ydivs - 1, gridColor, gridBg);
+    RenderGrid(grid, xdivs - 1, ydivs - 1, gridColor, gridBg, 2.0f);
     // if (xdivs == 1)
     //     DrawList->AddLine(ImVec2(grid_cntr.x, grid.Min.y), ImVec2(grid_cntr.x, grid.Max.y), gridColor, 1.0f);
     // if (ydivs == 1)
