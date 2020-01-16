@@ -98,7 +98,7 @@ void Spatializer::render()
             {
                 ImGui::BeginTooltip();
                 static std::vector<ImVec2> points(100);
-                ImGui::PlotSignal("##Empty", CurveSignal(g_curveMap[i].second), points, Greens::Chartreuse, 1, ImVec2(200,50), false);      
+                ImGui::PlotSignal("##Empty", CurveSignal(g_curveMap[i].second), points, 0, 2, Greens::Chartreuse, 1, ImVec2(200,50), false);      
                 ImGui::EndTooltip();        
             }
         }

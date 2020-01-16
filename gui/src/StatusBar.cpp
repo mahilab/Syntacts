@@ -136,17 +136,19 @@ void StatusBar::renderButtons()
     showTooltip("Email Feedback");
 
     ImGui::SameLine();
-    if (ImGui::Button(ICON_FA_ADJUST)) \
-        toggleTheme();
-        // ImGui::OpenPopup("Theme Editor");
+    if (ImGui::Button(ICON_FA_ADJUST)) 
+    {
+        if (Input::getKey(Key::LControl))
+            ImGui::OpenPopup("Theme Editor");
+        else
+            toggleTheme();
+    }
     showTooltip("Toggle Light/Dark Mode");
-    // if (ImGui::BeginPopupModal("Theme Editor", &modalOpen, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove))
-    // {
-    //     ImGui::ThemeEdit();
-    //     ImGui::EndPopup();
-    // }
-
-
+    if (ImGui::BeginPopupModal("Theme Editor", &modalOpen, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove))
+    {
+        ImGui::ThemeEdit();
+        ImGui::EndPopup();
+    }
     ImGui::SameLine();
     if (ImGui::Button(ICON_FA_QUESTION))
         ImGui::OpenPopup("Help");

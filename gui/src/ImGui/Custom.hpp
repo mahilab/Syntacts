@@ -12,8 +12,8 @@ namespace ImGui {
 bool MiniSliderScalar(const char* label, ImGuiDataType data_type, void* p_data, const void* p_min, const void* p_max, bool top, float power);
 bool MiniSliderFloat(const char* label, float* v, float v_min, float v_max, bool top = true, float power = 1.0f);
 
-void RenderGrid(ImRect bb, int nx, int ny, ImU32 gridColor, ImU32 bgColor, float thickness = 1.0f);
-void PlotSignal(const char* label,  const tact::Signal& sig, std::vector<ImVec2>& points, ImVec4 color, float thickness, ImVec2 size = ImVec2(-1,0), bool grid = true);
+void RenderGrid(ImRect bb, int nx, int ny, ImU32 gridColor, ImU32 bgColor, float thickness = 1.0f, float rounding = 0);
+void PlotSignal(const char* label,  const tact::Signal& sig, std::vector<ImVec2>& points, float t1, float t2, ImVec4 color, float thickness, ImVec2 size = ImVec2(-1,0), bool grid = true);
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -29,6 +29,10 @@ struct SpatializerTarget {
 };
 
 bool Spatializer(const char* label, SpatializerTarget& target, tact::Curve rolloff, std::map<int,SpatializerNode>& nodes, float nodeRadius, ImVec4 color, ImVec2 size, const char* dnd, int xdivs = 10, int ydivs = 10, bool snap = false);
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool TimelineScrollbar(float* ltime, float* rtime, bool* lrgrabbed, bool* rgrabbed, bool* cgrabbed, ImVec2 size = ImVec2(-1, 0), float grabWidth = 10);
 
 ///////////////////////////////////////////////////////////////////////////////
 

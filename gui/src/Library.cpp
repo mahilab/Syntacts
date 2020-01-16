@@ -85,14 +85,14 @@ void Library::render()
     ImGui::BeginFixed(getName().c_str(), rect.getPosition(), rect.getSize());
     if (ImGui::BeginTabBar("LibraryWindowTabs"))
     {
-        if (ImGui::BeginTabItem("Palette##Tab"))
+        if (ImGui::BeginTabItem(" Palette ##Tab"))
         {
             ImGui::BeginGroup();
             palette.render();
             ImGui::EndGroup();
             ImGui::EndTabItem();
         }
-        if (ImGui::BeginTabItem("Library ##Tab"))
+        if (ImGui::BeginTabItem(" Library ##Tab"))
         {
             ImGui::BeginGroup();
             renderCreateDialog();
@@ -156,14 +156,14 @@ void Library::renderLibraryList()
         if (ImGui::Selectable(entry.name.c_str(), m_selected == entry.name))
             m_selected = entry.name;
         ImGui::NodeSourceL(entry.name);
-        if (ImGui::BeginPopupContextItem())
-        {
-            static std::vector<ImVec2> points(10000);
-            tact::Signal sig;
-            tact::Library::loadSignal(sig, entry.name);
-            ImGui::PlotSignal(entry.name.c_str(), sig, points, Blues::DeepSkyBlue, 1.0f, ImVec2(300,150), false);
-            ImGui::EndPopup();
-        }
+        // if (ImGui::BeginPopupContextItem())
+        // {
+        //     static std::vector<ImVec2> points(10000);
+        //     tact::Signal sig;
+        //     tact::Library::loadSignal(sig, entry.name);
+        //     ImGui::PlotSignal(entry.name.c_str(), sig, points, Blues::DeepSkyBlue, 1.0f, ImVec2(300,150), false);
+        //     ImGui::EndPopup();
+        // }
         if (ImGui::IsItemHovered()) {            
             tact::Signal sig;
             tact::Library::loadSignal(sig, entry.name);

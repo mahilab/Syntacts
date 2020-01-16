@@ -83,12 +83,12 @@ bool MiniSliderFloat(const char *label, float *v, float v_min, float v_max, bool
     return MiniSliderScalar(label, ImGuiDataType_Float, v, &v_min, &v_max, top, power);
 }
 
-void RenderGrid(ImRect bb, int nx, int ny, ImU32 gridColor, ImU32 bgColor, float thickness)
+void RenderGrid(ImRect bb, int nx, int ny, ImU32 gridColor, ImU32 bgColor, float thickness, float rounding)
 {
     ImDrawList *DrawList = GetWindowDrawList();
     float dx = bb.GetWidth() / nx;
     float dy = bb.GetHeight() / ny;
-    DrawList->AddRectFilled(bb.Min, bb.Max, bgColor);
+    DrawList->AddRectFilled(bb.Min, bb.Max, bgColor, rounding);
     for (int ix = 0; ix < nx + 1; ++ix)
     {
         ImVec2 t = bb.Min + ImVec2(ix * dx, 0);
@@ -105,7 +105,7 @@ void RenderGrid(ImRect bb, int nx, int ny, ImU32 gridColor, ImU32 bgColor, float
     }
 }
 
-void PlotSignal(const char *label, const tact::Signal &sig, std::vector<ImVec2> &points, ImVec4 color, float thickness, ImVec2 size, bool grid)
+void PlotSignal(const char *label, const tact::Signal &sig, std::vector<ImVec2> &points, float t1, float t2, ImVec4 color, float thickness, ImVec2 size, bool grid)
 {
     ImGuiWindow *window = GetCurrentWindow();
     if (window->SkipItems)
@@ -122,37 +122,26 @@ void PlotSignal(const char *label, const tact::Signal &sig, std::vector<ImVec2> 
         return;
     const bool hovered = ItemHoverable(frame_bb, id);
     if (grid)
-        RenderGrid(frame_bb, 10, 8, GetColorU32(ImGuiCol_WindowBg), GetColorU32(ImGuiCol_FrameBg));
+        RenderGrid(frame_bb, 10, 8, GetColorU32(ImGuiCol_WindowBg), GetColorU32(ImGuiCol_FrameBg), 1.0f, style.FrameRounding);
     else
         RenderFrame(frame_bb.Min, frame_bb.Max, GetColorU32(ImGuiCol_FrameBg), true, style.FrameRounding);
-
     const ImVec2 start = {frame_bb.Min.x, frame_bb.GetCenter().y};
     const float dx = frame_bb.GetWidth() / points.size();
     const float ys = -frame_bb.GetHeight() * 0.5f * 0.95f;
-    float len = sig.length();
-    if (len > 0)
-    {
-        if (len == tact::INF)
-        {
-            // ImGui::Text("INF");
-            len = 1.0f;
-        }
-        // else
-        //     ImGui::Text("%0.3f s", len);
-        float dt = len / points.size();
-        float t = 0;
-        float x = start.x;
 
-        for (int i = 0; i < points.size(); ++i)
-        {
-            float s = ImClamp((float)sig.sample(t), -1.0f, 1.0f);
-            float y = start.y + s * ys;
-            points[i].x = x;
-            points[i].y = y;
-            t += dt;
-            x += dx;
-        }
+    float dt = (t2 - t1) / points.size();
+    float t = t1;
+    float x = start.x;
+    for (int i = 0; i < points.size(); ++i)
+    {
+        float s = ImClamp((float)sig.sample(t), -1.0f, 1.0f);
+        float y = start.y + s * ys;
+        points[i].x = x;
+        points[i].y = y;
+        t += dt;
+        x += dx;
     }
+    
     DrawList->Flags &= ~ImDrawListFlags_AntiAliasedLines;
     DrawList->AddPolyline(&points[0], (int)points.size(), ImGui::ColorConvertFloat4ToU32(color), false, thickness);
     DrawList->Flags |= ImDrawListFlags_AntiAliasedLines;
@@ -385,6 +374,104 @@ bool Spatializer(const char *label, SpatializerTarget &target, tact::Curve rollo
         ImGui::EndDragDropTarget();
     }
     return changed;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool TimelineScrollbar(float* ltime, float* rtime, bool* lGrabbed, bool* rGrabbed, bool* cGrabbed, ImVec2 size, float grabWidth) {
+    bool changed = false;
+    // skip render if SkipItems on
+    ImGuiWindow *window = GetCurrentWindow();
+    if (window->SkipItems)
+        return false;
+    // get ImGuiContext and Style
+    ImGuiContext &g = *GImGui;
+    const ImGuiStyle &style = g.Style;
+    const ImGuiIO &IO = GetIO();
+    ImDrawList *DrawList = GetWindowDrawList();
+
+    size = CalcItemSize(size, 100, style.ScrollbarSize);
+
+    const ImRect frame_bb(window->DC.CursorPos, window->DC.CursorPos + size);
+    const ImRect inner_bb(frame_bb.Min + style.FramePadding, frame_bb.Max - style.FramePadding);
+    const ImVec2 grab_offset(3,3);
+
+    ItemSize(frame_bb);
+
+    // centerline
+    const ImVec2 sMin(frame_bb.Min.x + grab_offset.x + grabWidth * 0.5f, frame_bb.GetCenter().y);
+    const ImVec2 sMax(frame_bb.Max.x - grab_offset.x - grabWidth * 0.5f, frame_bb.GetCenter().y);
+
+    ImVec2 lPos = ImLerp(sMin, sMax, *ltime);
+    ImVec2 rPos = ImLerp(sMin, sMax, *rtime);
+    ImVec2 lMin = sMin;
+    ImVec2 rMin = lPos + ImVec2(2 * grabWidth,0);
+    ImVec2 lMax = rPos - ImVec2(2 * grabWidth,0);
+    ImVec2 rMax = sMax;
+
+    // grab center    
+    ImVec2 grab_half = ImVec2(grabWidth, frame_bb.GetHeight() - 2 * grab_offset.y) * 0.5f;
+
+    const ImRect cGrab_bb(lPos - grab_half, rPos + grab_half);
+
+    // draw grab ends
+    ImRect lGrab_bb(lPos - grab_half, lPos + grab_half);
+    ImRect rGrab_bb(rPos - grab_half, rPos + grab_half);
+
+    bool lHovered = lGrab_bb.Contains(IO.MousePos);
+    bool rHovered = lHovered ? false : rGrab_bb.Contains(IO.MousePos);
+    bool cHovered = lHovered || rHovered ? false : cGrab_bb.Contains(IO.MousePos);
+
+    if (lHovered || *lGrabbed) {
+        if (IO.MouseClicked[0])
+            *lGrabbed = true;  
+        if (IO.MouseDoubleClicked[0])
+            lPos.x = lMin.x;          
+        if (*lGrabbed) {
+            lPos.x += IO.MouseDelta.x;
+            lPos.x = ImClamp(lPos.x, lMin.x, lMax.x);
+            *ltime = (lPos.x - sMin.x) / (sMax.x - sMin.x);
+            rHovered = false; cHovered = false;
+        }
+    }
+    else if (rHovered || *rGrabbed) {
+        if (IO.MouseClicked[0])
+            *rGrabbed = true;   
+        if (IO.MouseDoubleClicked[0])
+            rPos.x = rMax.x;     
+        if (*rGrabbed) {
+            rPos.x += IO.MouseDelta.x;
+            rPos.x = ImClamp(rPos.x, rMin.x, rMax.x);
+            *rtime = (rPos.x - sMin.x) / (sMax.x - sMin.x);
+            lHovered = false; cHovered = false;
+        }
+    }
+    else if (cHovered || *cGrabbed) {
+        if (IO.MouseClicked[0])
+            *cGrabbed = true;
+        if (IO.MouseDoubleClicked[0]) {
+            lPos.x = lMin.x;          
+            rPos.x = rMax.x;     
+        }
+        if (*cGrabbed) {
+            float shift = ImClamp(IO.MouseDelta.x, sMin.x - lPos.x, sMax.x - rPos.x);
+            lPos.x += shift;
+            rPos.x += shift;
+            *ltime = (lPos.x - sMin.x) / (sMax.x - sMin.x);
+            *rtime = (rPos.x - sMin.x) / (sMax.x - sMin.x);
+            lHovered = false; rHovered = false;
+        }
+    }
+    if (IO.MouseReleased[0]) {
+        *lGrabbed = false;
+        *rGrabbed = false;
+        *cGrabbed = false;
+    }
+    // render
+     DrawList->AddRectFilled(frame_bb.Min, frame_bb.Max, GetColorU32(ImGuiCol_ScrollbarBg), style.ChildRounding);
+    DrawList->AddRectFilled(cGrab_bb.Min, cGrab_bb.Max, *cGrabbed ? GetColorU32(ImGuiCol_ScrollbarGrabActive) : cHovered ? GetColorU32(ImGuiCol_ScrollbarGrabHovered,0.75f) : GetColorU32(ImGuiCol_ScrollbarGrab), style.ScrollbarRounding);
+    DrawList->AddRectFilled(lGrab_bb.Min, lGrab_bb.Max, *lGrabbed ? GetColorU32(ImGuiCol_ScrollbarGrabActive) : lHovered ? GetColorU32(ImGuiCol_ScrollbarGrabHovered) : GetColorU32(ImGuiCol_ScrollbarGrabHovered, 0.5f), style.ScrollbarRounding);
+    DrawList->AddRectFilled(rGrab_bb.Min, rGrab_bb.Max, *rGrabbed ? GetColorU32(ImGuiCol_ScrollbarGrabActive) : rHovered ? GetColorU32(ImGuiCol_ScrollbarGrabHovered) : GetColorU32(ImGuiCol_ScrollbarGrabHovered, 0.5f), style.ScrollbarRounding);
 }
 
 } // namespace ImGui
