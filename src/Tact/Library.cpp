@@ -14,6 +14,7 @@
 #include <filesystem>
 #include <iostream>
 #include <cstdlib>
+#include <cctype>
 
 #include <cereal/types/memory.hpp>
 #include <cereal/archives/binary.hpp>
@@ -127,6 +128,7 @@ FileFormat getFormatFromExt(std::string ext)
         return extensions[ext];
     return FileFormat::Unknown;
 }
+
 
 std::string getExtFromFormat(FileFormat format) {
     if (format == FileFormat::WAV)
