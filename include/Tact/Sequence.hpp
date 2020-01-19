@@ -20,6 +20,8 @@ public:
     void insert(Signal signal, double t);
     /// Inserts another Sequence at position t in this Sequence but does NOT move head
     void insert(Sequence sequence, double t);
+    /// Clears the Sequence
+    void clear();
 
     /// Samples and sums all overlapping signals in the sequence at time t
     double sample(double t) const;

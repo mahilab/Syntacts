@@ -1,5 +1,6 @@
 #include "Workspace.hpp"
 #include "Gui.hpp"
+#include "ImGui/Sequencer.hpp"
 
 using namespace carnot;
 
@@ -18,18 +19,21 @@ void Workspace::render()
     {
         if (ImGui::BeginTabItem("Designer##Tab"))
         {
+            activeTab = TabDesigner;
             designer.render();
             ImGui::EndTabItem();
             gui->visualizer->setRenderedSignal(designer.buildSignal(), Purples::Plum);
         }
         if (ImGui::BeginTabItem("Sequencer##Tab"))
         {
+            activeTab = TabSequencer;
             sequencer.render();
             ImGui::EndTabItem();
-            gui->visualizer->setRenderedSignal(tact::Signal(), Oranges::Coral);
+            gui->visualizer->setRenderedSignal(sequencer.buildSignal(), Oranges::Coral);
         }
         if (ImGui::BeginTabItem("Spatializer##Tab"))
         {
+            activeTab = TabSpatializer;
             spatializer.render();
             ImGui::EndTabItem();
             gui->visualizer->setRenderedSignal(spatializer.getSignal(), Greens::YellowGreen);

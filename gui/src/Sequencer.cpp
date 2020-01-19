@@ -3,13 +3,21 @@
 Sequencer::Sequencer(Gui* gui)
     : Widget(gui)
 {
-    m_sequence.frameMin = 0;
-    m_sequence.frameMax = 100;
-    m_sequence.items.push_back(CueSequence::Item{0, 0, 20, false});
+    m_tracks.emplace_back();
+    m_tracks.back().label = "New Track";
 }
 
 void Sequencer::render()
 {
-    ImSequencer::Sequencer(&m_sequence, &m_currentFrame, &m_expanded, &m_selectedEntry, &m_firstFrame,
-                           ImSequencer::SEQUENCER_EDIT_STARTEND | ImSequencer::SEQUENCER_ADD | ImSequencer::SEQUENCER_DEL | ImSequencer::SEQUENCER_CHANGE_FRAME);
+    ImGui::Sequencer("Sequencer", m_tracks, m_selected, m_tMin, m_tMax, carnot::Oranges::DarkOrange);
+    
+}
+
+tact::Signal Sequencer::buildSignal() {
+    m_seq.clear();
+    for (auto& track : m_tracks) {
+        if (track.populated && track.visible)
+            m_seq.insert(track.signal, track.t);
+    }
+    return m_seq;
 }

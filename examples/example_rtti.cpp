@@ -5,7 +5,6 @@
 using namespace tact;
 using std::string;
 
-
 void printSignal(Signal sig, int pos = 0);
 
 void printTime(Signal sig, int pos) {
@@ -57,6 +56,5 @@ int main(int argc, char const *argv[])
     Signal x = Sine(440) * Envelope(5, 0.75f);
     printSignal(x);
     return 0;
-
 }
 

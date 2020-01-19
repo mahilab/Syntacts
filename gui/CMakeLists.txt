@@ -27,8 +27,10 @@ add_executable(syntacts-gui
     src/Spatializer.cpp
     src/Visualizer.hpp
     src/Visualizer.cpp
-    src/ImGui/ImSequencer.hpp
-    src/ImGui/ImSequencer.cpp
+    src/DragAndDrop.hpp
+    src/DragAndDrop.cpp
+    src/ImGui/Sequencer.hpp
+    src/ImGui/Sequencer.cpp
     src/ImGui/Custom.hpp
     src/ImGui/Custom.cpp
     src/ImGui/PolyBezier.hpp

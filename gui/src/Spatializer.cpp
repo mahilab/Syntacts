@@ -106,10 +106,11 @@ void Spatializer::render()
     }
 
     ImGui::Separator();
-    ImGui::NodeSlot(m_sigName.c_str(), ImVec2(200, 0));
-    if (ImGui::NodeDroppedL()) {
-        m_sigName = ImGui::NodePayloadL();
-        tact::Library::loadSignal(m_signal, m_sigName);
+    NodeSlot(m_sigName.c_str(), ImVec2(200, 0));
+    if (NodeDroppedL()) {
+        m_sigName = NodePayloadL().first;
+        m_signal = NodePayloadL().second;
+
     }
     ImGui::SameLine();
     ImGui::Text("Signal");

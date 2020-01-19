@@ -2,10 +2,14 @@
 
 using namespace carnot;
 
-Gui::Gui() : device(makeChild<DeviceBar>(this).get()),
+
+
+Gui::Gui() : 
+             device(makeChild<DeviceBar>(this).get()),
              player(makeChild<Player>(this).get()),
              workspace(makeChild<Workspace>(this).get()),
              status(makeChild<StatusBar>(this).get()),
+             dnd(makeChild<DragAndDrop>().get()),
              library(makeChild<Library>(this).get()),             
              visualizer(makeChild<Visualizer>(this).get())
 {
@@ -22,6 +26,9 @@ void Gui::start() {
 }
 
 void Gui::update() {
+}
+
+void Gui::lateUpdate() {
 }
 
 void Gui::positionWindows()

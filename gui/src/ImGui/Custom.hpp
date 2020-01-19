@@ -53,7 +53,7 @@ inline void Tooltip(const char* tip) {
 inline void BeginDisabled(bool disabled = true) {
     if (disabled) {
         ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
-        ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
+        ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.25f);
     }
 }
 
@@ -64,5 +64,9 @@ inline void EndDisabled(bool disabled = true) {
         ImGui::PopStyleVar();
     }
 }
+
+///////////////////////////////////////////////////////////////////////////////
+
+
 
 } // namespace ImGui

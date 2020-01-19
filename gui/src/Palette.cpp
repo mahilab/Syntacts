@@ -58,7 +58,7 @@ void Palette::render()
         for (auto &pItem : section.second)
         {
             ImGui::Selectable(palletteString(pItem).c_str(), false);
-            ImGui::NodeSourceP(pItem);
+            NodeSourceP(pItem);
         }
     }
     ImGui::EndChild();

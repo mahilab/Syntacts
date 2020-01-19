@@ -17,13 +17,13 @@ void Player::update() {
 void Player::render()
 {
     ImGui::BeginFixed(getName().c_str(), rect.getPosition(), rect.getSize());
-    ImGui::BeginNodeTarget();
+    BeginNodeTarget();
     if (ImGui::Button(ICON_FA_PLAY, ImVec2(25, 0)))
         playSelected();
-    ImGui::EndNodeTarget();
-    if (ImGui::NodeDroppedL()) {
+    EndNodeTarget();
+    if (NodeDroppedL()) {
         tact::Signal sig;
-        if (tact::Library::loadSignal(sig, ImGui::NodePayloadL()))
+        if (tact::Library::loadSignal(sig, NodePayloadL().first))
         {
             for (int i = 0; i < gui->device->session->getCurrentDevice().maxChannels; ++i)
                 gui->device->session->play(i,sig);
@@ -61,16 +61,16 @@ void Player::renderChannels()
             if (playing)
                 ImGui::PushStyleColor(ImGuiCol_Button, Grays::Gray50);
             auto label = str(i);
-            ImGui::BeginNodeTarget();
+            BeginNodeTarget();
             if (ImGui::Button(label.c_str(), ImVec2(25, 0)))
                 playCh(i);
-            ImGui::EndNodeTarget();
+            EndNodeTarget();
             if (playing)
                 ImGui::PopStyleColor();
 
-            if (ImGui::NodeDroppedL()) {
+            if (NodeDroppedL()) {
                 tact::Signal sig;
-                tact::Library::loadSignal(sig, ImGui::NodePayloadL());
+                tact::Library::loadSignal(sig, NodePayloadL().first);
                 gui->device->session->play(i, sig);
             }
             if (ImGui::IsItemClicked(1))
@@ -118,7 +118,11 @@ void Player::renderChannels()
 
 void Player::playCh(int ch)
 {
-    auto sig = gui->workspace->designer.buildSignal();
+    tact::Signal sig;
+    if (gui->workspace->activeTab == Workspace::TabSequencer)
+        sig = gui->workspace->sequencer.buildSignal();
+    else
+        sig = gui->workspace->designer.buildSignal();
     gui->device->session->play(ch, sig);
 }
 

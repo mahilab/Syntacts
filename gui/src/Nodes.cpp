@@ -3,28 +3,7 @@
 
 using namespace carnot;
 
-namespace ImGui
-{
-
-namespace
-{
-bool g_nodeHeld = false;
-PItem g_pPayload;
-std::string g_lPayload;
-float g_nodeTime;
-} // namespace
-
-void SetNodeHeld(bool held)
-{
-    g_nodeHeld = held;
-    if (held)
-        g_nodeTime = 0;
-}
-
-bool NodeHeld()
-{
-    return g_nodeHeld;
-}
+///////////////////////////////////////////////////////////////////////////////
 
 void NodeSlot(const char *label, const ImVec2 &size, ImGuiCol col)
 {
@@ -32,96 +11,6 @@ void NodeSlot(const char *label, const ImVec2 &size, ImGuiCol col)
     ImGui::Button(label, size);
     EndNodeTarget();
 }
-
-void BeginNodeTarget(ImGuiCol col)
-{
-    ImVec4 color = ImGui::GetStyle().Colors[col];
-    if (g_nodeHeld)
-    {
-        static float f = 1.0f;
-        float t = 0.5f + 0.5f * std::sin(2.0f * IM_PI * f * (float)GetTime());
-        color = ImLerp(color, ImVec4(0, 0, 0, 0), t * 0.25f);
-    }
-    ImGui::PushStyleColor(ImGuiCol_Button, color);
-    ImGui::PushStyleColor(ImGuiCol_FrameBg, color);
-}
-
-void EndNodeTarget()
-{
-    ImGui::PopStyleColor(2);
-}
-
-void NodeSourceP(PItem pItem)
-{
-    if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
-    {
-        g_pPayload = pItem;
-        SetNodeHeld(true);
-        ImGui::SetDragDropPayload("DND_PITEM", &g_pPayload, sizeof(PItem));
-        ImGui::Text(palletteString(pItem).c_str());
-        ImGui::EndDragDropSource();
-    }
-}
-
-void NodeSourceL(const std::string &name)
-{
-    if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
-    {
-        g_lPayload = name;
-        SetNodeHeld(true);
-        ImGui::SetDragDropPayload("DND_LITEM", &g_lPayload, sizeof(std::string));
-        ImGui::Text(name.c_str());
-        ImGui::EndDragDropSource();
-    }
-}
-
-bool NodeDroppedP()
-{
-    bool ret = false;
-    if (ImGui::BeginDragDropTarget())
-    {
-        if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("DND_PITEM"))
-        {
-            ret = true;
-        }
-        ImGui::EndDragDropTarget();
-    }
-    return ret;
-}
-
-bool NodeDroppedL()
-{
-    bool ret = false;
-    if (ImGui::BeginDragDropTarget())
-    {
-        if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("DND_LITEM"))
-        {
-            ret = true;
-        }
-        ImGui::EndDragDropTarget();
-    }
-    return ret;
-}
-
-PItem NodePayloadP()
-{
-    return g_pPayload;
-}
-
-const std::string &NodePayloadL()
-{
-    return g_lPayload;
-}
-
-void NodeUpdate()
-{
-    SetNodeHeld(false);
-    g_nodeTime = Engine::deltaTime();
-}
-
-} // namespace ImGui
-
-///////////////////////////////////////////////////////////////////////////////
 
 /// Returns the name of a Syntacts signal
 const std::string &signalName(std::type_index id)
@@ -230,12 +119,12 @@ void NodeList::gui()
         ImGui::PopID();
     }
     // node slot
-    if (m_nodes.size() == 0 || ImGui::NodeHeld())
-        ImGui::NodeSlot("##EmpySlot", ImVec2(-1, 0), ImGuiCol_TabActive);
+    if (m_nodes.size() == 0 || NodeHeld())
+        NodeSlot("##EmpySlot", ImVec2(-1, 0), ImGuiCol_TabActive);
     // check for incomming palette items
-    if (ImGui::NodeDroppedP())
+    if (NodeDroppedP())
     {
-        auto node = makeNode(ImGui::NodePayloadP());
+        auto node = makeNode(NodePayloadP());
         if (node)
         {
             m_nodes.emplace_back(node);
@@ -244,9 +133,9 @@ void NodeList::gui()
         }
     }
     // check for incomming library items
-    if (ImGui::NodeDroppedL())
+    if (NodeDroppedL())
     {
-        auto node = make<LibrarySignalNode>(ImGui::NodePayloadL());
+        auto node = make<LibrarySignalNode>(NodePayloadL().first);
         m_nodes.emplace_back(node);
         m_closeHandles.emplace_back(true);
         m_ids.push_back(m_nextId++);
@@ -327,11 +216,11 @@ void LibrarySignalNode::gui()
 void StretcherNode::gui()
 {
     auto cast = (tact::Stretcher *)sig.get();
-    ImGui::NodeSlot(m_sigName.c_str(), ImVec2(ImGui::CalcItemWidth(), 0));
-    if (ImGui::NodeDroppedL())
+    NodeSlot(m_sigName.c_str(), ImVec2(ImGui::CalcItemWidth(), 0));
+    if (NodeDroppedL())
     {
-        m_sigName = ImGui::NodePayloadL();
-        tact::Library::loadSignal(cast->signal, m_sigName);
+        m_sigName = NodePayloadL().first;
+        cast->signal = NodePayloadL().second;
     }
     ImGui::SameLine();
     ImGui::Text("Signal");
@@ -345,11 +234,11 @@ void StretcherNode::gui()
 void RepeaterNode::gui()
 {
     auto cast = (tact::Repeater *)sig.get();
-    ImGui::NodeSlot(m_sigName.c_str(), ImVec2(ImGui::CalcItemWidth(), 0));
-    if (ImGui::NodeDroppedL())
+    NodeSlot(m_sigName.c_str(), ImVec2(ImGui::CalcItemWidth(), 0));
+    if (NodeDroppedL())
     {
-        m_sigName = ImGui::NodePayloadL();
-        tact::Library::loadSignal(cast->signal, m_sigName);
+        m_sigName = NodePayloadL().first;
+        cast->signal = NodePayloadL().second;
     }
     ImGui::SameLine();
     ImGui::Text("Signal");
@@ -364,11 +253,11 @@ void RepeaterNode::gui()
 void ReverserNode::gui()
 {
     auto cast = (tact::Repeater *)sig.get();
-    ImGui::NodeSlot(m_sigName.c_str(), ImVec2(ImGui::CalcItemWidth(), 0));
-    if (ImGui::NodeDroppedL())
+    NodeSlot(m_sigName.c_str(), ImVec2(ImGui::CalcItemWidth(), 0));
+    if (NodeDroppedL())
     {
-        m_sigName = ImGui::NodePayloadL();
-        tact::Library::loadSignal(cast->signal, m_sigName);
+        m_sigName = NodePayloadL().first;
+        cast->signal = NodePayloadL().second;
     }
     ImGui::SameLine();
     ImGui::Text("Signal");
@@ -408,10 +297,10 @@ void OscillatorNode::gui()
     if (cast->x.isType<tact::Time>())
     {
         float f = (float)cast->x.gain / (float)tact::TWO_PI;
-        ImGui::BeginNodeTarget();
+        BeginNodeTarget();
         ImGui::DragFloat("##Frequency", &f, 1, 0, 1000, "%.0f Hz");
-        ImGui::EndNodeTarget();
-        if (ImGui::NodeDroppedP())
+        EndNodeTarget();
+        if (NodeDroppedP())
         {
         }
         ImGui::SameLine();

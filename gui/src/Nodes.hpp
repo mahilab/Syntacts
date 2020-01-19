@@ -1,32 +1,13 @@
-#ifndef IMGUI_DEFINE_MATH_OPERATORS
-    #define IMGUI_DEFINE_MATH_OPERATORS
-#endif
-
 #pragma once
-#include <syntacts>
-#include <carnot>
 #include <deque>
 #include "ImGui/PolyBezier.hpp"
 #include "Palette.hpp"
+#include "DragAndDrop.hpp"
+#include <utility>
 
 ///////////////////////////////////////////////////////////////////////////////
 
-namespace ImGui {
-
-bool NodeHeld();
 void NodeSlot(const char* label, const ImVec2& size = ImVec2(-1, 0), ImGuiCol col = ImGuiCol_Button);
-void BeginNodeTarget(ImGuiCol col = ImGuiCol_Button);
-void EndNodeTarget();
-
-void NodeSourceP(PItem pitem);
-void NodeSourceL(const std::string& name);
-bool NodeDroppedP();
-bool NodeDroppedL();
-PItem NodePayloadP();
-const std::string& NodePayloadL();
-
-void NodeUpdate();
-}
 
 const std::string& signalName(std::type_index id);
 const std::string& signalName(const tact::Signal& sig);

@@ -81,7 +81,6 @@ void Library::update()
 
 void Library::render()
 {
-    ImGui::NodeUpdate();
     ImGui::BeginFixed(getName().c_str(), rect.getPosition(), rect.getSize());
     if (ImGui::BeginTabBar("LibraryWindowTabs"))
     {
@@ -130,8 +129,12 @@ void Library::renderCreateDialog()
     {
         if (!m_lib.count(filename))
         {
-            auto cue = gui->workspace->designer.buildSignal();
-            tact::Library::saveSignal(cue, filename);
+            tact::Signal sig;
+            if (gui->workspace->activeTab == Workspace::TabSequencer)
+                sig = gui->workspace->sequencer.buildSignal();
+            else
+                sig = gui->workspace->designer.buildSignal();
+            tact::Library::saveSignal(sig, filename);
             sync();
             gui->status->pushMessage("Created Signal " + filename);
             memset(m_inputBuffer, 0, 64);
@@ -155,15 +158,7 @@ void Library::renderLibraryList()
         Entry &entry = pair.second;
         if (ImGui::Selectable(entry.name.c_str(), m_selected == entry.name))
             m_selected = entry.name;
-        ImGui::NodeSourceL(entry.name);
-        // if (ImGui::BeginPopupContextItem())
-        // {
-        //     static std::vector<ImVec2> points(10000);
-        //     tact::Signal sig;
-        //     tact::Library::loadSignal(sig, entry.name);
-        //     ImGui::PlotSignal(entry.name.c_str(), sig, points, Blues::DeepSkyBlue, 1.0f, ImVec2(300,150), false);
-        //     ImGui::EndPopup();
-        // }
+        NodeSourceL(entry.name, tact::Signal());
         if (ImGui::IsItemHovered()) {            
             tact::Signal sig;
             tact::Library::loadSignal(sig, entry.name);
@@ -181,8 +176,12 @@ void Library::renderLibraryControls()
     float space = 27;
     if (ImGui::Button(ICON_FA_SAVE))
     {
-        auto cue = gui->workspace->designer.buildSignal();
-        tact::Library::saveSignal(cue, m_selected);
+        tact::Signal sig;
+        if (gui->workspace->activeTab == Workspace::TabSequencer)
+            sig = gui->workspace->sequencer.buildSignal();
+        else
+            sig = gui->workspace->designer.buildSignal();
+        tact::Library::saveSignal(sig, m_selected);
         gui->status->pushMessage("Saved Signal " + m_selected);
         sync();
     }

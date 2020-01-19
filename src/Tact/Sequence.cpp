@@ -43,4 +43,10 @@ double Sequence::length() const {
     return m_length;
 }
 
+void Sequence::clear() {
+    m_keys.clear();
+    head = 0;
+    m_length = 0;
+}
+
 } // namespace tact
