@@ -14,6 +14,8 @@ bool MiniSliderFloat(const char* label, float* v, float v_min, float v_max, bool
 
 void RenderGrid(ImRect bb, int nx, int ny, ImU32 gridColor, ImU32 bgColor, float thickness = 1.0f, float rounding = 0);
 void PlotSignal(const char* label,  const tact::Signal& sig, std::vector<ImVec2>& points, float t1, float t2, ImVec4 color, float thickness, ImVec2 size = ImVec2(-1,0), bool grid = true);
+void RenderSignalInBounds(ImDrawList* DrawList, const tact::Signal& sig, float t1, float t2, ImRect bb, ImVec4 color, float thickness, int n = 0);
+
 
 ///////////////////////////////////////////////////////////////////////////////
 

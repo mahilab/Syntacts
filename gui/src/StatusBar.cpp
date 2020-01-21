@@ -75,50 +75,13 @@ void StatusBar::renderButtons()
 {
     bool modalOpen = true;
 
-#ifndef TACT_USE_MALLOC
-    ImGui::SameLine(ImGui::GetWindowWidth() - 365);
-#else
-    ImGui::SameLine(ImGui::GetWindowWidth() - 285);
-#endif
+    ImGui::SameLine(ImGui::GetWindowWidth() - 240);
     ImGui::PushStyleColor(ImGuiCol_PlotHistogram, m_cpuGradient(Math::clamp01(m_cpuLoad)));
     if (gui->device->session)
         m_cpuLoad = (float)gui->device->session->getCpuLoad();
     ImGui::ProgressBar(m_cpuLoad, ImVec2(100, 0));
     ImGui::PopStyleColor();
     showTooltip("Session CPU Thread Load");
-
-#ifndef TACT_USE_MALLOC
-    ImGui::SameLine();
-    std::string used = str(tact::Signal::pool().blocksUsed()) + "/" + str(tact::Signal::pool().blocksTotal());
-    if (ImGui::Button(used.c_str(), ImVec2(70, 0)))
-        ImGui::OpenPopup("Signal Memory Pool");
-    if (ImGui::BeginPopupModal("Signal Memory Pool", &modalOpen, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove))
-    {
-        auto occupied = tact::Signal::pool().blocksOccupied();
-        int i = 0;
-        int rows = 16;
-        int cols = tact::MAX_SIGNALS / rows;
-        std::string rowText(tact::MAX_SIGNALS / 16, ' ');
-
-        for (int r = 0; r < rows; ++r)
-        {
-            for (int c = 0; c < cols; ++c)
-            {
-                if (occupied[i++])
-                    rowText[c] = 'X';
-                else
-                    rowText[c] = '_';
-            }
-            ImGui::Text(rowText.c_str());
-        }
-        ImGui::EndPopup();
-    }
-    showTooltip("View Signal Memory Pool Fragmentation");
-#else
-    ImGui::SameLine();
-    ImGui::Button(str(tact::Signal::count()).c_str(), ImVec2(30, 0));
-    showTooltip("Global Signal Count");
-#endif
 
     ImGui::SameLine();
     if (ImGui::Button(ICON_FA_GITHUB))
@@ -127,8 +90,27 @@ void StatusBar::renderButtons()
 
     ImGui::SameLine();
     if (ImGui::Button(ICON_FA_BUG))
-        openUrl("https://github.com/mahilab/Syntacts/issues");
-    showTooltip("Open Issue Tracker");
+        ImGui::OpenPopup("Debug Info");
+
+    if (ImGui::BeginPopupModal("Debug Info", &modalOpen, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove))
+    {
+        auto info = Debug::getInfo();
+        ImGui::Text("FPS:            "); ImGui::SameLine(); ImGui::Text("%.2f", info.fps);
+        ImGui::Text("RAM Usage:      "); ImGui::SameLine(); ImGui::Text("%.0f MB", info.ram);
+        ImGui::Text("CPU Usage:      "); ImGui::SameLine(); ImGui::Text("%.2f \%", info.cpu);
+        ImGui::Text("Signal Count:   "); ImGui::SameLine(); ImGui::Text("%i", tact::Signal::count());
+        ImGui::PushStyleColor(ImGuiCol_Button, Reds::FireBrick);
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, Reds::Salmon);
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, Reds::LightSalmon);
+        if (ImGui::Button("Report Issue", {-1,0}))
+            openUrl("https://github.com/mahilab/Syntacts/issues");
+        ImGui::PopStyleColor(3);
+        ImGui::EndPopup();
+
+    }
+    showTooltip("Display Debug Info");
+
+
 
     ImGui::SameLine();
     if (ImGui::Button(ICON_FA_ENVELOPE "##Brandon"))
@@ -163,7 +145,7 @@ void StatusBar::renderButtons()
     if (ImGui::BeginPopupModal("Help", &modalOpen, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove))
     {
         ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + 250);
-        ImGui::TextWrapped("To get helpful information and tips, simply drag the " ICON_FA_QUESTION " button over areas of interest.");
+        ImGui::TextWrapped("To get helpful information and tips, simply drag the " ICON_FA_QUESTION " button over areas of interest. (Work In Progress)");
         ImGui::PopTextWrapPos();
         ImGui::EndPopup();
     }

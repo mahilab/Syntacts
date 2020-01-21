@@ -248,11 +248,12 @@ public:
         m_device = {-1,"N/A",false,-1,"N/A",false,0};
         m_channels.clear();
         m_sampleRate = 0;
+        m_stream = nullptr;
         return SyntactsError_NoError;
     }
 
     bool isOpen() const {
-        return Pa_IsStreamActive(m_stream) == 1;
+        return m_stream != nullptr && Pa_IsStreamActive(m_stream) == 1;
     }
 
     bool isPlaying(int channel) {

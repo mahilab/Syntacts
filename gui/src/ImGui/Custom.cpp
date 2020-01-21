@@ -1,6 +1,7 @@
 #define IMGUI_DEFINE_MATH_OPERATORS
 
 #include "Custom.hpp"
+#include <sstream>
 
 namespace
 {
@@ -40,8 +41,8 @@ bool MiniSliderScalar(const char *label, ImGuiDataType data_type, void *p_data, 
 
     const ImVec2 label_size = CalcTextSize(label, NULL, true);
     const float h = (label_size.y + style.FramePadding.y * 2.0f);
-    const ImVec2 topLeft = top ? window->DC.CursorPos : window->DC.CursorPos + ImVec2(0, 0.5f * h + style.ItemSpacing.y * 0.5f);
-    const ImRect frame_bb(topLeft, topLeft + ImVec2(w, h * 0.5f - style.ItemSpacing.y * 0.5f));
+    const ImVec2 topLeft = top ? window->DC.CursorPos : window->DC.CursorPos + ImVec2(0, (0.5f * h + 0.5 * style.FramePadding.y));
+    const ImRect frame_bb(topLeft, topLeft + ImVec2(w, (h * 0.5f - 0.5f * style.FramePadding.y)));
     const ImRect total_bb(frame_bb.Min, frame_bb.Max);
 
     ItemSize(total_bb, style.FramePadding.y);
@@ -145,7 +146,45 @@ void PlotSignal(const char *label, const tact::Signal &sig, std::vector<ImVec2> 
     DrawList->Flags &= ~ImDrawListFlags_AntiAliasedLines;
     DrawList->AddPolyline(&points[0], (int)points.size(), ImGui::ColorConvertFloat4ToU32(color), false, thickness);
     DrawList->Flags |= ImDrawListFlags_AntiAliasedLines;
+
+    std::string txt;
+    std::stringstream ss;
+    ss << sig.length();
+    if (sig.length() != tact::INF)
+        ss << " s";
+    txt = ss.str();
+    ImVec2 txtSize = CalcTextSize(txt.c_str());
+    RenderText(frame_bb.Max - txtSize - style.FramePadding, txt.c_str());
 }
+
+void RenderSignalInBounds(ImDrawList* DrawList, const tact::Signal& sig, float t1, float t2, ImRect bb, ImVec4 color, float thickness, int n) {
+    static std::vector<ImVec2> buffer;
+    if (n == 0)
+        n = (int)bb.GetWidth() * 2;
+    buffer.resize(n);
+    const ImVec2 start = {bb.Min.x, bb.GetCenter().y};
+    const float dx = bb.GetWidth() / buffer.size();
+    const float ys = -bb.GetHeight() * 0.5f * 0.95f;
+    float dt = (t2 - t1) / buffer.size();
+    float t = t1;
+    float x = start.x;
+    for (int i = 0; i < buffer.size(); ++i)
+    {
+        float s = ImClamp((float)sig.sample(t), -1.0f, 1.0f);
+        float y = start.y + s * ys;
+        buffer[i].x = x;
+        buffer[i].y = y;
+        t += dt;
+        x += dx;
+    }
+    
+    DrawList->PushClipRect(bb.Min, bb.Max, true);
+    DrawList->Flags &= ~ImDrawListFlags_AntiAliasedLines;
+    DrawList->AddPolyline(&buffer[0], n, ImGui::GetColorU32(color), false, thickness);
+    DrawList->Flags |= ImDrawListFlags_AntiAliasedLines;
+    DrawList->PopClipRect();
+}
+
 
 bool Spatializer(const char *label, SpatializerTarget &target, tact::Curve rolloff, std::map<int, SpatializerNode> &nodes, float nodeRadius,
                  ImVec4 color, ImVec2 size, const char *dnd, int xdivs, int ydivs, bool snap)
@@ -425,25 +464,31 @@ bool TimelineScrollbar(float* ltime, float* rtime, bool* lGrabbed, bool* rGrabbe
     if (lHovered || *lGrabbed) {
         if (IO.MouseClicked[0])
             *lGrabbed = true;  
-        if (IO.MouseDoubleClicked[0])
+        if (IO.MouseDoubleClicked[0]) {
             lPos.x = lMin.x;          
+            changed = true;
+        }
         if (*lGrabbed) {
             lPos.x += IO.MouseDelta.x;
             lPos.x = ImClamp(lPos.x, lMin.x, lMax.x);
             *ltime = (lPos.x - sMin.x) / (sMax.x - sMin.x);
             rHovered = false; cHovered = false;
+            changed = true;
         }
     }
     else if (rHovered || *rGrabbed) {
         if (IO.MouseClicked[0])
             *rGrabbed = true;   
-        if (IO.MouseDoubleClicked[0])
+        if (IO.MouseDoubleClicked[0]) {
             rPos.x = rMax.x;     
+            changed = true;
+        }
         if (*rGrabbed) {
             rPos.x += IO.MouseDelta.x;
             rPos.x = ImClamp(rPos.x, rMin.x, rMax.x);
             *rtime = (rPos.x - sMin.x) / (sMax.x - sMin.x);
             lHovered = false; cHovered = false;
+            changed = true;
         }
     }
     else if (cHovered || *cGrabbed) {
@@ -452,6 +497,7 @@ bool TimelineScrollbar(float* ltime, float* rtime, bool* lGrabbed, bool* rGrabbe
         if (IO.MouseDoubleClicked[0]) {
             lPos.x = lMin.x;          
             rPos.x = rMax.x;     
+            changed = true;
         }
         if (*cGrabbed) {
             float shift = ImClamp(IO.MouseDelta.x, sMin.x - lPos.x, sMax.x - rPos.x);
@@ -460,6 +506,7 @@ bool TimelineScrollbar(float* ltime, float* rtime, bool* lGrabbed, bool* rGrabbe
             *ltime = (lPos.x - sMin.x) / (sMax.x - sMin.x);
             *rtime = (rPos.x - sMin.x) / (sMax.x - sMin.x);
             lHovered = false; rHovered = false;
+            changed = true;
         }
     }
     if (IO.MouseReleased[0]) {
@@ -468,10 +515,12 @@ bool TimelineScrollbar(float* ltime, float* rtime, bool* lGrabbed, bool* rGrabbe
         *cGrabbed = false;
     }
     // render
-     DrawList->AddRectFilled(frame_bb.Min, frame_bb.Max, GetColorU32(ImGuiCol_ScrollbarBg), style.ChildRounding);
+    DrawList->AddRectFilled(frame_bb.Min, frame_bb.Max, GetColorU32(ImGuiCol_ScrollbarBg), style.ChildRounding);
     DrawList->AddRectFilled(cGrab_bb.Min, cGrab_bb.Max, *cGrabbed ? GetColorU32(ImGuiCol_ScrollbarGrabActive) : cHovered ? GetColorU32(ImGuiCol_ScrollbarGrabHovered,0.75f) : GetColorU32(ImGuiCol_ScrollbarGrab), style.ScrollbarRounding);
     DrawList->AddRectFilled(lGrab_bb.Min, lGrab_bb.Max, *lGrabbed ? GetColorU32(ImGuiCol_ScrollbarGrabActive) : lHovered ? GetColorU32(ImGuiCol_ScrollbarGrabHovered) : GetColorU32(ImGuiCol_ScrollbarGrabHovered, 0.5f), style.ScrollbarRounding);
     DrawList->AddRectFilled(rGrab_bb.Min, rGrab_bb.Max, *rGrabbed ? GetColorU32(ImGuiCol_ScrollbarGrabActive) : rHovered ? GetColorU32(ImGuiCol_ScrollbarGrabHovered) : GetColorU32(ImGuiCol_ScrollbarGrabHovered, 0.5f), style.ScrollbarRounding);
+
+    return changed;
 }
 
 } // namespace ImGui

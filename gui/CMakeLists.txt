@@ -29,6 +29,8 @@ add_executable(syntacts-gui
     src/Visualizer.cpp
     src/DragAndDrop.hpp
     src/DragAndDrop.cpp
+    src/FileWatcher.hpp
+    src/FileWatcher.cpp
     src/ImGui/Sequencer.hpp
     src/ImGui/Sequencer.cpp
     src/ImGui/Custom.hpp

@@ -24,4 +24,5 @@ public:
 private:
     int m_payload;
     float m_masterVol = 1.0f;
+    float m_masterPitch = 0.0f;
 };

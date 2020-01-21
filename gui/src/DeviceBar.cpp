@@ -10,16 +10,20 @@ DeviceBar::DeviceBar(Gui* gui) :
     Widget(gui)
 { }
 
+DeviceBar::~DeviceBar() {
+    onSessionDestroy.emit();
+}
 
 /// Restarts Syntacts session
 void DeviceBar::initialize()
 {
     // make new session
+    onSessionDestroy.emit();
     session = make<tact::Session>();
-    onSessionInit.emit();
     getAvailable();
     switchDevice(session->getDefaultDevice());
 }
+
 
 void DeviceBar::switchDevice(const tact::Device &dev, double sampleRate)
 {
@@ -80,8 +84,9 @@ void DeviceBar::render()
     ImGui::SameLine();
     renderDeviceDetails();
     ImGui::SameLine();
-    if (ImGui::Button(ICON_FA_SYNC_ALT))
+    if (ImGui::Button(ICON_FA_SYNC_ALT)) {
         initialize();
+    }
     gui->status->showTooltip("Refresh Device List");
     ImGui::EndGroup();
     if (ImGui::BeginDragDropTarget())

@@ -64,8 +64,8 @@ public:
     static inline Pool& pool();
     static inline int count();
 public:
-    double gain; // the signal will be scaled by this amount when sampled
-    double bias; // the signal will be offset by this amount when sampled
+    double gain;    ///< the Signal will be scaled by this amount when sampled
+    double bias;    ///< the Signal will be offset by this amount when sampled
 public:
     struct Concept;
     /// Unique Pointer Deleter

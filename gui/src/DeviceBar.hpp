@@ -6,6 +6,7 @@
 class DeviceBar : public Widget, public carnot::GameObject {
 public:
     DeviceBar(Gui* gui);
+    ~DeviceBar();
     void initialize();
     void switchDevice(const tact::Device& dev, double sampleRate = 0);
     void switchApi(const std::string& api);
@@ -23,7 +24,7 @@ private:
 public:
     carnot::FloatRect rect;
     carnot::Signal<void(void)> onSessionOpen;
-    carnot::Signal<void(void)> onSessionInit;
+    carnot::Signal<void(void)> onSessionDestroy;
     std::shared_ptr<tact::Session> session;
 private:
     tact::Device m_currentDev;

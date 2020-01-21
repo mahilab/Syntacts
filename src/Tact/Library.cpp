@@ -61,7 +61,6 @@ CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Repeater>);
 CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Stretcher>);
 CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Reverser>);
 
-
 CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Instant>);
 CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Delayed>);
 CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Linear>);
@@ -107,14 +106,12 @@ namespace Library
 
 namespace
 {
-bool ensureLibraryDirectoryExists()
-{
-    return fs::create_directories(getLibraryDirectory());
-}
+
 
 FileFormat getFormatFromExt(std::string ext)
 {
     static std::unordered_map<std::string, FileFormat> extensions = {
+        {".sig", FileFormat::SIG},
         {".wave", FileFormat::WAV},
         {".wav", FileFormat::WAV},
         {".aiff", FileFormat::AIFF},
@@ -131,7 +128,9 @@ FileFormat getFormatFromExt(std::string ext)
 
 
 std::string getExtFromFormat(FileFormat format) {
-    if (format == FileFormat::WAV)
+    if (format == FileFormat::SIG)
+        return ".sig";
+    else if (format == FileFormat::WAV)
         return ".wav";
     else if (format == FileFormat::AIFF)
         return ".aiff";
@@ -140,6 +139,17 @@ std::string getExtFromFormat(FileFormat format) {
     else if (format == FileFormat::JSON)
         return ".json";
     return "";
+}
+
+bool ensureDirectoryExists(fs::path path) {
+    if (fs::exists(path) || path.empty())
+        return true;
+    if (!fs::create_directories(path))
+    {
+        std::cout << "Failed to create path: " << path << std::endl;
+        return false;
+    }
+    return true;
 }
 
 } // namespace
@@ -151,13 +161,12 @@ const std::string &getLibraryDirectory()
     return libFolder;
 }
 
-bool saveSignal(const Signal &signal, const std::string &name)
-{
+bool saveSignalEx(const Signal& signal, const std::string& dir, const std::string& name) {
     try
     {
-        ensureLibraryDirectoryExists();
+        ensureDirectoryExists(dir);
         std::ofstream file;
-        file.open(getLibraryDirectory() + name + ".sig", std::ios::binary);
+        file.open(dir + name + ".sig", std::ios::binary);
         if (file)
         {
             cereal::BinaryOutputArchive archive(file);
@@ -173,17 +182,17 @@ bool saveSignal(const Signal &signal, const std::string &name)
     }
     catch (...)
     {
+        std::cout << "Unhandled Exception!" << std::endl;
         return false;
     }
 }
 
-bool loadSignal(Signal &signal, const std::string &name)
+bool loadSignalEx(Signal &signal, const std::string& dir, const std::string &name)
 {
     try
     {
-        ensureLibraryDirectoryExists();
         std::ifstream file;
-        file.open(getLibraryDirectory() + name + ".sig", std::ios::binary);
+        file.open(dir + name + ".sig", std::ios::binary);
         if (file)
         {
             cereal::BinaryInputArchive archive(file);
@@ -199,34 +208,58 @@ bool loadSignal(Signal &signal, const std::string &name)
     }
     catch (...)
     {
+        std::cout << "Unhandled Exception!" << std::endl;
         return false;
     }
 }
 
+bool saveSignal(const Signal &signal, const std::string &name)
+{
+    return saveSignalEx(signal, getLibraryDirectory(), name);
+}
+
+bool loadSignal(Signal &signal, const std::string &name)
+{
+    ensureDirectoryExists(getLibraryDirectory());
+    return loadSignalEx(signal, getLibraryDirectory(), name);
+}
+
+bool deleteSignal(const std::string& name) {
+    auto path = getLibraryDirectory() + name + ".sig";
+    return fs::remove(path);
+}
+
 bool exportSignal(const Signal &signal, const std::string &filePath, FileFormat format, int sampleRate, double maxLength)
 {
-    if (format == FileFormat::Unknown)
+    if (format == FileFormat::Unknown) {
+        std::cout << "Unknown file format" << std::endl;
         return false;
+    }
     try
     {
         auto path = fs::path(filePath);
         if (format == FileFormat::Auto) {
             format = getFormatFromExt(path.extension().string());
-            if (format == FileFormat::Unknown)
+            if (format == FileFormat::Unknown) {
+                std::cout << "Unknown file format" << std::endl;
                 return false;
+            }
         }
         else if (!path.has_extension()) {
             path.replace_extension(getExtFromFormat(format));
         }      
 
         // create folder(s) if they don't exist
-        if (path.has_parent_path() && !fs::exists(path.parent_path()))
-        {
-            if (!fs::create_directories(path.parent_path()))
-            {
-                std::cout << "Failed to create directories" << std::endl;
-                return false;
+        if (path.has_parent_path()) {
+            if (!ensureDirectoryExists(path.parent_path())) {
+                return false;        
             }
+        }
+
+        if (format == FileFormat::SIG) {
+            std::string dir = path.has_parent_path() ? path.parent_path().string() + "/" : "";
+            std::string name = path.stem().string();
+            return saveSignalEx(signal, dir, name);
         }
 
         // export using cereal if JSON
@@ -255,12 +288,17 @@ bool exportSignal(const Signal &signal, const std::string &filePath, FileFormat 
             audioBuffer.emplace_back(std::move(buffer));
             AudioFileFormat audioFormat = format == FileFormat::WAV ? AudioFileFormat::Wave : AudioFileFormat::Aiff;
             AudioFile<double> file;
-            if (!file.setAudioBuffer(audioBuffer))
+            if (!file.setAudioBuffer(audioBuffer)) {
+                std::cout << "Failed to set file audio buffer" << std::endl;
                 return false;
+            }
             file.setBitDepth(16);
             file.setSampleRate(sampleRate);
-            if (!file.save(path.generic_string(), audioFormat))
+            if (!file.save(path.string(), audioFormat)) {
+                std::cout << "Failed to save " << path << std::endl;
                 return false;
+            }
+            return true;
         }
         else if (format == FileFormat::CSV)
         {
@@ -269,8 +307,10 @@ bool exportSignal(const Signal &signal, const std::string &filePath, FileFormat 
             for (auto &sample : buffer)
                 file << sample << std::endl;
             file.close();
+            return true;
         }
-        return true;
+
+        return false;
     }
     catch (cereal::Exception e)
     {
@@ -300,6 +340,22 @@ bool importSignal(Signal &signal, const std::string &filePath, FileFormat format
             path.replace_extension(getExtFromFormat(format)); // should this happen?
         }      
 
+        if (format == FileFormat::SIG) {
+            std::string dir = path.has_parent_path() ? path.parent_path().string() + "/" : "";
+            std::string name = path.stem().string();
+            return loadSignalEx(signal, dir, name);
+        }
+
+        // export using cereal if JSON
+        if (format == FileFormat::JSON)
+        {
+            std::ifstream file;
+            file.open(path);
+            cereal::JSONInputArchive archive(file);
+            archive(signal);
+            return true;
+        }
+
         if (format == FileFormat::AIFF || format == FileFormat::WAV) {
             AudioFile<float> audioFile;
             if (!audioFile.load(path.string()))
@@ -311,8 +367,18 @@ bool importSignal(Signal &signal, const std::string &filePath, FileFormat format
             return true;
         }
 
+        if (format == FileFormat::CSV) {
+            std::cout << "CSV Import not yet supported" << std::endl;
+            return false;
+        }
 
-        return true;
+        return false;
+
+    }
+    catch (cereal::Exception e)
+    {
+        std::cout << e.what() << std::endl;
+        return false;
     }
     catch (...)
     {

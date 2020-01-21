@@ -14,7 +14,6 @@ Workspace::Workspace(Gui *gui) : Widget(gui),
 void Workspace::render()
 {
     ImGui::BeginFixed("Workspace", rect.getPosition(), rect.getSize());
-    ImGui::BeginFixed(getName().c_str(), rect.getPosition(), rect.getSize());
     if (ImGui::BeginTabBar("WorkspaceTabs"))
     {
         if (ImGui::BeginTabItem("Designer##Tab"))

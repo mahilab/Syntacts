@@ -11,6 +11,7 @@ int main(int argc, char const *argv[])
     Engine::init(960, 540, WindowStyle::Close);
     Engine::window->setTitle("Syntacts");
     Engine::setBackgroundColor(Grays::Gray5);
+    Debug::setFunctionKeysEnabled(false);
     Engine::run(); 
     return 0;
 }

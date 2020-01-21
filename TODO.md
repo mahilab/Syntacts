@@ -21,15 +21,15 @@
 
 ## Optimization
 - ~~consider using unique_ptr in Signal with a clone method~~
-- multi-sample functions (all the way down)
-- eliminate Tweens in favor of static bezier objects
+- ~~eliminate Tweens in favor of static bezier objects~~
+- multi-time sample functions (all the way down)
 - use of std::map for KeyedEnvelope complicates GUI, consider vectors
 
 ## Nice to Have
 - ~~Repeater, Stretcher, Reverse signals~~
 - real-time manipulation of *any* parameter (see WebAudio AudioParam for inspiration)
 - channel polyphony 
-- look into cereal's minima load/save capabilities
+- look into cereal's minimal load/save capabilities
 - additional variables in expression
 
 # GUI
@@ -42,12 +42,15 @@
 - ~~don't load all lib items automatically~~
 - ~~pop-up visualizer~~
 - ~~dark/light themes~~
-- refresh library
+- ~~refresh library~~
 - Sequencer tab
 - improved slot header
 - drag/drop help dialogs
 - PolyLine / KeyEnvelope
 - improve play/pause/stop interface
+- library signal references
+- lirbary signal busting
+- improve dnd interface
 
 ## Nice to Have
 - ~~CPU usage meter~~

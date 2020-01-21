@@ -34,7 +34,8 @@ Spatializer::Spatializer(Gui* gui) :
     m_target.pos.x = (float)m_spatializer.getTarget().x;
     m_target.pos.y = (float)m_spatializer.getTarget().y;
     m_target.radius =(float)m_spatializer.getRadius();
-    gui->device->onSessionInit.connect(this, &Spatializer::onSessionInit);
+    gui->device->onSessionOpen.connect(this, &Spatializer::onSessionChange);
+    gui->device->onSessionDestroy.connect(this, &Spatializer::onSessionDestroy);
     m_spatializer.autoUpdate(false);
 }
 
@@ -107,9 +108,9 @@ void Spatializer::render()
 
     ImGui::Separator();
     NodeSlot(m_sigName.c_str(), ImVec2(200, 0));
-    if (NodeDroppedL()) {
-        m_sigName = NodePayloadL().first;
-        m_signal = NodePayloadL().second;
+    if (SignalTarget()) {
+        m_sigName = SignalPayload().first;
+        m_signal = SignalPayload().second;
 
     }
     ImGui::SameLine();
@@ -145,8 +146,12 @@ tact::Signal Spatializer::getSignal() {
     return m_signal;
 }
 
-void Spatializer::onSessionInit() {
+void Spatializer::onSessionChange() {
     m_spatializer.bind(gui->device->session.get());
+}
+
+void Spatializer::onSessionDestroy() {
+    m_spatializer.bind(nullptr);
 }
 
 void Spatializer::sync() {

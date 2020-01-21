@@ -122,9 +122,9 @@ void NodeList::gui()
     if (m_nodes.size() == 0 || NodeHeld())
         NodeSlot("##EmpySlot", ImVec2(-1, 0), ImGuiCol_TabActive);
     // check for incomming palette items
-    if (NodeDroppedP())
+    if (PaletteTarget())
     {
-        auto node = makeNode(NodePayloadP());
+        auto node = makeNode(PalettePayload());
         if (node)
         {
             m_nodes.emplace_back(node);
@@ -133,9 +133,9 @@ void NodeList::gui()
         }
     }
     // check for incomming library items
-    if (NodeDroppedL())
+    if (SignalTarget())
     {
-        auto node = make<LibrarySignalNode>(NodePayloadL().first);
+        auto node = make<LibrarySignalNode>(SignalPayload().first);
         m_nodes.emplace_back(node);
         m_closeHandles.emplace_back(true);
         m_ids.push_back(m_nextId++);
@@ -217,10 +217,10 @@ void StretcherNode::gui()
 {
     auto cast = (tact::Stretcher *)sig.get();
     NodeSlot(m_sigName.c_str(), ImVec2(ImGui::CalcItemWidth(), 0));
-    if (NodeDroppedL())
+    if (SignalTarget())
     {
-        m_sigName = NodePayloadL().first;
-        cast->signal = NodePayloadL().second;
+        m_sigName = SignalPayload().first;
+        cast->signal = SignalPayload().second;
     }
     ImGui::SameLine();
     ImGui::Text("Signal");
@@ -235,10 +235,10 @@ void RepeaterNode::gui()
 {
     auto cast = (tact::Repeater *)sig.get();
     NodeSlot(m_sigName.c_str(), ImVec2(ImGui::CalcItemWidth(), 0));
-    if (NodeDroppedL())
+    if (SignalTarget())
     {
-        m_sigName = NodePayloadL().first;
-        cast->signal = NodePayloadL().second;
+        m_sigName = SignalPayload().first;
+        cast->signal = SignalPayload().second;
     }
     ImGui::SameLine();
     ImGui::Text("Signal");
@@ -254,10 +254,10 @@ void ReverserNode::gui()
 {
     auto cast = (tact::Repeater *)sig.get();
     NodeSlot(m_sigName.c_str(), ImVec2(ImGui::CalcItemWidth(), 0));
-    if (NodeDroppedL())
+    if (SignalTarget())
     {
-        m_sigName = NodePayloadL().first;
-        cast->signal = NodePayloadL().second;
+        m_sigName = SignalPayload().first;
+        cast->signal = SignalPayload().second;
     }
     ImGui::SameLine();
     ImGui::Text("Signal");
@@ -300,7 +300,7 @@ void OscillatorNode::gui()
         BeginNodeTarget();
         ImGui::DragFloat("##Frequency", &f, 1, 0, 1000, "%.0f Hz");
         EndNodeTarget();
-        if (NodeDroppedP())
+        if (PaletteTarget())
         {
         }
         ImGui::SameLine();

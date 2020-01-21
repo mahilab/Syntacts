@@ -1,0 +1,181 @@
+{
+    "value0": {
+        "gain": 1.0,
+        "bias": 0.0,
+        "m_ptr": {
+            "polymorphic_id": 2147483649,
+            "polymorphic_name": "tact::Signal::Model<tact::Reverser>",
+            "ptr_wrapper": {
+                "valid": 1,
+                "data": {
+                    "Concept": {},
+                    "m_model": {
+                        "signal": {
+                            "gain": 1.0,
+                            "bias": 0.0,
+                            "m_ptr": {
+                                "polymorphic_id": 2147483650,
+                                "polymorphic_name": "tact::Signal::Model<tact::Product>",
+                                "ptr_wrapper": {
+                                    "valid": 1,
+                                    "data": {
+                                        "Concept": {},
+                                        "m_model": {
+                                            "IOperator": {
+                                                "lhs": {
+                                                    "gain": 1.0,
+                                                    "bias": 0.0,
+                                                    "m_ptr": {
+                                                        "polymorphic_id": 2147483651,
+                                                        "polymorphic_name": "tact::Signal::Model<tact::Sine>",
+                                                        "ptr_wrapper": {
+                                                            "valid": 1,
+                                                            "data": {
+                                                                "Concept": {},
+                                                                "m_model": {
+                                                                    "IOscillator": {
+                                                                        "x": {
+                                                                            "gain": 3518.583772020568,
+                                                                            "bias": 0.0,
+                                                                            "m_ptr": {
+                                                                                "polymorphic_id": 2147483652,
+                                                                                "polymorphic_name": "tact::Signal::Model<tact::Time>",
+                                                                                "ptr_wrapper": {
+                                                                                    "valid": 1,
+                                                                                    "data": {
+                                                                                        "Concept": {},
+                                                                                        "m_model": {}
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                "rhs": {
+                                                    "gain": 1.0,
+                                                    "bias": 0.0,
+                                                    "m_ptr": {
+                                                        "polymorphic_id": 2147483653,
+                                                        "polymorphic_name": "tact::Signal::Model<tact::ADSR>",
+                                                        "ptr_wrapper": {
+                                                            "valid": 1,
+                                                            "data": {
+                                                                "Concept": {},
+                                                                "m_model": {
+                                                                    "KeyedEnvelope": {
+                                                                        "keys": [
+                                                                            {
+                                                                                "key": 0.0,
+                                                                                "value": {
+                                                                                    "first": 0.0,
+                                                                                    "second": {
+                                                                                        "m_ptr": {
+                                                                                            "polymorphic_id": 2147483654,
+                                                                                            "polymorphic_name": "tact::Curve::Model<tact::Curves::Linear>",
+                                                                                            "ptr_wrapper": {
+                                                                                                "id": 2147483649,
+                                                                                                "data": {
+                                                                                                    "Concept": {},
+                                                                                                    "m_model": {}
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            },
+                                                                            {
+                                                                                "key": 0.025,
+                                                                                "value": {
+                                                                                    "first": 1.0,
+                                                                                    "second": {
+                                                                                        "m_ptr": {
+                                                                                            "polymorphic_id": 6,
+                                                                                            "ptr_wrapper": {
+                                                                                                "id": 2147483650,
+                                                                                                "data": {
+                                                                                                    "Concept": {},
+                                                                                                    "m_model": {}
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            },
+                                                                            {
+                                                                                "key": 0.05,
+                                                                                "value": {
+                                                                                    "first": 0.5,
+                                                                                    "second": {
+                                                                                        "m_ptr": {
+                                                                                            "polymorphic_id": 6,
+                                                                                            "ptr_wrapper": {
+                                                                                                "id": 2147483651,
+                                                                                                "data": {
+                                                                                                    "Concept": {},
+                                                                                                    "m_model": {}
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            },
+                                                                            {
+                                                                                "key": 0.07500000000000001,
+                                                                                "value": {
+                                                                                    "first": 0.5,
+                                                                                    "second": {
+                                                                                        "m_ptr": {
+                                                                                            "polymorphic_id": 2147483655,
+                                                                                            "polymorphic_name": "tact::Curve::Model<tact::Curves::Instant>",
+                                                                                            "ptr_wrapper": {
+                                                                                                "id": 2147483652,
+                                                                                                "data": {
+                                                                                                    "Concept": {},
+                                                                                                    "m_model": {}
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            },
+                                                                            {
+                                                                                "key": 0.1,
+                                                                                "value": {
+                                                                                    "first": 0.0,
+                                                                                    "second": {
+                                                                                        "m_ptr": {
+                                                                                            "polymorphic_id": 6,
+                                                                                            "ptr_wrapper": {
+                                                                                                "id": 2147483653,
+                                                                                                "data": {
+                                                                                                    "Concept": {},
+                                                                                                    "m_model": {}
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

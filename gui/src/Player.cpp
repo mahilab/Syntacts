@@ -21,9 +21,9 @@ void Player::render()
     if (ImGui::Button(ICON_FA_PLAY, ImVec2(25, 0)))
         playSelected();
     EndNodeTarget();
-    if (NodeDroppedL()) {
+    if (SignalTarget()) {
         tact::Signal sig;
-        if (tact::Library::loadSignal(sig, NodePayloadL().first))
+        if (tact::Library::loadSignal(sig, SignalPayload().first))
         {
             for (int i = 0; i < gui->device->session->getCurrentDevice().maxChannels; ++i)
                 gui->device->session->play(i,sig);
@@ -34,13 +34,31 @@ void Player::render()
             gui->device->session->stop(i);
     }
     ImGui::SameLine();
-    ImGui::PushItemWidth(-1);
-    if (ImGui::SliderFloat("##Master", &m_masterVol, 0, 1, ""))
+
+    float xRem = ImGui::GetContentRegionAvail().x;
+    ImGui::PushItemWidth(((xRem-4) * 0.5f));
+    if (ImGui::SliderFloat("##MasterVolume", &m_masterVol, 0, 1, "V"))
     {
         for (int i = 0; i < gui->device->session->getCurrentDevice().maxChannels; ++i)
-        {
             gui->device->session->setVolume(i, m_masterVol);
-        }
+    }
+    if (ImGui::IsItemClicked(1))
+    {
+        m_masterVol = m_masterVol == 0.0f ? 1.0f : m_masterVol == 1.0f ? 0.0f : m_masterVol < 0.5f ? 0.0f : 1.0f;
+        for (int i = 0; i < gui->device->session->getCurrentDevice().maxChannels; ++i)
+            gui->device->session->setVolume(i, m_masterVol);
+    }
+    ImGui::SameLine();
+    if (ImGui::SliderFloat("##MasterPitch", &m_masterPitch, -1, 1, "P"))
+    {
+        float pitch = std::pow(10, m_masterPitch);
+        for (int i = 0; i < gui->device->session->getCurrentDevice().maxChannels; ++i)
+            gui->device->session->setPitch(i, pitch);
+    }
+    if (ImGui::IsItemClicked(1))
+    {
+        for (int i = 0; i < gui->device->session->getCurrentDevice().maxChannels; ++i)
+            gui->device->session->setPitch(i, 1);
     }
     ImGui::PopItemWidth();
     ImGui::Separator();
@@ -51,8 +69,8 @@ void Player::render()
 /// Updates the channel selection checkboxes
 void Player::renderChannels()
 {
+    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, {ImGui::GetStyle().FramePadding.x, 0});
     ImGui::BeginChild("Channels", ImVec2(0, 0), false, ImGuiWindowFlags_NoBackground);
-    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(ImGui::GetStyle().FramePadding.x, ImGui::GetStyle().FramePadding.y * 2));
     if (gui->device->session) {
         for (int i = 0; i < gui->device->session->getCurrentDevice().maxChannels; ++i)
         {
@@ -68,9 +86,9 @@ void Player::renderChannels()
             if (playing)
                 ImGui::PopStyleColor();
 
-            if (NodeDroppedL()) {
+            if (SignalTarget()) {
                 tact::Signal sig;
-                tact::Library::loadSignal(sig, NodePayloadL().first);
+                tact::Library::loadSignal(sig, SignalPayload().first);
                 gui->device->session->play(i, sig);
             }
             if (ImGui::IsItemClicked(1))
@@ -84,13 +102,13 @@ void Player::renderChannels()
             }
 
             ImGui::SameLine();
-            ImGui::Button("",ImVec2(10,0));
 
-            ImGui::PushItemWidth(-1);
+            float xRem = ImGui::GetContentRegionAvail().x;
+            ImGui::PushItemWidth((xRem-4) * 0.5f);
 
-            ImGui::SameLine(43);
+            ImGui::SameLine();
             float v = (float)gui->device->session->getVolume(i);
-            if (ImGui::MiniSliderFloat(str("##Volume", i).c_str(), &v, 0, 1, true))
+            if (ImGui::SliderFloat(str("##Volume", i).c_str(), &v, 0, 1, ""))
                 gui->device->session->setVolume(i, v);
             if (ImGui::IsItemClicked(1))
             {
@@ -98,10 +116,10 @@ void Player::renderChannels()
                 gui->device->session->setVolume(i, v);
             }
 
-            ImGui::SameLine(43);
+            ImGui::SameLine();
             float p = (float)gui->device->session->getPitch(i);
             p = std::log10(p);
-            if (ImGui::MiniSliderFloat(str("##Pitch", i).c_str(), &p, -1, 1, false))
+            if (ImGui::SliderFloat(str("##Pitch", i).c_str(), &p, -1, 1, ""))
                 gui->device->session->setPitch(i, std::pow(10, p));
             if (ImGui::IsItemClicked(1))
             {
@@ -112,8 +130,8 @@ void Player::renderChannels()
             ImGui::PopID();
         }
     }
-    ImGui::PopStyleVar();
     ImGui::EndChild();
+    ImGui::PopStyleVar();
 }
 
 void Player::playCh(int ch)

@@ -12,7 +12,8 @@ private:
     void sync();
     void update();
     void fillGrid();
-    void onSessionInit();
+    void onSessionChange();
+    void onSessionDestroy();
 private:
     tact::Signal m_signal;
     int m_rollOffIndex = 0;

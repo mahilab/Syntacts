@@ -35,7 +35,7 @@ void Gui::positionWindows()
 {
     auto windowSize = Engine::getWindowSize();
     float margin = 5;
-    float barHeight = 35;
+    float barHeight = 33;
     float sidePanelWidth = 180;
     float workspaceHeight = 300;
     float columnHeight = windowSize.y - barHeight - 3 * margin;

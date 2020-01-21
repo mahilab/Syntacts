@@ -54,7 +54,7 @@ void EndNodeTarget()
 }
 
 
-void NodeSourceP(PItem pItem)
+void PaletteSource(PItem pItem)
 {
     if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
     {
@@ -66,7 +66,7 @@ void NodeSourceP(PItem pItem)
     }
 }
 
-void NodeSourceL(const std::string &name, tact::Signal signal)
+void SignalSource(const std::string &name, tact::Signal signal)
 {
     if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
     {
@@ -79,7 +79,7 @@ void NodeSourceL(const std::string &name, tact::Signal signal)
     }
 }
 
-bool NodeDroppedP()
+bool PaletteTarget()
 {
     bool ret = false;
     if (ImGui::BeginDragDropTarget())
@@ -93,7 +93,7 @@ bool NodeDroppedP()
     return ret;
 }
 
-bool NodeDroppedL()
+bool SignalTarget()
 {
     bool ret = false;
     if (ImGui::BeginDragDropTarget())
@@ -107,12 +107,12 @@ bool NodeDroppedL()
     return ret;
 }
 
-PItem NodePayloadP()
+PItem PalettePayload()
 {
     return g_pPayload;
 }
 
-const std::pair<std::string, tact::Signal>& NodePayloadL()
+const std::pair<std::string, tact::Signal>& SignalPayload()
 {
     return g_lPayload;
 }
