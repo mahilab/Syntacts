@@ -94,6 +94,7 @@ target_include_directories(syntacts
         ${CMAKE_CURRENT_SOURCE_DIR}/src
         ${portaudio_INCLUDE_DIR}
         3rdparty
+        3rdparty/cereal/include
 )
 target_link_libraries(syntacts PUBLIC portaudio_static PRIVATE) # rubberband-library)
 
@@ -115,15 +116,11 @@ if (carnot_FOUND)
 endif()
 
 #===============================================================================
-# Syntacts Examples/Tests
+# Syntacts Examples
 #===============================================================================
 
 if (SYNTACTS_EXAMPLES)
     add_subdirectory("examples")
-endif()
-
-if (SYNTACTS_TEST)
-    add_subdirectory("tests")
 endif()
 
 #===============================================================================
