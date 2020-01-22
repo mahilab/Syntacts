@@ -1,0 +1,3 @@
+[submodule "3rdparty/mahi-gui"]
+	path = 3rdparty/mahi-gui
+	url = https://github.com/mahilab/mahi-gui
