@@ -18,6 +18,7 @@
 cmake_minimum_required(VERSION 3.13.0)
 
 # user options
+option(SYNTACTS_GUI      "Turn ON to build Syntacts GUI"        ON)
 option(SYNTACTS_C_DLL    "Turn ON to build Syntacts C DLL"      ON )
 option(SYNTACTS_EXAMPLES "Turn ON to build Syntacts example(s)" ON )
 option(SYNTACTS_TEST     "Turn ON to build Syntacts test(s)"    ON )
@@ -113,6 +114,10 @@ endif()
 find_package(carnot)
 if (carnot_FOUND) 
     add_subdirectory("gui")
+endif()
+
+if (SYNTACTS_GUI)
+    add_subdirectory(3rdparty/mahi-gui)
 endif()
 
 #===============================================================================

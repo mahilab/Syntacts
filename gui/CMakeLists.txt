@@ -44,3 +44,6 @@ add_executable(syntacts-gui
 target_link_libraries(syntacts-gui syntacts carnot)
 set_target_properties(syntacts-gui PROPERTIES DEBUG_POSTFIX -d)
 install(TARGETS syntacts-gui RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+add_executable(syntacts-gui2 src/main2.cpp)
+target_link_libraries(syntacts-gui2 mahi::gui)
