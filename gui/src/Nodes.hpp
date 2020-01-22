@@ -1,13 +1,13 @@
 #pragma once
 #include <deque>
-#include "ImGui/PolyBezier.hpp"
+#include "PolyBezier.hpp"
 #include "Palette.hpp"
 #include "DragAndDrop.hpp"
 #include <utility>
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void NodeSlot(const char* label, const ImVec2& size = ImVec2(-1, 0), ImGuiCol col = ImGuiCol_Button);
+void NodeSlot(const char* label, const ImVec2& size = ImVec2(-1, 0));
 
 const std::string& signalName(std::type_index id);
 const std::string& signalName(const tact::Signal& sig);

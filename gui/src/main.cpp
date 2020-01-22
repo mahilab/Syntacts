@@ -1,17 +1,9 @@
-// #define CARNOT_NO_CONSOLE
-#define CARNOT_USE_DISCRETE_GPU
-
+// #define MAHI_GUI_NO_CONSOLE
 #include "Gui.hpp"
-
-using namespace carnot;
 
 int main(int argc, char const *argv[])
 {
-    Engine::makeRoot<Gui>();
-    Engine::init(960, 540, WindowStyle::Close);
-    Engine::window->setTitle("Syntacts");
-    Engine::setBackgroundColor(Grays::Gray5);
-    Debug::setFunctionKeysEnabled(false);
-    Engine::run(); 
+    Gui gui;
+    gui.run();
     return 0;
 }

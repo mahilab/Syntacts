@@ -1,80 +1,70 @@
 #define IMGUI_DEFINE_MATH_OPERATORS
 
 #include "DragAndDrop.hpp"
-#include <ImGui/imgui_internal.h>
+#include <imgui_internal.h>
 
 namespace
 {
-bool g_nodeHeld = false;
-PItem g_pPayload;
-std::pair<std::string, tact::Signal> g_lPayload;
-float g_nodeTime;
+bool g_signalHeld = false;
+bool g_paletteHeld = false;
+PItem g_palettePayload;
+std::pair<std::string, tact::Signal> g_signalPayload;
+bool g_pulsableSet = false;
+float g_pulseTime;
 
-static inline ImVec4 Lerp(const ImVec4& a, const ImVec4& b, float t)          { return ImVec4(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t, a.z + (b.z - a.z) * t, a.w + (b.w - a.w) * t); }
+static inline ImVec4 Lerp(const ImVec4& a, const ImVec4& b, float t)          
+{ 
+    return ImVec4(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t, a.z + (b.z - a.z) * t, a.w + (b.w - a.w) * t); 
+}
 
 } // namespace
 
-void SetNodeHeld(bool held)
+void UpdateDragAndDrop()
 {
-    g_nodeHeld = held;
-    if (held) {
-        g_nodeTime = 0;
-    }
-    else {
-    }
+    g_pulseTime = ImGui::GetIO().DeltaTime;
+    if (g_signalHeld && (ImGui::GetIO().MouseReleased[0] || !ImGui::GetIO().MouseDown[0]))
+        g_signalHeld = false;
+    if (g_paletteHeld && (ImGui::GetIO().MouseReleased[0] || !ImGui::GetIO().MouseDown[0]))
+        g_paletteHeld = false;
 }
 
-void DragAndDrop::update()
-{
-    SetNodeHeld(false);
-    g_nodeTime = carnot::Engine::deltaTime();
-}
-
-bool NodeHeld()
-{
-    return g_nodeHeld;
-}
-
-void BeginNodeTarget(ImGuiCol col)
+void BeginPulsable(bool acceptPalette, bool acceptSignal, ImGuiCol col)
 {
     ImVec4 color = ImGui::GetStyle().Colors[col];
-    if (g_nodeHeld)
+    if ((g_signalHeld && acceptSignal) || (g_paletteHeld && acceptPalette))
     {
         static float f = 1.0f;
         float t = 0.5f + 0.5f * std::sin(2.0f * IM_PI * f * (float)ImGui::GetTime());
-        color = Lerp(color, ImVec4(0, 0, 0, 0), t * 0.25f);        
+        color = Lerp(color, ImVec4(0, 0, 0, 0), t * 0.25f);     
+        ImGui::PushStyleColor(col, color);
+        g_pulsableSet = true;
     }
-    ImGui::PushStyleColor(ImGuiCol_Button, color);
-    ImGui::PushStyleColor(ImGuiCol_FrameBg, color);
 }
 
-void EndNodeTarget()
+void EndPulsable()
 {
-    ImGui::PopStyleColor(2);
+    if (g_pulsableSet) {
+        ImGui::PopStyleColor();
+        g_pulsableSet = false;
+    }
 }
 
+void SetPaletteHeld(bool held)
+{
+    g_paletteHeld = held;
+    if (held) {
+        g_pulseTime = 0;
+    }
+}
 
 void PaletteSource(PItem pItem)
 {
     if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
     {
-        g_pPayload = pItem;
-        SetNodeHeld(true);
-        ImGui::SetDragDropPayload("DND_PITEM", &g_pPayload, sizeof(PItem));
+        g_palettePayload = pItem;
+        SetPaletteHeld(true);
+        ImGui::SetDragDropPayload("DND_PITEM", &g_palettePayload, sizeof(PItem));
         ImGui::Text(palletteString(pItem).c_str());
-        ImGui::EndDragDropSource();
-    }
-}
-
-void SignalSource(const std::string &name, tact::Signal signal)
-{
-    if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
-    {
-        g_lPayload.first = name;
-        g_lPayload.second = std::move(signal);
-        SetNodeHeld(true);
-        ImGui::SetDragDropPayload("DND_LITEM", &g_lPayload, sizeof(std::string));
-        ImGui::Text(name.c_str());
         ImGui::EndDragDropSource();
     }
 }
@@ -93,6 +83,36 @@ bool PaletteTarget()
     return ret;
 }
 
+PItem PalettePayload()
+{
+    return g_palettePayload;
+}
+
+bool PaletteHeld() {
+    return g_paletteHeld;
+}
+
+void SetSignalHeld(bool held)
+{
+    g_signalHeld = held;
+    if (held) {
+        g_pulseTime = 0;
+    }
+}
+
+void SignalSource(const std::string &name, tact::Signal signal)
+{
+    if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
+    {
+        g_signalPayload.first = name;
+        g_signalPayload.second = std::move(signal);
+        SetSignalHeld(true);
+        ImGui::SetDragDropPayload("DND_LITEM", &g_signalPayload, sizeof(std::string));
+        ImGui::Text(name.c_str());
+        ImGui::EndDragDropSource();
+    }
+}
+
 bool SignalTarget()
 {
     bool ret = false;
@@ -107,13 +127,12 @@ bool SignalTarget()
     return ret;
 }
 
-PItem PalettePayload()
-{
-    return g_pPayload;
-}
-
 const std::pair<std::string, tact::Signal>& SignalPayload()
 {
-    return g_lPayload;
+    return g_signalPayload;
 }
 
+bool SignalHeld()
+{
+    return g_signalHeld;
+}

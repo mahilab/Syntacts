@@ -1,15 +1,15 @@
 #include "Nodes.hpp"
 #include "Gui.hpp"
 
-using namespace carnot;
+using namespace mahi::gui;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void NodeSlot(const char *label, const ImVec2 &size, ImGuiCol col)
+void NodeSlot(const char *label, const ImVec2 &size)
 {
-    BeginNodeTarget(col);
+    BeginPulsable(true,true);
     ImGui::Button(label, size);
-    EndNodeTarget();
+    EndPulsable();
 }
 
 /// Returns the name of a Syntacts signal
@@ -50,52 +50,52 @@ const std::string &signalName(const tact::Signal &sig)
     return signalName(sig.typeId());
 }
 
-Ptr<Node> makeNode(PItem id)
+std::shared_ptr<Node> makeNode(PItem id)
 {
     if (id == PItem::Time)
-        return make<TimeNode>();
+        return std::make_shared<TimeNode>();
     if (id == PItem::Scalar)
-        return make<ScalarNode>();
+        return std::make_shared<ScalarNode>();
     if (id == PItem::Ramp)
-        return make<RampNode>();
+        return std::make_shared<RampNode>();
     if (id == PItem::Noise)
-        return make<NoiseNode>();
+        return std::make_shared<NoiseNode>();
     if (id == PItem::Expression)
-        return make<ExpressionNode>();
+        return std::make_shared<ExpressionNode>();
     if (id == PItem::Sum)
-        return make<SumNode>();
+        return std::make_shared<SumNode>();
     if (id == PItem::Product)
-        return make<ProductNode>();
+        return std::make_shared<ProductNode>();
     if (id == PItem::Sine)
-        return make<OscillatorNode>(tact::Sine());
+        return std::make_shared<OscillatorNode>(tact::Sine());
     if (id == PItem::Square)
-        return make<OscillatorNode>(tact::Square());
+        return std::make_shared<OscillatorNode>(tact::Square());
     if (id == PItem::Saw)
-        return make<OscillatorNode>(tact::Saw());
+        return std::make_shared<OscillatorNode>(tact::Saw());
     if (id == PItem::Triangle)
-        return make<OscillatorNode>(tact::Triangle());
+        return std::make_shared<OscillatorNode>(tact::Triangle());
     if (id == PItem::Chirp)
-        return make<ChirpNode>();
+        return std::make_shared<ChirpNode>();
     if (id == PItem::Envelope)
-        return make<EnvelopeNode>();
+        return std::make_shared<EnvelopeNode>();
     if (id == PItem::ASR)
-        return make<ASRNode>();
+        return std::make_shared<ASRNode>();
     if (id == PItem::ADSR)
-        return make<ADSRNode>();
+        return std::make_shared<ADSRNode>();
     if (id == PItem::PolyBezier)
-        return make<PolyBezierNode>();
+        return std::make_shared<PolyBezierNode>();
     if (id == PItem::Stretcher)
-        return make<StretcherNode>();
+        return std::make_shared<StretcherNode>();
     if (id == PItem::Repeater)
-        return make<RepeaterNode>();
+        return std::make_shared<RepeaterNode>();
     if (id == PItem::Reverser)
-        return make<ReverserNode>();
+        return std::make_shared<ReverserNode>();
     if (id == PItem::Pwm)
-        return make<PwmNode>();
+        return std::make_shared<PwmNode>();
     if (id == PItem::FM)
-        return make<FmNode>();
-    static auto gui = Engine::getRoot().as<Gui>();
-    gui->status->pushMessage("Failed to create Node!", StatusBar::Error);
+        return std::make_shared<FmNode>();
+    // static auto gui = Engine::getRoot().as<Gui>();
+    // gui.status->pushMessage("Failed to create Node!", StatusBar::Error);
     return nullptr;
 }
 
@@ -119,8 +119,8 @@ void NodeList::gui()
         ImGui::PopID();
     }
     // node slot
-    if (m_nodes.size() == 0 || NodeHeld())
-        NodeSlot("##EmpySlot", ImVec2(-1, 0), ImGuiCol_TabActive);
+    if (m_nodes.size() == 0 || SignalHeld() || PaletteHeld())
+        NodeSlot("##EmpySlot", ImVec2(-1, 0));
     // check for incomming palette items
     if (PaletteTarget())
     {
@@ -135,13 +135,13 @@ void NodeList::gui()
     // check for incomming library items
     if (SignalTarget())
     {
-        auto node = make<LibrarySignalNode>(SignalPayload().first);
+        auto node = std::make_shared<LibrarySignalNode>(SignalPayload().first);
         m_nodes.emplace_back(node);
         m_closeHandles.emplace_back(true);
         m_ids.push_back(m_nextId++);
     }
     // clean up
-    std::vector<Ptr<Node>> newNodes;
+    std::vector<std::shared_ptr<Node>> newNodes;
     std::vector<int> newIds;
     for (int i = 0; i < m_nodes.size(); ++i)
     {
@@ -297,9 +297,9 @@ void OscillatorNode::gui()
     if (cast->x.isType<tact::Time>())
     {
         float f = (float)cast->x.gain / (float)tact::TWO_PI;
-        BeginNodeTarget();
+        BeginPulsable(true,true);
         ImGui::DragFloat("##Frequency", &f, 1, 0, 1000, "%.0f Hz");
-        EndNodeTarget();
+        EndPulsable();
         if (PaletteTarget())
         {
         }

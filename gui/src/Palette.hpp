@@ -37,5 +37,5 @@ const std::string& palletteString(PItem id);
 class Palette : public Widget {
 public:
     using Widget::Widget;
-    void render() override;
+    void update() override;
 };

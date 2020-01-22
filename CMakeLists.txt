@@ -111,13 +111,10 @@ endif()
 # Syntacts GUI
 #===============================================================================
 
-find_package(carnot)
-if (carnot_FOUND) 
-    add_subdirectory("gui")
-endif()
-
 if (SYNTACTS_GUI)
+    set(MAHI_GUI_EXAMPLES OFF CACHE BOOL "" FORCE)
     add_subdirectory(3rdparty/mahi-gui)
+    add_subdirectory("gui")
 endif()
 
 #===============================================================================

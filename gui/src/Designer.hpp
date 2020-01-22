@@ -7,7 +7,7 @@ class Designer : public Widget {
 public:
     using Widget::Widget;
     tact::Signal buildSignal();
-    void render() override;
+    void update() override;
 private:
     ProductNode m_root;
 };

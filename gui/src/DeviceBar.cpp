@@ -1,14 +1,16 @@
 #include "DeviceBar.hpp"
 #include <thread>
-#include "ImGui/Custom.hpp"
+#include "Custom.hpp"
 #include "Gui.hpp"
 
-using namespace carnot;
+using namespace mahi::gui;
 
 
-DeviceBar::DeviceBar(Gui* gui) :
+DeviceBar::DeviceBar(Gui& gui) :
     Widget(gui)
-{ }
+{ 
+    initialize();
+}
 
 DeviceBar::~DeviceBar() {
     onSessionDestroy.emit();
@@ -19,7 +21,7 @@ void DeviceBar::initialize()
 {
     // make new session
     onSessionDestroy.emit();
-    session = make<tact::Session>();
+    session = std::make_shared<tact::Session>();
     getAvailable();
     switchDevice(session->getDefaultDevice());
 }
@@ -33,13 +35,13 @@ void DeviceBar::switchDevice(const tact::Device &dev, double sampleRate)
         result = session->close();
     if (result != SyntactsError_NoError)
     {
-        gui->status->pushMessage("Failed to close device! Error: " + str(result), StatusBar::Error);
+        gui.status.pushMessage("Failed to close device! Error: " + str(result), StatusBar::Error);
     }
     // open requested device
     result = session->open(dev, dev.maxChannels, sampleRate);
     if (result != SyntactsError_NoError)
     {
-        gui->status->pushMessage("Failed to open device! Error: " + str(result), StatusBar::Error);
+        gui.status.pushMessage("Failed to open device! Error: " + str(result), StatusBar::Error);
     }
     /// update current and available
     getCurrent();
@@ -52,29 +54,19 @@ void DeviceBar::switchApi(const std::string &api)
     {
         m_currentApi = api;
         switchDevice(m_available[m_currentApi][0]);
-        gui->status->pushMessage("Switched API to " + m_currentApi);
+        gui.status.pushMessage("Switched API to " + m_currentApi);
     }
 }
 
 void DeviceBar::switchSampleRate(double sampleRate)
 {
     switchDevice(m_currentDev, sampleRate);
-    gui->status->pushMessage("Changed sample rate to " + str(sampleRate, "Hz"));
-}
-
-void DeviceBar::start()
-{
-    initialize();
+    gui.status.pushMessage("Changed sample rate to " + str(sampleRate, "Hz"));
 }
 
 void DeviceBar::update() {
-    render();
-}
-
-void DeviceBar::render()
-{
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(7, 7));
-    ImGui::BeginFixed(getName().c_str(), rect.getPosition(), rect.getSize());
+    ImGui::BeginFixed("Device Bar", position, size);
     ImGui::BeginGroup();
     renderApiSelection();
     ImGui::SameLine();
@@ -87,7 +79,7 @@ void DeviceBar::render()
     if (ImGui::Button(ICON_FA_SYNC_ALT)) {
         initialize();
     }
-    gui->status->showTooltip("Refresh Device List");
+    gui.status.showTooltip("Refresh Device List");
     ImGui::EndGroup();
     if (ImGui::BeginDragDropTarget())
     {
@@ -99,6 +91,8 @@ void DeviceBar::render()
     ImGui::End();
     ImGui::PopStyleVar();
 }
+
+
 
 void DeviceBar::renderApiSelection()
 {
@@ -118,7 +112,7 @@ void DeviceBar::renderApiSelection()
         ImGui::EndCombo();
     }
     ImGui::PopItemWidth();
-    gui->status->showTooltip("Select API");
+    gui.status.showTooltip("Select API");
 }
 
 void DeviceBar::renderDeviceSelection()
@@ -144,7 +138,7 @@ void DeviceBar::renderDeviceSelection()
         ImGui::EndCombo();
     }
     ImGui::PopItemWidth();
-    gui->status->showTooltip("Select Device");
+    gui.status.showTooltip("Select Device");
 }
 
 void DeviceBar::renderDeviceSampleRates()
@@ -171,7 +165,7 @@ void DeviceBar::renderDeviceSampleRates()
         ImGui::EndCombo();
     }
     ImGui::PopItemWidth();
-    gui->status->showTooltip("Select Sample Rate");
+    gui.status.showTooltip("Select Sample Rate");
 }
 
 void DeviceBar::renderDeviceDetails()
@@ -181,7 +175,7 @@ void DeviceBar::renderDeviceDetails()
         ImGui::OpenPopup("Device Details");
     }
 
-    gui->status->showTooltip("List Devices");
+    gui.status.showTooltip("List Devices");
     bool modalOpen = true;
     if (ImGui::BeginPopupModal("Device Details", &modalOpen, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove))
     {

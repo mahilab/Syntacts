@@ -1,5 +1,5 @@
 #pragma once
-#include <ImGui/imgui.h>
+#include <imgui.h>
 #include <utility>
 #include <string>
 #include <syntacts>
@@ -9,13 +9,10 @@
 // General DND
 ///////////////////////////////////////////////////////////////////////////////
 
-class DragAndDrop : public carnot::GameObject {
-    void update() override;
-};
 
-bool NodeHeld();
-void BeginNodeTarget(ImGuiCol col = ImGuiCol_Button);
-void EndNodeTarget();
+void UpdateDragAndDrop();
+void BeginPulsable(bool acceptPalette, bool acceptSignal, ImGuiCol col = ImGuiCol_Button);
+void EndPulsable();
 
 ///////////////////////////////////////////////////////////////////////////////
 // Pallete DND
@@ -24,6 +21,7 @@ void EndNodeTarget();
 void PaletteSource(PItem pitem);
 bool PaletteTarget();
 PItem PalettePayload();
+bool PaletteHeld();
 
 ///////////////////////////////////////////////////////////////////////////////
 // Signal DND
@@ -32,6 +30,7 @@ PItem PalettePayload();
 void SignalSource(const std::string& name, tact::Signal signal);
 bool SignalTarget();
 const std::pair<std::string, tact::Signal>& SignalPayload();
+bool SignalHeld();
 
 ///////////////////////////////////////////////////////////////////////////////
 // Help DND

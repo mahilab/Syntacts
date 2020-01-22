@@ -2,7 +2,7 @@
 #include "Nodes.hpp"
 #include <unordered_map>
 
-using namespace carnot;
+using namespace mahi::gui;
 
 /// Returns the name of a Syntacts signal
 const std::string &palletteString(PItem id)
@@ -41,10 +41,10 @@ const std::string &palletteString(PItem id)
         return names[PItem::Unknown];
 }
 
-void Palette::render()
+void Palette::update()
 {
     auto avail = ImGui::GetContentRegionAvail();
-    ImGui::PushStyleColor(ImGuiCol_ChildBg, Color::Transparent);
+    ImGui::PushStyleColor(ImGuiCol_ChildBg, {0,0,0,0});
     ImGui::BeginChild("PalleteList", ImVec2(0, avail.y));
     static std::vector<std::pair<std::string, std::vector<PItem>>> signals = {
         {"Oscillators", {PItem::Sine, PItem::Square, PItem::Saw, PItem::Triangle, PItem::Chirp, PItem::FM, PItem::Pwm, PItem::Noise}},

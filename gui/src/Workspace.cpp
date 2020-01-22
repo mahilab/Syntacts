@@ -1,48 +1,42 @@
 #include "Workspace.hpp"
 #include "Gui.hpp"
-#include "ImGui/Sequencer.hpp"
 
-using namespace carnot;
+using namespace mahi::gui;
 
-Workspace::Workspace(Gui *gui) : Widget(gui),
+Workspace::Workspace(Gui& gui) : Widget(gui),
                                  designer(gui),
                                  sequencer(gui),
                                  spatializer(gui)
 {
 }
 
-void Workspace::render()
+void Workspace::update()
 {
-    ImGui::BeginFixed("Workspace", rect.getPosition(), rect.getSize());
+    ImGui::BeginFixed("Workspace", position, size);
     if (ImGui::BeginTabBar("WorkspaceTabs"))
     {
         if (ImGui::BeginTabItem("Designer##Tab"))
         {
             activeTab = TabDesigner;
-            designer.render();
+            designer.update();
             ImGui::EndTabItem();
-            gui->visualizer->setRenderedSignal(designer.buildSignal(), Purples::Plum);
+            gui.visualizer.setRenderedSignal(designer.buildSignal(), Purples::Plum);
         }
         if (ImGui::BeginTabItem("Sequencer##Tab"))
         {
             activeTab = TabSequencer;
-            sequencer.render();
+            sequencer.update();
             ImGui::EndTabItem();
-            gui->visualizer->setRenderedSignal(sequencer.buildSignal(), Oranges::Coral);
+            gui.visualizer.setRenderedSignal(sequencer.buildSignal(), Oranges::Coral);
         }
         if (ImGui::BeginTabItem("Spatializer##Tab"))
         {
             activeTab = TabSpatializer;
-            spatializer.render();
+            spatializer.update();
             ImGui::EndTabItem();
-            gui->visualizer->setRenderedSignal(spatializer.getSignal(), Greens::YellowGreen);
+            gui.visualizer.setRenderedSignal(spatializer.getSignal(), Greens::YellowGreen);
         }
         ImGui::EndTabBar();
     }
     ImGui::End();
-}
-
-void Workspace::update()
-{
-    render();
 }

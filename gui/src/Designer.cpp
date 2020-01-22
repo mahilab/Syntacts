@@ -1,15 +1,15 @@
 #include "Designer.hpp"
 
-using namespace carnot;
+using namespace mahi::gui;
 
 tact::Signal Designer::buildSignal()
 {
     return m_root.signal();
 }
 
-void Designer::render()
+void Designer::update()
 {
-    ImGui::PushStyleColor(ImGuiCol_ChildBg, Color::Transparent);
+    ImGui::PushStyleColor(ImGuiCol_ChildBg, {0,0,0,0});
     ImGui::BeginChild("Designer##TabScroll");
     m_root.gui();
     ImGui::EndChild();

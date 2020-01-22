@@ -2,24 +2,18 @@
 
 #include "Widget.hpp"
 
-class Player : public Widget, public carnot::GameObject {
+class Player : public Widget {
 public:
 
-    using Widget::Widget;
+    Player(Gui& gui);
+    void update() override;
 
 private:
 
-    void start() override;
-    void update() override;
-    void render() override;
-    void renderChannels();
+    void updateChannels();
     void playCh(int ch);
     void playSelected();
     void rechannel();
-
-public:
-
-    carnot::FloatRect rect;
 
 private:
     int m_payload;

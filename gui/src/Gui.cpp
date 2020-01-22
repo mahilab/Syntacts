@@ -1,22 +1,17 @@
 #include "Gui.hpp"
+#include "DragAndDrop.hpp"
 
-using namespace carnot;
+using namespace mahi::gui;
 
-
-
-Gui::Gui() : 
-             device(makeChild<DeviceBar>(this).get()),
-             player(makeChild<Player>(this).get()),
-             workspace(makeChild<Workspace>(this).get()),
-             status(makeChild<StatusBar>(this).get()),
-             dnd(makeChild<DragAndDrop>().get()),
-             library(makeChild<Library>(this).get()),             
-             visualizer(makeChild<Visualizer>(this).get())
+Gui::Gui() : Application(960, 540, "Syntacts"),
+             device(*this),
+             player(*this),
+             workspace(*this),
+             library(*this),
+             visualizer(*this),
+             status(*this)
 {
-
-}
-
-void Gui::start() {
+    backgroundColor = Grays::Gray5;
     ImGuiStyle *imStyle = &ImGui::GetStyle();
     ImVec4 *colors = ImGui::GetStyle().Colors;
     colors[ImGuiCol_Border] = colors[ImGuiCol_TabActive];
@@ -26,14 +21,18 @@ void Gui::start() {
 }
 
 void Gui::update() {
-}
-
-void Gui::lateUpdate() {
+    device.update();
+    player.update();
+    workspace.update();
+    library.update();
+    visualizer.update();
+    status.update();
+    UpdateDragAndDrop();
 }
 
 void Gui::positionWindows()
 {
-    auto windowSize = Engine::getWindowSize();
+    ImVec2 windowSize = {960, 540};
     float margin = 5;
     float barHeight = 33;
     float sidePanelWidth = 180;
@@ -43,17 +42,23 @@ void Gui::positionWindows()
     float fullWidth = windowSize.x - 2 * margin;
     float l = margin;
     float t = margin;
-    library->rect = FloatRect(l, t, sidePanelWidth, columnHeight);
+    library.position = {l,t};
+    library.size =  {sidePanelWidth, columnHeight};
     t += columnHeight + margin;
-    status->rect = FloatRect(l, t, fullWidth, barHeight);
+    status.position = {l,t};
+    status.size = {fullWidth, barHeight};
     t = margin;
     l += sidePanelWidth + margin;
-    device->rect = FloatRect(l, t, centerWidth, barHeight);
+    device.position = {l,t};
+    device.size = {centerWidth, barHeight};
     t += barHeight + margin;
-    workspace->rect = FloatRect(l, t, centerWidth, workspaceHeight);
+    workspace.position = {l,t};
+    workspace.size = {centerWidth, workspaceHeight};
     t += workspaceHeight + margin;
-    visualizer->rect = FloatRect(l, t, centerWidth, windowSize.y - workspaceHeight - barHeight * 2 - margin * 5);
+    visualizer.position = {l,t};
+    visualizer.size = {centerWidth, windowSize.y - workspaceHeight - barHeight * 2 - margin * 5};
     t = margin;
     l += centerWidth + margin;
-    player->rect = FloatRect(l, t, sidePanelWidth, columnHeight);
+    player.position = {l,t};
+    player.size = {sidePanelWidth, columnHeight};
 }

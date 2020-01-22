@@ -2,7 +2,7 @@
 
 #include "PolyBezier.hpp"
 #include "Custom.hpp"
-#include <ImGui/imgui_internal.h>
+#include <imgui_internal.h>
 
 ///////////////////////////////////////////////////////////////////////////////
 

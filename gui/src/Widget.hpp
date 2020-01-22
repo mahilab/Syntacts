@@ -1,13 +1,14 @@
 #pragma once
 #include <syntacts>
-#include <carnot>
+#include <mahi/gui.hpp>
 
 class Gui;
 
 class Widget {
 public:
-    Widget(Gui* gui);
-    virtual void render() = 0;
+    Widget(Gui& gui);
+    virtual void update() = 0;
 public:
-    Gui*const gui;
+    mahi::gui::Vec2 position, size;
+    Gui& gui;
 };

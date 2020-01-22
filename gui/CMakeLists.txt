@@ -1,5 +1,4 @@
-set(ICON syntacts.rc)
-add_executable(syntacts-gui 
+add_executable(syntacts-gui
     src/main.cpp 
     src/Gui.hpp
     src/Gui.cpp
@@ -7,43 +6,38 @@ add_executable(syntacts-gui
     src/Widget.cpp
     src/DeviceBar.hpp
     src/DeviceBar.cpp
-    src/Player.hpp
-    src/Player.cpp
     src/StatusBar.hpp
-    src/StatusBar.cpp
     src/Palette.hpp
     src/Palette.cpp
+    src/StatusBar.cpp
+    src/Visualizer.hpp
+    src/Visualizer.cpp
     src/Library.hpp
     src/Library.cpp
+    src/FileWatcher.hpp
+    src/FileWatcher.cpp
     src/Nodes.hpp
     src/Nodes.cpp
+    src/DragAndDrop.hpp
+    src/DragAndDrop.cpp
     src/Workspace.hpp
     src/Workspace.cpp
     src/Designer.hpp
     src/Designer.cpp
+    src/PolyBezier.hpp
+    src/PolyBezier.cpp
     src/Sequencer.hpp
     src/Sequencer.cpp
     src/Spatializer.hpp
     src/Spatializer.cpp
-    src/Visualizer.hpp
-    src/Visualizer.cpp
-    src/DragAndDrop.hpp
-    src/DragAndDrop.cpp
-    src/FileWatcher.hpp
-    src/FileWatcher.cpp
-    src/ImGui/Sequencer.hpp
-    src/ImGui/Sequencer.cpp
-    src/ImGui/Custom.hpp
-    src/ImGui/Custom.cpp
-    src/ImGui/PolyBezier.hpp
-    src/ImGui/PolyBezier.cpp
-    src/ImGui/Theme.hpp
-    src/ImGui/Theme.cpp
-    ${ICON}
-)
-target_link_libraries(syntacts-gui syntacts carnot)
+    src/Player.hpp
+    src/Player.cpp
+    src/Theme.hpp
+    src/Theme.cpp
+    src/Custom.hpp
+    src/Custom.cpp
+    syntacts.rc)
+
+target_link_libraries(syntacts-gui syntacts mahi::gui)
 set_target_properties(syntacts-gui PROPERTIES DEBUG_POSTFIX -d)
 install(TARGETS syntacts-gui RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-
-add_executable(syntacts-gui2 src/main2.cpp)
-target_link_libraries(syntacts-gui2 mahi::gui)

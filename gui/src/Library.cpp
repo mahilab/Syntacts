@@ -1,9 +1,9 @@
 #include "Library.hpp"
 #include "Gui.hpp"
-#include "ImGui/Custom.hpp"
+#include "Custom.hpp"
 #include <filesystem>
 
-using namespace carnot;
+using namespace mahi::gui;
 namespace fs = std::filesystem;
 
 namespace {
@@ -16,10 +16,11 @@ namespace {
 }
 
 
-Library::Library(Gui *gui) : Widget(gui),
+Library::Library(Gui& gui) : Widget(gui),
                              m_watcher(tact::Library::getLibraryDirectory(), 1000),
                              palette(gui)
 {
+    init();
 }
 
 tact::Signal Library::getSelectedSignal()
@@ -33,7 +34,7 @@ tact::Signal Library::getSelectedSignal()
     return tact::Signal();
 }
 
-void Library::onFileDrop(const std::string& filePath, const carnot::Vector2u& pos) {
+void Library::onFileDrop(const std::string& filePath) {
     tact::Signal imported;
     auto path = fs::path(filePath);
     std::string filename = path.stem().string();
@@ -42,7 +43,7 @@ void Library::onFileDrop(const std::string& filePath, const carnot::Vector2u& po
         if (m_lib.count(filename))
             m_ignoreFilChange = true;
         tact::Library::saveSignal(imported, filename);
-        gui->status->pushMessage("Imported " + filename);
+        gui.status.pushMessage("Imported " + filename);
         std::lock_guard<std::mutex> lock(m_mtx);
         m_lib[filename] = Entry();
         m_lib[filename].disk = imported;
@@ -50,7 +51,7 @@ void Library::onFileDrop(const std::string& filePath, const carnot::Vector2u& po
         m_lib[filename].loaded = true;
     }
     else {
-        gui->status->pushMessage("Failed to import " + filename, StatusBar::Error);
+        gui.status.pushMessage("Failed to import " + filename, StatusBar::Error);
     }
 }
 
@@ -70,23 +71,23 @@ void Library::onFileChange(std::string path, FileStatus status) {
                 m_lib[name] = Entry();
                 m_lib[name].name = name;
                 m_lib[name].loaded = false;
-                gui->status->pushMessage("Signal " + name + " added from disk");
+                gui.status.pushMessage("Signal " + name + " added from disk");
             }
         }
         else if (status == FileStatus::Erased)  {
             m_lib.erase(name);
-            gui->status->pushMessage("Signal " + name + " deleted from disk");
+            gui.status.pushMessage("Signal " + name + " deleted from disk");
         }
         else if (status == FileStatus::Modified) {
             if (m_lib.count(name)) {
                 m_lib[name].loaded = false;
-                gui->status->pushMessage("Signal " + name + " modified on disk");
+                gui.status.pushMessage("Signal " + name + " modified on disk");
             }
         }
     }
 }
 
-void Library::start()
+void Library::init()
 {
     auto& libPath = tact::Library::getLibraryDirectory();
     // make sure the lib directory exists
@@ -115,24 +116,19 @@ void Library::start()
     t.detach();
 
     // connect onFileDrop to carnot
-    Engine::onFileDrop.connect(this, &Library::onFileDrop);
+    // Engine::onFileDrop.connect(this, &Library::onFileDrop);
 }
 
 void Library::update()
 {
     std::lock_guard<std::mutex> lock(m_mtx);
-    render();
-}
-
-void Library::render()
-{
-    ImGui::BeginFixed(getName().c_str(), rect.getPosition(), rect.getSize());
+    ImGui::BeginFixed("Library", position, size);
     if (ImGui::BeginTabBar("LibraryWindowTabs"))
     {
         if (ImGui::BeginTabItem(" Palette ##Tab"))
         {
             ImGui::BeginGroup();
-            palette.render();
+            palette.update();
             ImGui::EndGroup();
             ImGui::EndTabItem();
         }
@@ -160,6 +156,8 @@ void Library::render()
     ImGui::End();
 }
 
+
+
 void Library::renderCreateDialog()
 {
     ImGui::PushItemWidth(-30);
@@ -175,32 +173,32 @@ void Library::renderCreateDialog()
         if (!m_lib.count(filename))
         {
             tact::Signal sig;
-            if (gui->workspace->activeTab == Workspace::TabSequencer)
-                sig = gui->workspace->sequencer.buildSignal();
+            if (gui.workspace.activeTab == Workspace::TabSequencer)
+                sig = gui.workspace.sequencer.buildSignal();
             else
-                sig = gui->workspace->designer.buildSignal();
+                sig = gui.workspace.designer.buildSignal();
             tact::Library::saveSignal(sig, filename);
             m_lib[filename] = Entry();
             m_lib[filename].disk = sig;
             m_lib[filename].loaded = true;
             m_lib[filename].name = filename;
-            gui->status->pushMessage("Created Signal " + filename);
+            gui.status.pushMessage("Created Signal " + filename);
             memset(m_inputBuffer, 0, 64);
             m_selected = filename;
         }
         else
         {
-            gui->status->pushMessage("Signal " + filename + " already exists", StatusBar::Error);
+            gui.status.pushMessage("Signal " + filename + " already exists", StatusBar::Error);
         }
     }
-    gui->status->showTooltip("Create new Signal");
+    gui.status.showTooltip("Create new Signal");
     ImGui::EndDisabled(!valid);
 }
 
 void Library::renderLibraryList()
 {
     auto avail = ImGui::GetContentRegionAvail();
-    ImGui::PushStyleColor(ImGuiCol_ChildBg, Color::Transparent);
+    ImGui::PushStyleColor(ImGuiCol_ChildBg, {0,0,0,0});
     ImGui::BeginChild("LibraryList", ImVec2(0, avail.y - 29));
     for (auto &pair : m_lib)
     {
@@ -212,7 +210,7 @@ void Library::renderLibraryList()
                if (tact::Library::loadSignal(entry.disk, entry.name))
                     entry.loaded = true;
             }
-            gui->visualizer->setRenderedSignal(entry.disk, Blues::DeepSkyBlue);
+            gui.visualizer.setRenderedSignal(entry.disk, Blues::DeepSkyBlue);
         }
         SignalSource(entry.name, entry.disk);
 
@@ -232,17 +230,17 @@ void Library::renderLibraryControls()
     if (ImGui::Button(ICON_FA_SAVE))
     {
         tact::Signal sig;
-        if (gui->workspace->activeTab == Workspace::TabSequencer)
-            sig = gui->workspace->sequencer.buildSignal();
+        if (gui.workspace.activeTab == Workspace::TabSequencer)
+            sig = gui.workspace.sequencer.buildSignal();
         else
-            sig = gui->workspace->designer.buildSignal();
+            sig = gui.workspace.designer.buildSignal();
         tact::Library::saveSignal(sig, m_selected);
         m_lib[m_selected].disk = sig;
         m_lib[m_selected].loaded = true;
         m_ignoreFilChange = true;
-        gui->status->pushMessage("Saved Signal " + m_selected);
+        gui.status.pushMessage("Saved Signal " + m_selected);
     }
-    gui->status->showTooltip("Save Selected Signal");
+    gui.status.showTooltip("Save Selected Signal");
 
     // DELETE
 
@@ -261,10 +259,10 @@ void Library::renderLibraryControls()
         // delete
         tact::Library::deleteSignal(it->second.name);
         m_lib.erase(it);
-        gui->status->pushMessage("Deleted Signal " + m_selected);
+        gui.status.pushMessage("Deleted Signal " + m_selected);
         m_ignoreFilChange = true;
     }
-    gui->status->showTooltip("Delete Selected Signal");
+    gui.status.showTooltip("Delete Selected Signal");
 
     // EXPORT
 
@@ -272,25 +270,25 @@ void Library::renderLibraryControls()
     if (ImGui::Button(ICON_FA_MUSIC))
     {
         tact::Library::exportSignal(getSelectedSignal(), m_selected, tact::FileFormat::WAV);
-        gui->status->pushMessage("Exported Signal " + m_selected + " to " + m_selected + ".wav");
+        gui.status.pushMessage("Exported Signal " + m_selected + " to " + m_selected + ".wav");
     }
-    gui->status->showTooltip("Export Selected Signal to WAV");
+    gui.status.showTooltip("Export Selected Signal to WAV");
 
     ImGui::SameLine(3 * space);
     if (ImGui::Button(ICON_FA_TABLE))
     {
         tact::Library::exportSignal(getSelectedSignal(), m_selected, tact::FileFormat::CSV);
-        gui->status->pushMessage("Exported Signal " + m_selected + " to " + m_selected + ".csv");
+        gui.status.pushMessage("Exported Signal " + m_selected + " to " + m_selected + ".csv");
     }
-    gui->status->showTooltip("Export Selected Signal to CSV");
+    gui.status.showTooltip("Export Selected Signal to CSV");
 
     ImGui::SameLine(4 * space);
     if (ImGui::Button(ICON_FA_CODE))
     {
         tact::Library::exportSignal(getSelectedSignal(), m_selected, tact::FileFormat::JSON);
-        gui->status->pushMessage("Exported Signal " + m_selected + " to " + m_selected + ".json");
+        gui.status.pushMessage("Exported Signal " + m_selected + " to " + m_selected + ".json");
     }
-    gui->status->showTooltip("Export Selected Signal to JSON");
+    gui.status.showTooltip("Export Selected Signal to JSON");
 
     ImGui::EndDisabled(disabled);
 }

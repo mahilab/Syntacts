@@ -2,8 +2,7 @@
 
 #include "Theme.hpp"
 #include "Custom.hpp"
-#include <ImGui/imgui_internal.h>
-#include <ImGui/imgui_demo.cpp>
+#include <imgui_internal.h>
 
 namespace ImGui {
 

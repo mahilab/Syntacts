@@ -9,10 +9,10 @@
 #include "FileWatcher.hpp"
 
 
-class Library : public Widget, public carnot::GameObject {
+class Library : public Widget {
 public:
 
-    Library(Gui* gui);
+    Library(Gui& gui);
 
     struct Entry {
         std::string name;
@@ -20,10 +20,9 @@ public:
         bool loaded = false;
     };
 
-private:
-    void start() override;
     void update() override;
-    void render() override;
+private:
+    void init();
     void renderCreateDialog();
     void renderLibraryList();
     void renderLibraryControls();    
@@ -31,10 +30,9 @@ private:
 private:
 
     void onFileChange(std::string path, FileStatus status);
-    void onFileDrop(const std::string& filePath, const carnot::Vector2u& pos);
+    void onFileDrop(const std::string& filePath);
 
 public:
-    carnot::FloatRect rect;
     Palette palette;
 private:
     std::mutex m_mtx;

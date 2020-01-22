@@ -3,18 +3,15 @@
 #include "Sequencer.hpp"
 #include "Spatializer.hpp"
 
-class Workspace : public Widget, public carnot::GameObject {
+class Workspace : public Widget {
 public:
     enum Tab {
         TabDesigner,
         TabSequencer,
         TabSpatializer
     };
-    Workspace(Gui* gui);
-    void render() override;
+    Workspace(Gui& gui);
     void update() override;
-public:
-    carnot::FloatRect rect;
 public:
     Tab activeTab;
     Designer designer;

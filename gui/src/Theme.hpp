@@ -1,6 +1,6 @@
 #pragma once
 #include <memory>
-#include <ImGui/imgui.h>
+#include <imgui.h>
 
 namespace ImGui {
 

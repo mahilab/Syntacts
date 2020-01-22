@@ -1,6 +1,6 @@
 #pragma once
-#include <ImGui/imgui.h>
-#include <ImGui/imgui_internal.h>
+#include <imgui.h>
+#include <imgui_internal.h>
 #include <vector>
 #include <string>
 #include <syntacts>
@@ -16,21 +16,6 @@ void RenderGrid(ImRect bb, int nx, int ny, ImU32 gridColor, ImU32 bgColor, float
 void PlotSignal(const char* label,  const tact::Signal& sig, std::vector<ImVec2>& points, float t1, float t2, ImVec4 color, float thickness, ImVec2 size = ImVec2(-1,0), bool grid = true);
 void RenderSignalInBounds(ImDrawList* DrawList, const tact::Signal& sig, float t1, float t2, ImRect bb, ImVec4 color, float thickness, int n = 0);
 
-
-///////////////////////////////////////////////////////////////////////////////
-
-struct SpatializerNode {
-    int index;
-    ImVec2 pos;
-    bool held;
-};
-
-struct SpatializerTarget {
-    ImVec2 pos;
-    float radius;
-};
-
-bool Spatializer(const char* label, SpatializerTarget& target, tact::Curve rolloff, std::map<int,SpatializerNode>& nodes, float nodeRadius, ImVec4 color, ImVec2 size, const char* dnd, int xdivs = 10, int ydivs = 10, bool snap = false);
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -69,6 +54,35 @@ inline void EndDisabled(bool disabled = true) {
 
 ///////////////////////////////////////////////////////////////////////////////
 
+inline float Remap(float x, float x0, float x1, float y0, float y1) {
+    return y0 + (x - x0) * (y1 - y0) / (x1 - x0);
+}
 
+inline double NiceNum(double x, bool round)
+{
+    int expv;  /* exponent of x */
+    double f;  /* fractional part of x */
+    double nf; /* nice, rounded fraction */
+    expv = floor(log10(x));
+    f = x / std::pow(10, expv); /* between 1 and 10 */
+    if (round)
+        if (f < 1.5)
+            nf = 1;
+        else if (f < 3)
+            nf = 2;
+        else if (f < 7)
+            nf = 5;
+        else
+            nf = 10;
+    else if (f <= 1)
+        nf = 1;
+    else if (f <= 2)
+        nf = 2;
+    else if (f <= 5)
+        nf = 5;
+    else
+        nf = 10;
+    return nf * std::pow(10., expv);
+}
 
 } // namespace ImGui

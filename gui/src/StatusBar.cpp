@@ -1,18 +1,18 @@
 #include "StatusBar.hpp"
-#include "ImGui/Custom.hpp"
+#include "Custom.hpp"
 #include "Gui.hpp"
-#include "ImGui/Theme.hpp"
+#include "Theme.hpp"
 
-using namespace carnot;
+using namespace mahi::gui;
 
 void StatusBar::pushMessage(const std::string &text, InfoLevel level)
 {
     m_fadeTime = 0;
     static Color infoColors[3] = {ImGui::GetStyle().Colors[ImGuiCol_Text], Yellows::Khaki, Reds::LightCoral};
-    m_fadeColors[0.00f] = Color::Transparent;
+    m_fadeColors[0.00f] = {0,0,0,0};
     m_fadeColors[0.02f] = infoColors[level];
     m_fadeColors[0.80f] = infoColors[level];
-    m_fadeColors[1.00f] = Color::Transparent;
+    m_fadeColors[1.00f] = {0,0,0,0};
     m_notification = text;
 }
 
@@ -24,11 +24,7 @@ void StatusBar::showTooltip(const std::string &tooltip)
     }
 }
 
-StatusBar::StatusBar(Gui *gui) : Widget(gui)
-{
-}
-
-void StatusBar::start()
+StatusBar::StatusBar(Gui& gui) : Widget(gui)
 {
     pushMessage("Welcome to Syntacts!");
     m_cpuGradient[0.00f] = ImGui::GetStyle().Colors[ImGuiCol_PlotHistogram];
@@ -40,13 +36,8 @@ void StatusBar::start()
 
 void StatusBar::update()
 {
-    render();
-}
-
-void StatusBar::render()
-{
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(7, 7));
-    ImGui::BeginFixed("StatusBar", rect.getPosition(), rect.getSize());
+    ImGui::BeginFixed("StatusBar", position, size);
     renderText();
     renderButtons();
     ImGui::End();
@@ -62,7 +53,7 @@ void StatusBar::renderText()
     }
     else
     {
-        m_fadeTime += Engine::deltaTime();
+        m_fadeTime += ImGui::GetIO().DeltaTime;
         float t = Math::clamp01(m_fadeTime / m_fadeDuration);
         auto color = m_fadeColors(t);
         ImGui::PushStyleColor(ImGuiCol_Text, color);
@@ -75,17 +66,19 @@ void StatusBar::renderButtons()
 {
     bool modalOpen = true;
 
-    ImGui::SameLine(ImGui::GetWindowWidth() - 240);
+    ImGui::SameLine(ImGui::GetWindowWidth() - 250);
     ImGui::PushStyleColor(ImGuiCol_PlotHistogram, m_cpuGradient(Math::clamp01(m_cpuLoad)));
-    if (gui->device->session)
-        m_cpuLoad = (float)gui->device->session->getCpuLoad();
-    ImGui::ProgressBar(m_cpuLoad, ImVec2(100, 0));
+    if (gui.device.session)
+        m_cpuLoad = gui.device.session->getCpuLoad();
+    float rounded = (int)(m_cpuLoad * 100.0f)/100.0f;
+    ImGui::ProgressBar(rounded, ImVec2(100, 0));
     ImGui::PopStyleColor();
     showTooltip("Session CPU Thread Load");
 
     ImGui::SameLine();
-    if (ImGui::Button(ICON_FA_GITHUB))
-        openUrl("https://github.com/mahilab/Syntacts");
+    if (ImGui::Button(ICON_FA_GITHUB)) {
+        // openUrl("https://github.com/mahilab/Syntacts");
+    }
     showTooltip("Open GitHub Repository");
 
     ImGui::SameLine();
@@ -94,16 +87,17 @@ void StatusBar::renderButtons()
 
     if (ImGui::BeginPopupModal("Debug Info", &modalOpen, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove))
     {
-        auto info = Debug::getInfo();
-        ImGui::Text("FPS:            "); ImGui::SameLine(); ImGui::Text("%.2f", info.fps);
-        ImGui::Text("RAM Usage:      "); ImGui::SameLine(); ImGui::Text("%.0f MB", info.ram);
-        ImGui::Text("CPU Usage:      "); ImGui::SameLine(); ImGui::Text("%.2f \%", info.cpu);
+        // auto info = Debug::getInfo();
+        ImGui::Text("FPS:            "); ImGui::SameLine(); ImGui::Text("%.2f", ImGui::GetIO().Framerate);
+        // ImGui::Text("RAM Usage:      "); ImGui::SameLine(); ImGui::Text("%.0f MB", info.ram);
+        // ImGui::Text("CPU Usage:      "); ImGui::SameLine(); ImGui::Text("%.2f \%", info.cpu);
         ImGui::Text("Signal Count:   "); ImGui::SameLine(); ImGui::Text("%i", tact::Signal::count());
         ImGui::PushStyleColor(ImGuiCol_Button, Reds::FireBrick);
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, Reds::Salmon);
         ImGui::PushStyleColor(ImGuiCol_ButtonActive, Reds::LightSalmon);
-        if (ImGui::Button("Report Issue", {-1,0}))
-            openUrl("https://github.com/mahilab/Syntacts/issues");
+        if (ImGui::Button("Report Issue", {-1,0})) {
+            // openUrl("https://github.com/mahilab/Syntacts/issues");
+        }
         ImGui::PopStyleColor(3);
         ImGui::EndPopup();
 
@@ -113,14 +107,15 @@ void StatusBar::renderButtons()
 
 
     ImGui::SameLine();
-    if (ImGui::Button(ICON_FA_ENVELOPE "##Brandon"))
-        openEmail("mep9@rice.edu; btc6@rice.edu", "Syntacts");
+    if (ImGui::Button(ICON_FA_ENVELOPE "##Brandon")) {
+        // openEmail("mep9@rice.edu; btc6@rice.edu", "Syntacts");
+    }
     showTooltip("Email Feedback");
 
     ImGui::SameLine();
     if (ImGui::Button(ICON_FA_ADJUST)) 
     {
-        if (Input::getKey(Key::LControl))
+        if (ImGui::GetIO().KeyCtrl)
             ImGui::OpenPopup("Theme Editor");
         else
             toggleTheme();
@@ -157,22 +152,27 @@ void StatusBar::renderButtons()
     {
         ImGui::Text("MAHI Lab");
         ImGui::SameLine(150);
-        if (ImGui::Button(ICON_FA_HOME "##MAHI"))
-            openUrl("https://mahilab.rice.edu/");
+        if (ImGui::Button(ICON_FA_HOME "##MAHI")) {
+            // openUrl("https://mahilab.rice.edu/");
+        }
         ImGui::SameLine(175);
-        if (ImGui::Button(ICON_FA_GITHUB "##MAHI"))
-            openUrl("https://github.com/mahilab");
+        if (ImGui::Button(ICON_FA_GITHUB "##MAHI")) {
+            // openUrl("https://github.com/mahilab");
+        }
 
         ImGui::Text("Evan Pezent");
         ImGui::SameLine(150);
-        if (ImGui::Button(ICON_FA_HOME "##Evan"))
-            openUrl("http://www.evanpezent.com");
+        if (ImGui::Button(ICON_FA_HOME "##Evan")) {
+            // openUrl("http://www.evanpezent.com");
+        }
         ImGui::SameLine(125);
-        if (ImGui::Button(ICON_FA_ENVELOPE "##Evan"))
-            openEmail("epezent@rice.edu", "Syntacts");
+        if (ImGui::Button(ICON_FA_ENVELOPE "##Evan")) {
+            // openEmail("epezent@rice.edu", "Syntacts");
+        }
         ImGui::SameLine(175);
-        if (ImGui::Button(ICON_FA_GITHUB "##Evan"))
-            openUrl("https://github.com/epezent");
+        if (ImGui::Button(ICON_FA_GITHUB "##Evan")) {
+            // openUrl("https://github.com/epezent");
+        }
         ImGui::EndPopup();
     }
 }
@@ -180,7 +180,7 @@ void StatusBar::renderButtons()
 void StatusBar::toggleTheme() {
     dark = !dark;
     if (dark) {
-        carnot::Engine::setBackgroundColor(Grays::Gray5);
+        gui.backgroundColor = Grays::Gray5;
         ImVec4* colors = ImGui::GetStyle().Colors;
         colors[ImGuiCol_Text]                   = ImVec4(0.80f, 0.80f, 0.83f, 1.00f);
         colors[ImGuiCol_TextDisabled]           = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
@@ -234,7 +234,7 @@ void StatusBar::toggleTheme() {
         colors[ImGuiCol_ModalWindowDimBg]       = ImVec4(1.00f, 0.98f, 0.95f, 0.73f);
     }
     else {
-        carnot::Engine::setBackgroundColor(Grays::Gray90);
+        gui.backgroundColor = Grays::Gray90;
         ImGui::StyleColorsLight();
     }
 }
