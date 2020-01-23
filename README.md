@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/mahilab/mahi-gui/master/mahi-gui.png" width="100">
+<img src="https://raw.githubusercontent.com/mahilab/Syntacts/master/logo/logo_text.png" width="500">
 
 ## Building from Source
 
