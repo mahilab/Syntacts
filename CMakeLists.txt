@@ -93,7 +93,7 @@ target_include_directories(syntacts
         3rdparty
         3rdparty/cereal/include
 )
-target_link_libraries(syntacts PUBLIC portaudio_static PRIVATE) # rubberband-library)
+target_link_libraries(syntacts PUBLIC portaudio_static PRIVATE)
 
 #===============================================================================
 # Syntacts Plugin DLL
@@ -109,7 +109,7 @@ endif()
 
 if (SYNTACTS_GUI)
     set(MAHI_GUI_EXAMPLES OFF CACHE BOOL "" FORCE)
-    add_subdirectory(3rdparty/mahi-gui)
+    add_subdirectory(3rdparty/mahi-gui EXCLUDE_FROM_ALL)
     add_subdirectory("gui")
 endif()
 
@@ -126,7 +126,7 @@ endif()
 #===============================================================================
 
 # install the library
-set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/syntacts)
+set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/Syntacts)
 install(TARGETS syntacts
 	EXPORT syntacts-targets
 	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -134,13 +134,13 @@ install(TARGETS syntacts
 )
 
 set_target_properties(syntacts PROPERTIES EXPORT_NAME syntacts)
-set_target_properties(syntacts PROPERTIES FOLDER "syntacts")
+set_target_properties(syntacts PROPERTIES FOLDER "Syntacts")
 
 # install headers
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 # set where we want to install our config
-set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/syntacts)
+set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/Syntacts)
 
 # export the targets to a script
 install(EXPORT syntacts-targets

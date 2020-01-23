@@ -4,6 +4,9 @@ include(CMakeFindDependencyMacro)
 
 list(APPEND CMAKE_MODULE_PATH ${SYNTACTS_CMAKE_DIR})
 
+set(SYNTACTS_CMAKE_DIR_ABOVE ${SYNTACTS_CMAKE_DIR})
+get_filename_component(SYNTACTS_CMAKE_DIR_ABOVE ${SYNTACTS_CMAKE_DIR_ABOVE} DIRECTORY)
+set(portaudio_DIR ${SYNTACTS_CMAKE_DIR_ABOVE}/portaudio)
 find_package(portaudio REQUIRED)
 set(portaudio_INCLUDE_DIR ${portaudio_DIR})
 get_filename_component(portaudio_INCLUDE_DIR ${portaudio_INCLUDE_DIR} DIRECTORY)
