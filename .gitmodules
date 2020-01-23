@@ -4,3 +4,6 @@
 [submodule "3rdparty/cereal"]
 	path = 3rdparty/cereal
 	url = https://github.com/USCiLab/cereal
+[submodule "3rdparty/portaudio"]
+	path = 3rdparty/portaudio
+	url = https://git.assembla.com/portaudio.git

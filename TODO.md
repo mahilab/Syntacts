@@ -70,7 +70,7 @@
 - expose all (or most important) C++ API functionality
 
 # Distribution / Documentation
-- embed PortAudio / ASIO
+- embed PortAudio / ASIO / gui
 - upload compiled binairies
 - create installer with NSIS
 - document all classes/functions
