@@ -9,14 +9,10 @@ Gui::Gui() : Application(960, 540, "Syntacts"),
              workspace(*this),
              library(*this),
              visualizer(*this),
-             status(*this)
+             status(*this),
+             theme(*this)
 {
-    backgroundColor = Grays::Gray5;
-    ImGuiStyle *imStyle = &ImGui::GetStyle();
-    ImVec4 *colors = ImGui::GetStyle().Colors;
-    colors[ImGuiCol_Border] = colors[ImGuiCol_TabActive];
-    colors[ImGuiCol_Separator] = colors[ImGuiCol_TabActive];
-    colors[ImGuiCol_DragDropTarget] = colors[ImGuiCol_Text];
+    ImGui::GetIO().IniFilename = nullptr;
     positionWindows();
 }
 
@@ -28,6 +24,18 @@ void Gui::update() {
     visualizer.update();
     status.update();
     UpdateDragAndDrop();
+}
+
+const std::string &Gui::saveDir()
+{
+#ifdef _WIN32
+    static std::string appData = std::string(std::getenv("APPDATA"));
+    static std::string dir = appData + std::string("\\Syntacts\\GUI\\");
+    std::filesystem::create_directories(dir);
+#else
+    static std::string dir = "";
+#endif
+    return dir;
 }
 
 void Gui::positionWindows()

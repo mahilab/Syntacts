@@ -16,12 +16,10 @@ public:
     void pushMessage(const std::string& text, InfoLevel level = Info);
     void showTooltip(const std::string& tooltip);
 private:
-    void render();
     void renderText();
     void renderButtons();
-    void toggleTheme();
 private:
-    bool dark = true;
+    bool m_dark = true;
     double m_cpuLoad = 0.0;
     mahi::gui::Sequence<mahi::gui::Color> m_cpuGradient;
     mahi::gui::Sequence<mahi::gui::Color> m_fadeColors;

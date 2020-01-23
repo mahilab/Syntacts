@@ -1,9 +1,26 @@
 #pragma once
-#include <memory>
-#include <imgui.h>
+#include "Widget.hpp"
 
-namespace ImGui {
+struct ThemeManager : public Widget {
+public:
 
-void ThemeEdit();
+    enum Theme {
+        DarkDefault = 0,
+        LightDefault,
+        DarkAlt,
+        Valve,
+        Theme_Count
+    };
 
-}
+    ThemeManager(Gui& gui);
+    ~ThemeManager();
+    void cycle();
+    void setTheme(Theme theme);
+public:
+    mahi::gui::Color libraryColor     = mahi::gui::Blues::LightSkyBlue;
+    mahi::gui::Color designerColor    = mahi::gui::Purples::Plum;
+    mahi::gui::Color sequencerColor   = mahi::gui::Oranges::DarkOrange;
+    mahi::gui::Color spatializerColor = mahi::gui::Greens::Chartreuse;
+private:
+    Theme m_theme;
+};

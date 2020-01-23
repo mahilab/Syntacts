@@ -59,8 +59,8 @@
 - ~~select device from Details listing~~
 - ~~custom plot renderer without decimation~~
 - faster startup
+- ~~last use memory (e.g. boot with last used device)~~
 - copy/rename library items
-- last use memory (e.g. boot with last used device)
 - custom themes
 - ASIO control panel
 

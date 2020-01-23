@@ -7,3 +7,6 @@ ipch/
 *.dll
 *.lib
 *.exe
+
+asiosdk/
+asiosdk*/

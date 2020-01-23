@@ -21,10 +21,9 @@ cmake_minimum_required(VERSION 3.13.0)
 option(SYNTACTS_GUI      "Turn ON to build Syntacts GUI"        ON)
 option(SYNTACTS_C_DLL    "Turn ON to build Syntacts C DLL"      ON )
 option(SYNTACTS_EXAMPLES "Turn ON to build Syntacts example(s)" ON )
-option(SYNTACTS_TEST     "Turn ON to build Syntacts test(s)"    ON )
 
 # create project
-project(syntacts VERSION 0.1.0 LANGUAGES CXX)
+project(syntacts VERSION 0.1.0)
 
 # add modules
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
@@ -68,13 +67,10 @@ set(SYNTACTS_SRC
     "src/Tact/General.cpp"
 )
 
-# find portaudio
-find_package(portaudio REQUIRED)
-set(portaudio_INCLUDE_DIR ${portaudio_DIR})
-get_filename_component(portaudio_INCLUDE_DIR ${portaudio_INCLUDE_DIR} DIRECTORY)
-get_filename_component(portaudio_INCLUDE_DIR ${portaudio_INCLUDE_DIR} DIRECTORY)
-get_filename_component(portaudio_INCLUDE_DIR ${portaudio_INCLUDE_DIR} DIRECTORY)
-set(portaudio_INCLUDE_DIR "${portaudio_INCLUDE_DIR}/include")
+# portaudio
+set(PA_DLL_LINK_WITH_STATIC_RUNTIME ON CACHE BOOL "" FORCE)
+add_subdirectory(3rdparty/portaudio)
+set_target_properties(portaudio_static PROPERTIES DEBUG_POSTFIX -d)
 
 #===============================================================================
 # Syntacts Static C++ Library
@@ -180,4 +176,5 @@ install(FILES
 # export from the build tree
 export(EXPORT syntacts-targets
 	#    NAMESPACE syntacts::
-	   FILE ${CMAKE_CURRENT_BINARY_DIR}/SyntactsTargets.cmake)
+       FILE ${CMAKE_CURRENT_BINARY_DIR}/SyntactsTargets.cmake)
+       

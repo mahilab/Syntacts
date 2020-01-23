@@ -6,13 +6,14 @@
 #include "Visualizer.hpp"
 #include "StatusBar.hpp"
 #include "Library.hpp"
-#include "DragAndDrop.hpp"
+#include "Theme.hpp"
 
 class Gui : public mahi::gui::Application {
 public:
     Gui();
     void update() override;
     void positionWindows();
+    const std::string& saveDir();
 public:
     DeviceBar device;
     Player player;
@@ -20,4 +21,5 @@ public:
     Library library;
     Visualizer visualizer;
     StatusBar status;
+    ThemeManager theme;
 };

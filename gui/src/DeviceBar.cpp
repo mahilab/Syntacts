@@ -2,6 +2,7 @@
 #include <thread>
 #include "Custom.hpp"
 #include "Gui.hpp"
+#include <fstream>
 
 using namespace mahi::gui;
 
@@ -14,6 +15,13 @@ DeviceBar::DeviceBar(Gui& gui) :
 
 DeviceBar::~DeviceBar() {
     onSessionDestroy.emit();
+    std::ofstream file(gui.saveDir() + "device.ini");
+    if (file.is_open()) {
+        auto d = session->getCurrentDevice();
+        file << d.apiName << std::endl;
+        file << d.name << std::endl;
+        file << session->getSampleRate();
+    }
 }
 
 /// Restarts Syntacts session
@@ -23,7 +31,28 @@ void DeviceBar::initialize()
     onSessionDestroy.emit();
     session = std::make_shared<tact::Session>();
     getAvailable();
-    switchDevice(session->getDefaultDevice());
+    // try to get the last known device
+    std::ifstream file(gui.saveDir() + "device.ini");
+    bool openLast = false;
+    if (file.is_open()) {
+        std::string apiName, name, sampleRate;
+        std::getline( file, apiName );
+        if (m_available.count(apiName)) {
+            std::getline( file, name );
+            for (auto& d : m_available[apiName]) {
+                if (d.name == name) {
+                    std::getline( file, sampleRate);
+                    std::stringstream ss(sampleRate);
+                    double sr;
+                    ss >> sr;
+                    switchDevice(d, sr);
+                    openLast = true;
+                }
+            }
+        }
+    }
+    if (!openLast)
+        switchDevice(session->getDefaultDevice());
 }
 
 
