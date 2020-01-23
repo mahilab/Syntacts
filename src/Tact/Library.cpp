@@ -156,9 +156,11 @@ bool ensureDirectoryExists(fs::path path) {
 
 const std::string &getLibraryDirectory()
 {
-    static std::string appData = std::string(std::getenv("APPDATA"));
-    static std::string libFolder = appData + std::string("\\Syntacts\\Library\\");
-    return libFolder;
+    static fs::path dirPath = std::string(std::getenv("APPDATA")) + std::string("\\Syntacts\\Library\\");
+    static std::string dirStr = dirPath.generic_string();
+    if (!fs::exists(dirStr) && !fs::create_directories(dirStr))
+        std::cout << "Failed to create Syntacts Library folder" << std::endl; 
+    return dirStr;
 }
 
 bool saveSignalEx(const Signal& signal, const std::string& dir, const std::string& name) {
