@@ -11,7 +11,7 @@ void Designer::update()
 {
     ImGui::PushStyleColor(ImGuiCol_ChildBg, {0,0,0,0});
     ImGui::BeginChild("Designer##TabScroll");
-    m_root.gui();
+    m_root.update();
     ImGui::EndChild();
     ImGui::PopStyleColor();
 }

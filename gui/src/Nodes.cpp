@@ -101,7 +101,7 @@ std::shared_ptr<Node> makeNode(PItem id)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void NodeList::gui()
+void NodeList::update()
 {
     // render nodes
     for (std::size_t i = 0; i < m_nodes.size(); ++i)
@@ -112,7 +112,7 @@ void NodeList::gui()
         if (ImGui::CollapsingHeader(header.c_str(), &m_closeHandles[i]))
         {
             ImGui::Indent();
-            m_nodes[i]->gui();
+            m_nodes[i]->update();
             ImGui::Unindent();
         }
         ImGui::PopStyleColor();
@@ -207,13 +207,13 @@ tact::Signal LibrarySignalNode::signal() { return sig; }
 const std::string &LibrarySignalNode::name() { return libName; }
 // float* LibrarySignalNode::gain() { return &sig.scale; }
 // float* LibrarySignalNode::bias() { return &sig.offset; }
-void LibrarySignalNode::gui()
+void LibrarySignalNode::update()
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void StretcherNode::gui()
+void StretcherNode::update()
 {
     auto cast = (tact::Stretcher *)sig.get();
     NodeSlot(m_sigName.c_str(), ImVec2(ImGui::CalcItemWidth(), 0));
@@ -231,7 +231,7 @@ void StretcherNode::gui()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RepeaterNode::gui()
+void RepeaterNode::update()
 {
     auto cast = (tact::Repeater *)sig.get();
     NodeSlot(m_sigName.c_str(), ImVec2(ImGui::CalcItemWidth(), 0));
@@ -250,7 +250,7 @@ void RepeaterNode::gui()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ReverserNode::gui()
+void ReverserNode::update()
 {
     auto cast = (tact::Repeater *)sig.get();
     NodeSlot(m_sigName.c_str(), ImVec2(ImGui::CalcItemWidth(), 0));
@@ -271,7 +271,7 @@ OscillatorNode::OscillatorNode(tact::Signal osc)
     sig = std::move(osc);
 }
 
-void OscillatorNode::gui()
+void OscillatorNode::update()
 {
     auto cast = (tact::IOscillator *)sig.get();
     if (ImGui::RadioButton("Sine", sig.isType<tact::Sine>()))
@@ -337,7 +337,7 @@ tact::Signal makeOsc(int type, Args ... args) {
 }
 }
 
-void ChirpNode::gui()
+void ChirpNode::update()
 {
     for (int i = 0; i < 4; ++i) {
         if (ImGui::RadioButton(oscName(i).c_str(), ftype == i))
@@ -362,7 +362,7 @@ const std::string &ChirpNode::name()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void FmNode::gui()
+void FmNode::update()
 {
     for (int i = 0; i < 4; ++i) {
         if (ImGui::RadioButton(oscName(i).c_str(), ftype == i))
@@ -388,7 +388,7 @@ const std::string &FmNode::name()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void PwmNode::gui()
+void PwmNode::update()
 {
     auto cast = (tact::Pwm *)sig.get();
     float f = (float)cast->frequency;
@@ -407,7 +407,7 @@ ExpressionNode::ExpressionNode()
     strcpy(buffer, cast->getExpression().c_str());
 }
 
-void ExpressionNode::gui()
+void ExpressionNode::update()
 {
     if (!ok)
         ImGui::PushStyleColor(ImGuiCol_FrameBg, Reds::FireBrick);
@@ -434,10 +434,10 @@ void ExpressionNode::gui()
 ///////////////////////////////////////////////////////////////////////////////
 
 PolyBezierNode::PolyBezierNode() : pb(Blues::DeepSkyBlue, ImVec2(0, 0), ImVec2(1, 1)) {
-    update();
+    sync();
 }
 
-void PolyBezierNode::gui()
+void PolyBezierNode::update()
 {
     ImGui::PushItemWidth(-1);
 
@@ -452,7 +452,7 @@ void PolyBezierNode::gui()
     update();
 }
 
-void PolyBezierNode::update() {
+void PolyBezierNode::sync() {
     auto cast = (tact::PolyBezier *)sig.get();
     int points = pb.pointCount();
     cast->points.resize(points);
@@ -470,7 +470,7 @@ void PolyBezierNode::update() {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void EnvelopeNode::gui()
+void EnvelopeNode::update()
 {
     auto cast = (tact::Envelope *)sig.get();
     float duration = (float)cast->duration;
@@ -483,7 +483,7 @@ void EnvelopeNode::gui()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ASRNode::gui()
+void ASRNode::update()
 {
     auto cast = (tact::ASR *)sig.get();
     auto it = cast->keys.begin();
@@ -511,7 +511,7 @@ void ASRNode::gui()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ADSRNode::gui()
+void ADSRNode::update()
 {
     auto cast = (tact::ASR *)sig.get();
     auto it = cast->keys.begin();
@@ -539,7 +539,7 @@ void ADSRNode::gui()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void NoiseNode::gui()
+void NoiseNode::update()
 {
     float gain = (float)sig.gain;
     float bias = (float)sig.bias;
@@ -551,11 +551,11 @@ void NoiseNode::gui()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TimeNode::gui() {}
+void TimeNode::update() {}
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ScalarNode::gui()
+void ScalarNode::update()
 {
     auto cast = (tact::Scalar *)sig.get();
     float value = (float)cast->value;
@@ -565,7 +565,7 @@ void ScalarNode::gui()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RampNode::gui()
+void RampNode::update()
 {
     auto cast = (tact::Ramp *)sig.get();
     float initial = (float)cast->initial;

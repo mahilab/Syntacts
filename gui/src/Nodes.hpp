@@ -15,7 +15,7 @@ const std::string& signalName(const tact::Signal& sig);
 ///////////////////////////////////////////////////////////////////////////////
 
 struct Node {
-    virtual void gui() = 0;
+    virtual void update() = 0;
     virtual tact::Signal signal() = 0;
     virtual const std::string& name() = 0;
     virtual bool empty() { return false; };
@@ -26,7 +26,7 @@ std::shared_ptr<Node> makeNode(PItem id);
 ///////////////////////////////////////////////////////////////////////////////
 
 struct NodeList : public Node { 
-    void gui();
+    void update();
     std::vector<std::shared_ptr<Node>> m_nodes;
     std::deque<bool> m_closeHandles;
     std::vector<int> m_ids;
@@ -56,7 +56,7 @@ struct LibrarySignalNode : public Node {
     LibrarySignalNode(const std::string& name);
     tact::Signal signal() override;
     const std::string& name() override;
-    void gui() override;
+    void update() override;
 protected:
     std::string libName;
     tact::Signal sig;    
@@ -75,21 +75,21 @@ protected:
 ///////////////////////////////////////////////////////////////////////////////
 
 struct StretcherNode : public SignalNode<tact::Stretcher> {
-    void gui() override;
+    void update() override;
     std::string m_sigName = "##Empty";
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 struct RepeaterNode : public SignalNode<tact::Repeater> {
-    void gui() override;
+    void update() override;
     std::string m_sigName = "##Empty";
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 struct ReverserNode : public SignalNode<tact::Reverser> {
-    void gui() override;
+    void update() override;
     std::string m_sigName = "##Empty";
 };
 
@@ -97,13 +97,13 @@ struct ReverserNode : public SignalNode<tact::Reverser> {
 
 struct OscillatorNode : public SignalNode<tact::Sine> {
     OscillatorNode(tact::Signal osc);
-    void gui() override;
+    void update() override;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 struct ChirpNode : public Node {    
-    virtual void gui() override;
+    virtual void update() override;
     virtual tact::Signal signal() override;
     virtual const std::string& name() override;
     float f = 100;
@@ -114,7 +114,7 @@ struct ChirpNode : public Node {
 ///////////////////////////////////////////////////////////////////////////////
 
 struct FmNode : public Node {
-    virtual void gui() override;
+    virtual void update() override;
     virtual tact::Signal signal() override;
     virtual const std::string& name() override;
     float f = 100;
@@ -126,14 +126,14 @@ struct FmNode : public Node {
 ///////////////////////////////////////////////////////////////////////////////
 
 struct PwmNode : public SignalNode<tact::Pwm> {
-    void gui() override;
+    void update() override;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 struct ExpressionNode : public SignalNode<tact::Expression> {
     ExpressionNode();
-    void gui();
+    void update();
     char buffer[256];
     bool ok = true;
 };
@@ -142,8 +142,8 @@ struct ExpressionNode : public SignalNode<tact::Expression> {
 
 struct PolyBezierNode : public SignalNode<tact::PolyBezier> {
     PolyBezierNode();
-    void gui();
     void update();
+    void sync();
     ImGui::PolyBezier pb;
     float bounds[4] = {0,0,1,1};
 };
@@ -151,43 +151,43 @@ struct PolyBezierNode : public SignalNode<tact::PolyBezier> {
 ///////////////////////////////////////////////////////////////////////////////
 
 struct EnvelopeNode : public SignalNode<tact::Envelope> {
-    void gui();
+    void update();
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 struct ASRNode : public SignalNode<tact::ASR> {
-    void gui() ;
+    void update() ;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 struct ADSRNode : public SignalNode<tact::ADSR> {
-    void gui();
+    void update();
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 struct NoiseNode : public SignalNode<tact::Noise> {
-    void gui();
+    void update();
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 struct TimeNode : public SignalNode<tact::Time> {
-    void gui();
+    void update();
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 struct ScalarNode : SignalNode<tact::Scalar> {
-    void gui();
+    void update();
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 struct RampNode : SignalNode<tact::Ramp> {
-    void gui();
+    void update();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

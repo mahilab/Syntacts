@@ -30,7 +30,7 @@ private:
 private:
 
     void onFileChange(std::string path, FileStatus status);
-    void onFileDrop(const std::string& filePath);
+    void onFileDrop(const std::vector<std::string>& paths);
 
 public:
     Palette palette;

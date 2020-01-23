@@ -43,7 +43,8 @@
 - ~~pop-up visualizer~~
 - ~~dark/light themes~~
 - ~~refresh library~~
-- Sequencer tab
+- ~~Sequencer tab~~
+- ~~remove carnot dep~~
 - improved slot header
 - drag/drop help dialogs
 - PolyLine / KeyEnvelope

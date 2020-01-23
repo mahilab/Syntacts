@@ -77,7 +77,7 @@ void StatusBar::renderButtons()
 
     ImGui::SameLine();
     if (ImGui::Button(ICON_FA_GITHUB)) {
-        // openUrl("https://github.com/mahilab/Syntacts");
+        System::openUrl("https://github.com/mahilab/Syntacts");
     }
     showTooltip("Open GitHub Repository");
 
@@ -88,15 +88,18 @@ void StatusBar::renderButtons()
     if (ImGui::BeginPopupModal("Debug Info", &modalOpen, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove))
     {
         // auto info = Debug::getInfo();
+        ImGui::Text("Signal Count:   "); ImGui::SameLine(); ImGui::Text("%i", tact::Signal::count());
         ImGui::Text("FPS:            "); ImGui::SameLine(); ImGui::Text("%.2f", ImGui::GetIO().Framerate);
+        ImGui::Text("Vertices:       "); ImGui::SameLine(); ImGui::Text("%d", ImGui::GetIO().MetricsRenderVertices);
+        ImGui::Text("Triangles:      "); ImGui::SameLine(); ImGui::Text("%d", ImGui::GetIO().MetricsRenderIndices / 3);
+
         // ImGui::Text("RAM Usage:      "); ImGui::SameLine(); ImGui::Text("%.0f MB", info.ram);
         // ImGui::Text("CPU Usage:      "); ImGui::SameLine(); ImGui::Text("%.2f \%", info.cpu);
-        ImGui::Text("Signal Count:   "); ImGui::SameLine(); ImGui::Text("%i", tact::Signal::count());
         ImGui::PushStyleColor(ImGuiCol_Button, Reds::FireBrick);
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, Reds::Salmon);
         ImGui::PushStyleColor(ImGuiCol_ButtonActive, Reds::LightSalmon);
         if (ImGui::Button("Report Issue", {-1,0})) {
-            // openUrl("https://github.com/mahilab/Syntacts/issues");
+            System::openUrl("https://github.com/mahilab/Syntacts/issues");
         }
         ImGui::PopStyleColor(3);
         ImGui::EndPopup();
@@ -105,10 +108,9 @@ void StatusBar::renderButtons()
     showTooltip("Display Debug Info");
 
 
-
     ImGui::SameLine();
     if (ImGui::Button(ICON_FA_ENVELOPE "##Brandon")) {
-        // openEmail("mep9@rice.edu; btc6@rice.edu", "Syntacts");
+        System::openEmail("mep9@rice.edu; btc6@rice.edu", "Syntacts");
     }
     showTooltip("Email Feedback");
 
@@ -153,25 +155,25 @@ void StatusBar::renderButtons()
         ImGui::Text("MAHI Lab");
         ImGui::SameLine(150);
         if (ImGui::Button(ICON_FA_HOME "##MAHI")) {
-            // openUrl("https://mahilab.rice.edu/");
+            System::openUrl("https://mahilab.rice.edu/");
         }
         ImGui::SameLine(175);
         if (ImGui::Button(ICON_FA_GITHUB "##MAHI")) {
-            // openUrl("https://github.com/mahilab");
+            System::openUrl("https://github.com/mahilab");
         }
 
         ImGui::Text("Evan Pezent");
         ImGui::SameLine(150);
         if (ImGui::Button(ICON_FA_HOME "##Evan")) {
-            // openUrl("http://www.evanpezent.com");
+            System::openUrl("http://www.evanpezent.com");
         }
         ImGui::SameLine(125);
         if (ImGui::Button(ICON_FA_ENVELOPE "##Evan")) {
-            // openEmail("epezent@rice.edu", "Syntacts");
+            System::openEmail("epezent@rice.edu", "Syntacts");
         }
         ImGui::SameLine(175);
         if (ImGui::Button(ICON_FA_GITHUB "##Evan")) {
-            // openUrl("https://github.com/epezent");
+            System::openUrl("https://github.com/epezent");
         }
         ImGui::EndPopup();
     }

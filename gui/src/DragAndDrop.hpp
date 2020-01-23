@@ -9,7 +9,6 @@
 // General DND
 ///////////////////////////////////////////////////////////////////////////////
 
-
 void UpdateDragAndDrop();
 void BeginPulsable(bool acceptPalette, bool acceptSignal, ImGuiCol col = ImGuiCol_Button);
 void EndPulsable();
