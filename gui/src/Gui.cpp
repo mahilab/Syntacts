@@ -12,14 +12,18 @@ Gui::Gui() : Application(960, 540, "Syntacts", false),
              visualizer(*this),
              status(*this)
 {
-    ImGui::GetIO().IniFilename = nullptr;
+    static auto inifile = saveDir() + "imgui.ini";
+    ImGui::GetIO().IniFilename = inifile.c_str();
     positionWindows();
     
     // ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_ViewportsEnable;
+    ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_DockingEnable;
+
 }
 
 void Gui::update() {
     static ImGuiIO& io = ImGui::GetIO();
+    theme.update();
     device.update();
     player.update();
     workspace.update();

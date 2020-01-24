@@ -449,7 +449,7 @@ void PolyBezierNode::update()
     pb.max.x = bounds[2];
     pb.max.y = bounds[3];
     ImGui::PopItemWidth();
-    update();
+    sync();
 }
 
 void PolyBezierNode::sync() {

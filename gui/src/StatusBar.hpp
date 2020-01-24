@@ -21,6 +21,7 @@ private:
 private:
     bool m_dark = true;
     double m_cpuLoad = 0.0;
+    bool m_showThemeEdit = false;
     mahi::gui::Sequence<mahi::gui::Color> m_cpuGradient;
     mahi::gui::Sequence<mahi::gui::Color> m_fadeColors;
     std::string m_notification;

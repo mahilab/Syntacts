@@ -85,7 +85,7 @@ void StatusBar::renderButtons()
     if (ImGui::Button(ICON_FA_BUG))
         ImGui::OpenPopup("Debug Info");
 
-    if (ImGui::BeginPopupModal("Debug Info", &modalOpen, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove))
+    if (ImGui::BeginPopupModal("Debug Info", &modalOpen))
     {
         // auto info = Debug::getInfo();
         ImGui::Text("Signal Count:   "); ImGui::SameLine(); ImGui::Text("%i", tact::Signal::count());
@@ -113,16 +113,13 @@ void StatusBar::renderButtons()
     if (ImGui::Button(ICON_FA_ADJUST)) 
     {
         if (ImGui::GetIO().KeyCtrl)
-            ImGui::OpenPopup("Theme Editor");
+            gui.theme.showEditor = true;
         else
             gui.theme.cycle();
     }
     showTooltip("Cycle Themes");
-    if (ImGui::BeginPopupModal("Theme Editor", &modalOpen, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove))
-    {
-        ImGui::ShowStyleEditor();
-        ImGui::EndPopup();
-    }
+    
+
     ImGui::SameLine();
     if (ImGui::Button(ICON_FA_QUESTION))
         ImGui::OpenPopup("Help");
@@ -130,7 +127,7 @@ void StatusBar::renderButtons()
     HelpSource();
     
 
-    if (ImGui::BeginPopupModal("Help", &modalOpen, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove))
+    if (ImGui::BeginPopupModal("Help", &modalOpen, ImGuiWindowFlags_NoResize))
     {
         ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + 250);
         ImGui::TextWrapped("To get helpful information and tips, simply drag the " ICON_FA_QUESTION " button over areas of interest. (Work In Progress)");
@@ -141,7 +138,7 @@ void StatusBar::renderButtons()
     if (ImGui::Button(ICON_FA_INFO))
         ImGui::OpenPopup("Syntacts GUI v1.0.0");
     showTooltip("Show General Info");
-    if (ImGui::BeginPopupModal("Syntacts GUI v1.0.0", &modalOpen, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove))
+    if (ImGui::BeginPopupModal("Syntacts GUI v1.0.0", &modalOpen, ImGuiWindowFlags_NoResize))
     {
         ImGui::Text("MAHI Lab");
         ImGui::SameLine(150);

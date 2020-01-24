@@ -114,7 +114,7 @@ void DeviceBar::update() {
     bool openHelp = true;
     if (HelpTarget()) 
         ImGui::OpenPopup("Device Help");
-    if (ImGui::BeginPopupModal("Device Help", &openHelp)) {
+    if (ImGui::BeginPopupModal("Device Help", &openHelp, ImGuiWindowFlags_NoResize)) {
         ImGui::BulletText("Use the drop down lists to select your prefered\nAPI, Device, and sample rate");
         ImGui::BulletText("Press the " ICON_FA_BARS " button to show a list of all Devices");
         ImGui::BulletText("Press the " ICON_FA_SYNC " button to reboot the current Device");
