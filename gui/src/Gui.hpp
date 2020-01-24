@@ -15,11 +15,11 @@ public:
     void positionWindows();
     const std::string& saveDir();
 public:
+    ThemeManager theme;
     DeviceBar device;
     Player player;
     Workspace workspace;
     Library library;
     Visualizer visualizer;
     StatusBar status;
-    ThemeManager theme;
 };

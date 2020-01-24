@@ -110,13 +110,18 @@ void DeviceBar::update() {
     }
     gui.status.showTooltip("Refresh Device List");
     ImGui::EndGroup();
-    if (ImGui::BeginDragDropTarget())
-    {
-        if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("DND_HELP"))
-        {
-        }
-        ImGui::EndDragDropTarget();
+
+    bool openHelp = true;
+    if (HelpTarget()) 
+        ImGui::OpenPopup("Device Help");
+    if (ImGui::BeginPopupModal("Device Help", &openHelp)) {
+        ImGui::BulletText("Use the drop down lists to select your prefered\nAPI, Device, and sample rate");
+        ImGui::BulletText("Press the " ICON_FA_BARS " button to show a list of all Devices");
+        ImGui::BulletText("Press the " ICON_FA_SYNC " button to reboot the current Device");
+        ImGui::EndPopup();
     }
+
+
     ImGui::End();
     ImGui::PopStyleVar();
 }
@@ -199,7 +204,7 @@ void DeviceBar::renderDeviceSampleRates()
 
 void DeviceBar::renderDeviceDetails()
 {
-    if (ImGui::Button("...") && session)
+    if (ImGui::Button(ICON_FA_BARS) && session)
     {
         ImGui::OpenPopup("Device Details");
     }

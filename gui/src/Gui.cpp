@@ -3,20 +3,23 @@
 
 using namespace mahi::gui;
 
-Gui::Gui() : Application(960, 540, "Syntacts"),
+Gui::Gui() : Application(960, 540, "Syntacts", false),
+             theme(*this),
              device(*this),
              player(*this),
              workspace(*this),
              library(*this),
              visualizer(*this),
-             status(*this),
-             theme(*this)
+             status(*this)
 {
     ImGui::GetIO().IniFilename = nullptr;
     positionWindows();
+    
+    // ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_ViewportsEnable;
 }
 
 void Gui::update() {
+    static ImGuiIO& io = ImGui::GetIO();
     device.update();
     player.update();
     workspace.update();

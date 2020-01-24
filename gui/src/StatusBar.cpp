@@ -66,7 +66,7 @@ void StatusBar::renderButtons()
 {
     bool modalOpen = true;
 
-    ImGui::SameLine(ImGui::GetWindowWidth() - 250);
+    ImGui::SameLine(ImGui::GetWindowWidth() - 225);
     ImGui::PushStyleColor(ImGuiCol_PlotHistogram, m_cpuGradient(Math::clamp01(m_cpuLoad)));
     if (gui.device.session)
         m_cpuLoad = gui.device.session->getCpuLoad();
@@ -108,11 +108,6 @@ void StatusBar::renderButtons()
     showTooltip("Display Debug Info");
 
 
-    ImGui::SameLine();
-    if (ImGui::Button(ICON_FA_ENVELOPE "##Brandon")) {
-        System::openEmail("mep9@rice.edu; btc6@rice.edu", "Syntacts");
-    }
-    showTooltip("Email Feedback");
 
     ImGui::SameLine();
     if (ImGui::Button(ICON_FA_ADJUST)) 
@@ -132,13 +127,9 @@ void StatusBar::renderButtons()
     if (ImGui::Button(ICON_FA_QUESTION))
         ImGui::OpenPopup("Help");
     showTooltip("Show Help Info");
-    if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
-    {
-        static int helpPayload = 1;
-        ImGui::SetDragDropPayload("DND_HELP", &helpPayload, sizeof(int));
-        ImGui::Text(ICON_FA_QUESTION);
-        ImGui::EndDragDropSource();
-    }
+    HelpSource();
+    
+
     if (ImGui::BeginPopupModal("Help", &modalOpen, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove))
     {
         ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + 250);

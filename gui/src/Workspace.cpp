@@ -20,21 +20,21 @@ void Workspace::update()
             activeTab = TabDesigner;
             designer.update();
             ImGui::EndTabItem();
-            gui.visualizer.setRenderedSignal(designer.buildSignal(), Purples::Plum);
+            gui.visualizer.setRenderedSignal(designer.buildSignal(), gui.theme.designerColor);
         }
         if (ImGui::BeginTabItem("Sequencer##Tab"))
         {
             activeTab = TabSequencer;
             sequencer.update();
             ImGui::EndTabItem();
-            gui.visualizer.setRenderedSignal(sequencer.buildSignal(), Oranges::Coral);
+            gui.visualizer.setRenderedSignal(sequencer.buildSignal(), gui.theme.sequencerColor);
         }
         if (ImGui::BeginTabItem("Spatializer##Tab"))
         {
             activeTab = TabSpatializer;
             spatializer.update();
             ImGui::EndTabItem();
-            gui.visualizer.setRenderedSignal(spatializer.getSignal(), Greens::YellowGreen);
+            gui.visualizer.setRenderedSignal(spatializer.getSignal(), gui.theme.spatializerColor);
         }
         ImGui::EndTabBar();
     }

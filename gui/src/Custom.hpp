@@ -25,8 +25,14 @@ bool TimelineScrollbar(float* ltime, float* rtime, bool* lrgrabbed, bool* rgrabb
 
 /// Begins a fixed size window without a header
 inline void BeginFixed(const char* name, const ImVec2& pos, const ImVec2& size) {
-    ImGui::SetNextWindowPos(pos, ImGuiCond_Always);
-    ImGui::SetNextWindowSize(size, ImGuiCond_Always);
+    // ImGui::SetNextWindowPos(pos, ImGuiCond_Always);
+    // ImGui::SetNextWindowSize(size, ImGuiCond_Always);
+    // ImGui::Begin(name, nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
+    auto posV = ImGui::GetMainViewport()->Pos;
+    posV.x += pos.x;
+    posV.y += pos.y;
+    ImGui::SetNextWindowPos(posV, ImGuiCond_Appearing);
+    ImGui::SetNextWindowSize(size, ImGuiCond_Appearing);
     ImGui::Begin(name, nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
 }
 

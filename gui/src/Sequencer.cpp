@@ -12,7 +12,7 @@ Sequencer::Sequencer(Gui& gui)
 {
     m_interface.tracks.emplace_back();
     m_interface.tracks.back().label = "Track 1";
-    m_interface.activeColor = mahi::gui::Oranges::DarkOrange;
+    m_interface.activeColor =  gui.theme.sequencerColor;
     m_interface.inactiveColor = mahi::gui::Grays::Gray50;
     m_interface.onTooltip = [&](const char* msg) { gui.status.showTooltip(msg); };
 }

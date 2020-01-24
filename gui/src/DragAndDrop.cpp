@@ -136,3 +136,27 @@ bool SignalHeld()
 {
     return g_signalHeld;
 }
+
+void HelpSource() {
+    if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
+    {
+        static int helpPayload = 1;
+        ImGui::SetDragDropPayload("DND_HELP", &helpPayload, sizeof(int));
+        ImGui::Text(ICON_FA_QUESTION);
+        ImGui::EndDragDropSource();
+    }
+}
+
+bool HelpTarget()
+{
+    bool ret = false;
+    if (ImGui::BeginDragDropTarget())
+    {
+        if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("DND_HELP"))
+        {
+            ret = true;
+        }
+        ImGui::EndDragDropTarget();
+    }
+    return ret;
+}
