@@ -10,7 +10,8 @@ Gui::Gui() : Application(960, 540, "Syntacts", false),
              workspace(*this),
              library(*this),
              visualizer(*this),
-             status(*this)
+             status(*this),
+             debug(*this)
 {
     static auto inifile = saveDir() + "imgui.ini";
     ImGui::GetIO().IniFilename = inifile.c_str();
@@ -30,6 +31,7 @@ void Gui::update() {
     library.update();
     visualizer.update();
     status.update();
+    debug.update();
     UpdateDragAndDrop();
 }
 

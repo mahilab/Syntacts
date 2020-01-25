@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Tact/Config.hpp>
 #include <Tact/General.hpp>
 #include <Tact/MemoryPool.hpp>
 #include <typeinfo>
@@ -10,30 +11,38 @@ namespace tact
 
 ///////////////////////////////////////////////////////////////////////////////
 
-// If uncommented, Signal will use default malloc instead of memory pool
-#define TACT_USE_MALLOC     
-
-// If uncommented, Signal will use shared pointers instead of unique pointers
-// #define TACT_USE_SHARED_PTR 
-
-///////////////////////////////////////////////////////////////////////////////
-
-/// The size of memory blocks available to store Signals
-constexpr std::size_t SIGNAL_BLOCK_SIZE  = 64;
-/// The maximum number of signals that can simultaneously exist
-constexpr std::size_t MAX_SIGNALS = 1024;
-
-///////////////////////////////////////////////////////////////////////////////
-
 /// An object that returns time variant samples for a length of time
 class SYNTACTS_API Signal {
 public:
     /// Default constructor
     Signal();
-    /// Constructor
-    template<typename T> inline Signal(T signal);
-     
-#ifndef TACT_USE_SHARED_PTR
+    /// Type Erasing Constructor
+    template<typename T> inline Signal(T signal);   
+
+    /// Samples the Signal at time t in seconds
+    inline double sample(double t) const;
+    /// Samples the Signal at n times give by t into output buffer b
+    inline void sample(const double* t, double* b, int n) const;
+    /// Returns the length of the Signal in seconds or infinity
+    inline double length() const;
+
+    /// Returns the type_index of the underlying type-erased Signal
+    std::type_index typeId() const;
+    /// Returns true if the underlying type-erased Signal is type T
+    template <typename T> inline bool isType() const;
+    /// Gets a pointer to the underlying type-erased Signal type (use with caution)
+    void* get() const;
+    
+    /// Returns the current count of Signals in this process
+    static inline int count();
+
+public:
+    double gain;  ///< the Signal will be scaled by this amount when sampled
+    double bias;  ///< the Signal will be offset by this amount when sampled
+
+    /// NOT MUCH TO SEE BELOW THIS POINT EXCEPT NASTY IMPLEMENTATION DETAILS :)
+
+#ifndef SYNTACTS_USE_SHARED_PTR
     /// Copy constructor
     Signal(const Signal& other);
     /// Move constructor
@@ -44,35 +53,20 @@ public:
     Signal& operator=(Signal&&) noexcept = default;
 #endif
 
-    /// Samples the Signal at time t in seconds
-    inline double sample(double t) const;
-    /// Samples the Signal at n times give by t into output buffer b
-    inline void sample(const double* t, double* b, int n) const;
-    /// Returns the length of the Signal in seconds or infinity
-    inline double length() const;
-
-    /// Returns the type_index of the underlying Signal
-    std::type_index typeId() const;
-    /// Returns true if the underlying Signal is type T
-    template <typename T> inline bool isType() const;
-    /// Gets a pointer to the underlying Signal type (use with caution)
-    void* get() const;
-
-public:
-    using Pool = FriendlyStackPool<SIGNAL_BLOCK_SIZE, MAX_SIGNALS, Signal>;
-    /// Gets a reference to the Signal memory pool
+#ifdef SYNTACTS_USE_POOL
+    using Pool = FriendlyStackPool<SYNTACTS_POOL_BLOCK_SIZE, SYNTACTS_POOL_MAX_BLOCKS, Signal>;
     static inline Pool& pool();
-    static inline int count();
-public:
-    double gain;    ///< the Signal will be scaled by this amount when sampled
-    double bias;    ///< the Signal will be offset by this amount when sampled
+#endif
+
 public:
     struct Concept;
     /// Unique Pointer Deleter
+#ifdef SYNTACTS_USE_POOL
     struct Deleter {
         void operator()(Concept* ptr)
         { ptr->~Concept(); Signal::pool().deallocate(ptr); }
     };    
+#endif
     /// Type Erasure Concept
     struct Concept {
         Concept() { s_count++; }
@@ -82,11 +76,11 @@ public:
         virtual double length() const = 0;
         virtual std::type_index typeId() const = 0;
         virtual void* get() const = 0;
-#ifndef TACT_USE_SHARED_PTR
-#ifdef TACT_USE_MALLOC
-        virtual std::unique_ptr<Concept> copy() const = 0;
-#else
+#ifndef SYNTACTS_USE_SHARED_PTR
+#ifdef SYNTACTS_USE_POOL
         virtual std::unique_ptr<Concept, Deleter> copy() const = 0;
+#else
+        virtual std::unique_ptr<Concept> copy() const = 0;
 #endif
 #endif
         static inline int count() {return s_count; }
@@ -105,20 +99,20 @@ public:
         double length() const override;
         std::type_index typeId() const override;
         void* get() const override;
-#ifndef TACT_USE_SHARED_PTR
-#ifdef TACT_USE_MALLOC
-        std::unique_ptr<Concept> copy() const override;
-#else
+#ifndef SYNTACTS_USE_SHARED_PTR
+#ifdef SYNTACTS_USE_POOL
         std::unique_ptr<Concept, Deleter> copy() const override;
+#else
+        std::unique_ptr<Concept> copy() const override;
 #endif
 #endif
         T m_model;
         TACT_SERIALIZE(TACT_PARENT(Concept), TACT_MEMBER(m_model));
     };
 private:
-#ifdef TACT_USE_SHARED_PTR
+#ifdef SYNTACTS_USE_SHARED_PTR
     std::shared_ptr<const Concept> m_ptr;
-#ifndef TACT_USE_MALLOC
+#ifdef SYNTACTS_USE_POOL
     template<typename T>
     struct Allocator
     {
@@ -133,10 +127,10 @@ private:
     };
 #endif
 #else
-#ifdef TACT_USE_MALLOC
-    std::unique_ptr<Concept> m_ptr;
-#else
+#ifdef SYNTACTS_USE_POOL
     std::unique_ptr<Concept, Deleter> m_ptr;
+#else
+    std::unique_ptr<Concept> m_ptr;
 #endif
 #endif
 private:

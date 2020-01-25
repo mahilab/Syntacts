@@ -72,7 +72,7 @@ void DeviceBar::switchDevice(const tact::Device &dev, double sampleRate)
     {
         gui.status.pushMessage("Failed to open device! Error: " + str(result), StatusBar::Error);
     }
-    /// update current and available
+    // update current and available
     getCurrent();
     onSessionOpen.emit();
 }
@@ -96,7 +96,8 @@ void DeviceBar::switchSampleRate(double sampleRate)
 void DeviceBar::update() {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(7, 7));
     ImGui::BeginFixed("Device Bar", position, size);
-    ImGui::BeginGroup();
+
+    ImGui::BeginGroup(); // help group
     renderApiSelection();
     ImGui::SameLine();
     renderDeviceSelection();
@@ -107,17 +108,18 @@ void DeviceBar::update() {
     ImGui::SameLine();
     if (ImGui::Button(ICON_FA_SYNC_ALT)) {
         initialize();
+        gui.status.pushMessage("Restarted Session");
     }
-    gui.status.showTooltip("Refresh Device List");
+    gui.status.showTooltip("Restart Sesssion");
     ImGui::EndGroup();
 
     bool openHelp = true;
     if (HelpTarget()) 
         ImGui::OpenPopup("Device Help");
     if (ImGui::BeginPopupModal("Device Help", &openHelp, ImGuiWindowFlags_NoResize)) {
-        ImGui::BulletText("Use the drop down lists to select your prefered\nAPI, Device, and sample rate");
+        ImGui::BulletText("Use the drop down lists to select your prefered API, Device, and sample rate");
         ImGui::BulletText("Press the " ICON_FA_BARS " button to show a list of all Devices");
-        ImGui::BulletText("Press the " ICON_FA_SYNC " button to reboot the current Device");
+        ImGui::BulletText("Press the " ICON_FA_SYNC " button to restart the current Session");
         ImGui::EndPopup();
     }
 
@@ -151,8 +153,10 @@ void DeviceBar::renderApiSelection()
 
 void DeviceBar::renderDeviceSelection()
 {
-    ImGui::PushItemWidth(320);
-    std::string devName;
+    float wrem = ImGui::GetContentRegionAvail().x;
+    ImGui::PushItemWidth(wrem - 135);
+    static std::string devName;
+    devName.clear();
     if (session)
         devName = m_currentDev.name + " [" + std::to_string(m_currentDev.index) + "]";
     if (ImGui::BeginCombo("##Devices", devName.c_str()))
@@ -177,8 +181,9 @@ void DeviceBar::renderDeviceSelection()
 
 void DeviceBar::renderDeviceSampleRates()
 {
-    ImGui::PushItemWidth(-55);
-    std::string rate;
+    ImGui::PushItemWidth(85);
+    static std::string rate;
+    rate.clear();
     if (session)
         rate = str(session->getSampleRate(), "Hz");
     if (ImGui::BeginCombo("##SampleRates", rate.c_str()))
@@ -221,6 +226,8 @@ void DeviceBar::renderDeviceDetails()
         ImGui::Text("API");
         ImGui::SameLine(500);
         ImGui::Text("Channels");
+        ImGui::Separator();
+        ImGui::PushStyleColor(ImGuiCol_Button, {0,0,0,0});
         for (auto &pair : session->getAvailableDevices())
         {
             auto d = pair.second;
@@ -245,6 +252,11 @@ void DeviceBar::renderDeviceDetails()
             ImGui::SameLine(500);
             ImGui::Text(str(d.maxChannels).c_str());
         }
+        ImGui::PopStyleColor();
+        ImGui::PushStyleVar(ImGuiStyleVar_Alpha, 0.5f);
+        ImGui::Separator();
+        ImGui::Text("*Indicates system default device or API default device");
+        ImGui::PopStyleVar();
         ImGui::EndPopup();
     }
 }

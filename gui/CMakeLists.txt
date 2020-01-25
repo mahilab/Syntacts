@@ -32,6 +32,8 @@ add_executable(syntacts-gui
     src/Spatializer.cpp
     src/Player.hpp
     src/Player.cpp
+    src/Debugger.hpp
+    src/Debugger.cpp
     src/Theme.hpp
     src/Theme.cpp
     src/Custom.hpp

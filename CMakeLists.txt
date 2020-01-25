@@ -23,7 +23,7 @@ option(SYNTACTS_C_DLL    "Turn ON to build Syntacts C DLL"      ON )
 option(SYNTACTS_EXAMPLES "Turn ON to build Syntacts example(s)" ON )
 
 # create project
-project(syntacts VERSION 0.1.0)
+project(syntacts VERSION 1.0.0)
 
 # add modules
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
@@ -82,7 +82,13 @@ set_target_properties(syntacts PROPERTIES CXX_STANDARD 17 DEBUG_POSTFIX -d)
 set_target_properties(syntacts PROPERTIES COMPILE_FLAGS "/bigobj" )
 target_sources(syntacts PRIVATE ${SYNTACTS_INCLUDE})
 target_sources(syntacts PRIVATE ${SYNTACTS_SRC})
-target_compile_definitions(syntacts PUBLIC SYNTACTS_STATIC PA_USE_ASIO PRIVATE NOMINMAX)
+target_compile_definitions(syntacts 
+    PUBLIC 
+        SYNTACTS_STATIC 
+        PA_USE_ASIO 
+    PRIVATE 
+        NOMINMAX
+)
 target_include_directories(syntacts
 	PUBLIC
 		$<INSTALL_INTERFACE:include>

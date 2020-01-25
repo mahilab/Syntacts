@@ -7,25 +7,25 @@ template <typename T>
 Signal::Signal(T signal) : 
     gain(1), 
     bias(0), 
-#ifdef TACT_USE_MALLOC
-#ifdef TACT_USE_SHARED_PTR
+#ifndef SYNTACTS_USE_POOL
+#ifdef SYNTACTS_USE_SHARED_PTR
     m_ptr(std::make_shared<Model<T>>(std::move(signal)))
 #else
     m_ptr(std::make_unique<Model<T>>(std::move(signal)))
 #endif
 #else
-#ifdef TACT_USE_SHARED_PTR
+#ifdef SYNTACTS_USE_SHARED_PTR
     m_ptr(std::allocate_shared<Model<T>, Allocator<Concept>>(Allocator<Concept>(), std::move(signal)))
 #else
     m_ptr(new (Signal::pool().allocate()) Model<T>(std::move(signal)))
 #endif
 #endif
 {
-#ifndef TACT_USE_MALLOC
-#ifdef TACT_USE_SHARED_PTR
-    static_assert((2 * sizeof(void *) + sizeof(Model<T>)) <= SIGNAL_BLOCK_SIZE, "Signal allocation would exceed SIGNAL_BLOCK SIZE");
+#ifdef SYNTACTS_USE_POOL
+#ifdef SYNTACTS_USE_SHARED_PTR
+    static_assert((2 * sizeof(void *) + sizeof(Model<T>)) <= SYNTACTS_POOL_BLOCK_SIZE, "Signal allocation would exceed SIGNAL_BLOCK SIZE");
 #else
-    static_assert((sizeof(Model<T>)) <= SIGNAL_BLOCK_SIZE, "Signal allocation would exceed SIGNAL_BLOCK SIZE");
+    static_assert((sizeof(Model<T>)) <= SYNTACTS_POOL_BLOCK_SIZE, "Signal allocation would exceed SIGNAL_BLOCK SIZE");
 #endif
 #endif
 }
@@ -51,10 +51,12 @@ inline bool Signal::isType() const
     return m_ptr->typeId() == typeid(T); 
 }
 
+#ifdef SYNTACTS_USE_POOL
 inline Signal::Pool& Signal::pool() {
     static Signal::Pool p;
     return p;
 }
+#endif
 
 inline int Signal::count() {
     return Concept::count();
@@ -103,8 +105,8 @@ void* Signal::Model<T>::get() const
     return (void*)&m_model; 
 }
 
-#ifndef TACT_USE_SHARED_PTR
-#ifdef TACT_USE_MALLOC
+#ifndef SYNTACTS_USE_SHARED_PTR
+#ifndef SYNTACTS_USE_POOL
 
 template <typename T>
 std::unique_ptr<Signal::Concept> Signal::Model<T>::copy() const 
@@ -134,7 +136,7 @@ void Signal::save(Archive& archive) const {
 
 template <class Archive>
 void Signal::load(Archive& archive) {
-#if !defined TACT_USE_MALLOC && !defined TACT_USE_SHARED_PTR
+#if defined SYNTACTS_USE_POOL && !defined SYNTACTS_USE_SHARED_PTR
     std::unique_ptr<Concept> ptr;
     archive(TACT_MEMBER(gain), TACT_MEMBER(bias), TACT_MEMBER(ptr));
     m_ptr = ptr->copy();

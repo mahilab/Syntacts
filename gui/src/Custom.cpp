@@ -157,9 +157,9 @@ void RenderSignalInBounds(ImDrawList* DrawList, const tact::Signal& sig, float t
     }
     
     DrawList->PushClipRect(bb.Min, bb.Max, true);
-    // DrawList->Flags &= ~ImDrawListFlags_AntiAliasedLines;
+    DrawList->Flags &= ~ImDrawListFlags_AntiAliasedLines;
     DrawList->AddPolyline(&buffer[0], n, ImGui::GetColorU32(color), false, thickness);
-    // DrawList->Flags |= ImDrawListFlags_AntiAliasedLines;
+    DrawList->Flags |= ImDrawListFlags_AntiAliasedLines;
     DrawList->PopClipRect();
 }
 

@@ -2,6 +2,7 @@
 #include "Custom.hpp"
 #include "Gui.hpp"
 #include "Theme.hpp"
+#include "Gui.hpp"
 
 using namespace mahi::gui;
 
@@ -67,10 +68,11 @@ void StatusBar::renderButtons()
     bool modalOpen = true;
 
     ImGui::SameLine(ImGui::GetWindowWidth() - 225);
-    ImGui::PushStyleColor(ImGuiCol_PlotHistogram, m_cpuGradient(Math::clamp01(m_cpuLoad)));
+    double cpu = 0;
     if (gui.device.session)
-        m_cpuLoad = gui.device.session->getCpuLoad();
-    float rounded = (int)(m_cpuLoad * 100.0f)/100.0f;
+        cpu = gui.device.session->getCpuLoad();
+    float rounded = (int)(cpu * 100.0f)/100.0f;
+    ImGui::PushStyleColor(ImGuiCol_PlotHistogram, m_cpuGradient(Math::clamp01((float)cpu)));
     ImGui::ProgressBar(rounded, ImVec2(100, 0));
     ImGui::PopStyleColor();
     showTooltip("Session CPU Thread Load");
@@ -83,28 +85,7 @@ void StatusBar::renderButtons()
 
     ImGui::SameLine();
     if (ImGui::Button(ICON_FA_BUG))
-        ImGui::OpenPopup("Debug Info");
-
-    if (ImGui::BeginPopupModal("Debug Info", &modalOpen))
-    {
-        // auto info = Debug::getInfo();
-        ImGui::Text("Signal Count:   "); ImGui::SameLine(); ImGui::Text("%i", tact::Signal::count());
-        ImGui::Text("FPS:            "); ImGui::SameLine(); ImGui::Text("%.2f", ImGui::GetIO().Framerate);
-        ImGui::Text("Vertices:       "); ImGui::SameLine(); ImGui::Text("%d", ImGui::GetIO().MetricsRenderVertices);
-        ImGui::Text("Triangles:      "); ImGui::SameLine(); ImGui::Text("%d", ImGui::GetIO().MetricsRenderIndices / 3);
-
-        // ImGui::Text("RAM Usage:      "); ImGui::SameLine(); ImGui::Text("%.0f MB", info.ram);
-        // ImGui::Text("CPU Usage:      "); ImGui::SameLine(); ImGui::Text("%.2f \%", info.cpu);
-        ImGui::PushStyleColor(ImGuiCol_Button, Reds::FireBrick);
-        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, Reds::Salmon);
-        ImGui::PushStyleColor(ImGuiCol_ButtonActive, Reds::LightSalmon);
-        if (ImGui::Button("Report Issue", {-1,0})) {
-            System::openUrl("https://github.com/mahilab/Syntacts/issues");
-        }
-        ImGui::PopStyleColor(3);
-        ImGui::EndPopup();
-
-    }
+        gui.debug.show = true;
     showTooltip("Display Debug Info");
 
 

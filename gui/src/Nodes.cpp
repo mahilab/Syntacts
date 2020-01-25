@@ -3,6 +3,10 @@
 
 using namespace mahi::gui;
 
+namespace {
+    int g_nextNodeId = 0;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 void NodeSlot(const char *label, const ImVec2 &size)
@@ -101,15 +105,19 @@ std::shared_ptr<Node> makeNode(PItem id)
 
 ///////////////////////////////////////////////////////////////////////////////
 
+Node::Node() : active(true), id(g_nextNodeId++) { }
+
+///////////////////////////////////////////////////////////////////////////////
+
 void NodeList::update()
 {
     // render nodes
     for (std::size_t i = 0; i < m_nodes.size(); ++i)
     {
         auto &header = m_nodes[i]->name() + "###SignalSlot";
-        ImGui::PushID(m_ids[i]);
+        ImGui::PushID(m_nodes[i]->id);
         ImGui::PushStyleColor(ImGuiCol_Header, ImGui::GetStyle().Colors[ImGuiCol_TabActive]);
-        if (ImGui::CollapsingHeader(header.c_str(), &m_closeHandles[i]))
+        if (ImGui::CollapsingHeader(header.c_str(), &m_nodes[i]->active, ImGuiTreeNodeFlags_DefaultOpen))
         {
             ImGui::Indent();
             m_nodes[i]->update();
@@ -126,34 +134,24 @@ void NodeList::update()
     {
         auto node = makeNode(PalettePayload());
         if (node)
-        {
             m_nodes.emplace_back(node);
-            m_closeHandles.emplace_back(true);
-            m_ids.push_back(m_nextId++);
-        }
     }
     // check for incomming library items
     if (SignalTarget())
     {
         auto node = std::make_shared<LibrarySignalNode>(SignalPayload().first);
         m_nodes.emplace_back(node);
-        m_closeHandles.emplace_back(true);
-        m_ids.push_back(m_nextId++);
     }
     // clean up
     std::vector<std::shared_ptr<Node>> newNodes;
+    newNodes.reserve(m_nodes.size());
     std::vector<int> newIds;
     for (int i = 0; i < m_nodes.size(); ++i)
     {
-        if (m_closeHandles[i])
-        {
-            newNodes.emplace_back(std::move(m_nodes[i]));
-            newIds.push_back(m_ids[i]);
-        }
+        if (m_nodes[i]->active)        
+            newNodes.emplace_back(std::move(m_nodes[i]));        
     }
     m_nodes = std::move(newNodes);
-    m_ids = std::move(newIds);
-    m_closeHandles = std::deque<bool>(m_nodes.size(), true);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -433,7 +431,7 @@ void ExpressionNode::update()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-PolyBezierNode::PolyBezierNode() : pb(Blues::DeepSkyBlue, ImVec2(0, 0), ImVec2(1, 1)) {
+PolyBezierNode::PolyBezierNode() : pb(ImGui::GetStyle().Colors[ImGuiCol_PlotLines], ImVec2(0, 0), ImVec2(1, 1)) {
     sync();
 }
 

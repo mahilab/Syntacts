@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <limits>
+#include <string>
 
 namespace tact {
 
@@ -36,6 +37,8 @@ inline double lerp(double a, double b, double t) {
     return a + (b - a) * t;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+
 /// Sleeps the calling thread for seconds (accurate within a few milliseconds)
 void sleep(double seconds, double max = 60);
 
@@ -44,5 +47,10 @@ void tic();
 
 /// Returns the time in seconds since tic() was called.
 double toc();
+
+///////////////////////////////////////////////////////////////////////////////
+
+/// Returns the Syntacts version number (e.g. "1.0.0")
+const std::string& syntactsVersion();
 
 } // namespace tact

@@ -15,10 +15,13 @@ const std::string& signalName(const tact::Signal& sig);
 ///////////////////////////////////////////////////////////////////////////////
 
 struct Node {
+    Node();
     virtual void update() = 0;
     virtual tact::Signal signal() = 0;
     virtual const std::string& name() = 0;
     virtual bool empty() { return false; };
+    bool active = true;
+    int id;
 };
 
 std::shared_ptr<Node> makeNode(PItem id);
@@ -28,10 +31,6 @@ std::shared_ptr<Node> makeNode(PItem id);
 struct NodeList : public Node { 
     void update();
     std::vector<std::shared_ptr<Node>> m_nodes;
-    std::deque<bool> m_closeHandles;
-    std::vector<int> m_ids;
-    int m_nextId;
-    float m_scale = 1, m_offset = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

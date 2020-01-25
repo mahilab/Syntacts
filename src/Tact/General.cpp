@@ -158,7 +158,7 @@ Samples::Samples(const std::vector<float>& samples, double sampleRate) :
 
 double Samples::sample(double t) const {
     std::size_t i = static_cast<std::size_t>(t * m_sampleRate);
-    if (i < m_samples->size())
+    if (i < m_samples->size() - 1) 
         return m_samples->operator[](i);
     return 0;
 }

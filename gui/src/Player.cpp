@@ -13,6 +13,7 @@ Player::Player(Gui& gui) : Widget(gui)
 void Player::update()
 {
     ImGui::BeginFixed("Player", position, size);
+    ImGui::BeginGroup(); // help group
     BeginPulsable(false,true);
     if (ImGui::Button(ICON_FA_PLAY, ImVec2(25, 0)))
         playSelected();
@@ -53,12 +54,28 @@ void Player::update()
     }
     if (ImGui::IsItemClicked(1))
     {
+        m_masterPitch = 0;
         for (int i = 0; i < gui.device.session->getCurrentDevice().maxChannels; ++i)
             gui.device.session->setPitch(i, 1);
     }
     ImGui::PopItemWidth();
     ImGui::Separator();
     updateChannels();
+    ImGui::EndGroup();
+
+    bool openHelp = true;
+    if (HelpTarget()) 
+        ImGui::OpenPopup("Player Help");
+    if (ImGui::BeginPopupModal("Player Help", &openHelp, ImGuiWindowFlags_NoResize)) {
+        ImGui::BulletText("Left-click the " ICON_FA_PLAY " or numbered buttons to play the currently designed Signal on all or individual channels");
+        ImGui::BulletText("Right-click the " ICON_FA_PLAY " or numbered buttons to stop Signals on all or individual channels");
+        ImGui::BulletText("Drag Signals from the Library tab on to the " ICON_FA_PLAY " and numbered buttons to play them");
+        ImGui::BulletText("Use the left and right sliders to adjust volume and pitch, respectively");
+        ImGui::BulletText("Right-click sliders to quickly toggle positions");
+        ImGui::BulletText("Ctrl+Left-click sliders for numeric text entry");
+        ImGui::EndPopup();
+    }
+
     ImGui::End();
 }
 

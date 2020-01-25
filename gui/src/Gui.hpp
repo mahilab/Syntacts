@@ -7,6 +7,7 @@
 #include "StatusBar.hpp"
 #include "Library.hpp"
 #include "Theme.hpp"
+#include "Debugger.hpp"
 
 class Gui : public mahi::gui::Application {
 public:
@@ -22,4 +23,5 @@ public:
     Library library;
     Visualizer visualizer;
     StatusBar status;
+    Debugger debug;
 };

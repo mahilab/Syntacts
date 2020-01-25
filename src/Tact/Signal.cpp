@@ -5,7 +5,7 @@ namespace tact
 
 Signal::Signal() : Signal(Scalar(0)) {}
 
-#ifndef TACT_USE_SHARED_PTR
+#ifndef SYNTACTS_USE_SHARED_PTR
     Signal::Signal(const Signal& other) :
         gain(other.gain),
         bias(other.bias),
@@ -15,7 +15,7 @@ Signal::Signal() : Signal(Scalar(0)) {}
     {
         return *this = Signal(other);
     }
-#endif
+#endif // SYNTACTS_USE_SHARED_PTR
 
 std::type_index Signal::typeId() const
 { 

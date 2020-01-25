@@ -1,3 +1,4 @@
+#include <Tact/Config.hpp>
 #include <Tact/Util.hpp>
 #include <thread>
 #include <chrono>
@@ -26,6 +27,13 @@ double toc() {
     g_toc = std::chrono::high_resolution_clock::now();
     auto ns = std::chrono::duration_cast<std::chrono::nanoseconds>(g_toc - g_tic).count();
     return ns / 1000000000.0;
+}
+
+const std::string& syntactsVersion() {
+    static std::string ver = std::to_string(SYNTACTS_VERSION_MAJOR) + "."
+                           + std::to_string(SYNTACTS_VERSION_MINOR) + "."
+                           + std::to_string(SYNTACTS_VERSION_PATCH);
+    return ver;
 }
 
 };
