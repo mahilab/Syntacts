@@ -29,19 +29,21 @@ public:
     Spatializer(Gui& gui);
     tact::Signal getSignal();
     void update();
+    tact::Spatializer spatializer;
 private:
     void sync();
     void fillGrid();
     void onSessionChange();
     void onSessionDestroy();
+
 private:
     tact::Signal m_signal;
     int m_rollOffIndex = 0;
+    int m_rollOffHoveredIdx = -1;
     std::string m_sigName = "##Empty";
-    tact::Spatializer m_spatializer;
     int m_divs[2] = {5,5};
     bool m_snap = true;
-    bool m_1d   = false;
+    bool m_2d   = true;
     bool xFirst = false;
     char m_inputBuffer[64] = "";
     std::map<int, ImGui::SpatializerNode> m_channels;

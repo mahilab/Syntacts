@@ -62,17 +62,17 @@ void Player::update()
     ImGui::Separator();
     updateChannels();
     ImGui::EndGroup();
-
-    bool openHelp = true;
+    
     if (HelpTarget()) 
         ImGui::OpenPopup("Player Help");
-    if (ImGui::BeginPopupModal("Player Help", &openHelp, ImGuiWindowFlags_NoResize)) {
+    if (ImGui::BeginHelpPopup("Player Help")) {
         ImGui::BulletText("Left-click the " ICON_FA_PLAY " or numbered buttons to play the currently designed Signal on all or individual channels");
         ImGui::BulletText("Right-click the " ICON_FA_PLAY " or numbered buttons to stop Signals on all or individual channels");
         ImGui::BulletText("Drag Signals from the Library tab on to the " ICON_FA_PLAY " and numbered buttons to play them");
         ImGui::BulletText("Use the left and right sliders to adjust volume and pitch, respectively");
         ImGui::BulletText("Right-click sliders to quickly toggle positions");
         ImGui::BulletText("Ctrl+Left-click sliders for numeric text entry");
+        ImGui::BulletText("Channels currently in the Spatializer will be highlighted and locked");
         ImGui::EndPopup();
     }
 
@@ -92,10 +92,15 @@ void Player::updateChannels()
             if (playing)
                 ImGui::PushStyleColor(ImGuiCol_Button, Grays::Gray50);
             auto label = str(i);
+            bool inSpat = gui.workspace.spatializer.spatializer.hasChannel(i);
+            if (inSpat)
+                ImGui::PushStyleColor(ImGuiCol_Text, gui.theme.spatializerColor);
             BeginPulsable(false,true);
             if (ImGui::Button(label.c_str(), ImVec2(25, 0)))
                 playCh(i);
             EndPulsable();
+            if (inSpat)
+                ImGui::PopStyleColor();
             if (playing)
                 ImGui::PopStyleColor();
 
@@ -116,9 +121,9 @@ void Player::updateChannels()
 
             ImGui::SameLine();
 
+            ImGui::BeginDisabled(inSpat);
             float xRem = ImGui::GetContentRegionAvail().x;
             ImGui::PushItemWidth((xRem-4) * 0.5f);
-
             ImGui::SameLine();
             float v = (float)gui.device.session->getVolume(i);
             if (ImGui::SliderFloat(str("##Volume", i).c_str(), &v, 0, 1, ""))
@@ -134,12 +139,11 @@ void Player::updateChannels()
             p = std::log10(p);
             if (ImGui::SliderFloat(str("##Pitch", i).c_str(), &p, -1, 1, ""))
                 gui.device.session->setPitch(i, std::pow(10, p));
-            if (ImGui::IsItemClicked(1))
-            {
+            if (ImGui::IsItemClicked(1))            
                 gui.device.session->setPitch(i, 1);
-            }
-
             ImGui::PopItemWidth();
+            ImGui::EndDisabled(inSpat);
+
             ImGui::PopID();
         }
     }

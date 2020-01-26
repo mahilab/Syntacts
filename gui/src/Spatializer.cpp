@@ -18,6 +18,8 @@ namespace {
 
     };
 
+    // future evan: wtf is this?
+    // present evan: turning a drop-off curve into a signal so I can render it with those funcs
     class CurveSignal {
     public:
         CurveSignal(tact::Curve curve) : m_curve(curve) { }
@@ -35,83 +37,85 @@ namespace {
 Spatializer::Spatializer(Gui& gui) :
     Widget(gui)
 {
-    m_target.pos.x = (float)m_spatializer.getTarget().x;
-    m_target.pos.y = (float)m_spatializer.getTarget().y;
-    m_target.radius =(float)m_spatializer.getRadius();
+    m_target.pos.x = (float)spatializer.getTarget().x;
+    m_target.pos.y = (float)spatializer.getTarget().y;
+    m_target.radius =(float)spatializer.getRadius();
     gui.device.onSessionOpen.connect(this, &Spatializer::onSessionChange);
     gui.device.onSessionDestroy.connect(this, &Spatializer::onSessionDestroy);
-    m_spatializer.autoUpdate(false);
+    if (gui.device.session)
+        onSessionChange();
+    spatializer.autoUpdate(false);
 }
 
 void Spatializer::update()
 {
-    if (ImGui::Spatializer("Spatializer##Grid", m_target, g_curveMap[m_rollOffIndex].second, m_channels, 10, gui.theme.spatializerColor, ImVec2(260, -1), "DND_CHANNEL", m_divs[0], m_1d ? 1 : m_divs[1], m_snap)) {
+    ImGui::BeginGroup(); //  help group
+    if (ImGui::Spatializer("Spatializer##Grid", m_target, g_curveMap[m_rollOffIndex].second, m_channels, 10, gui.theme.spatializerColor, ImVec2(260, -1), "DND_CHANNEL", m_divs[0], !m_2d ? 1 : m_divs[1], m_snap)) {
         sync();
     }
     ImGui::SameLine();
     ImGui::BeginGroup();
-    ImGui::PushItemWidth(200);
-    ImGui::Text(m_1d ? "Divisions" : "X Divisions");
-    if (!m_1d) {
-        ImGui::SameLine(102);
+    ImGui::PushItemWidth(240);
+    ImGui::Text(m_2d ? "X Divisions" : "Divisions");
+    if (m_2d) {
+        ImGui::SameLine(112);
         ImGui::Text("Y Divisions");
     }
-    ImGui::SameLine(220);
-    ImGui::Text("Snap");
-    ImGui::SameLine(260);
-    ImGui::Text("1D");
-    if (m_1d)
+    if (!m_2d)
         ImGui::SliderInt("##Grid Size", m_divs, 1, 25);
     else
-        ImGui::SliderInt2("##Grid Size", m_divs, 1, 25);
-    ImGui::SameLine(220);
-    ImGui::Checkbox("##Snap", &m_snap);
-    ImGui::SameLine(260);
-    ImGui::Checkbox("##1D", &m_1d);
-    if (ImGui::Button("Fill", ImVec2(200, 0))) {
-        m_spatializer.clear();
+            ImGui::SliderInt2("##Grid Size", m_divs, 1, 25);    
+    ImGui::SameLine();
+
+    ImGui::EnableButton(ICON_FA_MAGNET, &m_snap);
+    
+    ImGui::SameLine();
+    ImGui::EnableButton(ICON_FA_TH, &m_2d);
+
+    if (ImGui::Button("Fill", ImVec2(240, 0))) {
+        spatializer.clear();
         fillGrid();
     }
-    if (ImGui::Button("Clear", ImVec2(200, 0))) {
-        m_spatializer.clear();
+    if (ImGui::Button("Clear", ImVec2(240, 0))) {
+        spatializer.clear();
         m_channels.clear();
     }
-    ImGui::PushItemWidth(175);
 
-    bool entered = ImGui::InputText("##SignalName", m_inputBuffer, 64, ImGuiInputTextFlags_CharsNoBlank | ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue);
-    ImGui::PopItemWidth();
-    ImGui::SameLine();
-    ImGui::Button(ICON_FA_SAVE);
+    // ImGui::PushItemWidth(175);
+    // bool entered = ImGui::InputText("##SignalName", m_inputBuffer, 64, ImGuiInputTextFlags_CharsNoBlank | ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue);
+    // ImGui::PopItemWidth();
+    // ImGui::SameLine();
+    // ImGui::Button(ICON_FA_SAVE);
 
     ImGui::Separator();
-    if (m_1d)
-        ImGui::DragFloat("Position", &m_target.pos.x, 0.005f, 0.0f, 1.0f);
-    else
+    if (m_2d)
         ImGui::DragFloat2("Position", &m_target.pos.x, 0.005f, 0.0f, 1.0f);
+    else
+        ImGui::DragFloat("Position", &m_target.pos.x, 0.005f, 0.0f, 1.0f);
     ImGui::DragFloat("Radius", &m_target.radius, 0.005f, 0.0f, 1.0f);
-    if (ImGui::BeginCombo("Roll-Off", g_curveMap[m_rollOffIndex].first.c_str()))
+    static std::vector<ImVec2> points(100);
+    ImGui::PlotSignal("##Empty", CurveSignal(g_curveMap[m_rollOffHoveredIdx == -1 ? m_rollOffIndex : m_rollOffHoveredIdx].second), points, 0, 2, Greens::Chartreuse, 1, ImVec2(240,45), false, false);     
+    m_rollOffHoveredIdx = -1;
+    ImGui::SameLine();
+    ImGui::Text("Roll-Off");
+    if (ImGui::BeginCombo("##Roll-Off", g_curveMap[m_rollOffIndex].first.c_str()))
     {
         for (int i = 0; i < g_curveMap.size(); ++i) {
             bool selected = i == m_rollOffIndex;
             if (ImGui::Selectable(g_curveMap[i].first.c_str(), selected)) {
                 m_rollOffIndex = i;
-                m_spatializer.setRollOff(g_curveMap[m_rollOffIndex].second);
+                spatializer.setRollOff(g_curveMap[m_rollOffIndex].second);
             }
             if (selected)
                 ImGui::SetItemDefaultFocus();
-            if (ImGui::IsItemHovered())
-            {
-                ImGui::BeginTooltip();
-                static std::vector<ImVec2> points(100);
-                ImGui::PlotSignal("##Empty", CurveSignal(g_curveMap[i].second), points, 0, 2, Greens::Chartreuse, 1, ImVec2(200,50), false);      
-                ImGui::EndTooltip();        
-            }
+            if (ImGui::IsItemHovered())            
+                m_rollOffHoveredIdx = i;
         }
         ImGui::EndCombo();
     }
 
     ImGui::Separator();
-    NodeSlot(m_sigName.c_str(), ImVec2(200, 0));
+    NodeSlot(m_sigName.c_str(), ImVec2(240, 0));
     if (SignalTarget()) {
         m_sigName = SignalPayload().first;
         m_signal = SignalPayload().second;
@@ -119,35 +123,56 @@ void Spatializer::update()
     }
     ImGui::SameLine();
     ImGui::Text("Signal");
-    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(ImGui::GetStyle().FramePadding.x, ImGui::GetStyle().FramePadding.y * 2));
     if (ImGui::Button(ICON_FA_PLAY, ImVec2(25,0)))
-        m_spatializer.play(m_signal);
+        spatializer.play(m_signal);
+    if (ImGui::IsItemClicked(1))
+        spatializer.stop();
     ImGui::SameLine();
-    if (ImGui::Button(ICON_FA_PAUSE))
-    { }
+
+
+    ImGui::PushItemWidth(103);
+    float v = (float)spatializer.getVolume();
+    if (ImGui::SliderFloat("##V", &v, 0, 1, "V"))
+        spatializer.setVolume(v);
     ImGui::SameLine();
-    if (ImGui::Button(ICON_FA_STOP))
-        m_spatializer.stop();
-    ImGui::SameLine(75);
-    ImGui::PushItemWidth(125);
-    float v = (float)m_spatializer.getVolume();
-    if (ImGui::MiniSliderFloat("##Volume", &v, 0, 1, true))
-        m_spatializer.setVolume(v);
-    ImGui::SameLine(75);
-    float p = (float)m_spatializer.getPitch();
+    float p = (float)spatializer.getPitch();
     p = std::log10(p);
-    if (ImGui::MiniSliderFloat("##Pitch", &p, -1, 1, false))
-        m_spatializer.setPitch(std::pow(10, p));
+    if (ImGui::SliderFloat("##P", &p, -1, 1, "P"))
+        spatializer.setPitch(std::pow(10, p));
     ImGui::PopItemWidth();
-    ImGui::PopStyleVar();
+
     ImGui::PopItemWidth();
     ImGui::EndGroup();
+    ImGui::EndGroup();
+    if (HelpTarget()) 
+        ImGui::OpenPopup("Spatializer Help");
+    if (ImGui::BeginHelpPopup("Spatializer Help")) {
+        ImGui::BulletText("Drag channels on to the Spatializer grid and position them as desired");
+        ImGui::BulletText("Remove channels by double-clicking them in the Spatializer");
+        ImGui::BulletText("Set X/Y grid divisions and enable snap with the " ICON_FA_MAGNET " button for easy layout");
+        ImGui::BulletText("Switch to 1D mode by clicking the " ICON_FA_TH " button");
+        ImGui::BulletText("Use the Fill button to uniformly place all channels in the current grid (alternates direction)");
+        ImGui::BulletText("Use the Clear button to remove all channels from the Spatializer");
+        ImGui::Separator();
+        ImGui::BulletText("Move the Target location by right-mouse dragging the grid");
+        ImGui::BulletText("Change the Target radius with the mouse scroll wheel");
+        ImGui::BulletText("Select a volume roll-off method from the drop down list");
+        ImGui::Separator();
+        ImGui::BulletText("Drag Signals from the Library into the Signal slot");
+        ImGui::BulletText("Left-click and right-click the " ICON_FA_PLAY " button to play and stop the Signal, respectively");
+        ImGui::BulletText("Use the V and P sliders to adjust master volume and pitch, respectively");
+        ImGui::EndPopup();
+    }
+
+    
 
     for (auto& chan : m_channels) 
-        m_spatializer.setPosition(chan.first, chan.second.pos.x, chan.second.pos.y);
-    m_spatializer.setTarget(m_target.pos.x, m_target.pos.y);
-    m_spatializer.setRadius(m_target.radius);
-    m_spatializer.update();
+        spatializer.setPosition(chan.first, chan.second.pos.x, chan.second.pos.y);
+    spatializer.setTarget(m_target.pos.x, m_target.pos.y);
+    spatializer.setRadius(m_target.radius);
+    spatializer.update();
+    
+
 }
 
 tact::Signal Spatializer::getSignal() {
@@ -155,22 +180,22 @@ tact::Signal Spatializer::getSignal() {
 }
 
 void Spatializer::onSessionChange() {
-    m_spatializer.bind(gui.device.session.get());
+    spatializer.bind(gui.device.session.get());
 }
 
 void Spatializer::onSessionDestroy() {
-    m_spatializer.bind(nullptr);
+    spatializer.bind(nullptr);
 }
 
 void Spatializer::sync() {
-    auto existing = m_spatializer.getChannels();
+    auto existing = spatializer.getChannels();
     std::vector<int> remove;
     for (auto& e : existing) {
         if (m_channels.count(e) == 0)
             remove.push_back(e);
     }
     for (auto& r : remove)
-        m_spatializer.remove(r);
+        spatializer.remove(r);
     update();
 }
 
@@ -182,7 +207,7 @@ void Spatializer::fillGrid() {
         float div[2] = {1.0f / (m_divs[0]-1), 1.0f / (m_divs[1]-1)};
         int k = 0;
         xFirst = !xFirst;
-        if (xFirst || m_1d)
+        if (xFirst || !m_2d)
         {
             for (int y = 0; y < m_divs[1]; ++y)
             {

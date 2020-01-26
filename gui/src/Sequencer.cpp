@@ -19,7 +19,26 @@ Sequencer::Sequencer(Gui& gui)
 
 void Sequencer::update()
 {
-    ImGui::Sequencer("Sequencer", m_interface);    
+    ImGui::BeginGroup();
+    ImGui::Sequencer("Sequencer", m_interface);  
+    ImGui::EndGroup();  
+    if (HelpTarget()) 
+        ImGui::OpenPopup("Sequencer Help");
+    
+    if (ImGui::BeginHelpPopup("Sequencer Help")) {
+        ImGui::BulletText("Drag Signals from the Library on to Track timelines");
+        ImGui::BulletText("Position Track Signals by dragging horizontally");
+        ImGui::BulletText("Add new Tracks with the " ICON_FA_PLUS_SQUARE " button");
+        ImGui::BulletText("You can also drag Signals on to the " ICON_FA_PLUS_SQUARE " button");
+        ImGui::BulletText("Remove the selected Track with the " ICON_FA_MINUS_SQUARE " button");
+        ImGui::BulletText("Use the " ICON_FA_EXPAND " button to fit the timeline to all Tracks");
+        ImGui::BulletText("Toggle timeline snap with the [ ] button");
+        ImGui::BulletText("Disable individual Tracks with the " ICON_FA_EYE " buttons");
+        ImGui::BulletText("Use the " ICON_FA_ANGLE_DOWN " button to reveal additional track controls");
+        ImGui::BulletText("Ctrl+Scroll to zoom in and out on the timeline");
+        ImGui::EndPopup();
+    }
+    
 }
 
 tact::Signal Sequencer::buildSignal() {

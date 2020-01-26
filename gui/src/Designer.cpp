@@ -1,4 +1,5 @@
 #include "Designer.hpp"
+#include "Custom.hpp"
 
 using namespace mahi::gui;
 
@@ -13,10 +14,9 @@ void Designer::update()
     ImGui::BeginChild("Designer##TabScroll");
     m_root.update();
     ImGui::EndChild();
-    bool openHelp = true;
     if (HelpTarget())
         ImGui::OpenPopup("Designer Help");
-    if (ImGui::BeginPopupModal("Designer Help", &openHelp, ImGuiWindowFlags_NoResize)) {
+    if (ImGui::BeginHelpPopup("Designer Help")) {
         ImGui::BulletText("Drag items from the Palette or Library tabs into empty slots of the Node stack");
         ImGui::BulletText("By default, the resulting output Signal will be the product of the entire Node stack");
         ImGui::BulletText("Each Node has controls to configure it");

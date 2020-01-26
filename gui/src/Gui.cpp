@@ -1,7 +1,10 @@
 #include "Gui.hpp"
 #include "DragAndDrop.hpp"
+#include <filesystem>
 
 using namespace mahi::gui;
+
+namespace fs = std::filesystem;
 
 Gui::Gui() : Application(960, 540, "Syntacts", false),
              theme(*this),
@@ -13,6 +16,7 @@ Gui::Gui() : Application(960, 540, "Syntacts", false),
              status(*this),
              debug(*this)
 {
+    fs::create_directories(saveDir());
     static auto inifile = saveDir() + "imgui.ini";
     ImGui::GetIO().IniFilename = inifile.c_str();
     positionWindows();
@@ -38,9 +42,8 @@ void Gui::update() {
 const std::string &Gui::saveDir()
 {
 #ifdef _WIN32
-    static std::string appData = std::string(std::getenv("APPDATA"));
-    static std::string dir = appData + std::string("\\Syntacts\\GUI\\");
-    std::filesystem::create_directories(dir);
+    static fs::path p = std::string(std::getenv("APPDATA")) + std::string("\\Syntacts\\GUI\\");
+    static std::string dir = p.generic_string();
 #else
     static std::string dir = "";
 #endif

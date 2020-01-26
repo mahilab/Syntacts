@@ -98,7 +98,7 @@ void StatusBar::renderButtons()
         else
             gui.theme.cycle();
     }
-    showTooltip("Cycle Themes");
+    showTooltip("Change Themes");
     
 
     ImGui::SameLine();
@@ -111,15 +111,15 @@ void StatusBar::renderButtons()
     if (ImGui::BeginPopupModal("Help", &modalOpen, ImGuiWindowFlags_NoResize))
     {
         ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + 250);
-        ImGui::TextWrapped("To get helpful information and tips, simply drag the " ICON_FA_QUESTION " button over areas of interest. (Work In Progress)");
+        ImGui::TextWrapped("To get helpful information and tips, simply drag the " ICON_FA_QUESTION " button over areas of interest.");
         ImGui::PopTextWrapPos();
         ImGui::EndPopup();
     }
     ImGui::SameLine();
     if (ImGui::Button(ICON_FA_INFO))
-        ImGui::OpenPopup("Syntacts GUI v1.0.0");
+        ImGui::OpenPopup("Syntacts GUI");
     showTooltip("Show General Info");
-    if (ImGui::BeginPopupModal("Syntacts GUI v1.0.0", &modalOpen, ImGuiWindowFlags_NoResize))
+    if (ImGui::BeginPopupModal("Syntacts GUI", &modalOpen, ImGuiWindowFlags_NoResize))
     {
         ImGui::Text("MAHI Lab");
         ImGui::SameLine(150);

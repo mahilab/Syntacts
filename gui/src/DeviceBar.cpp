@@ -113,10 +113,9 @@ void DeviceBar::update() {
     gui.status.showTooltip("Restart Sesssion");
     ImGui::EndGroup();
 
-    bool openHelp = true;
     if (HelpTarget()) 
         ImGui::OpenPopup("Device Help");
-    if (ImGui::BeginPopupModal("Device Help", &openHelp, ImGuiWindowFlags_NoResize)) {
+    if (ImGui::BeginHelpPopup("Device Help")) {
         ImGui::BulletText("Use the drop down lists to select your prefered API, Device, and sample rate");
         ImGui::BulletText("Press the " ICON_FA_BARS " button to show a list of all Devices");
         ImGui::BulletText("Press the " ICON_FA_SYNC " button to restart the current Session");

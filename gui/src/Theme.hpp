@@ -7,7 +7,8 @@ public:
     enum Theme {
         DarkDefault = 0,
         LightDefault,
-        DarkAlt,
+        DarkAlt1,
+        DarkAlt2,
         Valve,
         Theme_Count
     };

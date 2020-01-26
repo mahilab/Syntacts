@@ -84,7 +84,7 @@ void RenderGrid(ImRect bb, int nx, int ny, ImU32 gridColor, ImU32 bgColor, float
     }
 }
 
-void PlotSignal(const char *label, const tact::Signal &sig, std::vector<ImVec2> &points, float t1, float t2, ImVec4 color, float thickness, ImVec2 size, bool grid)
+void PlotSignal(const char *label, const tact::Signal &sig, std::vector<ImVec2> &points, float t1, float t2, ImVec4 color, float thickness, ImVec2 size, bool grid, bool text)
 {
     ImGuiWindow *window = GetCurrentWindow();
     if (window->SkipItems)
@@ -124,15 +124,16 @@ void PlotSignal(const char *label, const tact::Signal &sig, std::vector<ImVec2> 
     // DrawList->Flags &= ~ImDrawListFlags_AntiAliasedLines;
     DrawList->AddPolyline(&points[0], (int)points.size(), ImGui::ColorConvertFloat4ToU32(color), false, thickness);
     // DrawList->Flags |= ImDrawListFlags_AntiAliasedLines;
-
-    std::string txt;
-    std::stringstream ss;
-    ss << sig.length();
-    if (sig.length() != tact::INF)
-        ss << " s";
-    txt = ss.str();
-    ImVec2 txtSize = CalcTextSize(txt.c_str());
-    RenderText(frame_bb.Max - txtSize - style.FramePadding, txt.c_str());
+    if (text) {
+        std::string txt;
+        std::stringstream ss;
+        ss << sig.length();
+        if (sig.length() != tact::INF)
+            ss << " s";
+        txt = ss.str();
+        ImVec2 txtSize = CalcTextSize(txt.c_str());
+        RenderText(frame_bb.Max - txtSize - style.FramePadding, txt.c_str());
+    }
 }
 
 void RenderSignalInBounds(ImDrawList* DrawList, const tact::Signal& sig, float t1, float t2, ImRect bb, ImVec4 color, float thickness, int n) {
@@ -270,5 +271,40 @@ bool TimelineScrollbar(float* ltime, float* rtime, bool* lGrabbed, bool* rGrabbe
 
     return changed;
 }
+
+bool BeginHelpPopup(const char* name)
+{
+    ImGuiContext& g = *GImGui;
+    ImGuiWindow* window = g.CurrentWindow;
+    const ImGuiID id = window->GetID(name);
+    if (!IsPopupOpen(id))
+    {
+        g.NextWindowData.ClearFlags(); // We behave like Begin() and need to consume those values
+        return false;
+    }
+
+    // Center modal windows by default
+    // FIXME: Should test for (PosCond & window->SetWindowPosAllowFlags) with the upcoming window.
+    if ((g.NextWindowData.Flags & ImGuiNextWindowDataFlags_HasPos) == 0)
+    {
+        ImGuiViewportP* viewport = window->WasActive ? window->Viewport : (ImGuiViewportP*)GetMainViewport(); // FIXME-VIEWPORT: What may be our reference viewport?
+        SetNextWindowPos(viewport->GetCenter(), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+    }
+
+    ImGuiWindowFlags flags = ImGuiWindowFlags_Popup | ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoResize;
+    bool p_open = true;
+    const bool is_open = Begin(name, &p_open, flags);
+    if (!is_open || (!p_open)) // NB: is_open can be 'false' when the popup is completely clipped (e.g. zero size display)
+    {
+        EndPopup();
+        if (is_open)
+            ClosePopupToLevel(g.BeginPopupStack.Size, true);
+        return false;
+    }
+    return is_open;
+}
+
+
+
 
 } // namespace ImGui

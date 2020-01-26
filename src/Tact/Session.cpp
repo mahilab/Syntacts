@@ -48,7 +48,7 @@ public:
     double  lastVolume = 1.0f;
     double  pitch  = 1.0f;
     double  lastPitch = 1.0f;
-    bool   paused = true;
+    bool   paused = false;
     bool   stopped = true;
     
     void fillBuffer(float* buffer, unsigned long frames) {
@@ -70,12 +70,12 @@ public:
             for (unsigned long f = 0; f < frames; ++f) {
                 pitch += pitchIncr;
                 volume += volumeIncr;
-                buffer[f] = static_cast<float>( signal.sample(time) * volume );
+                buffer[f] = volume > 0 ? static_cast<float>( signal.sample(time) * volume ) : 0;
                 time += sampleLength * pitch;
             }
         }
         if (time > signal.length()) {
-            paused = true;
+            // paused = true;
             stopped = true;
         }
 

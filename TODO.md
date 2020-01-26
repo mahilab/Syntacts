@@ -45,13 +45,13 @@
 - ~~refresh library~~
 - ~~Sequencer tab~~
 - ~~remove carnot dep~~
+- ~~improve dnd interface~~
 - improved slot header
 - drag/drop help dialogs
 - PolyLine / KeyEnvelope
 - improve play/pause/stop interface
 - library signal references
 - lirbary signal busting
-- improve dnd interface
 
 ## Nice to Have
 - ~~CPU usage meter~~

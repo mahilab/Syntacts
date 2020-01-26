@@ -124,6 +124,7 @@ void Library::init()
 
 void Library::update()
 {
+    bool dummy = true;
     std::lock_guard<std::mutex> lock(m_mtx);
     ImGui::BeginFixed("Library", position, size);
     if (ImGui::BeginTabBar("LibraryWindowTabs"))
@@ -133,6 +134,13 @@ void Library::update()
             ImGui::BeginGroup();
             palette.update();
             ImGui::EndGroup();
+            if (HelpTarget())
+                ImGui::OpenPopup("Palette Help");
+            if (ImGui::BeginHelpPopup("Palette Help")) {
+                ImGui::BulletText("Drag items from the Palette to Node slots in the Designer tab");
+                ImGui::BulletText("Palette items cannot be dragged on to Channels, the Sequencer, or the Spatializer");
+                ImGui::EndPopup();
+            }
             ImGui::EndTabItem();
         }
         if (ImGui::BeginTabItem(" Library ##Tab"))
@@ -141,16 +149,26 @@ void Library::update()
             renderCreateDialog();
             ImGui::Separator();
             renderLibraryList();
+            if (ImGui::BeginPopupContextItem()){
+                ImGui::PushStyleColor(ImGuiCol_Button, {0,0,0,0});
+                if (ImGui::Button("Reveal in Explorer")) {
+                    System::openFolder(tact::Library::getLibraryDirectory());
+                    ImGui::CloseCurrentPopup();
+                }
+                ImGui::PopStyleColor();
+                ImGui::EndPopup();
+            }
             ImGui::Separator();
             renderLibraryControls();
             ImGui::EndGroup();
-            if (ImGui::BeginDragDropTarget())
-            {
-                if (const ImGuiPayload *playload = ImGui::AcceptDragDropPayload("DND_HELP"))
-                {
-                    print("TODO");
-                }
-                ImGui::EndDragDropTarget();
+            if (HelpTarget())
+                ImGui::OpenPopup("Library Help");
+            if (ImGui::BeginHelpPopup("Library Help")) {
+                ImGui::BulletText("Use the input field and " ICON_FA_PLUS_SQUARE " button to save the currently Designed or Sequenced Signal");
+                ImGui::BulletText("Signals are saved to the global Syntacts Library");
+                ImGui::BulletText("Hover over a Library Signal for a preview or right-click it for additional controls");
+                ImGui::BulletText("Use the buttons at the bottom to save, delete, and export Signals to different file formats");
+                ImGui::EndPopup();
             }
             ImGui::EndTabItem();
         }
@@ -163,7 +181,7 @@ void Library::update()
 
 void Library::renderCreateDialog()
 {
-    ImGui::PushItemWidth(-30);
+    ImGui::PushItemWidth(-22);
     bool entered = ImGui::InputText("##SignalName", m_inputBuffer, 64, ImGuiInputTextFlags_CharsNoBlank | ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue);
     ImGui::PopItemWidth();
     ImGui::SameLine();
@@ -228,7 +246,7 @@ void Library::renderLibraryControls()
     ImGui::BeginDisabled(disabled);
 
     // SAVE
-    float buttonWidth = (ImGui::GetContentRegionAvailWidth() - 6 * ImGui::GetStyle().FramePadding.x) / 6;    
+    float buttonWidth = (ImGui::GetContentRegionAvailWidth() - 5 * ImGui::GetStyle().ItemSpacing.x) / 6;    
     if (ImGui::Button(ICON_FA_SAVE, ImVec2(buttonWidth, 0)))
     {
         tact::Signal sig;
