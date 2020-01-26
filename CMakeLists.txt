@@ -115,6 +115,7 @@ endif()
 
 if (SYNTACTS_GUI)
     set(MAHI_GUI_EXAMPLES OFF CACHE BOOL "" FORCE)
+    set(MAHI_GUI_COROUTINES OFF CACHE BOOL "" FORCE)
     add_subdirectory(3rdparty/mahi-gui EXCLUDE_FROM_ALL)
     add_subdirectory("gui")
 endif()
