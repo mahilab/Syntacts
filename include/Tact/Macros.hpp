@@ -1,11 +1,19 @@
 #pragma once
 #include <Tact/Config.hpp>
 
+#include <cereal/types/memory.hpp>
+#include <cereal/archives/binary.hpp>
+#include <cereal/archives/json.hpp>
+#include <cereal/types/base_class.hpp>
+#include <cereal/types/vector.hpp>
+#include <cereal/access.hpp>
+#include <cereal/types/polymorphic.hpp>
+#include <cereal/types/functional.hpp>
+#include <cereal/types/map.hpp>
+#include <cereal/types/utility.hpp>
+
 ///////////////////////////////////////////////////////////////////////////////
 
-namespace cereal {
-    class access;
-}
 
 #define TACT_SERIALIZABLE friend class cereal::access; \
                           template <class Archive> \

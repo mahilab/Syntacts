@@ -1,0 +1,1 @@
+/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin/clang++   -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/library.dir/example_library.cpp.o  -o library  ../libsyntacts.a ../3rdparty/portaudio/libportaudio.a -framework CoreAudio -framework AudioToolbox -framework AudioUnit -framework Carbon -lm -lpthread 

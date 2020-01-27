@@ -1,0 +1,412 @@
+The system is: Darwin - 15.6.0 - x86_64
+Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+Compiler: /Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin/clang 
+Build flags: 
+Id flags:  
+
+The output was:
+0
+
+
+Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "a.out"
+
+The C compiler identification is Clang, found in "/Users/Krystin/Desktop/Syntacts/Syntacts/build-clang/CMakeFiles/3.16.3/CompilerIdC/a.out"
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+Compiler: /Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin/clang++ 
+Build flags: 
+Id flags:  
+
+The output was:
+0
+
+
+Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "a.out"
+
+The CXX compiler identification is Clang, found in "/Users/Krystin/Desktop/Syntacts/Syntacts/build-clang/CMakeFiles/3.16.3/CompilerIdCXX/a.out"
+
+Determining if the C compiler works passed with the following output:
+Change Dir: /Users/Krystin/Desktop/Syntacts/Syntacts/build-clang/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_e0577/fast && /Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_e0577.dir/build.make CMakeFiles/cmTC_e0577.dir/build
+Building C object CMakeFiles/cmTC_e0577.dir/testCCompiler.c.o
+/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin/clang    -o CMakeFiles/cmTC_e0577.dir/testCCompiler.c.o   -c /Users/Krystin/Desktop/Syntacts/Syntacts/build-clang/CMakeFiles/CMakeTmp/testCCompiler.c
+Linking C executable cmTC_e0577
+/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTC_e0577.dir/link.txt --verbose=1
+/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin/clang   -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_e0577.dir/testCCompiler.c.o  -o cmTC_e0577 
+
+
+
+Detecting C compiler ABI info compiled with the following output:
+Change Dir: /Users/Krystin/Desktop/Syntacts/Syntacts/build-clang/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_2885d/fast && /Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_2885d.dir/build.make CMakeFiles/cmTC_2885d.dir/build
+Building C object CMakeFiles/cmTC_2885d.dir/CMakeCCompilerABI.c.o
+/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin/clang   -v -Wl,-v -o CMakeFiles/cmTC_2885d.dir/CMakeCCompilerABI.c.o   -c /Applications/CMake.app/Contents/share/cmake-3.16/Modules/CMakeCCompilerABI.c
+clang version 9.0.0 (git://github.com/llvm/llvm-project.git 0399d5a9682b3cef71c653373e38890c63c4c365)
+Target: x86_64-apple-darwin15.6.0
+Thread model: posix
+InstalledDir: /Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin
+clang-9: warning: -Wl,-v: 'linker' input unused [-Wunused-command-line-argument]
+ "/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin/clang-9" -cc1 -triple x86_64-apple-macosx10.11.0 -Wdeprecated-objc-isa-usage -Werror=deprecated-objc-isa-usage -emit-obj -mrelax-all -disable-free -disable-llvm-verifier -discard-value-names -main-file-name CMakeCCompilerABI.c -mrelocation-model pic -pic-level 2 -mthread-model posix -mdisable-fp-elim -masm-verbose -munwind-tables -faligned-alloc-unavailable -target-cpu core2 -dwarf-column-info -debugger-tuning=lldb -ggnu-pubnames -target-linker-version 512.4 -v -coverage-notes-file /Users/Krystin/Desktop/Syntacts/Syntacts/build-clang/CMakeFiles/CMakeTmp/CMakeFiles/cmTC_2885d.dir/CMakeCCompilerABI.c.gcno -resource-dir /Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/lib/clang/9.0.0 -internal-isystem /usr/local/include -internal-isystem /Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/lib/clang/9.0.0/include -internal-externc-isystem /usr/include -fdebug-compilation-dir /Users/Krystin/Desktop/Syntacts/Syntacts/build-clang/CMakeFiles/CMakeTmp -ferror-limit 19 -fmessage-length 0 -stack-protector 1 -fblocks -fencode-extended-block-signature -fregister-global-dtors-with-atexit -fobjc-runtime=macosx-10.11.0 -fmax-type-align=16 -fdiagnostics-show-option -o CMakeFiles/cmTC_2885d.dir/CMakeCCompilerABI.c.o -x c /Applications/CMake.app/Contents/share/cmake-3.16/Modules/CMakeCCompilerABI.c
+clang -cc1 version 9.0.0 based upon LLVM 9.0.0 default target x86_64-apple-darwin15.6.0
+#include "..." search starts here:
+#include <...> search starts here:
+ /usr/local/include
+ /Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/lib/clang/9.0.0/include
+ /usr/include
+ /System/Library/Frameworks (framework directory)
+ /Library/Frameworks (framework directory)
+End of search list.
+Linking C executable cmTC_2885d
+/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTC_2885d.dir/link.txt --verbose=1
+/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin/clang   -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -v -Wl,-v CMakeFiles/cmTC_2885d.dir/CMakeCCompilerABI.c.o  -o cmTC_2885d 
+clang version 9.0.0 (git://github.com/llvm/llvm-project.git 0399d5a9682b3cef71c653373e38890c63c4c365)
+Target: x86_64-apple-darwin15.6.0
+Thread model: posix
+InstalledDir: /Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin
+ "/usr/bin/ld" -demangle -lto_library /Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/lib/libLTO.dylib -dynamic -arch x86_64 -macosx_version_min 10.11.0 -o cmTC_2885d -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTC_2885d.dir/CMakeCCompilerABI.c.o -lSystem /Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/lib/clang/9.0.0/lib/darwin/libclang_rt.osx.a
+@(#)PROGRAM:ld  PROJECT:ld64-274.2
+configured to support archs: armv6 armv7 armv7s arm64 i386 x86_64 x86_64h armv6m armv7k armv7m armv7em (tvOS)
+Library search paths:
+	/usr/lib
+	/usr/local/lib
+Framework search paths:
+	/Library/Frameworks/
+	/System/Library/Frameworks/
+
+
+
+Parsed C implicit include dir info from above output: rv=done
+  found start of include info
+  found start of implicit include info
+    add: [/usr/local/include]
+    add: [/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/lib/clang/9.0.0/include]
+    add: [/usr/include]
+  end of search list found
+  collapse include dir [/usr/local/include] ==> [/usr/local/include]
+  collapse include dir [/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/lib/clang/9.0.0/include] ==> [/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/lib/clang/9.0.0/include]
+  collapse include dir [/usr/include] ==> [/usr/include]
+  implicit include dirs: [/usr/local/include;/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/lib/clang/9.0.0/include;/usr/include]
+
+
+Parsed C implicit link information from above output:
+  link line regex: [^( *|.*[/\])(ld|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\]+-)?ld|collect2)[^/\]*( |$)]
+  ignore line: [Change Dir: /Users/Krystin/Desktop/Syntacts/Syntacts/build-clang/CMakeFiles/CMakeTmp]
+  ignore line: []
+  ignore line: [Run Build Command(s):/usr/bin/make cmTC_2885d/fast && /Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_2885d.dir/build.make CMakeFiles/cmTC_2885d.dir/build]
+  ignore line: [Building C object CMakeFiles/cmTC_2885d.dir/CMakeCCompilerABI.c.o]
+  ignore line: [/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin/clang   -v -Wl -v -o CMakeFiles/cmTC_2885d.dir/CMakeCCompilerABI.c.o   -c /Applications/CMake.app/Contents/share/cmake-3.16/Modules/CMakeCCompilerABI.c]
+  ignore line: [clang version 9.0.0 (git://github.com/llvm/llvm-project.git 0399d5a9682b3cef71c653373e38890c63c4c365)]
+  ignore line: [Target: x86_64-apple-darwin15.6.0]
+  ignore line: [Thread model: posix]
+  ignore line: [InstalledDir: /Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin]
+  ignore line: [clang-9: warning: -Wl -v: 'linker' input unused [-Wunused-command-line-argument]]
+  ignore line: [ "/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin/clang-9" -cc1 -triple x86_64-apple-macosx10.11.0 -Wdeprecated-objc-isa-usage -Werror=deprecated-objc-isa-usage -emit-obj -mrelax-all -disable-free -disable-llvm-verifier -discard-value-names -main-file-name CMakeCCompilerABI.c -mrelocation-model pic -pic-level 2 -mthread-model posix -mdisable-fp-elim -masm-verbose -munwind-tables -faligned-alloc-unavailable -target-cpu core2 -dwarf-column-info -debugger-tuning=lldb -ggnu-pubnames -target-linker-version 512.4 -v -coverage-notes-file /Users/Krystin/Desktop/Syntacts/Syntacts/build-clang/CMakeFiles/CMakeTmp/CMakeFiles/cmTC_2885d.dir/CMakeCCompilerABI.c.gcno -resource-dir /Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/lib/clang/9.0.0 -internal-isystem /usr/local/include -internal-isystem /Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/lib/clang/9.0.0/include -internal-externc-isystem /usr/include -fdebug-compilation-dir /Users/Krystin/Desktop/Syntacts/Syntacts/build-clang/CMakeFiles/CMakeTmp -ferror-limit 19 -fmessage-length 0 -stack-protector 1 -fblocks -fencode-extended-block-signature -fregister-global-dtors-with-atexit -fobjc-runtime=macosx-10.11.0 -fmax-type-align=16 -fdiagnostics-show-option -o CMakeFiles/cmTC_2885d.dir/CMakeCCompilerABI.c.o -x c /Applications/CMake.app/Contents/share/cmake-3.16/Modules/CMakeCCompilerABI.c]
+  ignore line: [clang -cc1 version 9.0.0 based upon LLVM 9.0.0 default target x86_64-apple-darwin15.6.0]
+  ignore line: [#include "..." search starts here:]
+  ignore line: [#include <...> search starts here:]
+  ignore line: [ /usr/local/include]
+  ignore line: [ /Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/lib/clang/9.0.0/include]
+  ignore line: [ /usr/include]
+  ignore line: [ /System/Library/Frameworks (framework directory)]
+  ignore line: [ /Library/Frameworks (framework directory)]
+  ignore line: [End of search list.]
+  ignore line: [Linking C executable cmTC_2885d]
+  ignore line: [/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTC_2885d.dir/link.txt --verbose=1]
+  ignore line: [/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin/clang   -Wl -search_paths_first -Wl -headerpad_max_install_names  -v -Wl -v CMakeFiles/cmTC_2885d.dir/CMakeCCompilerABI.c.o  -o cmTC_2885d ]
+  ignore line: [clang version 9.0.0 (git://github.com/llvm/llvm-project.git 0399d5a9682b3cef71c653373e38890c63c4c365)]
+  ignore line: [Target: x86_64-apple-darwin15.6.0]
+  ignore line: [Thread model: posix]
+  ignore line: [InstalledDir: /Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin]
+  link line: [ "/usr/bin/ld" -demangle -lto_library /Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/lib/libLTO.dylib -dynamic -arch x86_64 -macosx_version_min 10.11.0 -o cmTC_2885d -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTC_2885d.dir/CMakeCCompilerABI.c.o -lSystem /Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/lib/clang/9.0.0/lib/darwin/libclang_rt.osx.a]
+    arg [/usr/bin/ld] ==> ignore
+    arg [-demangle] ==> ignore
+    arg [-lto_library] ==> ignore, skip following value
+    arg [/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/lib/libLTO.dylib] ==> skip value of -lto_library
+    arg [-dynamic] ==> ignore
+    arg [-arch] ==> ignore
+    arg [x86_64] ==> ignore
+    arg [-macosx_version_min] ==> ignore
+    arg [10.11.0] ==> ignore
+    arg [-o] ==> ignore
+    arg [cmTC_2885d] ==> ignore
+    arg [-search_paths_first] ==> ignore
+    arg [-headerpad_max_install_names] ==> ignore
+    arg [-v] ==> ignore
+    arg [CMakeFiles/cmTC_2885d.dir/CMakeCCompilerABI.c.o] ==> ignore
+    arg [-lSystem] ==> lib [System]
+    arg [/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/lib/clang/9.0.0/lib/darwin/libclang_rt.osx.a] ==> lib [/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/lib/clang/9.0.0/lib/darwin/libclang_rt.osx.a]
+  Library search paths: [;/usr/lib;/usr/local/lib]
+  Framework search paths: [;/Library/Frameworks/;/System/Library/Frameworks/]
+  remove lib [System]
+  remove lib [/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/lib/clang/9.0.0/lib/darwin/libclang_rt.osx.a]
+  collapse library dir [/usr/lib] ==> [/usr/lib]
+  collapse library dir [/usr/local/lib] ==> [/usr/local/lib]
+  collapse framework dir [/Library/Frameworks/] ==> [/Library/Frameworks]
+  collapse framework dir [/System/Library/Frameworks/] ==> [/System/Library/Frameworks]
+  implicit libs: []
+  implicit dirs: [/usr/lib;/usr/local/lib]
+  implicit fwks: [/Library/Frameworks;/System/Library/Frameworks]
+
+
+Determining if the CXX compiler works passed with the following output:
+Change Dir: /Users/Krystin/Desktop/Syntacts/Syntacts/build-clang/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_99626/fast && /Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_99626.dir/build.make CMakeFiles/cmTC_99626.dir/build
+Building CXX object CMakeFiles/cmTC_99626.dir/testCXXCompiler.cxx.o
+/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin/clang++     -o CMakeFiles/cmTC_99626.dir/testCXXCompiler.cxx.o -c /Users/Krystin/Desktop/Syntacts/Syntacts/build-clang/CMakeFiles/CMakeTmp/testCXXCompiler.cxx
+Linking CXX executable cmTC_99626
+/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTC_99626.dir/link.txt --verbose=1
+/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin/clang++    -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_99626.dir/testCXXCompiler.cxx.o  -o cmTC_99626 
+
+
+
+Detecting CXX compiler ABI info compiled with the following output:
+Change Dir: /Users/Krystin/Desktop/Syntacts/Syntacts/build-clang/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_83143/fast && /Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_83143.dir/build.make CMakeFiles/cmTC_83143.dir/build
+Building CXX object CMakeFiles/cmTC_83143.dir/CMakeCXXCompilerABI.cpp.o
+/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin/clang++    -v -Wl,-v -o CMakeFiles/cmTC_83143.dir/CMakeCXXCompilerABI.cpp.o -c /Applications/CMake.app/Contents/share/cmake-3.16/Modules/CMakeCXXCompilerABI.cpp
+clang version 9.0.0 (git://github.com/llvm/llvm-project.git 0399d5a9682b3cef71c653373e38890c63c4c365)
+Target: x86_64-apple-darwin15.6.0
+Thread model: posix
+InstalledDir: /Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin
+clang-9: warning: -Wl,-v: 'linker' input unused [-Wunused-command-line-argument]
+ "/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin/clang-9" -cc1 -triple x86_64-apple-macosx10.11.0 -Wdeprecated-objc-isa-usage -Werror=deprecated-objc-isa-usage -emit-obj -mrelax-all -disable-free -disable-llvm-verifier -discard-value-names -main-file-name CMakeCXXCompilerABI.cpp -mrelocation-model pic -pic-level 2 -mthread-model posix -mdisable-fp-elim -masm-verbose -munwind-tables -faligned-alloc-unavailable -target-cpu core2 -dwarf-column-info -debugger-tuning=lldb -ggnu-pubnames -target-linker-version 512.4 -v -coverage-notes-file /Users/Krystin/Desktop/Syntacts/Syntacts/build-clang/CMakeFiles/CMakeTmp/CMakeFiles/cmTC_83143.dir/CMakeCXXCompilerABI.cpp.gcno -resource-dir /Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/lib/clang/9.0.0 -stdlib=libc++ -internal-isystem /Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin/../include/c++/v1 -internal-isystem /usr/include/c++/v1 -internal-isystem /usr/local/include -internal-isystem /Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/lib/clang/9.0.0/include -internal-externc-isystem /usr/include -fdeprecated-macro -fdebug-compilation-dir /Users/Krystin/Desktop/Syntacts/Syntacts/build-clang/CMakeFiles/CMakeTmp -ferror-limit 19 -fmessage-length 0 -stack-protector 1 -fblocks -fencode-extended-block-signature -fregister-global-dtors-with-atexit -fobjc-runtime=macosx-10.11.0 -fcxx-exceptions -fexceptions -fmax-type-align=16 -fdiagnostics-show-option -o CMakeFiles/cmTC_83143.dir/CMakeCXXCompilerABI.cpp.o -x c++ /Applications/CMake.app/Contents/share/cmake-3.16/Modules/CMakeCXXCompilerABI.cpp
+clang -cc1 version 9.0.0 based upon LLVM 9.0.0 default target x86_64-apple-darwin15.6.0
+ignoring nonexistent directory "/usr/include/c++/v1"
+#include "..." search starts here:
+#include <...> search starts here:
+ /Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin/../include/c++/v1
+ /usr/local/include
+ /Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/lib/clang/9.0.0/include
+ /usr/include
+ /System/Library/Frameworks (framework directory)
+ /Library/Frameworks (framework directory)
+End of search list.
+Linking CXX executable cmTC_83143
+/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTC_83143.dir/link.txt --verbose=1
+/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin/clang++    -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -v -Wl,-v CMakeFiles/cmTC_83143.dir/CMakeCXXCompilerABI.cpp.o  -o cmTC_83143 
+clang version 9.0.0 (git://github.com/llvm/llvm-project.git 0399d5a9682b3cef71c653373e38890c63c4c365)
+Target: x86_64-apple-darwin15.6.0
+Thread model: posix
+InstalledDir: /Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin
+ "/usr/bin/ld" -demangle -lto_library /Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/lib/libLTO.dylib -dynamic -arch x86_64 -macosx_version_min 10.11.0 -o cmTC_83143 -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTC_83143.dir/CMakeCXXCompilerABI.cpp.o -lc++ -lSystem /Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/lib/clang/9.0.0/lib/darwin/libclang_rt.osx.a
+@(#)PROGRAM:ld  PROJECT:ld64-274.2
+configured to support archs: armv6 armv7 armv7s arm64 i386 x86_64 x86_64h armv6m armv7k armv7m armv7em (tvOS)
+Library search paths:
+	/usr/lib
+	/usr/local/lib
+Framework search paths:
+	/Library/Frameworks/
+	/System/Library/Frameworks/
+
+
+
+Parsed CXX implicit include dir info from above output: rv=done
+  found start of include info
+  found start of implicit include info
+    add: [/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin/../include/c++/v1]
+    add: [/usr/local/include]
+    add: [/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/lib/clang/9.0.0/include]
+    add: [/usr/include]
+  end of search list found
+  collapse include dir [/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin/../include/c++/v1] ==> [/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/include/c++/v1]
+  collapse include dir [/usr/local/include] ==> [/usr/local/include]
+  collapse include dir [/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/lib/clang/9.0.0/include] ==> [/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/lib/clang/9.0.0/include]
+  collapse include dir [/usr/include] ==> [/usr/include]
+  implicit include dirs: [/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/include/c++/v1;/usr/local/include;/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/lib/clang/9.0.0/include;/usr/include]
+
+
+Parsed CXX implicit link information from above output:
+  link line regex: [^( *|.*[/\])(ld|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\]+-)?ld|collect2)[^/\]*( |$)]
+  ignore line: [Change Dir: /Users/Krystin/Desktop/Syntacts/Syntacts/build-clang/CMakeFiles/CMakeTmp]
+  ignore line: []
+  ignore line: [Run Build Command(s):/usr/bin/make cmTC_83143/fast && /Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_83143.dir/build.make CMakeFiles/cmTC_83143.dir/build]
+  ignore line: [Building CXX object CMakeFiles/cmTC_83143.dir/CMakeCXXCompilerABI.cpp.o]
+  ignore line: [/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin/clang++    -v -Wl -v -o CMakeFiles/cmTC_83143.dir/CMakeCXXCompilerABI.cpp.o -c /Applications/CMake.app/Contents/share/cmake-3.16/Modules/CMakeCXXCompilerABI.cpp]
+  ignore line: [clang version 9.0.0 (git://github.com/llvm/llvm-project.git 0399d5a9682b3cef71c653373e38890c63c4c365)]
+  ignore line: [Target: x86_64-apple-darwin15.6.0]
+  ignore line: [Thread model: posix]
+  ignore line: [InstalledDir: /Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin]
+  ignore line: [clang-9: warning: -Wl -v: 'linker' input unused [-Wunused-command-line-argument]]
+  ignore line: [ "/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin/clang-9" -cc1 -triple x86_64-apple-macosx10.11.0 -Wdeprecated-objc-isa-usage -Werror=deprecated-objc-isa-usage -emit-obj -mrelax-all -disable-free -disable-llvm-verifier -discard-value-names -main-file-name CMakeCXXCompilerABI.cpp -mrelocation-model pic -pic-level 2 -mthread-model posix -mdisable-fp-elim -masm-verbose -munwind-tables -faligned-alloc-unavailable -target-cpu core2 -dwarf-column-info -debugger-tuning=lldb -ggnu-pubnames -target-linker-version 512.4 -v -coverage-notes-file /Users/Krystin/Desktop/Syntacts/Syntacts/build-clang/CMakeFiles/CMakeTmp/CMakeFiles/cmTC_83143.dir/CMakeCXXCompilerABI.cpp.gcno -resource-dir /Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/lib/clang/9.0.0 -stdlib=libc++ -internal-isystem /Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin/../include/c++/v1 -internal-isystem /usr/include/c++/v1 -internal-isystem /usr/local/include -internal-isystem /Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/lib/clang/9.0.0/include -internal-externc-isystem /usr/include -fdeprecated-macro -fdebug-compilation-dir /Users/Krystin/Desktop/Syntacts/Syntacts/build-clang/CMakeFiles/CMakeTmp -ferror-limit 19 -fmessage-length 0 -stack-protector 1 -fblocks -fencode-extended-block-signature -fregister-global-dtors-with-atexit -fobjc-runtime=macosx-10.11.0 -fcxx-exceptions -fexceptions -fmax-type-align=16 -fdiagnostics-show-option -o CMakeFiles/cmTC_83143.dir/CMakeCXXCompilerABI.cpp.o -x c++ /Applications/CMake.app/Contents/share/cmake-3.16/Modules/CMakeCXXCompilerABI.cpp]
+  ignore line: [clang -cc1 version 9.0.0 based upon LLVM 9.0.0 default target x86_64-apple-darwin15.6.0]
+  ignore line: [ignoring nonexistent directory "/usr/include/c++/v1"]
+  ignore line: [#include "..." search starts here:]
+  ignore line: [#include <...> search starts here:]
+  ignore line: [ /Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin/../include/c++/v1]
+  ignore line: [ /usr/local/include]
+  ignore line: [ /Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/lib/clang/9.0.0/include]
+  ignore line: [ /usr/include]
+  ignore line: [ /System/Library/Frameworks (framework directory)]
+  ignore line: [ /Library/Frameworks (framework directory)]
+  ignore line: [End of search list.]
+  ignore line: [Linking CXX executable cmTC_83143]
+  ignore line: [/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTC_83143.dir/link.txt --verbose=1]
+  ignore line: [/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin/clang++    -Wl -search_paths_first -Wl -headerpad_max_install_names  -v -Wl -v CMakeFiles/cmTC_83143.dir/CMakeCXXCompilerABI.cpp.o  -o cmTC_83143 ]
+  ignore line: [clang version 9.0.0 (git://github.com/llvm/llvm-project.git 0399d5a9682b3cef71c653373e38890c63c4c365)]
+  ignore line: [Target: x86_64-apple-darwin15.6.0]
+  ignore line: [Thread model: posix]
+  ignore line: [InstalledDir: /Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin]
+  link line: [ "/usr/bin/ld" -demangle -lto_library /Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/lib/libLTO.dylib -dynamic -arch x86_64 -macosx_version_min 10.11.0 -o cmTC_83143 -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTC_83143.dir/CMakeCXXCompilerABI.cpp.o -lc++ -lSystem /Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/lib/clang/9.0.0/lib/darwin/libclang_rt.osx.a]
+    arg [/usr/bin/ld] ==> ignore
+    arg [-demangle] ==> ignore
+    arg [-lto_library] ==> ignore, skip following value
+    arg [/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/lib/libLTO.dylib] ==> skip value of -lto_library
+    arg [-dynamic] ==> ignore
+    arg [-arch] ==> ignore
+    arg [x86_64] ==> ignore
+    arg [-macosx_version_min] ==> ignore
+    arg [10.11.0] ==> ignore
+    arg [-o] ==> ignore
+    arg [cmTC_83143] ==> ignore
+    arg [-search_paths_first] ==> ignore
+    arg [-headerpad_max_install_names] ==> ignore
+    arg [-v] ==> ignore
+    arg [CMakeFiles/cmTC_83143.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
+    arg [-lc++] ==> lib [c++]
+    arg [-lSystem] ==> lib [System]
+    arg [/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/lib/clang/9.0.0/lib/darwin/libclang_rt.osx.a] ==> lib [/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/lib/clang/9.0.0/lib/darwin/libclang_rt.osx.a]
+  Library search paths: [;/usr/lib;/usr/local/lib]
+  Framework search paths: [;/Library/Frameworks/;/System/Library/Frameworks/]
+  remove lib [System]
+  remove lib [/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/lib/clang/9.0.0/lib/darwin/libclang_rt.osx.a]
+  collapse library dir [/usr/lib] ==> [/usr/lib]
+  collapse library dir [/usr/local/lib] ==> [/usr/local/lib]
+  collapse framework dir [/Library/Frameworks/] ==> [/Library/Frameworks]
+  collapse framework dir [/System/Library/Frameworks/] ==> [/System/Library/Frameworks]
+  implicit libs: [c++]
+  implicit dirs: [/usr/lib;/usr/local/lib]
+  implicit fwks: [/Library/Frameworks;/System/Library/Frameworks]
+
+
+Determining if the include file sys/types.h exists passed with the following output:
+Change Dir: /Users/Krystin/Desktop/Syntacts/Syntacts/build-clang/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_a0af2/fast && /Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_a0af2.dir/build.make CMakeFiles/cmTC_a0af2.dir/build
+Building C object CMakeFiles/cmTC_a0af2.dir/CheckIncludeFile.c.o
+/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin/clang    -o CMakeFiles/cmTC_a0af2.dir/CheckIncludeFile.c.o   -c /Users/Krystin/Desktop/Syntacts/Syntacts/build-clang/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+Linking C executable cmTC_a0af2
+/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTC_a0af2.dir/link.txt --verbose=1
+/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin/clang   -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_a0af2.dir/CheckIncludeFile.c.o  -o cmTC_a0af2 
+
+
+
+Determining if the include file stdint.h exists passed with the following output:
+Change Dir: /Users/Krystin/Desktop/Syntacts/Syntacts/build-clang/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_7ddf8/fast && /Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_7ddf8.dir/build.make CMakeFiles/cmTC_7ddf8.dir/build
+Building C object CMakeFiles/cmTC_7ddf8.dir/CheckIncludeFile.c.o
+/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin/clang    -o CMakeFiles/cmTC_7ddf8.dir/CheckIncludeFile.c.o   -c /Users/Krystin/Desktop/Syntacts/Syntacts/build-clang/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+Linking C executable cmTC_7ddf8
+/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7ddf8.dir/link.txt --verbose=1
+/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin/clang   -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_7ddf8.dir/CheckIncludeFile.c.o  -o cmTC_7ddf8 
+
+
+
+Determining if the include file stddef.h exists passed with the following output:
+Change Dir: /Users/Krystin/Desktop/Syntacts/Syntacts/build-clang/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_191e8/fast && /Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_191e8.dir/build.make CMakeFiles/cmTC_191e8.dir/build
+Building C object CMakeFiles/cmTC_191e8.dir/CheckIncludeFile.c.o
+/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin/clang    -o CMakeFiles/cmTC_191e8.dir/CheckIncludeFile.c.o   -c /Users/Krystin/Desktop/Syntacts/Syntacts/build-clang/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+Linking C executable cmTC_191e8
+/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTC_191e8.dir/link.txt --verbose=1
+/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin/clang   -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_191e8.dir/CheckIncludeFile.c.o  -o cmTC_191e8 
+
+
+
+Determining size of unsigned short passed with the following output:
+Change Dir: /Users/Krystin/Desktop/Syntacts/Syntacts/build-clang/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_dc3fa/fast && /Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_dc3fa.dir/build.make CMakeFiles/cmTC_dc3fa.dir/build
+Building C object CMakeFiles/cmTC_dc3fa.dir/CMAKE_SIZEOF_UNSIGNED_SHORT.c.o
+/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin/clang    -o CMakeFiles/cmTC_dc3fa.dir/CMAKE_SIZEOF_UNSIGNED_SHORT.c.o   -c /Users/Krystin/Desktop/Syntacts/Syntacts/build-clang/CMakeFiles/CheckTypeSize/CMAKE_SIZEOF_UNSIGNED_SHORT.c
+Linking C executable cmTC_dc3fa
+/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTC_dc3fa.dir/link.txt --verbose=1
+/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin/clang   -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_dc3fa.dir/CMAKE_SIZEOF_UNSIGNED_SHORT.c.o  -o cmTC_dc3fa 
+
+
+
+Determining if the system is big endian passed with the following output:
+Change Dir: /Users/Krystin/Desktop/Syntacts/Syntacts/build-clang/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_e539b/fast && /Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_e539b.dir/build.make CMakeFiles/cmTC_e539b.dir/build
+Building C object CMakeFiles/cmTC_e539b.dir/TestEndianess.c.o
+/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin/clang    -o CMakeFiles/cmTC_e539b.dir/TestEndianess.c.o   -c /Users/Krystin/Desktop/Syntacts/Syntacts/build-clang/CMakeFiles/CMakeTmp/TestEndianess.c
+Linking C executable cmTC_e539b
+/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTC_e539b.dir/link.txt --verbose=1
+/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin/clang   -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_e539b.dir/TestEndianess.c.o  -o cmTC_e539b 
+
+
+TestEndianess.c:
+/* A 16 bit integer is required. */
+typedef unsigned short cmakeint16;
+
+/* On a little endian machine, these 16bit ints will give "THIS IS LITTLE ENDIAN."
+   On a big endian machine the characters will be exchanged pairwise. */
+const cmakeint16 info_little[] =  {0x4854, 0x5349, 0x4920, 0x2053, 0x494c, 0x5454, 0x454c, 0x4520, 0x444e, 0x4149, 0x2e4e, 0x0000};
+
+/* on a big endian machine, these 16bit ints will give "THIS IS BIG ENDIAN."
+   On a little endian machine the characters will be exchanged pairwise. */
+const cmakeint16 info_big[] =     {0x5448, 0x4953, 0x2049, 0x5320, 0x4249, 0x4720, 0x454e, 0x4449, 0x414e, 0x2e2e, 0x0000};
+
+#ifdef __CLASSIC_C__
+int main(argc, argv) int argc; char *argv[];
+#else
+int main(int argc, char *argv[])
+#endif
+{
+  int require = 0;
+  require += info_little[argc];
+  require += info_big[argc];
+  (void)argv;
+  return require;
+}
+
+
+Determining if the include file pthread.h exists passed with the following output:
+Change Dir: /Users/Krystin/Desktop/Syntacts/Syntacts/build-clang/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_90d07/fast && /Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_90d07.dir/build.make CMakeFiles/cmTC_90d07.dir/build
+Building C object CMakeFiles/cmTC_90d07.dir/CheckIncludeFile.c.o
+/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin/clang    -o CMakeFiles/cmTC_90d07.dir/CheckIncludeFile.c.o   -c /Users/Krystin/Desktop/Syntacts/Syntacts/build-clang/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+Linking C executable cmTC_90d07
+/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTC_90d07.dir/link.txt --verbose=1
+/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin/clang   -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_90d07.dir/CheckIncludeFile.c.o  -o cmTC_90d07 
+
+
+
+Performing C SOURCE FILE Test CMAKE_HAVE_LIBC_PTHREAD succeeded with the following output:
+Change Dir: /Users/Krystin/Desktop/Syntacts/Syntacts/build-clang/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_214e5/fast && /Library/Developer/CommandLineTools/usr/bin/make -f CMakeFiles/cmTC_214e5.dir/build.make CMakeFiles/cmTC_214e5.dir/build
+Building C object CMakeFiles/cmTC_214e5.dir/src.c.o
+/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin/clang   -DCMAKE_HAVE_LIBC_PTHREAD   -o CMakeFiles/cmTC_214e5.dir/src.c.o   -c /Users/Krystin/Desktop/Syntacts/Syntacts/build-clang/CMakeFiles/CMakeTmp/src.c
+Linking C executable cmTC_214e5
+/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTC_214e5.dir/link.txt --verbose=1
+/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin/clang  -DCMAKE_HAVE_LIBC_PTHREAD -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTC_214e5.dir/src.c.o  -o cmTC_214e5 
+
+
+Source file was:
+#include <pthread.h>
+
+void* test_func(void* data)
+{
+  return data;
+}
+
+int main(void)
+{
+  pthread_t thread;
+  pthread_create(&thread, NULL, test_func, NULL);
+  pthread_detach(thread);
+  pthread_join(thread, NULL);
+  pthread_atfork(NULL, NULL, NULL);
+  pthread_exit(NULL);
+
+  return 0;
+}
+

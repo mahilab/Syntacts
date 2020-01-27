@@ -145,20 +145,20 @@ private:
 ///////////////////////////////////////////////////////////////////////////////
 
 /// A StackPool where memory management is only available to Friend
-template <size_t BlockSize, size_t BlockCount, class Friend>
-class FriendlyStackPool : public StackPool<BlockSize, BlockCount> {
-public:
-  using StackPool::blocksAvailable;
-  using StackPool::blocksTotal;
-  using StackPool::blocksUsed;
-  using StackPool::StackPool;
+// template <size_t BlockSize, size_t BlockCount, class Friend>
+// class FriendlyStackPool : public StackPool<BlockSize, BlockCount> {
+// public:
+//   using StackPool::blocksAvailable;
+//   using StackPool::blocksTotal;
+//   using StackPool::blocksUsed;
+//   using StackPool::StackPool;
 
-protected:
-  friend Friend;
-  using StackPool::allocate;
-  using StackPool::deallocate;
-  using StackPool::reset;
-};
+// protected:
+//   friend Friend;
+//   using StackPool::allocate;
+//   using StackPool::deallocate;
+//   using StackPool::reset;
+// };
 
 ///////////////////////////////////////////////////////////////////////////////
 
