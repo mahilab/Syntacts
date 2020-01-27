@@ -338,17 +338,14 @@ namespace Syntacts
     ///////////////////////////////////////////////////////////////////////////
     // LIBRARY
     ///////////////////////////////////////////////////////////////////////////
-
-
-    // class Library
-    // {
-    //     public static Signal LoadSignal(string name)
-    //     {
-    //         Signal sig = new Signal();
-    //         sig.handle = Dll.Library_loadSignal(name);
-    //         return sig;
-    //     }
-    // }
+    
+    class Library
+    {
+        public static Signal LoadSignal(string name)
+        {
+            return new Signal(Dll.Library_loadSignal(name));
+        }
+    }
 
     class Dll
     {

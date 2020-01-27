@@ -4,5 +4,13 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>
   </PropertyGroup>
+  
+  <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
+    <DefineConstants>SYNTACTS_WINDOWS</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(OS)' == 'Unix' ">
+    <DefineConstants>SYNTACTS_MACOS</DefineConstants>
+  </PropertyGroup>
 
 </Project>

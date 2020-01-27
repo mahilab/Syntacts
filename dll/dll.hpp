@@ -19,8 +19,6 @@ EXPORT int Session_open2(Handle session, int index);
 EXPORT int Session_open3(Handle session, int index, int channelCount, double sampleRate);
 EXPORT int Session_close(Handle session);
 EXPORT bool Session_isOpen(Handle session);
-EXPORT bool Session_isPlaying(Handle session, int channel);
-EXPORT bool Session_isPaused(Handle session, int channel);
 
 EXPORT int Session_play(Handle session, int channel, Handle signal);
 EXPORT int Session_playAll(Handle session, Handle signal);
@@ -30,6 +28,8 @@ EXPORT int Session_pause(Handle session, int channel);
 EXPORT int Session_pauseAll(Handle session);
 EXPORT int Session_resume(Handle session, int channel);
 EXPORT int Session_resumeAll(Handle session);
+EXPORT bool Session_isPlaying(Handle session, int channel);
+EXPORT bool Session_isPaused(Handle session, int channel);
 
 EXPORT int Session_setVolume(Handle session, int channel, double volume);
 EXPORT double Session_getVolume(Handle session, int channel);
@@ -61,6 +61,9 @@ EXPORT int Signal_count();
 // OPERATORS
 /////////////////////////////////////////////////////////////////////////////
 
+EXPORT Handle Product_create(Handle lhs, Handle rhs);
+EXPORT Handle Sum_create(Handle lhs, Handle rhs);
+
 EXPORT Handle Mul_SigFlt(Handle lhs, double rhs);
 EXPORT Handle Mul_FltSig(double lhs, Handle rhs);
 
@@ -71,11 +74,6 @@ EXPORT Handle Sub_SigFlt(Handle lhs, double rhs);
 EXPORT Handle Sub_FltSig(double lhs, Handle rhs);
 
 EXPORT Handle Neg_Sig(Handle signal);
-
-///////////////////////////////////////////////////////////////////////////////
-
-EXPORT Handle Product_create(Handle lhs, Handle rhs);
-EXPORT Handle Sum_create(Handle lhs, Handle rhs);
 
 ///////////////////////////////////////////////////////////////////////////////
 // GENERAL
@@ -114,31 +112,31 @@ EXPORT Handle ADSR_create(double a, double d, double s, double r, double amp1, d
 
 EXPORT Handle Sine_create1(Handle x);
 EXPORT Handle Sine_create2(double hertz);
-EXPORT Handle Sine_create3(double , double rate);
+EXPORT Handle Sine_create3(double initial, double rate);
 EXPORT Handle Sine_create4(double hertz, Handle modulation, double index);
 
 EXPORT Handle Square_create1(Handle x);
 EXPORT Handle Square_create2(double hertz);
-EXPORT Handle Square_create3(double , double rate);
+EXPORT Handle Square_create3(double initial, double rate);
 EXPORT Handle Square_create4(double hertz, Handle modulation, double index);
 
 EXPORT Handle Saw_create1(Handle x);
 EXPORT Handle Saw_create2(double hertz);
-EXPORT Handle Saw_create3(double , double rate);
+EXPORT Handle Saw_create3(double initial, double rate);
 EXPORT Handle Saw_create4(double hertz, Handle modulation, double index);
 
 EXPORT Handle Triangle_create1(Handle x);
 EXPORT Handle Triangle_create2(double hertz);
-EXPORT Handle Triangle_create3(double , double rate);
+EXPORT Handle Triangle_create3(double initial, double rate);
 EXPORT Handle Triangle_create4(double hertz, Handle modulation, double index);
 
 EXPORT Handle Pwm_create(double frequency, double dutyCycle);
 
 ///////////////////////////////////////////////////////////////////////////////
+// SEQUENCE
+///////////////////////////////////////////////////////////////////////////////
 
 EXPORT Handle Sequence_create();
-
-// TODO: push, insert, clear, head
 
 EXPORT Handle Sequence_SigSig(Handle lhs, Handle rhs);
 EXPORT Handle Sequence_SigFlt(Handle lhs, double rhs);
@@ -148,6 +146,10 @@ EXPORT void Sequence_SeqFlt(Handle lhs, double rhs);
 EXPORT void Sequence_SeqSig(Handle lhs, Handle rhs);
 EXPORT void Sequence_SeqSeq(Handle lhs, Handle rhs);
 
+// TODO: push, insert, clear, head
+
+///////////////////////////////////////////////////////////////////////////////
+// LIBRARY
 ///////////////////////////////////////////////////////////////////////////////
 
 EXPORT bool Library_saveSignal(Handle signal, const char* name);
@@ -156,7 +158,7 @@ EXPORT Handle Library_loadSignal(const char* name);
 // TODO: deleteSignal, exportSignal, importSignal
 
 ///////////////////////////////////////////////////////////////////////////////
+// DEBUG
+///////////////////////////////////////////////////////////////////////////////
 
 EXPORT int Debug_sigMapSize();
-
-///////////////////////////////////////////////////////////////////////////////
