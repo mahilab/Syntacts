@@ -11,14 +11,14 @@ void sleep(double seconds) {
 int main(int argc, char const *argv[])
 {
     auto s = Session_create();
-    Session_open(s, 4, 8, 44100);
+    Session_open1(s);
 
     std::cout << Debug_sigMapSize() << std::endl;
     std::cout << Signal_count() << std::endl;
 
-    auto sine1 = Sine_create(440);
-    auto sine2 = Sine_create(10);
-    auto adsr1 = ADSR_create(1,1,1,1);
+    auto sine1 = Sine_create2(440);
+    auto sine2 = Sine_create2(10);
+    auto adsr1 = ADSR_create(1,1,1,1,1,0.5);
     auto prod1 = Product_create(sine1, sine2);
     auto prod2 = Product_create(prod1, adsr1);
 
