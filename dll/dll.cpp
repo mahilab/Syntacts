@@ -46,14 +46,6 @@ bool Session_isOpen(Handle session) {
     return static_cast<Session*>(session)->isOpen();
 }
 
-bool Session_isPlaying(Handle session, int channel) {
-    return static_cast<Session*>(session)->isPlaying(channel);
-}
-
-bool Session_isPaused(Handle session, int channel) {
-    return static_cast<Session*>(session)->isPaused(channel);
-}
-
 int Session_play(Handle session, int channel, Handle signal) {
     return static_cast<Session*>(session)->play(channel, g_sigs.at(signal));
 }
@@ -84,6 +76,14 @@ int Session_resume(Handle session, int channel) {
 
 int Session_resumeAll(Handle session) {
     return static_cast<Session*>(session)->resumeAll();
+}
+
+bool Session_isPlaying(Handle session, int channel) {
+    return static_cast<Session*>(session)->isPlaying(channel);
+}
+
+bool Session_isPaused(Handle session, int channel) {
+    return static_cast<Session*>(session)->isPaused(channel);
 }
 
 int Session_setVolume(Handle session, int channel, double volume) {
@@ -160,6 +160,14 @@ int Signal_count() {
 
 ///////////////////////////////////////////////////////////////////////////////
 
+Handle Product_create(Handle lhs, Handle rhs) {
+    return store(Product(g_sigs.at(lhs), g_sigs.at(rhs)));
+}
+
+Handle Sum_create(Handle lhs, Handle rhs) {
+    return store(Sum(g_sigs.at(lhs), g_sigs.at(rhs)));
+}
+
 Handle Mul_SigFlt(Handle lhs, double rhs) {
     return store(g_sigs.at(lhs) * rhs);
 }
@@ -186,16 +194,6 @@ Handle Sub_FltSig(double lhs, Handle rhs) {
 
 Handle Neg_Sig(Handle signal) {
     return store(-g_sigs.at(signal));
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Handle Product_create(Handle lhs, Handle rhs) {
-    return store(Product(g_sigs.at(lhs), g_sigs.at(rhs)));
-}
-
-Handle Sum_create(Handle lhs, Handle rhs) {
-    return store(Sum(g_sigs.at(lhs), g_sigs.at(rhs)));
 }
 
 ///////////////////////////////////////////////////////////////////////////////

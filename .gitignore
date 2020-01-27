@@ -1,5 +1,6 @@
 # C++
 [Bb]uild/
+[Bb]uild*/
 ipch/
 .vscode/
 .vs/
