@@ -2,6 +2,8 @@
 #include <chrono>
 #include <thread>
 #include <iostream>
+#include <stdlib.h>
+#include <stdio.h>
 
 using namespace tact;
 

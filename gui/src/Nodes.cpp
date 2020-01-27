@@ -114,7 +114,7 @@ void NodeList::update()
     // render nodes
     for (std::size_t i = 0; i < m_nodes.size(); ++i)
     {
-        auto &header = m_nodes[i]->name() + "###SignalSlot";
+        std::string header = m_nodes[i]->name() + "###SignalSlot";
         ImGui::PushID(m_nodes[i]->id);
         ImGui::PushStyleColor(ImGuiCol_Header, ImGui::GetStyle().Colors[ImGuiCol_TabActive]);
         if (ImGui::CollapsingHeader(header.c_str(), &m_nodes[i]->active, ImGuiTreeNodeFlags_DefaultOpen))

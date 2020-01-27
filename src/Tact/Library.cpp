@@ -16,6 +16,15 @@
 #include <cstdlib>
 #include <cctype>
 
+#include <cereal/archives/binary.hpp>
+#include <cereal/archives/json.hpp>
+#include <cereal/types/memory.hpp>
+#include <cereal/types/vector.hpp>
+#include <cereal/types/polymorphic.hpp>
+#include <cereal/types/functional.hpp>
+#include <cereal/types/map.hpp>
+#include <cereal/types/utility.hpp>
+
 #include <misc/AudioFile.h>
 
 namespace fs = std::filesystem;
@@ -145,7 +154,13 @@ bool ensureDirectoryExists(fs::path path) {
 
 const std::string &getLibraryDirectory()
 {
+#ifdef _WIN32
     static fs::path dirPath = std::string(std::getenv("APPDATA")) + std::string("\\Syntacts\\Library\\");
+#elif __APPLE__
+    static fs::path dirPath = std::string(getenv("HOME")) + "/Library/Syntacts/Library/";
+#else
+    static fs::path dirPath = "";
+#endif
     static std::string dirStr = dirPath.generic_string();
     if (!fs::exists(dirStr) && !fs::create_directories(dirStr))
         std::cout << "Failed to create Syntacts Library folder" << std::endl; 

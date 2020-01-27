@@ -80,6 +80,7 @@ set_target_properties(portaudio_static PROPERTIES DEBUG_POSTFIX -d)
 add_library(syntacts "")
 add_library(syntacts::syntacts ALIAS syntacts)
 set_target_properties(syntacts PROPERTIES CXX_STANDARD 17 DEBUG_POSTFIX -d)
+target_compile_features(syntacts PUBLIC cxx_std_17)
 if (MSVC)
 set_target_properties(syntacts PROPERTIES COMPILE_FLAGS "/bigobj" )
 endif()
@@ -88,10 +89,12 @@ target_sources(syntacts PRIVATE ${SYNTACTS_SRC})
 target_compile_definitions(syntacts 
     PUBLIC 
         SYNTACTS_STATIC 
-        PA_USE_ASIO 
     PRIVATE 
         NOMINMAX
 )
+if (WIN32)
+target_compile_definitions(syntacts PUBLIC PA_USE_ASIO)
+endif()
 target_include_directories(syntacts
 	PUBLIC
 		$<INSTALL_INTERFACE:include>

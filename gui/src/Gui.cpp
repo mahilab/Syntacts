@@ -44,6 +44,9 @@ const std::string &Gui::saveDir()
 #ifdef _WIN32
     static fs::path p = std::string(std::getenv("APPDATA")) + std::string("\\Syntacts\\GUI\\");
     static std::string dir = p.generic_string();
+#elif __APPLE__
+    static fs::path p = std::string(getenv("HOME")) + "/Library/Syntacts/GUI/";
+    static std::string dir = p.generic_string();
 #else
     static std::string dir = "";
 #endif

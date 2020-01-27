@@ -1,7 +1,3 @@
-#ifndef PA_USE_ASIO
-    #define PA_USE_ASIO 1
-#endif
-
 #include "misc/SPSCQueue.h"
 #include <Tact/Session.hpp>
 #include <cassert>
@@ -402,7 +398,9 @@ public:
     }
 
     void openControlPanel(int index) {
+#if PA_USE_ASIO
         PaAsio_ShowControlPanel(index, nullptr);
+#endif
     }
 
     Device makeDevice(int index) {
