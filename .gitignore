@@ -4,7 +4,7 @@ ipch/
 .vscode/
 .vs/
 
-*.dll
+# *.dll
 *.lib
 *.exe
 
