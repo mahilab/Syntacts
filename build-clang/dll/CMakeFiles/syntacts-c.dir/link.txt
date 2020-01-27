@@ -1,1 +1,0 @@
-/Users/Krystin/Desktop/Syntacts/clang+llvm-9.0.0-x86_64-darwin-apple/bin/clang++  -dynamiclib -Wl,-headerpad_max_install_names  -o libsyntacts-c.dylib -install_name @rpath/libsyntacts-c.dylib CMakeFiles/syntacts-c.dir/dll.cpp.o  ../libsyntacts.a ../3rdparty/portaudio/libportaudio.a -framework CoreAudio -framework AudioToolbox -framework AudioUnit -framework Carbon -lm -lpthread 
