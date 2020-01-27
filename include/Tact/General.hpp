@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Tact/Macros.hpp>
+#include <Tact/Serialization.hpp>
 #include <Tact/Util.hpp>
 #include <memory>
 #include <string>

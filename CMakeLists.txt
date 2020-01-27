@@ -35,7 +35,7 @@ set(SYNTACTS_INCLUDE
     "include/Tact/Oscillator.hpp"
     "include/Tact/Signal.hpp"
     "include/Tact/Process.hpp"
-    "include/Tact/Macros.hpp"
+    "include/Tact/Serialization.hpp"
     "include/Tact/Session.hpp"
     "include/Tact/Spatializer.hpp"
     "include/Tact/Library.hpp"
@@ -69,6 +69,7 @@ set(SYNTACTS_SRC
 
 # portaudio
 set(PA_DLL_LINK_WITH_STATIC_RUNTIME ON CACHE BOOL "" FORCE)
+set(PA_BUILD_SHARED OFF CACHE BOOL "" FORCE)
 add_subdirectory(3rdparty/portaudio)
 set_target_properties(portaudio_static PROPERTIES DEBUG_POSTFIX -d)
 
@@ -94,12 +95,12 @@ target_compile_definitions(syntacts
 target_include_directories(syntacts
 	PUBLIC
 		$<INSTALL_INTERFACE:include>
-		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/cereal/include>
 	PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
         ${portaudio_INCLUDE_DIR}
         3rdparty
-        3rdparty/cereal/include
 )
 target_link_libraries(syntacts PUBLIC portaudio_static PRIVATE)
 
@@ -147,6 +148,7 @@ set_target_properties(syntacts PROPERTIES FOLDER "Syntacts")
 
 # install headers
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(DIRECTORY 3rdparty/cereal/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 # set where we want to install our config
 set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/Syntacts)

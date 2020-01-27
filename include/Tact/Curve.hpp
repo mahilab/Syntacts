@@ -1,7 +1,13 @@
 #pragma once
 
-#include <Tact/Macros.hpp>
+#include <Tact/Serialization.hpp>
 #include <memory>
+
+#define TACT_CURVE(T) struct T { \
+                          double operator()(double t) const; \
+                          template <class Archive> void serialize(Archive& archive) {} \
+                      };
+
 
 namespace tact {
 
