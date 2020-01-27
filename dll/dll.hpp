@@ -134,6 +134,8 @@ EXPORT Handle Pwm_create(double frequency, double dutyCycle);
 
 EXPORT Handle Sequence_create();
 
+// TODO: push, insert, clear, head
+
 EXPORT Handle Sequence_SigSig(Handle lhs, Handle rhs);
 EXPORT Handle Sequence_SigFlt(Handle lhs, double rhs);
 EXPORT Handle Sequence_FltSig(double lhs, Handle rhs);
@@ -146,6 +148,8 @@ EXPORT void Sequence_SeqSeq(Handle lhs, Handle rhs);
 
 EXPORT bool Library_saveSignal(Handle signal, const char* name);
 EXPORT Handle Library_loadSignal(const char* name);
+
+// TODO: deleteSignal, exportSignal, importSignal
 
 ///////////////////////////////////////////////////////////////////////////////
 

@@ -12,3 +12,5 @@ asiosdk/
 asiosdk*/
 asiosdk.zip
 asiosdk*.zip
+
+.DS_Store

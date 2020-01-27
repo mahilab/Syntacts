@@ -5,6 +5,8 @@ from ctypes import *
 _syntacts = cdll.LoadLibrary("./syntacts-c.dll")
 
 ###############################################################################
+# SESSION
+###############################################################################
 
 _syntacts.Session_create.restype  = c_void_p
 _syntacts.Session_create.argtypes = None
@@ -12,32 +14,68 @@ _syntacts.Session_create.argtypes = None
 _syntacts.Session_delete.restype  = None
 _syntacts.Session_delete.argtypes = [c_void_p]
 
-_syntacts.Session_open.restype  = c_int
-_syntacts.Session_open.argtypes = [c_void_p, c_int, c_int, c_double]
+_syntacts.Session_open1.restype = c_int
+_syntacts.Session_open1.argtypes = [c_void_p]
+
+_syntacts.Session_open2.restype = c_int
+_syntacts.Session_open2.argtypes = [c_void_p, c_int]
+
+_syntacts.Session_open3.restype  = c_int
+_syntacts.Session_open3.argtypes = [c_void_p, c_int, c_int, c_double]
 
 _syntacts.Session_close.restype  = c_int
 _syntacts.Session_close.argtypes = [c_void_p]
 
+_syntacts.Session_isOpen.restype  = c_bool
+_syntacts.Session_isOpen.argtypes = [c_void_p]
+
+
 _syntacts.Session_play.restype  = c_int
 _syntacts.Session_play.argtypes = [c_void_p, c_int, c_void_p]
+
+_syntacts.Session_playAll.restype = c_int
+_syntacts.Session_playAll.argtypes = [c_void_p, c_void_p]
 
 _syntacts.Session_stop.restype  = c_int
 _syntacts.Session_stop.argtypes = [c_void_p, c_int]
 
+_syntacts.Session_stopAll.restype = c_int
+_syntacts.Session_stopAll.argtypes = [c_void_p, c_void_p]
+
 _syntacts.Session_pause.restype  = c_int
 _syntacts.Session_pause.argtypes = [c_void_p, c_int]
+
+_syntacts.Session_pauseAll.restype = c_int
+_syntacts.Session_pauseAll.argtypes = [c_void_p, c_void_p]
 
 _syntacts.Session_resume.restype  = c_int
 _syntacts.Session_resume.argtypes = [c_void_p, c_int]
 
+_syntacts.Session_resumeAll.restype = c_int
+_syntacts.Session_resumeAll.argtypes = [c_void_p, c_void_p]
+
+
 _syntacts.Session_setVolume.restype  = c_int
 _syntacts.Session_setVolume.argtypes = [c_void_p, c_int, c_double]
+
+_syntacts.Session_getVolume.restype = c_double
+_syntacts.Session_getVolume.argtypes = [c_void_p, c_int]
 
 _syntacts.Session_setPitch.restype  = c_int
 _syntacts.Session_setPitch.argtypes = [c_void_p, c_int, c_double]
 
-_syntacts.Session_isOpen.restype  = c_bool
-_syntacts.Session_isOpen.argtypes = [c_void_p]
+_syntacts.Session_getPitch.restype = c_double
+_syntacts.Session_getPitch.argtypes = [c_void_p, c_int]
+
+_syntacts.Session_getChannelCount.restype = c_int
+_syntacts.Session_getChannelCount.argtypes = [c_void_p]
+
+_syntacts.Session_getSampleRate.restype = c_double
+_syntacts.Session_getSampleRate.argtypes = [c_void_p]
+
+_syntacts.Session_getCpuLoad.restype = c_double
+_syntacts.Session_getCpuLoad.argtypes = [c_void_p]
+
 
 _syntacts.Session_count.restype = c_int
 _syntacts.Session_count.argtypes = None
@@ -103,17 +141,17 @@ _syntacts.ADSR_create.argtypes = [c_double, c_double, c_double, c_double]
 
 ###############################################################################
 
-_syntacts.Sine_create.restype  = c_void_p
-_syntacts.Sine_create.argtypes = [c_double]
+_syntacts.Sine_create2.restype  = c_void_p
+_syntacts.Sine_create2.argtypes = [c_double]
 
-_syntacts.Square_create.restype  = c_void_p
-_syntacts.Square_create.argtypes = [c_double]
+_syntacts.Square_create2.restype  = c_void_p
+_syntacts.Square_create2.argtypes = [c_double]
 
-_syntacts.Saw_create.restype  = c_void_p
-_syntacts.Saw_create.argtypes = [c_double]
+_syntacts.Saw_create2.restype  = c_void_p
+_syntacts.Saw_create2.argtypes = [c_double]
 
-_syntacts.Triangle_create.restype  = c_void_p
-_syntacts.Triangle_create.argtypes = [c_double]
+_syntacts.Triangle_create2.restype  = c_void_p
+_syntacts.Triangle_create2.argtypes = [c_double]
 
 ###############################################################################
 
@@ -160,7 +198,7 @@ class Session:
         _syntacts.Session_delete(self._handle)
 
     def open(self, index, channelCount, sampleRate):
-        return _syntacts.Session_open(self._handle, index, channelCount, sampleRate)
+        return _syntacts.Session_open3(self._handle, index, channelCount, sampleRate)
 
     def close(self):
         return _syntacts.Session_close(self._handle)
@@ -277,19 +315,19 @@ class ADSR(Signal):
 
 class Sine(Signal):
     def __init__(self, frequency):
-        self._handle = _syntacts.Sine_create(frequency)
+        self._handle = _syntacts.Sine_create2(frequency)
 
 class Square(Signal):
     def __init__(self, frequency):
-        self._handle = _syntacts.Square_create(frequency)
+        self._handle = _syntacts.Square_create2(frequency)
 
 class Saw(Signal):
     def __init__(self, frequency):
-        self._handle = _syntacts.Saw_create(frequency)
+        self._handle = _syntacts.Saw_create2(frequency)
 
 class Triangle(Signal):
     def __init__(self, frequency):
-        self._handle = _syntacts.Triangle_create(frequency)
+        self._handle = _syntacts.Triangle_create2(frequency)
 
 ###############################################################################
 
