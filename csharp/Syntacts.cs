@@ -9,7 +9,7 @@ namespace Syntacts
     // SESSION
     //////////////////////////////////////////////////////////////////////////
 
-    class Session : IDisposable
+    public class Session : IDisposable
     {
         public Session()
         {
@@ -154,7 +154,7 @@ namespace Syntacts
     // SIGNAL
     ///////////////////////////////////////////////////////////////////////////
 
-    class Signal : IDisposable
+    public class Signal : IDisposable
     {
         public Signal() 
         { }
@@ -169,29 +169,29 @@ namespace Syntacts
             return Dll.Signal_sample(handle, t);
         }
 
-        public double Length
+        public double length
         {
             get { return Dll.Signal_length(handle); }
         }
 
-        public double Gain
+        public double gain
         {
             set { Dll.Signal_setGain(handle, value); }
             get { return Dll.Signal_getGain(handle); }
         }
 
-        public double Bias
+        public double bias
         {
             set { Dll.Signal_setBias(handle, value); }
             get { return Dll.Signal_getBias(handle); }
         }
 
-        public bool Valid
+        public bool valid
         {
             get { return Dll.Signal_valid(handle); }
         }
 
-        public static int Count
+        public static int count
         {
             get { return Dll.Signal_count(); }
         }
@@ -266,14 +266,14 @@ namespace Syntacts
     // OPERATORS
     ///////////////////////////////////////////////////////////////////////////
 
-    class Product : Signal
+    public class Product : Signal
     {
         public Product(Signal lhs, Signal rhs) :
             base(Dll.Product_create(lhs.handle, rhs.handle))
         { }
     }
 
-    class Sum : Signal
+    public class Sum : Signal
     {
         public Sum(Signal lhs, Signal rhs) :
             base(Dll.Sum_create(lhs.handle, rhs.handle))
@@ -284,7 +284,7 @@ namespace Syntacts
     // SEQUENCE
     ///////////////////////////////////////////////////////////////////////////
 
-    class Sequence : Signal {
+    public class Sequence : Signal {
         public Sequence(Handle handle) 
         {
             this.handle = handle;
@@ -319,7 +319,7 @@ namespace Syntacts
             return this;
         }
         
-        public double Head {
+        public double head {
             get { return Dll.Sequence_getHead(handle); }
             set { Dll.Sequence_setHead(handle, value); }
         }
@@ -341,19 +341,19 @@ namespace Syntacts
     // GENERAL
     ///////////////////////////////////////////////////////////////////////////
 
-    class Time : Signal {
+    public class Time : Signal {
         public Time() :
             base(Dll.Time_create())
         { }
     }
 
-    class Scalar : Signal {
+    public class Scalar : Signal {
         public Scalar(double value) :
             base(Dll.Scalar_create(value))
         { }
     }
 
-    class Ramp : Signal {
+    public class Ramp : Signal {
         public Ramp(double initial, double rate) :
             base(Dll.Ramp_create1(initial, rate))
         { }
@@ -363,19 +363,19 @@ namespace Syntacts
         { }
     }
 
-    class Noise : Signal {
+    public class Noise : Signal {
         public Noise() :
             base(Dll.Noise_create())
         { }
     }
 
-    class Expression : Signal {
+    public class Expression : Signal {
         public Expression(string expr) :
             base(Dll.Expression_create(expr))
         { }
     }
 
-    class Samples : Signal {
+    public class Samples : Signal {
         public Samples(float[] samples, double sampleRate) :
             base(Dll.Samples_create(samples, samples.Length, sampleRate))
         { }
@@ -385,21 +385,21 @@ namespace Syntacts
     // PROCESS
     ///////////////////////////////////////////////////////////////////////////
 
-    class Repeater : Signal 
+    public class Repeater : Signal 
     {
         public Repeater(Signal signal, int repetitions, double delay) :
             base(Dll.Repeater_create(signal.handle, repetitions, delay))
         { }
     }
 
-    class Stretcher : Signal
+    public class Stretcher : Signal
     {
         public Stretcher(Signal signal, double factor) :
             base(Dll.Stretcher_create(signal.handle, factor))
         { }
     }
 
-    class Reverser : Signal
+    public class Reverser : Signal
     {
         public Reverser(Signal signal) : 
             base(Dll.Reverser_create(signal.handle))
@@ -410,21 +410,21 @@ namespace Syntacts
     // ENVELOPE
     ///////////////////////////////////////////////////////////////////////////
 
-    class Envelope : Signal
+    public class Envelope : Signal
     {
         public Envelope(double duration, double amplitude = 1) :        
             base(Dll.Envelope_create(duration, amplitude))
         { }
     }
 
-    class ASR : Signal
+    public class ASR : Signal
     {
         public ASR(double a, double s, double r, double amplitude = 1) :
             base(Dll.ASR_create(a, s, r, amplitude))
         { }
     }
 
-    class ADSR : Signal
+    public class ADSR : Signal
     {
         public ADSR(double a, double d, double s, double r, double amplitude1 = 1, double amplitude2 = 0.5) :
             base(Dll.ADSR_create(a,d,s,r,amplitude1,amplitude2))
@@ -435,7 +435,7 @@ namespace Syntacts
     // OSCILLATOR
     ///////////////////////////////////////////////////////////////////////////
 
-    class Sine : Signal
+    public class Sine : Signal
     {
         public Sine(Signal x) :
             base(Dll.Sine_create1(x.handle))
@@ -454,7 +454,7 @@ namespace Syntacts
         { }        
     }
 
-    class Square : Signal
+    public class Square : Signal
     {
         public Square(Signal x) :
             base(Dll.Square_create1(x.handle))
@@ -473,7 +473,7 @@ namespace Syntacts
         { }        
     }
 
-    class Saw : Signal
+    public class Saw : Signal
     {
         public Saw(Signal x) :
             base(Dll.Saw_create1(x.handle))
@@ -492,7 +492,7 @@ namespace Syntacts
         { }        
     }
 
-    class Triangle : Signal
+    public class Triangle : Signal
     {
         public Triangle(Signal x) :
             base(Dll.Triangle_create1(x.handle))
@@ -511,7 +511,7 @@ namespace Syntacts
         { }        
     }
 
-    class Pwm : Signal 
+    public class Pwm : Signal 
     {
         public Pwm(double frequency, double dutyCycle) :
             base(Dll.Pwm_create(frequency, dutyCycle))
@@ -522,7 +522,7 @@ namespace Syntacts
     // LIBRARY
     ///////////////////////////////////////////////////////////////////////////
 
-    enum FileFormat {
+    public enum FileFormat {
         Auto = 0, ///< automatic detection from file path extension
         SIG = 1,  ///< Syntacts file form
         WAV = 2,  ///< WAV audio file format
@@ -531,7 +531,7 @@ namespace Syntacts
         JSON = 5  ///< human readable serialized format
     }
     
-    class Library
+    public class Library
     {
         public static bool LoadSignal(out Signal signal, string name)
         {
