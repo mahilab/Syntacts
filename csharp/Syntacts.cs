@@ -36,11 +36,6 @@ namespace Syntacts
             return Dll.Session_close(handle);
         }
 
-        public bool IsOpen()
-        {
-            return Dll.Session_isOpen(handle);
-        }
-
         public int Play(int channel, Signal signal)
         {
             return Dll.Session_play(handle, channel, signal.handle);
@@ -101,27 +96,32 @@ namespace Syntacts
             return Dll.Session_getPitch(handle, channel);
         }
 
-        public int ChannelCount
+        public bool open
+        {
+            get { return Dll.Session_isOpen(handle); }
+        }
+
+        public int channelCount
         {
             get { return Dll.Session_getChannelCount(handle); }
         }
 
-        public double SampleRate
+        public double sampleRate
         {
             get { return Dll.Session_getSampleRate(handle); }
         }
 
-        public double CpuLoad
+        public double cpuLoad
         {
             get { return Dll.Session_getCpuLoad(handle); }
         }
 
-        public bool Valid 
+        public bool valid 
         {
             get { return Dll.Session_valid(handle); }
         }
 
-        public static int Count
+        public static int count
         {
             get { return Dll.Session_count(); }
         }        

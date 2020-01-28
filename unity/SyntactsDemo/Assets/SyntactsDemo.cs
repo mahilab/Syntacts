@@ -2,60 +2,37 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-using System;
-using System.Runtime.InteropServices;
-
-using Syntacts;
+using Syntacts; // use Syntacts namespace
 
 public class SyntactsDemo : MonoBehaviour
 {
+    [Header("Device Initialization")]
+    public int deviceIndex = 0;
 
-    public int device;
-    public int channeCount;
-    public int channel = 0;
-    public string signalName;
-    public bool open;
+    [Header("Device Info")]
+    public bool open = false;
+    public bool valid = false;
+    public int channelCount = 0;
 
-    public AnimationCurve curve;
 
-    [Range(0,10)]
+    [Header("Playback")]
+    public string librarySignal = "mySignal";
+    [Range(0, 1)]
+    public float volume = 1;
+    [Range(0.01f,10)]
     public float pitch = 1;
 
     Session session;
 
-    // Start is called before the first frame update
-    void Start()
-    {
+    void Awake() {
         session = new Session();
-        session.Open(device, channeCount);
+        session.Open(deviceIndex);
+        channelCount = session.ChannelCount;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space)) {
-            var sine = new Sine(440);
-            var mod  = new Sine(10);
-            var adsr = new ADSR(1,1,1,1);
-            var prod = sine * mod;
-            session.Play(channel, prod);
-        }
-
-        if (Input.GetKeyDown(KeyCode.X))
-            session.Stop(channel);
-
-        if (Input.GetKeyDown(KeyCode.C)) {
-            print(Signal.Count());
-        }
-
-        if (Input.GetKeyDown(KeyCode.L)) {
-            var sig = Library.LoadSignal(signalName);
-            session.Play(channel, sig);
-        }
-
-        session.SetPitch(channel, pitch);
-
+    void Update() {
         open = session.IsOpen();
+        valid = session.Valid;
     }
 
     void OnDestroy() 
@@ -63,5 +40,4 @@ public class SyntactsDemo : MonoBehaviour
         session.Close();
         session.Dispose();
     }
-
 }
