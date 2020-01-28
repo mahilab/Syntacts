@@ -12,14 +12,16 @@ class Sequence {
 public:
     /// Default constructor
     Sequence();
+    /// Moves the insertion head forward/backward by t
+    Sequence& push(double t);
     /// Pushes a Signal at the head position and then moves the head forward
-    void push(Signal signal);
+    Sequence& push(Signal signal);
     /// Pushes another Sequence at the head position and then moves the head forward
-    void push(Sequence sequence);
+    Sequence& push(Sequence sequence);
     /// Inserts a Signal at position t in this Sequence but does NOT move head
-    void insert(Signal signal, double t);
+    Sequence& insert(Signal signal, double t);
     /// Inserts another Sequence at position t in this Sequence but does NOT move head
-    void insert(Sequence sequence, double t);
+    Sequence& insert(Sequence sequence, double t);
     /// Clears the Sequence
     void clear();
 

@@ -5,7 +5,18 @@
 
 using namespace tact;
 
-std::unordered_map<void*, Signal> g_sigs;
+std::unordered_map<Handle, Signal> g_sigs;
+std::unordered_map<Handle, std::unique_ptr<Session>> g_sessions; // exposes "issues" that need to be investigated
+
+struct Finalizer {
+    ~Finalizer()
+    { 
+        g_sigs.clear();
+        g_sessions.clear(); 
+    }
+};
+
+Finalizer g_finalizer;
 
 template <typename S>
 inline Handle store(const S& s) {
@@ -18,12 +29,18 @@ inline Handle store(const S& s) {
 ///////////////////////////////////////////////////////////////////////////////
 
 Handle Session_create() {
-    Session* session = new Session();
-    return static_cast<void*>(session);
+    std::unique_ptr session = std::make_unique<Session>();
+    Handle h = static_cast<Handle>(session.get());
+    g_sessions.emplace(h, std::move(session));
+    return h;
 }
 
 void Session_delete(Handle session) {
-    delete static_cast<Session*>(session);
+    g_sessions.erase(session);    
+}
+
+bool Session_valid(Handle session) {
+    return g_sessions.count(session) > 0;
 }
 
 int Session_open1(Handle session) {
@@ -121,12 +138,12 @@ int Session_count() {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool Signal_valid(Handle signal) {
-    return g_sigs.count(signal) > 0;
-}
-
 void Signal_delete(Handle signal) {
     g_sigs.erase(signal);
+}
+
+bool Signal_valid(Handle signal) {
+    return g_sigs.count(signal) > 0;
 }
 
 double Signal_sample(Handle signal, double t) {
@@ -198,6 +215,87 @@ Handle Neg_Sig(Handle signal) {
 
 ///////////////////////////////////////////////////////////////////////////////
 
+Handle Sequence_create() {
+    return store(Sequence());
+}
+
+double Sequence_getHead(Handle handle) {
+    Sequence& s = *(Sequence*)g_sigs.at(handle).get();
+    return s.head;
+}
+
+void Sequence_setHead(Handle handle, double head) {
+    Sequence& s = *(Sequence*)g_sigs.at(handle).get();
+    s.head = head;
+}
+
+void Sequence_pushFlt(Handle handle, double t) {
+    Sequence& s = *(Sequence*)g_sigs.at(handle).get();
+    s.push(t);
+}
+
+void Sequence_pushSig(Handle handle, Handle signal) {
+    Sequence& s = *(Sequence*)g_sigs.at(handle).get();
+    s.push(g_sigs.at(signal));
+}
+
+void Sequence_pushSeq(Handle handle, Handle sequence) {
+    Sequence& s1 = *(Sequence*)g_sigs.at(handle).get();
+    Sequence& s2 = *(Sequence*)g_sigs.at(sequence).get();
+    s1.push(s2);
+}
+
+void Sequence_insertSig(Handle handle, Handle signal, double t) {
+    Sequence& s = *(Sequence*)g_sigs.at(handle).get();
+    s.insert(g_sigs.at(signal), t);
+}
+
+void Sequence_insertSeq(Handle handle, Handle sequence, double t) {
+    Sequence& s1 = *(Sequence*)g_sigs.at(handle).get();
+    Sequence& s2 = *(Sequence*)g_sigs.at(sequence).get();
+    s1.insert(s2, t);
+}
+
+void Sequence_clear(Handle handle) {
+    Sequence& s = *(Sequence*)g_sigs.at(handle).get();
+    s.clear();
+}
+
+
+
+Handle Sequence_SigSig(Handle lhs, Handle rhs) {
+    auto s = g_sigs.at(lhs) << g_sigs.at(rhs);
+    return store(s);
+}
+
+Handle Sequence_SigFlt(Handle lhs, double rhs) {
+    auto s = g_sigs.at(lhs) << rhs;
+    return store(s);
+}
+
+Handle Sequence_FltSig(double lhs, Handle rhs) {
+    auto s = lhs << g_sigs.at(rhs);
+    return store(s);
+}
+
+void Sequence_SeqFlt(Handle lhs, double rhs) {
+    Sequence& s = *(Sequence*)g_sigs.at(lhs).get();
+    s << rhs;
+}
+
+void Sequence_SeqSig(Handle lhs, Handle rhs) {
+    Sequence& s = *(Sequence*)g_sigs.at(lhs).get();
+    s << g_sigs.at(rhs);
+}
+
+void Sequence_SeqSeq(Handle lhs, Handle rhs) {
+    Sequence& s1 = *(Sequence*)g_sigs.at(lhs).get();
+    Sequence& s2 = *(Sequence*)g_sigs.at(rhs).get();
+    s1 << s2;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 Handle Time_create() {
     return store(Time());
 }
@@ -206,8 +304,12 @@ Handle Scalar_create(double value) {
     return store(Scalar(value));
 }
 
-Handle Ramp_create(double initial, double rate) {
+Handle Ramp_create1(double initial, double rate) {
     return store(Ramp(initial, rate));
+}
+
+Handle Ramp_create2(double initial, double final, double duration) {
+    return store(Ramp(initial, final, duration));
 }
 
 Handle Noise_create() {
@@ -323,55 +425,30 @@ Handle Pwm_create(double frequency, double dutyCycle) {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Handle Sequence_create() {
-    return store(Sequence());
-}
-
-Handle Sequence_SigSig(Handle lhs, Handle rhs) {
-    auto s = g_sigs.at(lhs) << g_sigs.at(rhs);
-    return store(s);
-}
-
-Handle Sequence_SigFlt(Handle lhs, double rhs) {
-    auto s = g_sigs.at(lhs) << rhs;
-    return store(s);
-}
-
-Handle Sequence_FltSig(double lhs, Handle rhs) {
-    auto s = lhs << g_sigs.at(rhs);
-    return store(s);
-}
-
-void Sequence_SeqFlt(Handle lhs, double rhs) {
-    Sequence& s = *(Sequence*)g_sigs.at(lhs).get();
-    s << rhs;
-}
-
-void Sequence_SeqSig(Handle lhs, Handle rhs) {
-    Sequence& s = *(Sequence*)g_sigs.at(lhs).get();
-    s << g_sigs.at(rhs);
-}
-
-void Sequence_SeqSeq(Handle lhs, Handle rhs) {
-    Sequence& s1 = *(Sequence*)g_sigs.at(lhs).get();
-    Sequence& s2 = *(Sequence*)g_sigs.at(rhs).get();
-    s1 << s2;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 bool Library_saveSignal(Handle signal, const char* name) {
     return Library::saveSignal(g_sigs.at(signal), name);
 } 
 
 Handle Library_loadSignal(const char* name) {
     Signal sig;
-    if (Library::loadSignal(sig, name)) {
+    if (Library::loadSignal(sig, name)) 
+        return store(sig);    
+    return nullptr;    
+}
+
+bool Library_deleteSignal(const char* name) {
+    return Library::deleteSignal(name);
+}
+
+bool Library_exportSignal(Handle signal, const char* filePath, int format, int sampleRate, double maxLength) {
+    return Library::exportSignal(g_sigs.at(signal), filePath, static_cast<FileFormat>(format), sampleRate, maxLength);
+}
+
+Handle Library_importSignal(const char* filePath, int format, int sampleRate) {
+    Signal sig;
+    if (Library::importSignal(sig, filePath, static_cast<FileFormat>(format), sampleRate))
         return store(sig);
-    }
-    else {
-        return nullptr;
-    }
+    return nullptr;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

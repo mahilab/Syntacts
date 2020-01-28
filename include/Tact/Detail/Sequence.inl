@@ -2,18 +2,15 @@ namespace tact
 {
 
 inline Sequence& Sequence::operator<<(double rhs) {
-    head += rhs;
-    return *this;
+    return push(rhs);
 }
 
 inline Sequence& Sequence::operator<<(Signal rhs) {
-    push(rhs);
-    return *this;
+    return push(rhs);
 }
 
 inline Sequence& Sequence::operator<<(Sequence rhs) {
-    push(rhs);
-    return *this;
+    return push(rhs);
 }
 
 inline Sequence operator<<(Signal lhs, Signal rhs) {

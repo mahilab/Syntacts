@@ -19,10 +19,10 @@ double Scalar::length() const
     return INF;
 }
 
-Ramp::Ramp(double _initial, double _rate) : initial(_initial), rate(_rate) {}
-Ramp::Ramp(double _initial, double _final, double _span) : initial(_initial), rate((_final - _initial) / _span) {}
+Ramp::Ramp(double _initial, double _rate) : initial(_initial), rate(_rate), duration(INF) {}
+Ramp::Ramp(double _initial, double _final, double _duration) : initial(_initial), rate((_final - _initial) / _duration), duration(_duration) {}
 double Ramp::sample(double t) const { return initial + rate * t; }
-double Ramp::length() const { return INF; }
+double Ramp::length() const { return duration; }
 
 Noise::Noise()
 { }

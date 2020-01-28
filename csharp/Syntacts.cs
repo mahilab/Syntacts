@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Syntacts
 {
-    using Handle = System.IntPtr; // C void*
+    using Handle = System.IntPtr; // ~ C void*
 
     ///////////////////////////////////////////////////////////////////////////
     // SESSION
@@ -116,10 +116,15 @@ namespace Syntacts
             get { return Dll.Session_getCpuLoad(handle); }
         }
 
+        public bool Valid 
+        {
+            get { return Dll.Session_valid(handle); }
+        }
+
         public static int Count
         {
             get { return Dll.Session_count(); }
-        }
+        }        
 
         ~Session()
         {
@@ -151,6 +156,8 @@ namespace Syntacts
 
     class Signal : IDisposable
     {
+        public Signal() 
+        { }
 
         public Signal(Handle handle)
         {
@@ -274,28 +281,141 @@ namespace Syntacts
     }
 
     ///////////////////////////////////////////////////////////////////////////
+    // SEQUENCE
+    ///////////////////////////////////////////////////////////////////////////
+
+    class Sequence : Signal {
+        public Sequence(Handle handle) 
+        {
+            this.handle = handle;
+        }
+
+        public Sequence() : 
+            base(Dll.Sequence_create())
+        { }
+
+        public Sequence Push(double t) {
+            Dll.Sequence_pushFlt(handle, t);
+            return this;
+        }
+
+        public Sequence Push(Signal signal) {
+            Dll.Sequence_pushSig(handle, signal.handle);
+            return this;
+        }
+
+        public Sequence Push(Sequence sequence) {
+            Dll.Sequence_pushSeq(handle, sequence.handle);
+            return this;
+        }
+
+        public Sequence Insert(Signal signal, double t) {
+            Dll.Sequence_insertSig(handle, signal.handle, t);
+            return this;
+        }
+
+        public Sequence Insert(Sequence sequence, double t) {
+            Dll.Sequence_insertSeq(handle, sequence.handle, t);
+            return this;
+        }
+        
+        public double Head {
+            get { return Dll.Sequence_getHead(handle); }
+            set { Dll.Sequence_setHead(handle, value); }
+        }
+
+        public static Sequence Combine(Signal lhs, Signal rhs) {
+            return new Sequence(Dll.Sequence_SigSig(lhs.handle,rhs.handle));
+        }
+
+        public static Sequence Combine(Signal lhs, double rhs) {
+            return new Sequence(Dll.Sequence_SigFlt(lhs.handle,rhs));
+        }
+
+        public static Sequence Combine(double lhs, Signal rhs) {
+            return new Sequence(Dll.Sequence_FltSig(lhs,rhs.handle));
+        }
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
     // GENERAL
     ///////////////////////////////////////////////////////////////////////////
 
-    // TODO
+    class Time : Signal {
+        public Time() :
+            base(Dll.Time_create())
+        { }
+    }
+
+    class Scalar : Signal {
+        public Scalar(double value) :
+            base(Dll.Scalar_create(value))
+        { }
+    }
+
+    class Ramp : Signal {
+        public Ramp(double initial, double rate) :
+            base(Dll.Ramp_create1(initial, rate))
+        { }
+
+        public Ramp(double initial, double final, double duration) :
+            base(Dll.Ramp_create2(initial, final, duration))
+        { }
+    }
+
+    class Noise : Signal {
+        public Noise() :
+            base(Dll.Noise_create())
+        { }
+    }
+
+    class Expression : Signal {
+        public Expression(string expr) :
+            base(Dll.Expression_create(expr))
+        { }
+    }
+
+    class Samples : Signal {
+        public Samples(float[] samples, double sampleRate) :
+            base(Dll.Samples_create(samples, samples.Length, sampleRate))
+        { }
+    }
 
     ///////////////////////////////////////////////////////////////////////////
     // PROCESS
     ///////////////////////////////////////////////////////////////////////////
 
-    // TODO
+    class Repeater : Signal 
+    {
+        public Repeater(Signal signal, int repetitions, double delay) :
+            base(Dll.Repeater_create(signal.handle, repetitions, delay))
+        { }
+    }
+
+    class Stretcher : Signal
+    {
+        public Stretcher(Signal signal, double factor) :
+            base(Dll.Stretcher_create(signal.handle, factor))
+        { }
+    }
+
+    class Reverser : Signal
+    {
+        public Reverser(Signal signal) : 
+            base(Dll.Reverser_create(signal.handle))
+        { }
+    }
 
     ///////////////////////////////////////////////////////////////////////////
     // ENVELOPE
     ///////////////////////////////////////////////////////////////////////////
 
-    // class Envelope : Signal
-    // {
-    //     public Envelope(double duration)
-    //     {
-    //         handle = Dll.Envelope_create(duration);
-    //     }
-    // }
+    class Envelope : Signal
+    {
+        public Envelope(double duration, double amplitude = 1) :        
+            base(Dll.Envelope_create(duration, amplitude))
+        { }
+    }
 
     class ASR : Signal
     {
@@ -304,13 +424,12 @@ namespace Syntacts
         { }
     }
 
-    // class ADSR : Signal
-    // {
-    //     public ADSR(double a, double d, double s, double r)
-    //     {
-    //         handle = Dll.ADSR_create(a, d, s, r);
-    //     }
-    // }
+    class ADSR : Signal
+    {
+        public ADSR(double a, double d, double s, double r, double amplitude1 = 1, double amplitude2 = 0.5) :
+            base(Dll.ADSR_create(a,d,s,r,amplitude1,amplitude2))
+        { }
+    }
 
     ///////////////////////////////////////////////////////////////////////////
     // OSCILLATOR
@@ -335,17 +454,116 @@ namespace Syntacts
         { }        
     }
 
+    class Square : Signal
+    {
+        public Square(Signal x) :
+            base(Dll.Square_create1(x.handle))
+        { }
+
+        public Square(double hertz) :
+            base(Dll.Square_create2(hertz))
+        { }
+
+        public Square(double initial, double rate) :
+            base(Dll.Square_create3(initial, rate))
+        { }
+
+        public Square(double hertz, Signal modulation, double index) :
+            base(Dll.Square_create4(hertz, modulation.handle, index))
+        { }        
+    }
+
+    class Saw : Signal
+    {
+        public Saw(Signal x) :
+            base(Dll.Saw_create1(x.handle))
+        { }
+
+        public Saw(double hertz) :
+            base(Dll.Saw_create2(hertz))
+        { }
+
+        public Saw(double initial, double rate) :
+            base(Dll.Saw_create3(initial, rate))
+        { }
+
+        public Saw(double hertz, Signal modulation, double index) :
+            base(Dll.Saw_create4(hertz, modulation.handle, index))
+        { }        
+    }
+
+    class Triangle : Signal
+    {
+        public Triangle(Signal x) :
+            base(Dll.Triangle_create1(x.handle))
+        { }
+
+        public Triangle(double hertz) :
+            base(Dll.Triangle_create2(hertz))
+        { }
+
+        public Triangle(double initial, double rate) :
+            base(Dll.Triangle_create3(initial, rate))
+        { }
+
+        public Triangle(double hertz, Signal modulation, double index) :
+            base(Dll.Triangle_create4(hertz, modulation.handle, index))
+        { }        
+    }
+
+    class Pwm : Signal 
+    {
+        public Pwm(double frequency, double dutyCycle) :
+            base(Dll.Pwm_create(frequency, dutyCycle))
+        { }
+    }
+
     ///////////////////////////////////////////////////////////////////////////
     // LIBRARY
     ///////////////////////////////////////////////////////////////////////////
+
+    enum FileFormat {
+        Auto = 0, ///< automatic detection from file path extension
+        SIG = 1,  ///< Syntacts file form
+        WAV = 2,  ///< WAV audio file format
+        AIFF = 3, ///< AIFF audio file format
+        CSV = 4,  ///< comman-separated-value format,
+        JSON = 5  ///< human readable serialized format
+    }
     
     class Library
     {
-        public static Signal LoadSignal(string name)
+        public static bool LoadSignal(out Signal signal, string name)
         {
-            return new Signal(Dll.Library_loadSignal(name));
+            signal = new Signal(Dll.Library_loadSignal(name));
+            if (signal.handle == Handle.Zero)
+                return false;
+            return true;
+        }
+
+        public static bool SaveSignal(Signal signal, string name) {
+            return Dll.Library_saveSignal(signal.handle, name);
+        }
+
+        public static bool DeleteSignal(string name) {
+            return Dll.Library_deleteSignal(name);
+        }
+
+        public static bool ExportSignal(Signal signal, string filePath, FileFormat format = FileFormat.Auto, int sampleRate = 48000, double maxLength = 60) {
+            return Dll.Library_exportSignal(signal.handle, filePath, (int)format, sampleRate, maxLength);
+        }
+
+        public static bool ImportSignal(out Signal signal, string filePath, FileFormat format = FileFormat.Auto, int sampleRate = 48000) {
+            signal = new Signal(Dll.Library_importSignal(filePath, (int)format, sampleRate));
+            if (signal.handle == Handle.Zero)
+                return false;
+            return true;
         }
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // DLL IMPORTS (STAY OUT!)
+    ///////////////////////////////////////////////////////////////////////////
 
     class Dll
     {
@@ -353,6 +571,8 @@ namespace Syntacts
         public static extern Handle Session_create();
         [DllImport("syntacts-c")]
         public static extern void Session_delete(Handle session);
+        [DllImport("syntacts-c")]
+        public static extern bool Session_valid(Handle session);
         [DllImport("syntacts-c")]
         public static extern int Session_open1(Handle session);
         [DllImport("syntacts-c")]
@@ -401,9 +621,9 @@ namespace Syntacts
         public static extern int Session_count();
 
         [DllImport("syntacts-c")]
-        public static extern bool Signal_valid(Handle signal);
-        [DllImport("syntacts-c")]
         public static extern void Signal_delete(Handle signal);
+        [DllImport("syntacts-c")]
+        public static extern bool Signal_valid(Handle signal);
         [DllImport("syntacts-c")]
         public static extern double Signal_sample(Handle signal, double t);
         [DllImport("syntacts-c")]
@@ -435,6 +655,39 @@ namespace Syntacts
         public static extern Handle Neg_Sig(Handle signal);
 
         [DllImport("syntacts-c")]
+        public static extern Handle Sequence_create();
+        [DllImport("syntacts-c")]
+        public static extern double Sequence_getHead(Handle handle);
+        [DllImport("syntacts-c")]
+        public static extern void Sequence_setHead(Handle handle, double head);
+        [DllImport("syntacts-c")]
+        public static extern void Sequence_pushFlt(Handle handle, double t);
+        [DllImport("syntacts-c")]
+        public static extern void Sequence_pushSig(Handle handle, Handle signal);
+        [DllImport("syntacts-c")]
+        public static extern void Sequence_pushSeq(Handle handle, Handle sequence);
+        [DllImport("syntacts-c")]
+        public static extern void Sequence_insertSig(Handle handle, Handle signal, double t);
+        [DllImport("syntacts-c")]
+        public static extern void Sequence_insertSeq(Handle handle, Handle sequence, double t);
+        [DllImport("syntacts-c")]
+        public static extern void Sequence_clear(Handle handle);
+
+
+        [DllImport("syntacts-c")]
+        public static extern Handle Sequence_SigSig(Handle lhs, Handle rhs);
+        [DllImport("syntacts-c")]
+        public static extern Handle Sequence_SigFlt(Handle lhs, double rhs);
+        [DllImport("syntacts-c")]
+        public static extern Handle Sequence_FltSig(double lhs, Handle rhs);
+        [DllImport("syntacts-c")]
+        public static extern void Sequence_SeqFlt(Handle lhs, double rhs);
+        [DllImport("syntacts-c")]
+        public static extern void Sequence_SeqSig(Handle lhs, Handle rhs);
+        [DllImport("syntacts-c")]
+        public static extern void Sequence_SeqSeq(Handle lhs, Handle rhs);
+
+        [DllImport("syntacts-c")]
         public static extern Handle Product_create(Handle lhs, Handle rhs);
         [DllImport("syntacts-c")]
         public static extern Handle Sum_create(Handle lhs, Handle rhs);
@@ -444,7 +697,9 @@ namespace Syntacts
         [DllImport("syntacts-c")]
         public static extern Handle Scalar_create(double value);
         [DllImport("syntacts-c")]
-        public static extern Handle Ramp_create(double initial, double rate);
+        public static extern Handle Ramp_create1(double initial, double rate);
+        [DllImport("syntacts-c")]
+        public static extern Handle Ramp_create2(double initial, double final, double duration);
         [DllImport("syntacts-c")]
         public static extern Handle Noise_create();
         [DllImport("syntacts-c", CallingConvention = CallingConvention.Cdecl)]
@@ -505,26 +760,17 @@ namespace Syntacts
         [DllImport("syntacts-c")]
         public static extern Handle Pwm_create(double frequency, double dutyCycle);
 
-
-        [DllImport("syntacts-c")]
-        public static extern Handle Sequence_create();
-        [DllImport("syntacts-c")]
-        public static extern Handle Sequence_SigSig(Handle lhs, Handle rhs);
-        [DllImport("syntacts-c")]
-        public static extern Handle Sequence_SigFlt(Handle lhs, double rhs);
-        [DllImport("syntacts-c")]
-        public static extern Handle Sequence_FltSig(double lhs, Handle rhs);
-        [DllImport("syntacts-c")]
-        public static extern void Sequence_SeqFlt(Handle lhs, double rhs);
-        [DllImport("syntacts-c")]
-        public static extern void Sequence_SeqSig(Handle lhs, Handle rhs);
-        [DllImport("syntacts-c")]
-        public static extern void Sequence_SeqSeq(Handle lhs, Handle rhs);
-
         [DllImport("syntacts-c", CallingConvention = CallingConvention.Cdecl)]
         public static extern bool Library_saveSignal(Handle signal, string name);
         [DllImport("syntacts-c", CallingConvention = CallingConvention.Cdecl)]
         public static extern Handle Library_loadSignal(string name);
+
+        [DllImport("syntacts-c", CallingConvention = CallingConvention.Cdecl)]
+        public static extern bool Library_deleteSignal(string name);
+        [DllImport("syntacts-c", CallingConvention = CallingConvention.Cdecl)]
+        public static extern bool Library_exportSignal(Handle signal, string filePath, int format, int sampleRate, double maxLength);
+        [DllImport("syntacts-c", CallingConvention = CallingConvention.Cdecl)]
+        public static extern Handle Library_importSignal(string filePath, int format, int sampleRate);
 
         [DllImport("syntacts-c")]
         public static extern int Debug_sigMapSize();

@@ -42,14 +42,15 @@ class SYNTACTS_API Ramp
 {
 public:
     Ramp(double initial = 1, double rate = 0);
-    Ramp(double initial, double final, double span);
+    Ramp(double initial, double final, double duration);
     double sample(double t) const;
     double length() const;
 public:
     double initial;
     double rate;
+    double duration;
 private:
-    TACT_SERIALIZE(TACT_MEMBER(initial), TACT_MEMBER(rate));
+    TACT_SERIALIZE(TACT_MEMBER(initial), TACT_MEMBER(rate), TACT_MEMBER(duration));
 };
 
 ///////////////////////////////////////////////////////////////////////////////

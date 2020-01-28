@@ -14,6 +14,7 @@ typedef void* Handle;
 
 EXPORT Handle Session_create();
 EXPORT void Session_delete(Handle session);
+EXPORT bool Session_valid(Handle session);
 EXPORT int Session_open1(Handle session);
 EXPORT int Session_open2(Handle session, int index);
 EXPORT int Session_open3(Handle session, int index, int channelCount, double sampleRate);
@@ -47,8 +48,8 @@ EXPORT int Session_count();
 // SIGNAL
 ///////////////////////////////////////////////////////////////////////////////
 
-EXPORT bool Signal_valid(Handle signal);
 EXPORT void Signal_delete(Handle signal);
+EXPORT bool Signal_valid(Handle signal);
 EXPORT double Signal_sample(Handle signal, double t);
 EXPORT double Signal_length(Handle signal);
 EXPORT void Signal_setGain(Handle signal, double gain);
@@ -76,12 +77,36 @@ EXPORT Handle Sub_FltSig(double lhs, Handle rhs);
 EXPORT Handle Neg_Sig(Handle signal);
 
 ///////////////////////////////////////////////////////////////////////////////
+// SEQUENCE
+///////////////////////////////////////////////////////////////////////////////
+
+EXPORT Handle Sequence_create();
+EXPORT double Sequence_getHead(Handle handle);
+EXPORT void Sequence_setHead(Handle handle, double head);
+EXPORT void Sequence_pushFlt(Handle handle, double t);
+EXPORT void Sequence_pushSig(Handle handle, Handle signal);
+EXPORT void Sequence_pushSeq(Handle handle, Handle sequence);
+EXPORT void Sequence_insertSig(Handle handle, Handle signal, double t);
+EXPORT void Sequence_insertSeq(Handle handle, Handle sequence, double t);
+EXPORT void Sequence_clear(Handle handle);
+
+EXPORT Handle Sequence_SigSig(Handle lhs, Handle rhs);
+EXPORT Handle Sequence_SigFlt(Handle lhs, double rhs);
+EXPORT Handle Sequence_FltSig(double lhs, Handle rhs);
+EXPORT void Sequence_SeqFlt(Handle lhs, double rhs);
+EXPORT void Sequence_SeqSig(Handle lhs, Handle rhs);
+EXPORT void Sequence_SeqSeq(Handle lhs, Handle rhs);
+
+// TODO: push, insert, clear, head
+
+///////////////////////////////////////////////////////////////////////////////
 // GENERAL
 ///////////////////////////////////////////////////////////////////////////////
 
 EXPORT Handle Time_create();
 EXPORT Handle Scalar_create(double value);
-EXPORT Handle Ramp_create(double initial, double rate);
+EXPORT Handle Ramp_create1(double initial, double rate);
+EXPORT Handle Ramp_create2(double initial, double final, double duration);
 EXPORT Handle Noise_create();
 EXPORT Handle Expression_create(const char* expr);
 EXPORT Handle Samples_create(float* samples, int nSamples, double sampleRate);
@@ -133,27 +158,14 @@ EXPORT Handle Triangle_create4(double hertz, Handle modulation, double index);
 EXPORT Handle Pwm_create(double frequency, double dutyCycle);
 
 ///////////////////////////////////////////////////////////////////////////////
-// SEQUENCE
-///////////////////////////////////////////////////////////////////////////////
-
-EXPORT Handle Sequence_create();
-
-EXPORT Handle Sequence_SigSig(Handle lhs, Handle rhs);
-EXPORT Handle Sequence_SigFlt(Handle lhs, double rhs);
-EXPORT Handle Sequence_FltSig(double lhs, Handle rhs);
-
-EXPORT void Sequence_SeqFlt(Handle lhs, double rhs);
-EXPORT void Sequence_SeqSig(Handle lhs, Handle rhs);
-EXPORT void Sequence_SeqSeq(Handle lhs, Handle rhs);
-
-// TODO: push, insert, clear, head
-
-///////////////////////////////////////////////////////////////////////////////
 // LIBRARY
 ///////////////////////////////////////////////////////////////////////////////
 
 EXPORT bool Library_saveSignal(Handle signal, const char* name);
 EXPORT Handle Library_loadSignal(const char* name);
+EXPORT bool Library_deleteSignal(const char* name);
+EXPORT bool Library_exportSignal(Handle signal, const char* filePath, int format, int sampleRate, double maxLength);
+EXPORT Handle Library_importSignal(const char* filePath, int format, int sampleRate);
 
 // TODO: deleteSignal, exportSignal, importSignal
 

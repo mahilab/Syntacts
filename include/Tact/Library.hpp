@@ -7,13 +7,13 @@ namespace tact {
 
 /// Formats used for exporting/importing Signals
 enum class FileFormat {
-    SIG,     ///< Syntacts file form
-    WAV,     ///< WAV audio file format
-    AIFF,    ///< AIFF audio file format
-    CSV,     ///< comman-separated-value format,
-    JSON,    ///< human readable serialized format,
-    Auto,    ///< automatic detection from file path extension
-    Unknown  ///< unknown format (for internal use only)
+    Unknown = -1,  ///< unknown format (for internal use only)
+    Auto = 0,      ///< automatic detection from file path extension
+    SIG = 1,       ///< Syntacts file form
+    WAV = 2,       ///< WAV audio file format
+    AIFF = 3,      ///< AIFF audio file format
+    CSV = 4,       ///< comman-separated-value format,
+    JSON = 5       ///< human readable serialized format
 };
 
 namespace Library {

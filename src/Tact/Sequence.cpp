@@ -8,26 +8,35 @@ Sequence::Sequence() : head(0), m_keys(0), m_length(0)
 { 
 }
 
-void Sequence::push(Signal signal) {
+Sequence& Sequence::push(double t) {
+    head += t;
+    return *this;
+}
+
+Sequence& Sequence::push(Signal signal) {
     insert(signal, head);
     head += signal.length();
+    return *this;
 }
 
-void Sequence::push(Sequence sequence) {
+Sequence& Sequence::push(Sequence sequence) {
     insert(sequence, head);
     head += sequence.length();
+    return *this;
 }
 
-void Sequence::insert(Signal signal, double t) 
+Sequence& Sequence::insert(Signal signal, double t) 
 {
     m_length = std::max(m_length, t + signal.length());
     m_keys.push_back({t, std::move(signal)});
+    return *this;
 }
 
-void Sequence::insert(Sequence sequence, double t) {
+Sequence& Sequence::insert(Sequence sequence, double t) {
     m_length = std::max(m_length, t + sequence.length());
     for (auto& k : sequence.m_keys)
         insert(k.signal, t + k.t);
+    return *this;
 }
 
 double Sequence::sample(double t) const {
