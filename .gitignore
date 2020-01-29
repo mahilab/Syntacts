@@ -6,11 +6,11 @@ ipch/
 .vs/
 !.vscode/cmake-variants.yaml
 
-# *.dll
+*.dll
 *.lib
 *.exe
-*-d.dll
-*-d.dylib
+*.dylib
+*.so
 
 asiosdk/
 asiosdk*/
