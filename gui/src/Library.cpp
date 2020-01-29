@@ -149,9 +149,16 @@ void Library::update()
             renderCreateDialog();
             ImGui::Separator();
             renderLibraryList();
-            if (ImGui::BeginPopupContextItem()){
+            if (ImGui::BeginPopupContextItem("##ContextMenu")){
                 ImGui::PushStyleColor(ImGuiCol_Button, {0,0,0,0});
-                if (ImGui::Button("Reveal in Explorer")) {
+#ifdef _WIN32
+                if (ImGui::Button("Reveal in Explorer")) 
+#elif __APPLE__
+                if (ImGui::Button("Reveal in Finder")) 
+#else
+                if (ImGui::Button("Reveal in File Browser"))
+#endif
+                {
                     System::openFolder(tact::Library::getLibraryDirectory());
                     ImGui::CloseCurrentPopup();
                 }
