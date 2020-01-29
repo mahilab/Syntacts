@@ -9,6 +9,8 @@ ipch/
 # *.dll
 *.lib
 *.exe
+*-d.dll
+*-d.dylib
 
 asiosdk/
 asiosdk*/

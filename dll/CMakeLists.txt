@@ -2,6 +2,7 @@ add_library(syntacts-c SHARED "")
 add_library(syntacts::syntacts-c ALIAS syntacts-c)
 target_sources(syntacts-c PRIVATE "dll.hpp" "dll.cpp")
 target_link_libraries(syntacts-c PRIVATE syntacts)
+set_target_properties(syntacts-c PROPERTIES CXX_STANDARD 17 DEBUG_POSTFIX -d)
 
 add_custom_command(TARGET syntacts-c POST_BUILD 
                COMMAND ${CMAKE_COMMAND} -E copy_if_different
