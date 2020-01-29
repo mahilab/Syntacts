@@ -1,0 +1,26 @@
+buildType: 
+ default: release
+ description: "Build Type"
+ choices: 
+  release: 
+   short: Release
+   long: "Building with optimizations"
+   buildType: Release
+  debug: 
+   short: Debug
+   long: "Build with debugging info"
+   buildType: Debug
+
+static: 
+ default: off
+ choices: 
+  on: 
+   short: Static Runtime
+   long: "Build with static runtime linkage"
+   settings: 
+    SYNTACTS_USE_STATIC_STD_LIBS: ON
+  off: 
+   short: Dynamic Runtime
+   long: "Build with dynamic runtime linkage"
+   settings: 
+    SYNTACTS_USE_STATIC_STD_LIBS: OFF

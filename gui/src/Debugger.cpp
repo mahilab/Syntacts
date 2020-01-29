@@ -1,5 +1,6 @@
 #include "Debugger.hpp"
 #include "Gui.hpp"
+#include "portaudio.h"
 
 using namespace mahi::gui;
 
@@ -38,6 +39,13 @@ void Debugger::update()
         ImGui::SameLine();
         ImGui::Text("%d (%d total)", SYNTACTS_POOL_BLOCK_SIZE, SYNTACTS_POOL_BLOCK_SIZE * SYNTACTS_POOL_MAX_BLOCKS);
 #endif
+        ImGui::Text("ASIO Support:        ");
+        ImGui::SameLine();
+#ifdef PA_USE_ASIO
+        ImGui::Text("True");
+#else
+        ImGui::Text("False");
+#endif
         ImGui::Text("Pointer Type:        ");
         ImGui::SameLine();
 #ifdef SYNTACTS_USE_SHARED_PTR
@@ -70,6 +78,9 @@ void Debugger::update()
         ImGui::Text("Syntacts Version:    ");
         ImGui::SameLine();
         ImGui::Text(tact::syntactsVersion().c_str());
+        ImGui::Text("PortAudio Version:   ");
+        ImGui::SameLine();
+        ImGui::Text(Pa_GetVersionInfo()->versionText);
         ImGui::Text("ImGui Version:       ");
         ImGui::SameLine();
         ImGui::Text(ImGui::GetVersion());
@@ -82,7 +93,6 @@ void Debugger::update()
         ImGui::Text("GPU:                 ");
         ImGui::SameLine();
         ImGui::Text("%s\n",renderer);
-
         ImGui::PushStyleColor(ImGuiCol_Button, Reds::FireBrick);
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, Reds::Salmon);
         ImGui::PushStyleColor(ImGuiCol_ButtonActive, Reds::LightSalmon);

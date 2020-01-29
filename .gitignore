@@ -2,8 +2,9 @@
 [Bb]uild/
 [Bb]uild*/
 ipch/
-.vscode/
+.vscode/*
 .vs/
+!.vscode/cmake-variants.yaml
 
 # *.dll
 *.lib

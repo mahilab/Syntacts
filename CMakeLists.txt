@@ -18,9 +18,10 @@
 cmake_minimum_required(VERSION 3.13.0)
 
 # user options
-option(SYNTACTS_GUI      "Turn ON to build Syntacts GUI"        ON)
-option(SYNTACTS_C_DLL    "Turn ON to build Syntacts C DLL"      ON )
-option(SYNTACTS_EXAMPLES "Turn ON to build Syntacts example(s)" ON )
+option(SYNTACTS_BUILD_GUI           "Turn ON to build Syntacts GUI"                                                                          ON  )
+option(SYNTACTS_BUILD_C_DLL         "Turn ON to build Syntacts C DLL"                                                                        ON  )
+option(SYNTACTS_BUILD_EXAMPLES      "Turn ON to build Syntacts example(s)"                                                                   ON  )
+option(SYNTACTS_USE_STATIC_STD_LIBS "Turn ON to link Syntacts against static runtime libs (i.e. eliminate VCRUNTIME140.dll, etc. dependency" OFF )
 
 # create project
 project(syntacts VERSION 1.0.0)
@@ -28,6 +29,23 @@ project(syntacts VERSION 1.0.0)
 # add modules
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
 include(GNUInstallDirs)
+
+# globally set static linkage
+if(MSVC AND SYNTACTS_USE_STATIC_STD_LIBS)
+    message("Linking Syntacts against STATIC runtime libraries")
+    foreach(flag
+            CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+            CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
+        if (${flag} MATCHES "/MD")
+            string(REGEX REPLACE "/MD" "/MT" ${flag} "${${flag}}")
+        endif()
+        if (${flag} MATCHES "/MDd")
+            string(REGEX REPLACE "/MDd" "/MTd" ${flag} "${${flag}}")
+        endif()
+    endforeach()
+else()
+    message("Linking Syntacts against DYNAMIC runtime libraries")
+endif()
 
 # gather public includes
 set(SYNTACTS_INCLUDE 
@@ -92,8 +110,9 @@ target_compile_definitions(syntacts
     PRIVATE 
         NOMINMAX
 )
-if (WIN32)
-target_compile_definitions(syntacts PUBLIC PA_USE_ASIO)
+if (WIN32 AND PA_USE_ASIO)
+    message("Building Syntacts with ASIO support")
+    target_compile_definitions(syntacts PUBLIC PA_USE_ASIO)
 endif()
 target_include_directories(syntacts
 	PUBLIC
@@ -111,7 +130,7 @@ target_link_libraries(syntacts PUBLIC portaudio_static PRIVATE)
 # Syntacts Plugin DLL
 #===============================================================================
 
-if (SYNTACTS_C_DLL)
+if (SYNTACTS_BUILD_C_DLL)
     add_subdirectory("dll")
 endif()
 
@@ -119,9 +138,12 @@ endif()
 # Syntacts GUI
 #===============================================================================
 
-if (SYNTACTS_GUI)
+if (SYNTACTS_BUILD_GUI)
     set(MAHI_GUI_EXAMPLES OFF CACHE BOOL "" FORCE)
     set(MAHI_GUI_COROUTINES OFF CACHE BOOL "" FORCE)
+    if (MSVC AND SYNTACTS_USE_STATIC_STD_LIBS)
+        set(USE_MSVC_RUNTIME_LIBRARY_DLL OFF CACHE BOOL "" FORCE)
+    endif()
     add_subdirectory(3rdparty/mahi-gui EXCLUDE_FROM_ALL)
     add_subdirectory("gui")
 endif()
@@ -130,7 +152,7 @@ endif()
 # Syntacts Examples
 #===============================================================================
 
-if (SYNTACTS_EXAMPLES)
+if (SYNTACTS_BUILD_EXAMPLES)
     add_subdirectory("examples")
 endif()
 

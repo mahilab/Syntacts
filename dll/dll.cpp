@@ -8,7 +8,6 @@ using namespace tact;
 std::unordered_map<Handle, Signal> g_sigs;
 std::unordered_map<Handle, std::unique_ptr<Session>> g_sessions; // exposes "issues" that need to be investigated
 
-
 struct Finalizer {
     ~Finalizer()
     { 
