@@ -81,7 +81,6 @@ class Session:
 ###############################################################################
 ## SIGNAL
 ###############################################################################
-
 class Signal:    
     def __init__(self, handle):
         self._handle = handle
@@ -154,40 +153,7 @@ class Signal:
         return _tact.Signal_count()
 
 ###############################################################################
-# ENVELOPE
-###############################################################################
-
-class Envelope(Signal):
-    def __init__(self, duration):
-        self._handle = _tact.Envelope_create(duration)
-
-class ASR(Signal):
-    def __init__(self, a, s, r):
-        self._handle = _tact.ASR_create(a,s,r)
-
-class ADSR(Signal):
-    def __init__(self, a, d, s, r):
-        self._handle = _tact.ADSR_create(a,d,s,r)
-
-###############################################################################
-# OSCILLATOR
-###############################################################################
-class Sine(Signal):
-    def __init__(self, frequency):
-        self._handle = _tact.Sine_create2(frequency)
-
-class Square(Signal):
-    def __init__(self, frequency):
-        self._handle = _tact.Square_create2(frequency)
-
-class Saw(Signal):
-    def __init__(self, frequency):
-        self._handle = _tact.Saw_create2(frequency)
-
-class Triangle(Signal):
-    def __init__(self, frequency):
-        self._handle = _tact.Triangle_create2(frequency)
-
+# OPERATORS
 ###############################################################################
 
 class Product(Signal):
@@ -199,6 +165,8 @@ class Sum(Signal):
         self._handle = _tact.Sum_create(lhs._handle, rhs._handle)
 
 ###############################################################################
+# SEQUENCE
+###############################################################################
 
 class Sequence(Signal):
     def __init__(self, handle = None):
@@ -207,6 +175,37 @@ class Sequence(Signal):
         else:
             self._handle =  _tact.Sequence_create()
     
+    @property
+    def head(self):
+        return _tact.Sequence_getHead(self._handle)
+
+    @head.setter
+    def head(self, newHead):
+        _tact.Sequence_setHead(self._handle, newHead)
+
+    def push(self, other):
+        if isinstance(other, Sequence):
+            _tact.Sequence_SeqSeq(self._handle, other._handle)
+        elif isinstance(other, Signal):
+            _tact.Sequence_SeqSig(self._handle, other._handle)
+        elif isinstance(other, (int, float)):
+            _tact.Sequence_SeqFlt(self._handle, other)
+        else:
+            raise TypeError("other must be Sequence, Signal, int, or float")
+        return self
+
+    def insert(self, other, t):
+        if isinstance(other, Sequence):
+            _tact.Sequence_insertSeq(self._handle, other._handle, t)
+        elif isinstance(other, Signal):
+            _tact.Sequence_insertSig(self._handle, other._handle, t)
+        else:
+            raise TypeError("other must be Sequence or Signal")
+        return self
+
+    def clear(self):
+        _tact.Sequence_clear(self._handle)
+
     def __lshift__(self, other):
         if isinstance(other, Sequence):
             _tact.Sequence_SeqSeq(self._handle, other._handle)
@@ -219,15 +218,150 @@ class Sequence(Signal):
         return self
 
 ###############################################################################
+# GENERAL
+###############################################################################
+
+class Time(Signal):
+    def __init__(self):
+        self._handle = _tact.Time_create()
+
+class Scalar(Signal):
+    def __init__(self, value):
+        self._handle = _tact.Scalar_create(value)
+
+class Ramp(Signal):
+    def __init__(self, initial, arg1, arg2=None):
+        if arg2:
+            self._handle = _tact.Ramp_create2(initial, arg2, arg1)
+        else:
+            self._handle = _tact.Ramp_create1(initial, arg1)
+
+class Noise(Signal):
+    def __init__(self):
+        self._handle = _tact.Noise_create()
+
+class Expression(Signal):
+    def __init__(self, expr):
+        self._handle = _tact.Expression_create(c_char_p(expr.encode))
+
+# TODO: class Samples (not sure how to handle float* yet)
+
+###############################################################################
+# PROCESS
+###############################################################################
+
+class Repeater(Signal):
+    def __init__(self, signal, repetitions, delay):
+        self._handle = _tact.Repeater_create(signal._handle, repetitions, delay)
+
+class Stretcher(Signal):
+    def __init__(self, signal, factor):
+        self._handle = _tact.Stretcher_create(signal._handle, factor)
+
+class Reverser(Signal):
+    def __init__(self, signal):
+        self._handle = _tact.Reverser_create(signal._handle)
+
+###############################################################################
+# ENVELOPE
+###############################################################################
+
+class Envelope(Signal):
+    def __init__(self, duration, amplitude=1):
+        self._handle = _tact.Envelope_create(duration, amplitude)
+
+class ASR(Signal):
+    def __init__(self, a, s, r, amplitude=1):
+        self._handle = _tact.ASR_create(a,s,r,amplitude)
+
+class ADSR(Signal):
+    def __init__(self, a, d, s, r, amp1=1, amp2=0.5):
+        self._handle = _tact.ADSR_create(a,d,s,r,amp1,amp2)
+
+###############################################################################
+# OSCILLATOR
+###############################################################################
+
+class Sine(Signal):
+    def __init__(self, arg1, arg2=None, arg3=None):
+        if arg3:
+            self._handle = _tact.Sine_create4(arg1,arg2._handle,arg3)
+        elif arg2:
+            self._handle = _tact.Sine_create3(arg1, arg2)
+        elif isinstance(arg1, (int, float)): 
+            self._handle = _tact.Sine_create2(arg1)
+        elif isinstance(arg1, Signal):
+            self._handle = _tact.Sine_create1(arg1._handle)
+        else:
+            raise TypeError("Invalid arguments passed to Sine")
+
+class Square(Signal):
+    def __init__(self, arg1, arg2=None, arg3=None):
+        if arg3:
+            self._handle = _tact.Square_create4(arg1,arg2._handle,arg3)
+        elif arg2:
+            self._handle = _tact.Square_create3(arg1, arg2)
+        elif isinstance(arg1, (int, float)): 
+            self._handle = _tact.Square_create2(arg1)
+        elif isinstance(arg1, Signal):
+            self._handle = _tact.Square_create1(arg1._handle)
+        else:
+            raise TypeError("Invalid arguments passed to Sine")
+
+class Saw(Signal):
+    def __init__(self, arg1, arg2=None, arg3=None):
+        if arg3:
+            self._handle = _tact.Saw_create4(arg1,arg2._handle,arg3)
+        elif arg2:
+            self._handle = _tact.Saw_create3(arg1, arg2)
+        elif isinstance(arg1, (int, float)): 
+            self._handle = _tact.Saw_create2(arg1)
+        elif isinstance(arg1, Signal):
+            self._handle = _tact.Saw_create1(arg1._handle)
+        else:
+            raise TypeError("Invalid arguments passed to Sine")
+
+class Triangle(Signal):
+    def __init__(self, arg1, arg2=None, arg3=None):
+        if arg3:
+            self._handle = _tact.Triangle_create4(arg1,arg2._handle,arg3)
+        elif arg2:
+            self._handle = _tact.Triangle_create3(arg1, arg2)
+        elif isinstance(arg1, (int, float)): 
+            self._handle = _tact.Triangle_create2(arg1)
+        elif isinstance(arg1, Signal):
+            self._handle = _tact.Triangle_create1(arg1._handle)
+        else:
+            raise TypeError("Invalid arguments passed to Sine")
+
+###############################################################################
 
 class Library:
     @staticmethod
-    def save_signal(signal, name):
+    def saveSignal(signal, name):
         return _tact.Library_saveSignal(signal._handle, c_char_p(name.encode()))
 
     @staticmethod
-    def load_signal(name):
-        return Signal(_tact.Library_loadSignal(c_char_p(name.encode())))
+    def loadSignal(name):
+        handle = _tact.Library_loadSignal(c_char_p(name.encode()))
+        if handle:
+            return Signal(handle)
+        return None
+
+    @staticmethod
+    def deleteSignal(name):
+        return _tact.Library_deleteSignal(c_char_p(name.encode()))
+
+    @staticmethod
+    def exportSignal(signal, filePath, format=0, sampleRate=48000, maxLength=60):
+        return _tact.Library_exportSignal(signal._handle, c_char_p(filePath.encoder()), format, sampleRate, maxLength)
+
+    @staticmethod
+    def importSignal(filePath, format=0, sampleRate=48000):
+        handle = _tact.Library_importSignal(c_char_p(filePath.encode()), format, sampleRate)
+        if handle:
+            return Signal(handle)
+        return None
 
 ###############################################################################
 
@@ -307,71 +441,80 @@ lib_func(_tact.Neg_Sig, Handle, [Handle])
 
 # Sequence
 
-_tact.Sequence_create.restype = Handle
-_tact.Sequence_create.argtypes = None
+lib_func(_tact.Sequence_create, Handle, None)
+lib_func(_tact.Sequence_getHead, c_double, [Handle])
+lib_func(_tact.Sequence_setHead, None, [Handle, c_double])
+lib_func(_tact.Sequence_pushFlt, None, [Handle, c_double])
+lib_func(_tact.Sequence_pushSig, None, [Handle, Handle])
+lib_func(_tact.Sequence_pushSeq, None, [Handle, Handle])
+lib_func(_tact.Sequence_insertSig, None, [Handle, Handle, c_double])
+lib_func(_tact.Sequence_insertSeq, None, [Handle, Handle, c_double])
+lib_func(_tact.Sequence_clear, None, [Handle])
 
-_tact.Sequence_SigSig.restype = Handle
-_tact.Sequence_SigSig.argtypes = [Handle, Handle]
-
-_tact.Sequence_SigFlt.restype = Handle
-_tact.Sequence_SigFlt.argtypes = [Handle, c_double]
-
-_tact.Sequence_FltSig.restype = Handle
-_tact.Sequence_FltSig.argtypes = [c_double, Handle]
-
-_tact.Sequence_SeqFlt.restype = None
-_tact.Sequence_SeqFlt.argtypes = [Handle, c_double]
-
-_tact.Sequence_SeqSig.restype = None
-_tact.Sequence_SeqSig.argtypes = [Handle, Handle]
-
-_tact.Sequence_SeqSeq.restype = None
-_tact.Sequence_SeqSeq.argtypes = [Handle, Handle]
+lib_func(_tact.Sequence_SigSig, Handle, [Handle, Handle])
+lib_func(_tact.Sequence_SigFlt, Handle, [Handle, c_double])
+lib_func(_tact.Sequence_FltSig, Handle, [c_double, Handle])
+lib_func(_tact.Sequence_SeqFlt, None, [Handle, c_double])
+lib_func(_tact.Sequence_SeqSig, None, [Handle, Handle])
+lib_func(_tact.Sequence_SeqSeq, None, [Handle, Handle])
 
 # General
 
-# TODO
+lib_func(_tact.Time_create, Handle, None)
+lib_func(_tact.Scalar_create, Handle, [c_double])
+lib_func(_tact.Ramp_create1, Handle, [c_double, c_double])
+lib_func(_tact.Ramp_create2, Handle, [c_double, c_double, c_double])
+lib_func(_tact.Noise_create, Handle, None)
+lib_func(_tact.Expression_create, Handle, [c_char_p])
+lib_func(_tact.Samples_create, Handle, [POINTER(c_float), c_int, c_double])
 
-# PROCESS
+# Process
 
-# TODO
+lib_func(_tact.Repeater_create, Handle, [Handle, c_int, c_double])
+lib_func(_tact.Stretcher_create, Handle, [Handle, c_double])
+lib_func(_tact.Reverser_create, Handle, [Handle])
 
 # Envelope
 
-_tact.Envelope_create.restype  = Handle
-_tact.Envelope_create.argtypes = [c_double]
-
-_tact.ASR_create.restype  = Handle
-_tact.ASR_create.argtypes = [c_double, c_double, c_double]
-
-_tact.ADSR_create.restype  = Handle
-_tact.ADSR_create.argtypes = [c_double, c_double, c_double, c_double]
+lib_func(_tact.Envelope_create, Handle, [c_double, c_double])
+lib_func(_tact.ASR_create, Handle, [c_double, c_double, c_double, c_double])
+lib_func(_tact.ADSR_create, Handle, [c_double, c_double, c_double, c_double, c_double, c_double])
 
 # Oscillator
 
-_tact.Sine_create2.restype  = Handle
-_tact.Sine_create2.argtypes = [c_double]
+lib_func(_tact.Sine_create1, Handle, [Handle])
+lib_func(_tact.Sine_create2, Handle, [c_double])
+lib_func(_tact.Sine_create3, Handle, [c_double, c_double])
+lib_func(_tact.Sine_create4, Handle, [c_double, Handle, c_double])
 
-_tact.Square_create2.restype  = Handle
-_tact.Square_create2.argtypes = [c_double]
+lib_func(_tact.Square_create1, Handle, [Handle])
+lib_func(_tact.Square_create2, Handle, [c_double])
+lib_func(_tact.Square_create3, Handle, [c_double, c_double])
+lib_func(_tact.Square_create4, Handle, [c_double, Handle, c_double])
 
-_tact.Saw_create2.restype  = Handle
-_tact.Saw_create2.argtypes = [c_double]
+lib_func(_tact.Saw_create1, Handle, [Handle])
+lib_func(_tact.Saw_create2, Handle, [c_double])
+lib_func(_tact.Saw_create3, Handle, [c_double, c_double])
+lib_func(_tact.Saw_create4, Handle, [c_double, Handle, c_double])
 
-_tact.Triangle_create2.restype  = Handle
-_tact.Triangle_create2.argtypes = [c_double]
+lib_func(_tact.Triangle_create1, Handle, [Handle])
+lib_func(_tact.Triangle_create2, Handle, [c_double])
+lib_func(_tact.Triangle_create3, Handle, [c_double, c_double])
+lib_func(_tact.Triangle_create4, Handle, [c_double, Handle, c_double])
+
+lib_func(_tact.Pwm_create, Handle, [c_double, c_double])
+
 
 # Library
 
-_tact.Library_saveSignal.restype  = c_bool
-_tact.Library_saveSignal.argtypes = [Handle, c_char_p]
-
-_tact.Library_loadSignal.restype  = Handle
-_tact.Library_loadSignal.argtypes = [c_char_p]
+lib_func(_tact.Library_saveSignal, c_bool, [Handle, c_char_p])
+lib_func(_tact.Library_loadSignal, Handle, [c_char_p])
+lib_func(_tact.Library_deleteSignal, c_bool, [c_char_p])
+lib_func(_tact.Library_exportSignal, c_bool, [Handle, c_char_p, c_int, c_int, c_double])
+lib_func(_tact.Library_importSignal, Handle, [c_char_p, c_int, c_int])
 
 # Debug
 
-_tact.Debug_sigMapSize.restype = c_int
-_tact.Debug_sigMapSize.argtypes = None
+lib_func(_tact.Debug_sigMapSize, int, None)
 
 ###############################################################################
