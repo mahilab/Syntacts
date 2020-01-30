@@ -1,11 +1,12 @@
 from syntacts import *
 from time import sleep
 
-session = Session()
-res = session.open(3,8,48000)
 
-s = Sine(440)
+s = Session()
+print( s.open(3, 8, 44100) )
+print( s.getChannelCount() )
+print( s.getSampleRate() )
+print( s.getCpuLoad() )
+print (s.count() )
 
-session.play(0,s)
-
-sleep(10)
+# sleep(10)

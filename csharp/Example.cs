@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Threading;
 using Syntacts;
 
-using System.Threading;
+// run with the following console command:
+// dotnet run
 
 class Example
 {
