@@ -14,8 +14,12 @@ class Session:
     def __del__(self):
         _tact.Session_delete(self._handle)
 
-    def open(self, index, channelCount, sampleRate):
-        return _tact.Session_open3(self._handle, index, channelCount, sampleRate)
+    def open(self, index=None, channelCount=0, sampleRate=0):
+        if index:
+            return _tact.Session_open3(self._handle, index, channelCount, sampleRate)
+        else:
+            return _tact.Session_open1(self._handle)
+        
 
     def close(self):
         return _tact.Session_close(self._handle)
@@ -333,6 +337,10 @@ class Triangle(Signal):
             self._handle = _tact.Triangle_create1(arg1._handle)
         else:
             raise TypeError("Invalid arguments passed to Sine")
+
+class Pwm(Signal):
+    def __init__(self, frequency, dutyCycle=0.5):
+        self._handle = _tact.Pwm_create(frequency, dutyCycle)
 
 ###############################################################################
 

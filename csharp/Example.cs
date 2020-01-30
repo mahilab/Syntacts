@@ -12,7 +12,7 @@ class Example
         Session s = new Session();
         s.Open();
 
-        Signal x = new Sine(440) * new Sine(20) * new ASR(1,2,3);
+        Signal x = new Sine(440) * new Triangle(20) * new ASR(1,2,3);
         Signal y = new Square(440, 1000) * new ADSR(1,1,1,1);
         Signal z = new Pwm(500,0.5) * new Envelope(1);
 

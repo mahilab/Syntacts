@@ -206,6 +206,9 @@ public:
         channelNumbers.resize(channels);
         std::iota(channelNumbers.begin(), channelNumbers.end(), 1);
 
+        if (channels == 0)
+            channels = device.maxChannels;
+
         PaStreamParameters params;
         params.device = device.index;
         params.channelCount = channels;
@@ -213,7 +216,7 @@ public:
         params.hostApiSpecificStreamInfo = nullptr;
         params.sampleFormat = paFloat32 | paNonInterleaved;
 
-        m_sampleRate = sampleRate == 0 ? Pa_GetDeviceInfo(params.device)->defaultSampleRate : sampleRate;
+        m_sampleRate = sampleRate == 0 ? device.defaultSampleRate : sampleRate;
 
         if (Pa_IsFormatSupported(nullptr, &params, m_sampleRate) != paFormatIsSupported)
             return SyntactsError_InvalidSampleRate;

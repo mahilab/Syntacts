@@ -167,8 +167,6 @@ EXPORT bool Library_deleteSignal(const char* name);
 EXPORT bool Library_exportSignal(Handle signal, const char* filePath, int format, int sampleRate, double maxLength);
 EXPORT Handle Library_importSignal(const char* filePath, int format, int sampleRate);
 
-// TODO: deleteSignal, exportSignal, importSignal
-
 ///////////////////////////////////////////////////////////////////////////////
 // DEBUG
 ///////////////////////////////////////////////////////////////////////////////
