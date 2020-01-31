@@ -2,7 +2,7 @@ from syntacts import *
 from time import sleep
 
 s = Session()
-s.open();
+s.open()
 
 x = Sine(440) * Triangle(20) * ASR(1,2,3)
 y = Square(440, 1000) * ADSR(1,1,1,1)
