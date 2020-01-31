@@ -18,6 +18,7 @@
 - import Macaron JSON
 - save/load spatializers
 - grid mechanism in spatializers
+- channel polyphony 
 
 ## Optimization
 - ~~consider using unique_ptr in Signal with a clone method~~
@@ -28,7 +29,6 @@
 ## Nice to Have
 - ~~Repeater, Stretcher, Reverse signals~~
 - real-time manipulation of *any* parameter (see WebAudio AudioParam for inspiration)
-- channel polyphony 
 - look into cereal's minimal load/save capabilities
 - additional variables in expression
 
@@ -46,19 +46,20 @@
 - ~~Sequencer tab~~
 - ~~remove carnot dep~~
 - ~~improve dnd interface~~
+- ~~drag/drop help dialogs~~
 - improved slot header
-- drag/drop help dialogs
 - PolyLine / KeyEnvelope
 - improve play/pause/stop interface
 - library signal references
-- lirbary signal busting
+- library signal busting
+- log file
 
 ## Nice to Have
 - ~~CPU usage meter~~
 - ~~drag/drop lib to channel~~
 - ~~select device from Details listing~~
 - ~~custom plot renderer without decimation~~
-- faster startup
+- ~~faster startup~~
 - ~~last use memory (e.g. boot with last used device)~~
 - copy/rename library items
 - custom themes
@@ -66,13 +67,14 @@
 
 # Plugin DLL / External API
 ## Must Do
+- ~~expose all (or most important) C++ API functionality~~
+- spatializer
 - determine why no ASIO audio output when compiled with command line .NET (vs Unity .NET)
-- expose all (or most important) C++ API functionality
 
 # Distribution / Documentation
-- embed PortAudio / ASIO / gui
-- upload compiled binairies
+- ~~embed PortAudio / ASIO / gui~~
+- upload compiled binaries
 - create installer with NSIS
 - document all classes/functions
 - update examples
-- 
+

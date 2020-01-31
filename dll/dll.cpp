@@ -7,12 +7,14 @@ using namespace tact;
 
 std::unordered_map<Handle, Signal> g_sigs;
 std::unordered_map<Handle, std::unique_ptr<Session>> g_sessions; // exposes "issues" that need to be investigated
+std::unordered_map<Handle, std::unique_ptr<Spatializer>> g_spats;
 
 struct Finalizer {
     ~Finalizer()
     { 
         g_sigs.clear();
         g_sessions.clear(); 
+        g_spats.clear();
     }
 };
 
@@ -135,6 +137,108 @@ double Session_getCpuLoad(Handle session) {
 int Session_count() {
     return Session::count();
 }
+
+///////////////////////////////////////////////////////////////////////////////
+
+Handle Spatializer_create(Handle session) {
+    std::unique_ptr<Spatializer> spat;
+    if (g_sessions.count(session)) 
+        spat = std::make_unique<Spatializer>(static_cast<Session*>(session));
+    else
+        spat = std::make_unique<Spatializer>();
+    Handle h = static_cast<Handle>(spat.get());
+    g_spats.emplace(h, std::move(spat));    
+    return h;
+}
+
+void Spatializer_destroy(Handle spat) {
+    g_spats.erase(spat);
+}
+
+void Spatializer_bind(Handle spat, Handle session) {
+    static_cast<Spatializer*>(spat)->bind(static_cast<Session*>(session));
+}
+
+void Spatializer_unbind(Handle spat) {
+    static_cast<Spatializer*>(spat)->unbind();
+}
+
+void Spatializer_setPosition(Handle spat, int channel, Point p) {
+    static_cast<Spatializer*>(spat)->setPosition(channel, {p.x, p.y});
+}
+
+Point Spatializer_getPosition(Handle spat, int channel) {
+    auto p = static_cast<Spatializer*>(spat)->getPosition(channel);
+    return {p.x, p.y};
+}
+
+void Spatializer_setTarget(Handle spat, Point p) {
+    static_cast<Spatializer*>(spat)->setTarget({p.x, p.y});
+}
+
+Point Spatializer_getTarget(Handle spat) {
+    auto p = static_cast<Spatializer*>(spat)->getTarget();
+    return {p.x, p.y};
+}
+
+void Spatializer_setRadius(Handle spat, double r) {
+    static_cast<Spatializer*>(spat)->setRadius(r);
+}
+
+double Spatializer_getRadius(Handle spat) {
+    return static_cast<Spatializer*>(spat)->getRadius();
+}
+
+void Spatializer_clear(Handle spat) {
+    static_cast<Spatializer*>(spat)->clear();
+}
+
+void Spatializer_remove(Handle spat, int channel) {
+    static_cast<Spatializer*>(spat)->remove(channel);
+}
+
+int Spatializer_getChannelCount(Handle spat) {
+    return static_cast<Spatializer*>(spat)->getChannelCount();
+}
+
+bool Spatializer_hasChannel(Handle spat, int channel) {
+    return static_cast<Spatializer*>(spat)->hasChannel(channel);
+}
+
+
+void Spatializer_play(Handle spat, Handle signal) {
+    static_cast<Spatializer*>(spat)->play(g_sigs.at(signal));
+}
+
+void Spatializer_stop(Handle spat) {
+    static_cast<Spatializer*>(spat)->stop();
+}
+
+void Spatializer_setVolume(Handle spat, double volume) {
+    static_cast<Spatializer*>(spat)->setVolume(volume);
+}
+
+double Spatializer_getVolume(Handle spat) {
+    return static_cast<Spatializer*>(spat)->getVolume();
+}
+
+void Spatializer_setPitch(Handle spat, double pitch) {
+    static_cast<Spatializer*>(spat)->setPitch(pitch);
+}
+
+double Spatializer_getPitch(Handle spat) {
+    return static_cast<Spatializer*>(spat)->getPitch();
+}
+
+
+void Spatializer_autoUpdate(Handle spat, bool enable) {
+    static_cast<Spatializer*>(spat)->autoUpdate(enable);
+}
+
+void Spatializer_update(Handle spat) {
+    static_cast<Spatializer*>(spat)->update();
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////
 

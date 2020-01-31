@@ -17,11 +17,11 @@ public:
     const std::string& saveDir();
 public:
     ThemeManager theme;
+    StatusBar status;
     DeviceBar device;
     Player player;
     Workspace workspace;
     Library library;
     Visualizer visualizer;
-    StatusBar status;
     Debugger debug;
 };

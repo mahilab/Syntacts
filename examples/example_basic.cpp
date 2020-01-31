@@ -25,6 +25,7 @@ int main(int argc, char const *argv[])
     // Alternatively, you can just open the system default device by passing no arguments 
     // (which this example does because we don't know what device numbers you might have!)   
     session.open();
+    
 
     //-------------------------------------------------------------------------
       

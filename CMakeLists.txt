@@ -24,7 +24,7 @@ option(SYNTACTS_BUILD_EXAMPLES      "Turn ON to build Syntacts example(s)"      
 option(SYNTACTS_USE_STATIC_STD_LIBS "Turn ON to link Syntacts against static runtime libs (i.e. eliminate VCRUNTIME140.dll, etc. dependency" OFF )
 
 # create project
-project(syntacts VERSION 1.0.0)
+project(Syntacts VERSION 1.0.0)
 
 # add modules
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
@@ -45,6 +45,14 @@ if(MSVC AND SYNTACTS_USE_STATIC_STD_LIBS)
     endforeach()
 else()
     message("Linking Syntacts against DYNAMIC runtime libraries")
+endif()
+
+# disable FH4 for now (removes deps on new (late 2019) VCRUNTIME140_1.dll)
+# https://developercommunity.visualstudio.com/content/problem/852548/vcruntime140-1dll-is-missing.html
+if (MSVC AND NOT SYNTACTS_USE_STATIC_STD_LIBS)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -d2FH4-")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -d2:-FH4-")
+    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -d2:-FH4-")
 endif()
 
 # gather public includes
@@ -100,7 +108,7 @@ add_library(syntacts::syntacts ALIAS syntacts)
 set_target_properties(syntacts PROPERTIES CXX_STANDARD 17 DEBUG_POSTFIX -d)
 target_compile_features(syntacts PUBLIC cxx_std_17)
 if (MSVC)
-set_target_properties(syntacts PROPERTIES COMPILE_FLAGS "/bigobj" )
+    set_target_properties(syntacts PROPERTIES COMPILE_FLAGS "/bigobj")
 endif()
 target_sources(syntacts PRIVATE ${SYNTACTS_INCLUDE})
 target_sources(syntacts PRIVATE ${SYNTACTS_SRC})

@@ -12,6 +12,7 @@ namespace tact {
 
 /// Useful device information
 struct Device {
+    Device();
     int index;                     ///< device index
     std::string name;              ///< device name
     bool isDefault;                ///< is this the default device?

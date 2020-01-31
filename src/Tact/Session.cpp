@@ -34,6 +34,8 @@ static std::vector<double> STANDARD_SAMPLE_RATES = {
 
 using namespace rigtorp;
 
+
+
 /// Channel structure
 class Channel {
 public:
@@ -158,6 +160,18 @@ struct GetPitch : public Command {
 
 } // private namespace
 
+Device::Device() :
+    index(-1),
+    name("N/A"),
+    isDefault(false),
+    apiIndex(-1),
+    apiName("N/A"),
+    isApiDefault(false),
+    maxChannels(0),
+    sampleRates({}),
+    defaultSampleRate(0)
+{ }
+
 /// Session Implementation
 class Session::Impl {
 public:
@@ -165,8 +179,9 @@ public:
     Impl() :
         m_stream(nullptr),
         m_commands(QUEUE_SIZE),
-        m_device({-1,"N/A",false,-1,"N/A",false,0})
+        m_device()
     {
+
         // initialize PortAudio
         int result = Pa_Initialize();
         assert(result == paNoError);
@@ -199,8 +214,8 @@ public:
         if (isOpen())
             return SyntactsError_AlreadyOpen;
 
-        // set device
-        m_device = device;
+        if (device.index == -1 || device.apiIndex == -1)
+            return SyntactsError_InvalidDevice;
 
         // generat list of channel numbers
         channelNumbers.resize(channels);
@@ -216,24 +231,27 @@ public:
         params.hostApiSpecificStreamInfo = nullptr;
         params.sampleFormat = paFloat32 | paNonInterleaved;
 
-        m_sampleRate = sampleRate == 0 ? device.defaultSampleRate : sampleRate;
+        sampleRate = sampleRate == 0 ? device.defaultSampleRate : sampleRate;
 
-        if (Pa_IsFormatSupported(nullptr, &params, m_sampleRate) != paFormatIsSupported)
+        if (Pa_IsFormatSupported(nullptr, &params, sampleRate) != paFormatIsSupported)
             return SyntactsError_InvalidSampleRate;
 
         // resize vector of channels
         m_channels.clear();
         m_channels.resize(channels);
         for (auto& c : m_channels) 
-            c.sampleLength = 1.0 / m_sampleRate;
+            c.sampleLength = 1.0 / sampleRate;
         // open stream
         int result;
-        result = Pa_OpenStream(&m_stream, nullptr, &params, m_sampleRate, FRAMES_PER_BUFFER, paNoFlag, callback, this);
+        result = Pa_OpenStream(&m_stream, nullptr, &params, sampleRate, FRAMES_PER_BUFFER, paNoFlag, callback, this);
         if (result != paNoError)
             return result;  
         result = Pa_StartStream(m_stream);
         if (result != paNoError)
             return result;
+        // set device/sampel rate
+        m_device = device;
+        m_sampleRate = sampleRate;
         return SyntactsError_NoError;
     }
 
@@ -244,7 +262,7 @@ public:
         if (result != paNoError) {
             return result;
         }
-        m_device = {-1,"N/A",false,-1,"N/A",false,0};
+        m_device = Device();
         m_channels.clear();
         m_sampleRate = 0;
         m_stream = nullptr;
@@ -426,15 +444,17 @@ public:
                 sampleRates.push_back(static_cast<int>(s));
         }
 
-        return Device{index, 
-                    pa_dev_info->name, 
-                    index == Pa_GetDefaultOutputDevice(),
-                    pa_api_info->type,
-                    pa_api_info->name, 
-                    index == Pa_GetHostApiInfo( pa_dev_info->hostApi )->defaultOutputDevice,
-                    pa_dev_info->maxOutputChannels,
-                    std::move(sampleRates),
-                    static_cast<int>(pa_dev_info->defaultSampleRate)};
+        Device dev;
+        dev.index = index;
+        dev.name = pa_dev_info->name;
+        dev.isDefault = index == Pa_GetDefaultOutputDevice();
+        dev.apiIndex = pa_api_info->type;
+        dev.apiName = pa_api_info->name;
+        dev.isApiDefault = index == Pa_GetHostApiInfo( pa_dev_info->hostApi )->defaultOutputDevice;
+        dev.maxChannels = pa_dev_info->maxOutputChannels;
+        dev.sampleRates = std::move(sampleRates);
+        dev.defaultSampleRate = static_cast<int>(pa_dev_info->defaultSampleRate);
+        return dev;
     }
 
 

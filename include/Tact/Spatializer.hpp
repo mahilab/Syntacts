@@ -43,9 +43,6 @@ public:
     void setPitch(double pitch);
     double getPitch() const;
 
-    void save(const std::string& name);
-    void load(const std::string& name);
-
     void autoUpdate(bool enable);
     void update();
 private:

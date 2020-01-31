@@ -27,6 +27,7 @@ bool Spatializer(const char* label, SpatializerTarget& target, tact::Curve rollo
 class Spatializer : public Widget {
 public:
     Spatializer(Gui& gui);
+    ~Spatializer();
     tact::Signal getSignal();
     void update();
     tact::Spatializer spatializer;
@@ -48,4 +49,5 @@ private:
     char m_inputBuffer[64] = "";
     std::map<int, ImGui::SpatializerNode> m_channels;
     ImGui::SpatializerTarget m_target;
+    std::size_t m_openId, m_destroyId;
 };

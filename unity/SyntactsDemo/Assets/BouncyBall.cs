@@ -11,10 +11,14 @@ public class BouncyBall : MonoBehaviour
     public int collisionChannel = 0;
     public int velocityChannel = 1;
 
+    public float collisionFreq = 500;
+    public float velocityFreq = 200;
+
+
     // Start is called before the first frame update
     void Start()
     {
-        demo.session.Play(velocityChannel, new Sine(200) * new Sine(5));
+        demo.session.Play(velocityChannel, new Sine(velocityFreq) * new Sine(5));
         rb = GetComponent<Rigidbody>();
     }
 
@@ -25,7 +29,7 @@ public class BouncyBall : MonoBehaviour
     }
 
     void OnCollisionEnter(Collision col) {
-        Signal collision = new Square(500) * new ASR(0.05, 0.05, 0.05);
+        Signal collision = new Square(collisionFreq) * new ASR(0.05, 0.05, 0.05);
         demo.session.Play(collisionChannel, collision);
     }
 }

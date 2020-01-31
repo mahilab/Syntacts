@@ -65,32 +65,36 @@ void DeviceBar::switchDevice(const tact::Device &dev, double sampleRate)
     if (result != SyntactsError_NoError)
     {
         gui.status.pushMessage("Failed to close device! Error: " + str(result), StatusBar::Error);
+        return;
     }
     // open requested device
     result = session->open(dev, dev.maxChannels, sampleRate);
+    getCurrent();
     if (result != SyntactsError_NoError)
     {
         gui.status.pushMessage("Failed to open device! Error: " + str(result), StatusBar::Error);
+        return;
     }
     // update current and available
-    getCurrent();
+    std::string msg = "Opened \"" + dev.name + "\" under " + dev.apiName + " @ " + str(session->getSampleRate()) + " Hz";
+    gui.status.pushMessage(msg, StatusBar::Info);
     onSessionOpen.emit();
 }
 
 void DeviceBar::switchApi(const std::string &api)
 {
-    if (m_currentApi != api)
+    if (m_currentApi != api && m_available.count(api) > 0)
     {
         m_currentApi = api;
         switchDevice(m_available[m_currentApi][0]);
-        gui.status.pushMessage("Switched API to " + m_currentApi);
+        // gui.status.pushMessage("Switched API to " + m_currentApi);
     }
 }
 
 void DeviceBar::switchSampleRate(double sampleRate)
 {
     switchDevice(m_currentDev, sampleRate);
-    gui.status.pushMessage("Changed sample rate to " + str(sampleRate, "Hz"));
+    // gui.status.pushMessage("Changed sample rate to " + str(sampleRate, "Hz"));
 }
 
 void DeviceBar::update() {
@@ -108,7 +112,7 @@ void DeviceBar::update() {
     ImGui::SameLine();
     if (ImGui::Button(ICON_FA_SYNC_ALT)) {
         initialize();
-        gui.status.pushMessage("Restarted Session");
+        // gui.status.pushMessage("Restarted Session");
     }
     gui.status.showTooltip("Restart Sesssion");
     ImGui::EndGroup();
@@ -264,7 +268,8 @@ void DeviceBar::getCurrent()
 {
     if (session) {
         m_currentDev = session->getCurrentDevice();
-        m_currentApi = m_currentDev.apiName;
+        if (m_currentDev.apiIndex != -1)
+            m_currentApi = m_currentDev.apiName;
     }
 }
 
@@ -275,10 +280,12 @@ void DeviceBar::getAvailable()
         auto devs = session->getAvailableDevices();
         for (auto &dev : devs)
         {
-            if (dev.second.isApiDefault)
-                m_available[dev.second.apiName].push_front(dev.second);
-            else
-                m_available[dev.second.apiName].push_back(dev.second);
+            if (dev.second.apiIndex != -1 && dev.second.index != -1 && dev.second.apiName != "N/A") {
+                if (dev.second.isApiDefault)
+                    m_available[dev.second.apiName].push_front(dev.second);
+                else
+                    m_available[dev.second.apiName].push_back(dev.second);
+            }
         }
     }
 }

@@ -418,6 +418,8 @@ MonoBehaviour:
   demo: {fileID: 1990230287}
   collisionChannel: 0
   velocityChannel: 1
+  collisionFreq: 100
+  velocityFreq: 200
 --- !u!1 &1990230286
 GameObject:
   m_ObjectHideFlags: 0

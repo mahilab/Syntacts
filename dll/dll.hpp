@@ -42,7 +42,40 @@ EXPORT double Session_getCpuLoad(Handle session);
 
 EXPORT int Session_count();
 
-// TODO: Device
+// TODO: Device related functions
+
+///////////////////////////////////////////////////////////////////////////////
+// SPATIALIZER
+///////////////////////////////////////////////////////////////////////////////
+
+struct Point {double x,y;};
+
+EXPORT Handle Spatializer_create(Handle session);
+EXPORT void Spatializer_destroy(Handle spat);
+EXPORT void Spatializer_bind(Handle spat, Handle session);
+EXPORT void Spatializer_unbind(Handle spat);
+EXPORT void Spatializer_setPosition(Handle spat, int channel, Point p);
+EXPORT Point Spatializer_getPosition(Handle spat, int channel);
+EXPORT void Spatializer_setTarget(Handle spat, Point p);
+EXPORT Point Spatializer_getTarget(Handle spat);
+EXPORT void Spatializer_setRadius(Handle spat, double r);
+EXPORT double Spatializer_getRadius(Handle spat);
+EXPORT void Spatializer_clear(Handle spat);
+EXPORT void Spatializer_remove(Handle spat, int channel);
+EXPORT int Spatializer_getChannelCount(Handle spat);
+EXPORT bool Spatializer_hasChannel(Handle spat, int channel);
+
+EXPORT void Spatializer_play(Handle spat, Handle signal);
+EXPORT void Spatializer_stop(Handle spat);
+EXPORT void Spatializer_setVolume(Handle spat, double volume);
+EXPORT double Spatializer_getVolume(Handle spat);
+EXPORT void Spatializer_setPitch(Handle spat, double pitch);
+EXPORT double Spatializer_getPitch(Handle spat);
+
+EXPORT void Spatializer_autoUpdate(Handle spat, bool enable);
+EXPORT void Spatializer_update(Handle spat);
+
+// TODO: setRollOff, getRollOff, getChannels
 
 ///////////////////////////////////////////////////////////////////////////////
 // SIGNAL
@@ -96,8 +129,6 @@ EXPORT Handle Sequence_FltSig(double lhs, Handle rhs);
 EXPORT void Sequence_SeqFlt(Handle lhs, double rhs);
 EXPORT void Sequence_SeqSig(Handle lhs, Handle rhs);
 EXPORT void Sequence_SeqSeq(Handle lhs, Handle rhs);
-
-// TODO: push, insert, clear, head
 
 ///////////////////////////////////////////////////////////////////////////////
 // GENERAL

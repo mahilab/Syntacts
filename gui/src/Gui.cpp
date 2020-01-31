@@ -8,12 +8,12 @@ namespace fs = std::filesystem;
 
 Gui::Gui() : Application(960, 540, "Syntacts", false),
              theme(*this),
+             status(*this),
              device(*this),
              player(*this),
              workspace(*this),
              library(*this),
              visualizer(*this),
-             status(*this),
              debug(*this)
 {
     fs::create_directories(saveDir());
@@ -23,7 +23,6 @@ Gui::Gui() : Application(960, 540, "Syntacts", false),
     
     // ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_ViewportsEnable;
     ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_DockingEnable;
-
 }
 
 void Gui::update() {

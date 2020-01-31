@@ -40,11 +40,17 @@ Spatializer::Spatializer(Gui& gui) :
     m_target.pos.x = (float)spatializer.getTarget().x;
     m_target.pos.y = (float)spatializer.getTarget().y;
     m_target.radius =(float)spatializer.getRadius();
-    gui.device.onSessionOpen.connect(this, &Spatializer::onSessionChange);
-    gui.device.onSessionDestroy.connect(this, &Spatializer::onSessionDestroy);
+    m_openId = gui.device.onSessionOpen.connect(this, &Spatializer::onSessionChange);
+    m_destroyId = gui.device.onSessionDestroy.connect(this, &Spatializer::onSessionDestroy);
     if (gui.device.session)
         onSessionChange();
     spatializer.autoUpdate(false);
+}
+
+Spatializer::~Spatializer() {
+    // disconnect so this object's destroyed callbacks don't get called
+    gui.device.onSessionOpen.disconnect(m_openId);
+    gui.device.onSessionDestroy.disconnect(m_destroyId);
 }
 
 void Spatializer::update()
@@ -184,7 +190,7 @@ void Spatializer::onSessionChange() {
 }
 
 void Spatializer::onSessionDestroy() {
-    spatializer.bind(nullptr);
+    spatializer.unbind();
 }
 
 void Spatializer::sync() {

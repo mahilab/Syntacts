@@ -88,8 +88,6 @@ void StatusBar::renderButtons()
         gui.debug.show = true;
     showTooltip("Display Debug Info");
 
-
-
     ImGui::SameLine();
     if (ImGui::Button(ICON_FA_ADJUST)) 
     {
