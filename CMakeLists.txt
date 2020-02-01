@@ -1,7 +1,7 @@
 # MIT License
 #
 # Syntacts
-# Copyright (c) 2019 Mechatronics and Haptic Interfaces Lab - Rice University
+# Copyright (c) 2020 Mechatronics and Haptic Interfaces Lab - Rice University
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -18,10 +18,12 @@
 cmake_minimum_required(VERSION 3.13.0)
 
 # user options
-option(SYNTACTS_BUILD_GUI           "Turn ON to build Syntacts GUI"                                                                          ON  )
-option(SYNTACTS_BUILD_C_DLL         "Turn ON to build Syntacts C DLL"                                                                        ON  )
-option(SYNTACTS_BUILD_EXAMPLES      "Turn ON to build Syntacts example(s)"                                                                   ON  )
-option(SYNTACTS_USE_STATIC_STD_LIBS "Turn ON to link Syntacts against static runtime libs (i.e. eliminate VCRUNTIME140.dll, etc. dependency" OFF )
+option(SYNTACTS_BUILD_GUI           "Turn ON to build Syntacts GUI"      ON)
+option(SYNTACTS_BUILD_C_DLL         "Turn ON to build Syntacts C DLL"    ON)
+option(SYNTACTS_BUILD_EXAMPLES      "Turn ON to build Syntacts examples" ON)
+option(SYNTACTS_BUILD_TESTS         "Turn ON to build Syntacts tests"    ON)
+option(SYNTACTS_USE_STATIC_STD_LIBS "Turn ON to link Syntacts against static runtime libs 
+                                     (i.e. eliminate VCRUNTIME140.dll, etc. dependency" OFF)
 
 # create project
 project(Syntacts VERSION 1.0.0)
@@ -162,6 +164,14 @@ endif()
 
 if (SYNTACTS_BUILD_EXAMPLES)
     add_subdirectory("examples")
+endif()
+
+#===============================================================================
+# Syntacts Test
+#===============================================================================
+
+if (SYNTACTS_BUILD_TESTS)
+    add_subdirectory("tests")
 endif()
 
 #===============================================================================

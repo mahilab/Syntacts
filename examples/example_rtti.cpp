@@ -5,6 +5,11 @@
 using namespace tact;
 using std::string;
 
+// This example demonstrates how a Signal can be deconstructed with RTTI once
+// it has been type erased. This isn't normally recommended, but under certain 
+// circumstances it may be necessary to know what the underlying type(s)
+// of a Signal are (e.g. see Nodes in the GUI source code)
+
 void printSignal(Signal sig, int pos = 0);
 
 void printTime(Signal sig, int pos) {

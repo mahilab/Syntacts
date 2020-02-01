@@ -1,4 +1,5 @@
 #pragma once
+
 #include <Tact/Config.hpp>
 
 #include <cereal/cereal.hpp>

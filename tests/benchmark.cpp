@@ -52,16 +52,12 @@ int main(int argc, char const *argv[])
     display(toc(), n, sum, "Expression");
    
     sum = 0;
-
-    sum = 0;
     tic();
     for (int i = 0; i < n; ++i) {
         auto t = i * lenN;
         sum += std::sin(TWO_PI * 175 * t + 2 * std::sin(2.0f * PI * 10 * t)) * env.sample(t);
     }
     display(toc(), n, sum, "Best Case");  
-
-    ///////////////////////////////////////////////////////////////////////////
 
     sum = 0;
     tic();

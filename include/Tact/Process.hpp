@@ -1,3 +1,5 @@
+#pragma once
+
 #include <Tact/Signal.hpp>
 
 namespace tact

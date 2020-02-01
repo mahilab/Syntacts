@@ -68,8 +68,8 @@
 # Plugin DLL / External API
 ## Must Do
 - ~~expose all (or most important) C++ API functionality~~
-- spatializer
-- determine why no ASIO audio output when compiled with command line .NET (vs Unity .NET)
+- ~~spatializer~~
+- determine if ASIO has an issue in C# (works fine in Unity, so unsure)
 
 # Distribution / Documentation
 - ~~embed PortAudio / ASIO / gui~~

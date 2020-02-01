@@ -1,0 +1,14 @@
+# C++
+[Bb]uild/
+[Bb]uild*/
+ipch/
+.vscode/
+.vs/
+
+*.dll
+*.lib
+*.exe
+*.dylib
+*.so
+
+.DS_Store
