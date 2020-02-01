@@ -19,7 +19,6 @@ class Session:
             return _tact.Session_open3(self._handle, index, channelCount, sampleRate)
         else:
             return _tact.Session_open1(self._handle)
-        
 
     def close(self):
         return _tact.Session_close(self._handle)
@@ -30,52 +29,55 @@ class Session:
     def play(self, channel, signal):
         return _tact.Session_play(self._handle, channel, signal._handle)
 
-    def playAll(self, signal):
+    def play_all(self, signal):
         return _tact.Session_playAll(self._handle, signal._handle)
 
     def stop(self, channel):
         return _tact.Session_stop(self._handle, channel)
 
-    def stopAll(self, signal):
+    def stop_all(self, signal):
         return _tact.Session_stopAll(self._handle)
 
     def pause(self, channel):
         return _tact.Session_pause(self._handle, channel)
 
-    def pauseAll(self, signal):
+    def pause_all(self, signal):
         return _tact.Session_pauseAll(self._handle)   
 
     def resume(self, channel):
         return _tact.Session_resume(self._handle, channel)
 
-    def resumeAll(self, signal):
+    def resume_all(self, signal):
         return _tact.Session_resumeAll(self._handle)
 
-    def isPlaying(self, channel):
+    def is_playing(self, channel):
         return _tact.Session_isPlaying(self._handle, channel)
 
-    def isPause(self, channel):
+    def is_paused(self, channel):
         return _tact.Session_isPaused(self._handle, channel)
 
-    def setVolume(self, channel, volume):
+    def set_volume(self, channel, volume):
         return _tact.Session_setVolume(self._handle, channel, volume)
 
-    def getVolume(self, channel):
+    def get_volume(self, channel):
         return _tact.Session_getVolume(self._handle, channel)
 
-    def setPitch(self, channel, pitch):
+    def set_pitch(self, channel, pitch):
         return _tact.Session_setPitch(self._handle, channel, pitch)
 
-    def getPitch(self, channel):
+    def get_pitch(self, channel):
         return _tact.Session_getPitch(self._handle, channel)
 
-    def getChannelCount(self):
+    @property
+    def channel_count(self):
         return _tact.Session_getChannelCount(self._handle)
 
-    def getSampleRate(self):
+    @property
+    def sample_rate(self):
         return _tact.Session_getSampleRate(self._handle)
 
-    def getCpuLoad(self):
+    @property
+    def cpu_load(self):
         return _tact.Session_getCpuLoad(self._handle)
 
     @staticmethod
@@ -83,8 +85,111 @@ class Session:
         return _tact.Session_count()
 
 ###############################################################################
+## SPATIALIZER
+###############################################################################
+
+class Point(Structure):
+    _fields_ = [("x", c_double), ("y", c_double)]
+
+class Spatializer:
+    def __init__(self, session=None):
+        if (session):
+            self._handle = _tact.Spatializer_create(session._handle)
+        else:
+            self._handle = _tact.Spatializer_create(None)
+
+    def __del__(self):
+        _tact.Spatializer_delete(self._handle)
+
+    def bind(self, session):
+        _tact.Spatializer_bind(self._handle, session._handle)
+
+    def unbind(self):
+        _tact.Spatializer_unbind(self._handle)
+
+    def set_position(self, channel, p):
+        if type(p) is Point:
+            _tact.Spatializer_setPosition(self._handle, channel, p)
+        else:
+            pt = Point()
+            pt.x = p[0]
+            pt.y = p[1]
+            _tact.Spatializer_setPosition(self._handle, channel, pt)
+
+    def get_position(self, channel):
+        return _tact.Spatializer_getPosition(self._handle, channel)
+
+    def clear(self):
+        _tact.Spatializer_clear(self._handle)
+
+    def remove(self, channel):
+        _tact.Spatializer_remove(self._handle, channel)
+
+    def has_channel(self, channel):
+        return _tact.Spatializer_hasChannel(self._handle, channel)
+
+    def play(self, signal):
+        _tact.Spatializer_play(self._handle, signal._handle)
+
+    def stop(self):
+        _tact.Spatializer_stop(self._handle)
+
+    def update(self):
+        _tact.Spatializer_update(self._handle)
+
+    def auto_update(self, enable):
+        _tact.Spatializer_autoUpdate(self._handle, enable)
+
+    @property
+    def target(self):
+        return _tact.Spatializer_getTarget(self._handle)
+
+    @target.setter
+    def target(self, p):
+        if type(p) is Point:
+            _tact.Spatializer_setTarget(self._handle, p)
+        else:
+            pt = Point()
+            pt.x = p[0]
+            pt.y = p[1]
+            _tact.Spatializer_setTarget(self._handle, pt)
+    
+    @property
+    def radius(self):
+        return _tact.Spatializer_getRadius(self._handle)
+
+    @radius.setter
+    def radius(self, r):
+        _tact.Spatializer_setRadius(self._handle, r)
+
+    @property
+    def channel_count(self):
+        return _tact.Spatializer_getChannelCount(self._handle)
+
+    @property
+    def volume(self):
+        return _tact.Spatializer_getVolume(self._handle)
+
+    @volume.setter
+    def volume(self, v):
+        _tact.Spatializer_setVolume(self._handle, v)
+    
+    @property
+    def pitch(self):
+        return _tact.Spatializer_getPitch(self._handle)
+
+    @pitch.setter
+    def pitch(self, p):
+        _tact.Spatializer_setPitch(self._handle, p)
+
+    @property
+    def valid(self):
+        return _tact.Spatializer_valid(self._handle)
+
+###############################################################################
 ## SIGNAL
 ###############################################################################
+
 class Signal:    
     def __init__(self, handle):
         self._handle = handle
@@ -95,6 +200,7 @@ class Signal:
     def sample(self, t):
         return _tact.Signal_sample(self._handle, t)
 
+    @property
     def length(self):
         return _tact.Signal_length(self._handle)
 
@@ -346,26 +452,26 @@ class Pwm(Signal):
 
 class Library:
     @staticmethod
-    def saveSignal(signal, name):
+    def save_signal(signal, name):
         return _tact.Library_saveSignal(signal._handle, c_char_p(name.encode()))
 
     @staticmethod
-    def loadSignal(name):
+    def load_signal(name):
         handle = _tact.Library_loadSignal(c_char_p(name.encode()))
         if handle:
             return Signal(handle)
         return None
 
     @staticmethod
-    def deleteSignal(name):
+    def delete_signal(name):
         return _tact.Library_deleteSignal(c_char_p(name.encode()))
 
     @staticmethod
-    def exportSignal(signal, filePath, format=0, sampleRate=48000, maxLength=60):
+    def export_signal(signal, filePath, format=0, sampleRate=48000, maxLength=60):
         return _tact.Library_exportSignal(signal._handle, c_char_p(filePath.encoder()), format, sampleRate, maxLength)
 
     @staticmethod
-    def importSignal(filePath, format=0, sampleRate=48000):
+    def import_signal(filePath, format=0, sampleRate=48000):
         handle = _tact.Library_importSignal(c_char_p(filePath.encode()), format, sampleRate)
         if handle:
             return Signal(handle)
@@ -375,7 +481,7 @@ class Library:
 
 class Debug:
     @staticmethod
-    def sigMapSize():
+    def sig_map_size():
         return _tact.Debug_sigMapSize()
 
 ###############################################################################
@@ -418,6 +524,32 @@ lib_func(_tact.Session_getSampleRate, c_double, [Handle])
 lib_func(_tact.Session_getCpuLoad, c_double, [Handle])
 
 lib_func(_tact.Session_count, c_int, None)
+
+# Spatializer
+
+lib_func(_tact.Spatializer_create, Handle, [Handle])
+lib_func(_tact.Spatializer_delete, None, [Handle])
+lib_func(_tact.Spatializer_valid, c_bool, [Handle])
+lib_func(_tact.Spatializer_bind, None, [Handle, Handle])
+lib_func(_tact.Spatializer_unbind, None, [Handle])
+lib_func(_tact.Spatializer_setPosition, None, [Handle, c_int, Point])
+lib_func(_tact.Spatializer_getPosition, Point, [Handle, c_int])
+lib_func(_tact.Spatializer_setTarget, None, [Handle, Point])
+lib_func(_tact.Spatializer_getTarget, Point, [Handle])
+lib_func(_tact.Spatializer_setRadius, None, [Handle, c_double])
+lib_func(_tact.Spatializer_getRadius, c_double, [Handle])
+lib_func(_tact.Spatializer_clear, None, [Handle])
+lib_func(_tact.Spatializer_remove, None, [Handle, c_int])
+lib_func(_tact.Spatializer_getChannelCount, c_int , [Handle])
+lib_func(_tact.Spatializer_hasChannel, c_bool, [Handle, c_int])
+lib_func(_tact.Spatializer_play, None, [Handle, Handle])
+lib_func(_tact.Spatializer_stop, None, [Handle])
+lib_func(_tact.Spatializer_setVolume, None, [Handle, c_double])
+lib_func(_tact.Spatializer_getVolume, c_double, [Handle])
+lib_func(_tact.Spatializer_setPitch, None, [Handle, c_double])
+lib_func(_tact.Spatializer_getPitch, c_double, [Handle])
+lib_func(_tact.Spatializer_autoUpdate, None, [Handle, c_bool])
+lib_func(_tact.Spatializer_update, None, [Handle])
 
 # Signal
 

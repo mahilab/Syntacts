@@ -124,7 +124,7 @@ namespace Syntacts
         public static int count
         {
             get { return Dll.Session_count(); }
-        }        
+        }
 
         ~Session()
         {
@@ -148,6 +148,122 @@ namespace Syntacts
 
         public Handle handle = Handle.Zero;
 
+    }
+    
+    ///////////////////////////////////////////////////////////////////////////
+    // SPATIALIZER
+    ///////////////////////////////////////////////////////////////////////////
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public struct Point {
+        public Point(double x, double y) { this.x = x; this.y = y; }
+        public double x;
+        public double y;
+    }
+
+    public class Spatializer : IDisposable {
+
+        public Spatializer(Session session = null) {
+            if (session != null)
+                this.handle = Dll.Spatializer_create(session.handle);
+            else
+                this.handle = Dll.Spatializer_create(Handle.Zero);
+        }
+
+        public void Bind(Session session) {
+            Dll.Spatializer_bind(handle, session.handle);
+        }
+
+        public void Unbind() {
+            Dll.Spatializer_unbind(handle);
+        }
+
+        public void SetPosition(int channel, Point p) {
+            Dll.Spatializer_setPosition(handle, channel, p);
+        }
+
+        public Point GetPosition(int channel) {
+            return Dll.Spatializer_getPosition(handle, channel);
+        }
+
+        public void Clear() {
+            Dll.Spatializer_clear(handle);
+        }
+
+        public void Remove(int channel) {
+            Dll.Spatializer_remove(handle, channel);
+        }        
+
+        public bool HasChannel(int channel) {
+            return Dll.Spatializer_hasChannel(handle, channel);
+        }
+
+        public void Play(Signal signal) {
+            Dll.Spatializer_play(handle, signal.handle);
+        }
+
+        public void Stop() {
+            Dll.Spatializer_stop(handle);
+        }        
+
+        public void Update() {
+            Dll.Spatializer_update(handle);
+        }
+
+        ~Spatializer()
+        {
+            Dispose(false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (handle != Handle.Zero)
+            {
+                Dll.Spatializer_delete(handle);
+                handle = Handle.Zero;
+            }
+        }
+
+        public Point target {
+            get { return Dll.Spatializer_getTarget(handle); }
+            set { Dll.Spatializer_setTarget(handle, value);}
+        }
+
+        public double radius {
+            get { return Dll.Spatializer_getRadius(handle); }
+            set { Dll.Spatializer_setRadius(handle, value); }
+        }
+
+        public int channelCount {
+            get { return Dll.Spatializer_getChannelCount(handle); }
+        }
+
+        public double volume {
+            get { return Dll.Spatializer_getVolume(handle); }
+            set { Dll.Spatializer_setVolume(handle, value); }
+        }
+
+        public double pitch {
+            get { return Dll.Spatializer_getPitch(handle); }
+            set { Dll.Spatializer_setPitch(handle, value); }
+        }
+
+        public bool autoUpdate {
+            set { Dll.Spatializer_autoUpdate(handle, value); }
+        }
+
+        public bool valid 
+        {
+            get { return Dll.Spatializer_valid(handle); }
+        }
+
+        public Handle handle = Handle.Zero;
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -619,6 +735,55 @@ namespace Syntacts
         public static extern double Session_getCpuLoad(Handle session);
         [DllImport("syntacts-c")]
         public static extern int Session_count();
+
+        [DllImport("syntacts-c")]
+        public static extern Handle Spatializer_create(Handle session);
+        [DllImport("syntacts-c")]
+        public static extern void Spatializer_delete(Handle spat);
+        [DllImport("syntacts-c")]
+        public static extern bool Spatializer_valid(Handle spat);
+        [DllImport("syntacts-c")]
+        public static extern void Spatializer_bind(Handle spat, Handle session);
+        [DllImport("syntacts-c")]
+        public static extern void Spatializer_unbind(Handle spat);
+        [DllImport("syntacts-c")]
+        public static extern void Spatializer_setPosition(Handle spat, int channel, Point p);
+        [DllImport("syntacts-c")]
+        public static extern Point Spatializer_getPosition(Handle spat, int channel);
+        [DllImport("syntacts-c")]
+        public static extern void Spatializer_setTarget(Handle spat, Point p);
+        [DllImport("syntacts-c")]
+        public static extern Point Spatializer_getTarget(Handle spat);
+        [DllImport("syntacts-c")]
+        public static extern void Spatializer_setRadius(Handle spat, double r);
+        [DllImport("syntacts-c")]
+        public static extern double Spatializer_getRadius(Handle spat);
+        [DllImport("syntacts-c")]
+        public static extern void Spatializer_clear(Handle spat);
+        [DllImport("syntacts-c")]
+        public static extern void Spatializer_remove(Handle spat, int channel);
+        [DllImport("syntacts-c")]
+        public static extern int Spatializer_getChannelCount(Handle spat);
+        [DllImport("syntacts-c")]
+        public static extern bool Spatializer_hasChannel(Handle spat, int channel);
+
+        [DllImport("syntacts-c")]
+        public static extern void Spatializer_play(Handle spat, Handle signal);
+        [DllImport("syntacts-c")]
+        public static extern void Spatializer_stop(Handle spat);
+        [DllImport("syntacts-c")]
+        public static extern void Spatializer_setVolume(Handle spat, double volume);
+        [DllImport("syntacts-c")]
+        public static extern double Spatializer_getVolume(Handle spat);
+        [DllImport("syntacts-c")]
+        public static extern void Spatializer_setPitch(Handle spat, double pitch);
+        [DllImport("syntacts-c")]
+        public static extern double Spatializer_getPitch(Handle spat);
+
+        [DllImport("syntacts-c")]
+        public static extern void Spatializer_autoUpdate(Handle spat, bool enable);
+        [DllImport("syntacts-c")]
+        public static extern void Spatializer_update(Handle spat);
 
         [DllImport("syntacts-c")]
         public static extern void Signal_delete(Handle signal);

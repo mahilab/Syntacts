@@ -151,8 +151,12 @@ Handle Spatializer_create(Handle session) {
     return h;
 }
 
-void Spatializer_destroy(Handle spat) {
+void Spatializer_delete(Handle spat) {
     g_spats.erase(spat);
+}
+
+EXPORT bool Spatializer_valid(Handle spat) {
+    return g_spats.count(spat) > 0;
 }
 
 void Spatializer_bind(Handle spat, Handle session) {

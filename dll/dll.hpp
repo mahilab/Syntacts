@@ -51,7 +51,8 @@ EXPORT int Session_count();
 struct Point {double x,y;};
 
 EXPORT Handle Spatializer_create(Handle session);
-EXPORT void Spatializer_destroy(Handle spat);
+EXPORT void Spatializer_delete(Handle spat);
+EXPORT bool Spatializer_valid(Handle spat);
 EXPORT void Spatializer_bind(Handle spat, Handle session);
 EXPORT void Spatializer_unbind(Handle spat);
 EXPORT void Spatializer_setPosition(Handle spat, int channel, Point p);

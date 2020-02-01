@@ -16,7 +16,7 @@ int main(int argc, char const *argv[])
 
     // set up channels
     int chs = ss.getChannelCount();
-    float spc = 1.0f / (chs - 1);
+    double spc = 1.0 / (chs - 1);
     for (int i = 0; i < ss.getChannelCount(); ++i) 
         sp.setPosition(i, i * spc);
 
@@ -30,12 +30,12 @@ int main(int argc, char const *argv[])
     sp.play(sig);
 
     // do something cool
-    float t = 0;
+    double t = 0;
     while (t < 10) {
-        float x = 0.5f + 0.5f * std::sin(2*PI*t);
+        double x = 0.5 + 0.5 * std::sin(2*PI*t);
         sp.setTarget(x);
-        sleep(0.01f);
-        t += 0.01f;
+        sleep(0.01);
+        t += 0.01;
     }
 
     std::cout << "Finished!" << std::endl;
