@@ -3,7 +3,7 @@
 # Quick Start
 
 ### If you came for the GUI and/or Python/C#/Unity bindings...
-- Check the [Releases](https://github.com/mahilab/Syntacts/releases) for the latest pre-compiled binaries. 
+- Check the [Releases](https://github.com/mahilab/Syntacts/releases) page for the latest pre-compiled binaries. 
 - Run the GUI exectuable. On Windows, you may receive a "Windows protected your PC" screen. Click "More info", then "Run anyway".
 - Bindings:
   - For **Python**, run `example.py`
@@ -16,7 +16,8 @@
 3) Use the [template](https://github.com/mahilab/Syntacts/tree/master/template) to make a new Syntacts project with CMake
 
 ### Having issues?
-- Head over to the [Issues](https://github.com/mahilab/Syntacts/issues) page, and tell us your problem.
+- Head over to the [Issues](https://github.com/mahilab/Syntacts/issues) page and tell us your problem.
+- If you get a `VCRUNTIME140.dll missing` or similar issue, first try installing the latest [MSVC redistributable](https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads)
 
 # Building C++ from Source
 
