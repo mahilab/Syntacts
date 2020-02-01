@@ -68,7 +68,7 @@ Open a Terminal in a directory of your choice and run the following commands:
 > cd Syntacts
 > mkdir build && cd build
 > cmake .. -DCMAKE_BUILD_TYPE="Release"
-> cmake --build .
+> sudo cmake --build . --target install
 ```
 
 This will build **Syntacts** in its entirety and it install them to your system (likely in `/user/local/...`). 

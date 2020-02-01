@@ -30,7 +30,7 @@ class Example
         Library.LoadSignal(out loaded, "csharp");
 
         s.PlayAll(loaded);
-        Sleep(loaded.length)
+        Sleep(loaded.length);
 
         Signal noise = new Noise();
         Spatializer sp = new Spatializer(s);
@@ -51,8 +51,8 @@ class Example
         s.Dispose(); // important!
     }
 
-    void Sleep(double seconds) {
-        Thread.Sleep((int)(seconds*1000))
+    static void Sleep(double seconds) {
+        Thread.Sleep((int)(seconds*1000));
     }
 }
 
