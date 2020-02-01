@@ -73,7 +73,6 @@
 
 # Distribution / Documentation
 - ~~embed PortAudio / ASIO / gui~~
-- upload compiled binaries
 - create installer with NSIS
 - document all classes/functions
 - update examples
