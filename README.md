@@ -61,6 +61,6 @@ Open a Terminal in a directory of your choice and run the following commands:
 > sudo cmake --build . --target install
 ```
 
-This will build **Syntacts** in its entirety and it install them to your system (likely in `/user/local/...`). 
+This will build **Syntacts** in its entirety and then install it to your system (likely in `/user/local/...`). 
 
 >- Check your macOS and Clang versions. Syntacts makes use of C++17 features, particularly std::filesystem. You may need to update macOS and/or Apple Clang (e.g. with the command `xcode-select --install`). You may also consider using a mainline version of [Clang](https://clang.llvm.org/). Syntacts has been tested on macOS Catalina with Apple Clang 11.0.0 (clang-1100.0.0.33.17).
