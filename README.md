@@ -4,10 +4,10 @@
 
 ### If you came for the GUI and/or Python/C#/Unity bindings...
 - Check the [Releases](https://github.com/mahilab/Syntacts/releases) for the latest pre-compiled binaries. 
-- Run the GUI exectuable. On Windows, you may receive a "Windows protected your PC screen". Click "More info", then "Run anyway".
+- Run the GUI exectuable. On Windows, you may receive a "Windows protected your PC" screen. Click "More info", then "Run anyway".
 - Bindings:
   - For **Python**, run `example.py`
-  - For **C#**, build and run `Example.cs` from the command line with `dotnet run`
+  - For **C#**, build and run `csharp.csproj` from the command line with `dotnet run`
   - For **Unity**, open `Demo.unity`
 
 ### If you came for the C++ version...
