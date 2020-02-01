@@ -1,37 +1,26 @@
 <img src="https://raw.githubusercontent.com/mahilab/Syntacts/master/logo/logo_text.png" width="500">
 
-## Quick Start
+# Quick Start
 
-### GUI
+### If you came for the GUI and/or Python/C#/Unity bindings...
+- Check the [Releases](https://github.com/mahilab/Syntacts/releases) for the latest pre-compiled binaries. 
+- Run the GUI exectuable. On Windows, you may receive a "Windows protected your PC screen". Click "More info", then "Run anyway".
+- Bindings:
+  - For **Python**, run `example.py`
+  - For **C#**, build and run `Example.cs` from the command line with `dotnet run`
+  - For **Unity**, open `Demo.unity`
 
-1) Download and run the precompiled GUI executable from [Releases](https://github.com/mahilab/Syntacts/releases)
-
->If you get a "Windows protected your PC" screen, click "More info" and then "Run anyway". This is due to Syntacts not yet being a signed application, and will hopefully be resolved in the near future.
-
-### C++
-
+### If you came for the C++ version...
 1) Get the source code from the latest [Release](https://github.com/mahilab/Syntacts/releases) or by pulling `master`
 2) Build and install **Syntacts** for your system (see directions below)
 3) Use the [template](https://github.com/mahilab/Syntacts/tree/master/template) to make a new Syntacts project with CMake
 
-### Python
+### Having issues?
+- Head over to the [Issues](https://github.com/mahilab/Syntacts/issues) page, and tell us your problem.
 
-1) Download the Python binding from [Releases](https://github.com/mahilab/Syntacts/releases) (includes `syntacts-c.dll`, `syntacts.py`, and `example.py`)
-2) Run `example.py`
+# Building C++ from Source
 
-### CSharp
-
-1) Download the C# binding from [Releases](https://github.com/mahilab/Syntacts/releases) (includes `syntacts-c.dll`, `Syntacts.cs`,  `Example.cs`, and `csharp.csproj`)
-2) Build and run the example from the command line with `dotnet run`
-
-### Unity
-
-1) Download the example Unity project from [Releases](https://github.com/mahilab/Syntacts/releases)
-2) Open the folder in Unity and hit the play button
-
-## Building from Source
-
-### Requirements
+## Requirements
 
 - [git](https://git-scm.com/)
 - [CMake](https://cmake.org/)
@@ -39,7 +28,7 @@
 
 >**Note:** Syntacts uses **git submodules**. Make sure you use the `--recurse-submodules` option when cloning, otherwise your compliation will fail due to missing libraries!
 
-### Building on Windows
+## Building on Windows
 
 Open PowerShell **as an administrator** in a directory of your choice and run the following commands:
 
@@ -59,7 +48,7 @@ This will build **Syntacts** in its entirety and then install it to your system 
 >- The reason we require you to manually download the ASIO SDK with `wget` is because Steinberg's licensing agreement forbids that we distribute it. You can skip these two steps if you don't plan on using ASIO (though, you defintely should if you can!).
 >- You may need to specify a different CMake generator with `-G` if you have a another version of Visual Studio installed (e.g. `cmake .. -G "Visual Studio 15 2017 Win64"`)
 
-### Building on macOS
+## Building on macOS
 
 Open a Terminal in a directory of your choice and run the following commands:
 
