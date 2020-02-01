@@ -1,5 +1,5 @@
 #pragma once
-#include <mahi/ImGui.hpp>
+#include <mahi/imgui_custom.hpp>
 #include <imgui_internal.h>
 #include <vector>
 #include <string>

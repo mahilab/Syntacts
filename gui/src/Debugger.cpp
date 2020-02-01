@@ -75,6 +75,9 @@ void Debugger::update()
         ImGui::Text("CPU Load:            "); ImGui::SameLine(); ImGui::Text("%.2f %%", cpuTotal * 100);
         ImGui::Text("Session Load:        "); ImGui::SameLine(); ImGui::Text("%.2f %%", cpuSession * 100);        
         ImGui::Separator();
+        ImGui::Text("Operating System:    ");
+        ImGui::SameLine();
+        ImGui::Text("%s %s", System::osName().c_str(), System::osVersion().c_str());
         ImGui::Text("Syntacts Version:    ");
         ImGui::SameLine();
         ImGui::Text(tact::syntactsVersion().c_str());
