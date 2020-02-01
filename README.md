@@ -19,7 +19,7 @@
 - Head over to the [Issues](https://github.com/mahilab/Syntacts/issues) page and tell us your problem.
 - If you get a `VCRUNTIME140.dll missing` or similar issue, first try installing the latest [MSVC redistributable](https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads)
 
-# Building C++ from Source
+# Building Syntacts from C++ Source Code
 
 ## Requirements
 
