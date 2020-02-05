@@ -7,6 +7,10 @@
 
 using namespace tact;
 
+// This example is meant to show the full process of creating cues, sequencing 
+// them in time, and finally playing it. We're not saying that Syntacts is meant
+// to create music, but this is an illustration that can be played over speakers
+
 /// Returns musical note n semitones away from f0 (440 Hz = A4 by default)
 template <typename Osc>
 Signal note(int n, float f0 = 440) {
@@ -24,6 +28,7 @@ Signal key(const std::string& name, int octave) {
     return note<Osc>(i, 440);
 }
 
+// Cretes the notes required for "Funkytown" and returns the notes sequenced in time 
 Signal funktown() {
     auto Dsharp = key<Saw>("D#",6);
     auto Csharp = key<Saw>("C#",6);
@@ -33,6 +38,7 @@ Signal funktown() {
     return Dsharp << Dsharp << Csharp << Dsharp  << 0.2f << Asharp  << 0.2f << Asharp << Dsharp << Gsharp << G << Dsharp;
 }
 
+// Cretes the notes required for "Dixie" and returns the notes sequenced in time 
 Signal dixie() {
     return key<Square>("B", 5) <<
            key<Square>("G#",5) <<
@@ -52,7 +58,7 @@ int main(int argc, char const *argv[])
 {
     Session session;
     session.open();    
-    auto f = funktown();
+    auto f = funktown(); 
     Library::saveSignal(f, "funky");
     session.playAll(f);
     sleep(f.length() + 0.25f);

@@ -8,6 +8,7 @@ macro(syntacts_example SYNTACTS_EXAMPLE_NAME)
 endmacro()
 
 syntacts_example(basic)
+syntacts_example(signals)
 syntacts_example(devices)
 syntacts_example(library)
 syntacts_example(music)
