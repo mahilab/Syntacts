@@ -1,4 +1,3 @@
-// #define TACT_USE_MALLOC
 #include <syntacts>
 #include <chrono>
 #include <thread>
