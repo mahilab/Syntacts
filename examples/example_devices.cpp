@@ -3,6 +3,9 @@
 
 using namespace tact;
 
+// This example will load all devices and display their information for your computer. 
+// Run the exe from a window that will stay open once it runs so you can see the results
+
 int main(int argc, char const *argv[])
 {
     Session session;

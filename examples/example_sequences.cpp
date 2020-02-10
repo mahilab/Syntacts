@@ -1,14 +1,7 @@
-// #define TACT_USE_MALLOC
 #include <syntacts>
-#include <chrono>
-#include <thread>
 #include <iostream>
 
 using namespace tact;
-
-void sleep(float sec) {
-    std::this_thread::sleep_for(std::chrono::milliseconds((int)(sec * 1000)));
-}
 
 int main(int argc, char const *argv[])
 {   

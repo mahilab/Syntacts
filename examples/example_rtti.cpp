@@ -10,6 +10,9 @@ using std::string;
 // circumstances it may be necessary to know what the underlying type(s)
 // of a Signal are (e.g. see Nodes in the GUI source code)
 
+// This example is quite advanced and only applies if you hope to load, edit, 
+// and resave cues. 
+
 void printSignal(Signal sig, int pos = 0);
 
 void printTime(Signal sig, int pos) {
