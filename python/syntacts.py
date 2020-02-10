@@ -468,7 +468,7 @@ class Library:
 
     @staticmethod
     def export_signal(signal, filePath, format=0, sampleRate=48000, maxLength=60):
-        return _tact.Library_exportSignal(signal._handle, c_char_p(filePath.encoder()), format, sampleRate, maxLength)
+        return _tact.Library_exportSignal(signal._handle, c_char_p(filePath.encode()), format, sampleRate, maxLength)
 
     @staticmethod
     def import_signal(filePath, format=0, sampleRate=48000):

@@ -4,7 +4,13 @@ from math import sin
 from math import pi
 
 #-----------------------------------------------------------
+def check(signal):
+    if signal is not None:
+        print('Pass')
+    else:
+        print('Fail') 
 
+#-----------------------------------------------------------
 s = Session()
 s.open()
 
@@ -18,54 +24,78 @@ Library.save_signal(py, 'py')
 loaded = Library.load_signal('py')
 s.play(0,loaded)
 sleep(loaded.length)
+check(loaded)
 
 # # Syntacts Binary Format (Custom Location)
 
 Library.save_signal(py, 'py.sig')
 loaded = Library.load_signal('py.sig')
+check(loaded)
+del loaded
 
+Library.export_signal(py, 'relative/folder/py.sig')
+loaded = Library.import_signal('relative/folder/py.sig')
+check(loaded)
+del loaded
 
-Library.export_signal(py, '.\\relative\\folder\\ py.sig')
-loaded_sig = Library.import_signal('.\\relative\\folder\\ py.sig')
-print(loaded_sig.length)
-
-# Library.save_signal(py, '/absolute/folder/py.sig')
-# loaded = Library.load_signal('/absolute/folder/py.sig')
+Library.export_signal(py, '/absolute/folder/py.sig')
+loaded = Library.import_signal('/absolute/folder/py.sig')
+check(loaded)
+del loaded
 
 # # Syntacts JSON Format
 
 Library.save_signal(py, 'py.json')
 loaded = Library.load_signal('py.json')
+check(loaded)
+del loaded
 
-# Library.save_signal(py, 'relative/folder/py.json')
-# loaded = Library.load_signal('relative/folder/py.json')
+Library.export_signal(py, 'relative/folder/py.json')
+loaded = Library.import_signal('relative/folder/py.json')
+check(loaded)
+del loaded
 
-# Library.save_signal(py, '/absolute/folder/py.json')
-# loaded = Library.load_signal('/absolute/folder/py.json')
+Library.export_signal(py, '/absolute/folder/py.json')
+loaded = Library.import_signal('/absolute/folder/py.json')
+check(loaded)
+del loaded
 
 # # WAV Format
 
 Library.save_signal(py, 'py.wav')
 loaded = Library.load_signal('py.wav')
+check(loaded)
+del loaded
 
-# Library.save_signal(py, 'relative/folder/py.wav')
-# loaded = Library.load_signal('relative/folder/py.wav')
+Library.export_signal(py, 'relative/folder/py.wav')
+loaded = Library.import_signal('relative/folder/py.wav')
+check(loaded)
+del loaded
 
-# Library.save_signal(py, '/absolute/folder/py.wav')
-# loaded = Library.load_signal('/absolute/folder/py.wav')
+Library.export_signal(py, '/absolute/folder/py.wav')
+loaded = Library.import_signal('/absolute/folder/py.wav')
+check(loaded)
+del loaded
 
 # # AIFF Format
 
 Library.save_signal(py, 'py.aiff')
 loaded = Library.load_signal('py.aiff')
+check(loaded)
+del loaded
 
-# Library.save_signal(py, 'relative/folder/py.aiff')
-# loaded = Library.load_signal('relative/folder/py.aiff')
+Library.export_signal(py, 'relative/folder/py.aiff')
+loaded = Library.import_signal('relative/folder/py.aiff')
+check(loaded)
+del loaded
 
-# Library.export_signal(py, '/absolute/folder/py.aiff')
-# loaded_aiff = Library.import_signal('/absolute/folder/py.aiff')
+Library.export_signal(py, '/absolute/folder/py.aiff')
+loaded = Library.import_signal('/absolute/folder/py.aiff')
+check(loaded)
+del loaded
 
 # CSV/TXT Format (import not yet supported)
 
-Library.save_signal(py, 'py.txt')
-loaded = Library.load_signal('py.txt')  
+Library.export_signal(py, 'py.txt')
+Library.export_signal(py, 'relative/folder/py.txt')
+Library.export_signal(py, '/absolute/folder/py.txt')
