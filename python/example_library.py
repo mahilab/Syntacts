@@ -4,6 +4,7 @@ from math import sin
 from math import pi
 
 #-----------------------------------------------------------
+# Function to make sure export/import works
 def check(signal):
     if signal is not None:
         print('Pass')
@@ -14,9 +15,8 @@ def check(signal):
 s = Session()
 s.open()
 
-# Make a Signal to save/export, and a blank Signal to import in to
+# Make a Signal to save/export
 py = Sine(440) * ASR(1,1,1)
-
 
 # Syntacts Binary Format (Default Location, i.e. APPDATA/Syntacts/Library)
 
