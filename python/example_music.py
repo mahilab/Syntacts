@@ -7,7 +7,6 @@ from math import pi
 def key(name, octave):
     names = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B']
     idx = names.index(name)
-    print(idx)
     i = idx - 9 + (octave - 4) * 12
     a = 2**(1/12)
     freq = 440 *  a**i
