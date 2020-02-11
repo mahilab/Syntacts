@@ -5,14 +5,14 @@ from math import pi
 
 #----------------------------------------------------------
 s = Session()
-s.open(16)
+s.open()
 
 sig = Noise()
 
 sp = Spatializer(s)
 
 # set up channels
-chs = 8 # choose the number of channels you want to use here
+chs = s.channel_count # choose the number of channels you want to use here
 spc = 1.0 / (chs - 1)
 for i in range(chs):
     sp.set_position(i, (i * spc, 0))
