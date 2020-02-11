@@ -19,7 +19,7 @@ for i in range(chs):
 
 # set up target
 sp.target = (0,0) # arbitrary position 
-sp.radius = 0.5 # arbitrtary radius
+sp.radius = 0.1 # arbitrtary radius
 
 # play
 sp.play(sig)
