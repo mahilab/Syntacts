@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\Syntacts\Syntacts.csproj" />
+    <ProjectReference Include="..\..\Syntacts\Syntacts.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
