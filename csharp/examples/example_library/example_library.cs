@@ -24,58 +24,58 @@ class Example
 
         // Syntacts Binary Format (Default Location, i.e. APPDATA/Syntacts/Library)
         
-        showResult( Library.SaveSignal(save, "saved"));
-        showResult( Library.LoadSignal(out loaded, "saved"));
+        showResult( Library.SaveSignal(save, "cs"));
+        showResult( Library.LoadSignal(out loaded, "cs"));
 
         // Syntacts Binary Format (Custom Location)
 
-        showResult( Library.ExportSignal(save, "saved.sig"));
-        showResult( Library.ImportSignal(out loaded, "saved.sig"));
+        showResult( Library.ExportSignal(save, "cs.sig"));
+        showResult( Library.ImportSignal(out loaded, "cs.sig"));
 
-        showResult( Library.ExportSignal(save, "relative/folder/saved.sig"));
-        showResult( Library.ImportSignal(out loaded, "relative/folder/saved.sig"));
+        showResult( Library.ExportSignal(save, "relative/folder/cs.sig"));
+        showResult( Library.ImportSignal(out loaded, "relative/folder/cs.sig"));
 
-        showResult( Library.ExportSignal(save, "/absolute/folder/saved.sig"));
-        showResult( Library.ImportSignal(out loaded, "/absolute/folder/saved.sig"));
+        showResult( Library.ExportSignal(save, "/absolute/folder/cs.sig"));
+        showResult( Library.ImportSignal(out loaded, "/absolute/folder/cs.sig"));
 
         // Syntacts JSON Format
 
-        showResult( Library.ExportSignal(save, "saved.json"));
-        showResult( Library.ImportSignal(out loaded, "saved.json"));
+        showResult( Library.ExportSignal(save, "cs.json"));
+        showResult( Library.ImportSignal(out loaded, "cs.json"));
 
-        showResult( Library.ExportSignal(save, "relative/folder/saved.json"));
-        showResult( Library.ImportSignal(out loaded, "relative/folder/saved.json"));
+        showResult( Library.ExportSignal(save, "relative/folder/cs.json"));
+        showResult( Library.ImportSignal(out loaded, "relative/folder/cs.json"));
 
-        showResult( Library.ExportSignal(save, "/absolute/folder/saved.json"));
-        showResult( Library.ImportSignal(out loaded, "/absolute/folder/saved.json"));
+        showResult( Library.ExportSignal(save, "/absolute/folder/cs.json"));
+        showResult( Library.ImportSignal(out loaded, "/absolute/folder/cs.json"));
 
         // // WAV Format
 
-        showResult( Library.ExportSignal(save, "saved.wav"));
-        showResult( Library.ImportSignal(out loaded, "saved.wav"));
+        showResult( Library.ExportSignal(save, "cs.wav"));
+        showResult( Library.ImportSignal(out loaded, "cs.wav"));
 
-        showResult( Library.ExportSignal(save, "relative/folder/saved.wav"));
-        showResult( Library.ImportSignal(out loaded, "relative/folder/saved.wav"));
+        showResult( Library.ExportSignal(save, "relative/folder/cs.wav"));
+        showResult( Library.ImportSignal(out loaded, "relative/folder/cs.wav"));
 
-        showResult( Library.ExportSignal(save, "/absolute/folder/saved.wav"));
-        showResult( Library.ImportSignal(out loaded, "/absolute/folder/saved.wav"));
+        showResult( Library.ExportSignal(save, "/absolute/folder/cs.wav"));
+        showResult( Library.ImportSignal(out loaded, "/absolute/folder/cs.wav"));
 
         // // AIFF Format
 
-        showResult( Library.ExportSignal(save, "saved.aiff"));
-        showResult( Library.ImportSignal(out loaded, "saved.aiff"));
+        showResult( Library.ExportSignal(save, "cs.aiff"));
+        showResult( Library.ImportSignal(out loaded, "cs.aiff"));
 
-        showResult( Library.ExportSignal(save, "relative/folder/saved.aiff"));
-        showResult( Library.ImportSignal(out loaded, "relative/folder/saved.aiff"));
+        showResult( Library.ExportSignal(save, "relative/folder/cs.aiff"));
+        showResult( Library.ImportSignal(out loaded, "relative/folder/cs.aiff"));
 
-        showResult( Library.ExportSignal(save, "/absolute/folder/saved.aiff"));
-        showResult( Library.ImportSignal(out loaded, "/absolute/folder/saved.aiff"));
+        showResult( Library.ExportSignal(save, "/absolute/folder/cs.aiff"));
+        showResult( Library.ImportSignal(out loaded, "/absolute/folder/cs.aiff"));
 
         // // CSV/TXT Format (import not yet supported)
 
-        showResult( Library.ExportSignal(save, "saved.txt"));
-        showResult( Library.ExportSignal(save, "relative/folder/saved.txt"));
-        showResult( Library.ExportSignal(save, "/absolute/folder/saved.txt"));
+        showResult( Library.ExportSignal(save, "cs.csv"));
+        showResult( Library.ExportSignal(save, "relative/folder/cs.txt"));
+        showResult( Library.ExportSignal(save, "/absolute/folder/cs.txt"));
 
     }
 }

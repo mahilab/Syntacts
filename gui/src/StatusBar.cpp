@@ -9,10 +9,9 @@ using namespace mahi::gui;
 void StatusBar::pushMessage(const std::string &text, InfoLevel level)
 {
     m_fadeTime = 0;
-    static Color infoColors[3] = {ImGui::GetStyle().Colors[ImGuiCol_Text], Yellows::Khaki, Reds::LightCoral};
     m_fadeColors[0.00f] = {0,0,0,0};
-    m_fadeColors[0.02f] = infoColors[level];
-    m_fadeColors[0.80f] = infoColors[level];
+    m_fadeColors[0.02f] = level == InfoLevel::Info ? ImGui::GetStyle().Colors[ImGuiCol_Text] : level == Warning ? Yellows::Khaki : Reds::LightCoral;
+    m_fadeColors[0.80f] = level == InfoLevel::Info ? ImGui::GetStyle().Colors[ImGuiCol_Text] : level == Warning ? Yellows::Khaki : Reds::LightCoral;
     m_fadeColors[1.00f] = {0,0,0,0};
     m_notification = text;
 }

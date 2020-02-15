@@ -122,8 +122,12 @@ void PlotSignal(const char *label, const tact::Signal &sig, std::vector<ImVec2> 
     }
     
     // DrawList->Flags &= ~ImDrawListFlags_AntiAliasedLines;
-    DrawList->AddPolyline(&points[0], (int)points.size(), ImGui::ColorConvertFloat4ToU32(color), false, thickness);
+    // DrawList->AddPolyline(&points[0], (int)points.size(), ImGui::ColorConvertFloat4ToU32(color), false, thickness);
+    auto col32 = ImGui::ColorConvertFloat4ToU32(color);
+    for (int i = 0; i < points.size()-1; ++i)
+        DrawList->AddLine(points[i], points[i+1], col32, thickness);
     // DrawList->Flags |= ImDrawListFlags_AntiAliasedLines;
+
     if (text) {
         std::string txt;
         std::stringstream ss;
@@ -158,9 +162,12 @@ void RenderSignalInBounds(ImDrawList* DrawList, const tact::Signal& sig, float t
     }
     
     DrawList->PushClipRect(bb.Min, bb.Max, true);
-    DrawList->Flags &= ~ImDrawListFlags_AntiAliasedLines;
-    DrawList->AddPolyline(&buffer[0], n, ImGui::GetColorU32(color), false, thickness);
-    DrawList->Flags |= ImDrawListFlags_AntiAliasedLines;
+    // DrawList->Flags &= ~ImDrawListFlags_AntiAliasedLines;
+    // DrawList->AddPolyline(&buffer[0], n, ImGui::GetColorU32(color), false, thickness);
+    auto col32 = ImGui::ColorConvertFloat4ToU32(color);
+    for (int i = 0; i < buffer.size()-1; ++i)
+        DrawList->AddLine(buffer[i], buffer[i+1], col32, thickness);
+    // DrawList->Flags |= ImDrawListFlags_AntiAliasedLines;
     DrawList->PopClipRect();
 }
 

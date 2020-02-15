@@ -28,11 +28,6 @@ check(loaded)
 
 # # Syntacts Binary Format (Custom Location)
 
-Library.save_signal(py, 'py.sig')
-loaded = Library.load_signal('py.sig')
-check(loaded)
-del loaded
-
 Library.export_signal(py, 'relative/folder/py.sig')
 loaded = Library.import_signal('relative/folder/py.sig')
 check(loaded)
@@ -44,11 +39,6 @@ check(loaded)
 del loaded
 
 # # Syntacts JSON Format
-
-Library.save_signal(py, 'py.json')
-loaded = Library.load_signal('py.json')
-check(loaded)
-del loaded
 
 Library.export_signal(py, 'relative/folder/py.json')
 loaded = Library.import_signal('relative/folder/py.json')
@@ -62,11 +52,6 @@ del loaded
 
 # # WAV Format
 
-Library.save_signal(py, 'py.wav')
-loaded = Library.load_signal('py.wav')
-check(loaded)
-del loaded
-
 Library.export_signal(py, 'relative/folder/py.wav')
 loaded = Library.import_signal('relative/folder/py.wav')
 check(loaded)
@@ -78,11 +63,6 @@ check(loaded)
 del loaded
 
 # # AIFF Format
-
-Library.save_signal(py, 'py.aiff')
-loaded = Library.load_signal('py.aiff')
-check(loaded)
-del loaded
 
 Library.export_signal(py, 'relative/folder/py.aiff')
 loaded = Library.import_signal('relative/folder/py.aiff')
@@ -96,6 +76,6 @@ del loaded
 
 # CSV/TXT Format (import not yet supported)
 
-Library.export_signal(py, 'py.txt')
+Library.export_signal(py, 'py.csv')
 Library.export_signal(py, 'relative/folder/py.txt')
 Library.export_signal(py, '/absolute/folder/py.txt')

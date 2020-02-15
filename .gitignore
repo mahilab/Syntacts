@@ -17,4 +17,12 @@ asiosdk*/
 asiosdk.zip
 asiosdk*.zip
 
+relative/
+*.sig
+*.wav
+*.wave
+*.aiff
+*.aifc
+*.csv
+
 .DS_Store
