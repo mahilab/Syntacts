@@ -483,6 +483,7 @@ void EnvelopeNode::update()
 
 void ASRNode::update()
 {
+    static const float minDur = 0.001f;
     auto cast = (tact::ASR *)sig.get();
     auto it = cast->keys.begin();
     it++;
@@ -498,10 +499,16 @@ void ASRNode::update()
     float amp = a.second.first;
 
     bool changed = false;
-    if (ImGui::DragFloat3("Durations", asr, 0.001f, 0.0001f, 1.0f, "%0.3f s"))
+    if (ImGui::DragFloat3("Durations", asr, 0.001f, minDur, 1.0f, "%0.3f s"))
         changed = true;
     if (ImGui::DragFloat("Amplitude", &amp, 0.001f, 0, 1))
         changed = true;
+
+    for (int i = 0; i < 3; ++i)
+    {
+        if (asr[i] <= 0)
+            asr[i] = minDur;
+    }
 
     if (changed)
         sig = tact::ASR(asr[0], asr[1], asr[2], amp);
@@ -511,6 +518,8 @@ void ASRNode::update()
 
 void ADSRNode::update()
 {
+    static const float minDur = 0.001f;
+
     auto cast = (tact::ASR *)sig.get();
     auto it = cast->keys.begin();
     it++;
@@ -527,10 +536,17 @@ void ADSRNode::update()
     amp[0] = a.second.first;
     amp[1] = d.second.first;
     bool changed = false;
-    if (ImGui::DragFloat4("Durations", adsr, 0.001f, 0.0001f, 1, "%0.3f s"))
+    if (ImGui::DragFloat4("Durations", adsr, 0.001f, minDur, 1, "%0.3f s"))
         changed = true;
     if (ImGui::DragFloat2("Amplitudes", amp, 0.001f, 0, 1))
         changed = true;
+
+    for (int i = 0; i < 4; ++i)
+    {
+        if (adsr[i] <= 0)
+            adsr[i] = minDur;
+    }
+
     if (changed)
         sig = tact::ADSR(adsr[0], adsr[1], adsr[2], adsr[3], amp[0], amp[1]);
 }
