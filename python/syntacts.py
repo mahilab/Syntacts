@@ -1,7 +1,14 @@
+import platform
 from ctypes import *
 
 # DLL Import
-_tact = cdll.LoadLibrary("./syntacts-c.dll")
+# get the right filename
+if platform.uname()[0] == "Windows":
+    _lib_name = "./syntacts-c.dll"
+else:
+    _lib_name = "./syntacts-c.dylib"
+
+_tact = cdll.LoadLibrary(_lib_name)
 
 ###############################################################################
 ## SESSION
