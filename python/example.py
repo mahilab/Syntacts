@@ -40,3 +40,5 @@ while t < 10:
     sp.target = (xPos, 0)
     sleep(0.01)
     t += 0.01
+
+del sp

@@ -32,5 +32,6 @@ while (t < 10):
     sleep(0.01)
     t = t + 0.01
 
+del sp # ensure Spatializer deleted before Session
 
 print("Finished!")

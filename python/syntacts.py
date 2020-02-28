@@ -5,8 +5,8 @@ from ctypes import *
 # get the right filename
 if platform.uname()[0] == "Windows":
     _lib_name = "./syntacts-c.dll"
-else:
-    _lib_name = "./syntacts-c.dylib"
+elif platform.uname()[0] == "Darwin":
+    _lib_name = "./libsyntacts-c.dylib"
 
 _tact = cdll.LoadLibrary(_lib_name)
 
