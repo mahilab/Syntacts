@@ -7,7 +7,7 @@
 - Run the GUI exectuable. On Windows, you may receive a "Windows protected your PC" screen. Click "More info", then "Run anyway".
 - Bindings:
   - For **Python**, run `example.py`
-  - For **C#**, build and run `csharp.csproj` from the command line with `dotnet run`
+  - For **C#**, see the included `README.md`
   - For **Unity**, open `Demo.unity`
 
 ### If you came for the C++ version...
