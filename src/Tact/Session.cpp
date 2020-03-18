@@ -365,7 +365,10 @@ public:
     const Device& getDefaultDevice() const {
         int def = Pa_GetDefaultOutputDevice();
         assert(def != paNoDevice);
-        return m_devices.at(def);
+        if (m_devices.count(def))
+            return m_devices.at(def);
+        else
+            return m_devices.begin()->second;
     }
 
     const std::map<int, Device>& getAvailableDevices() const {
@@ -424,7 +427,7 @@ public:
 #endif
     }
 
-    Device makeDevice(int index) {
+    Device makeDevice(int index) const {
         auto pa_dev_info = Pa_GetDeviceInfo(index);
         auto pa_api_info = Pa_GetHostApiInfo(pa_dev_info->hostApi);
 
