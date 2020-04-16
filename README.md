@@ -1,5 +1,12 @@
 <img src="https://raw.githubusercontent.com/mahilab/Syntacts/master/logo/logo_text.png" width="500">
 
+Syntacts is an audio-based, haptic rendering framework. The library makes generating tactile vibrations though audio devices as simple as possible, by:
+
+1) Exposing low level access to virtually any hardware and driver (notably ASIO for low latency performance).
+2) Providing easy-to-use classes and mechanisms to generate complex vibration waveforms and sequences.
+3) Allowing for cue spatialization of multi-channel tactile arrays.
+4) Providing bindings for your favorite languages, including Python and C#, as well as example integration with Unity Engine.
+
 # Quick Start
 
 ### If you came for the GUI and/or Python/C#/Unity bindings...
