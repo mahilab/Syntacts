@@ -82,6 +82,6 @@ This will build **Syntacts** in its entirety and then install it to your system 
 |**Input**|AES-59 DB25|3.5 mm TRS (4)|
 |**Output**|2x8 0.1" Pitch Header|2x8 0.1" Pitch Header|
 |**Dimensions**|2.375" x 3.5"|2.375" x 3.5"|
-|**CAD Files**| [syntacts_amp_v1.2.0.zip](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/amps/syntacts_amp_v1.2.0.zip) | [syntacts_amp_v3.1.0.zip](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/amps/syntacts_amp_v3.1.0.zip) | 
+|**CAD / BOM**| [syntacts_amp_v1.2.0.zip](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/amps/syntacts_amp_v1.2.0.zip) | [syntacts_amp_v3.1.0.zip](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/amps/syntacts_amp_v3.1.0.zip) | 
 |**Manual**|Comming Soon|Comming Soon|
 |**License**|[TAPR Open Hardware License](https://tapr.org/the-tapr-open-hardware-license/)|[TAPR Open Hardware License](https://tapr.org/the-tapr-open-hardware-license/)|
