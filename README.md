@@ -7,7 +7,7 @@ Syntacts is an audio-based, haptic rendering framework. The library makes genera
 3) Allowing for cue spatialization of multi-channel tactile arrays.
 4) Providing bindings for your favorite languages, including Python and C#, as well as example integration with Unity Engine.
 
-# Quick Start
+# Syntacts Quick Start
 
 ### If you came for the GUI and/or Python/C#/Unity bindings...
 - Check the [Releases](https://github.com/mahilab/Syntacts/releases) page for the latest pre-compiled binaries. 
@@ -71,3 +71,15 @@ Open a Terminal in a directory of your choice and run the following commands:
 This will build **Syntacts** in its entirety and then install it to your system (likely in `/user/local/...`). 
 
 >- Check your macOS and Clang versions. Syntacts makes use of C++17 features, particularly std::filesystem. You may need to update macOS and/or Apple Clang (e.g. with the command `xcode-select --install`). You may also consider using a mainline version of [Clang](https://clang.llvm.org/). Syntacts has been tested on macOS Catalina with Apple Clang 11.0.0 (clang-1100.0.0.33.17).
+
+# Syntacts Amplifier
+
+
+|**Version**|**v1.2**|**v3.1**|
+|---|---|---|
+|**Image**|<img src="https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/amps/v1.2.png" width="200">|<img src="https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/amps/v3.1.png" width="200">|
+|**Channels**|8|8|
+|**Input**|AES59 DB25|3.5 mm TRS (4)|
+|**Output**|2x8 0.1" Header|2x8 0.1" Header|
+|**CAD Files**| [syntacts_amp_v1.2.0.zip](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/amps/syntacts_amp_v1.2.0.zip) | [syntacts_amp_v3.1.0.zip](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/amps/syntacts_amp_v3.1.0.zip) | 
+|**Manual**|Comming Soon|Comming Soon|
