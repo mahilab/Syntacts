@@ -83,3 +83,4 @@ This will build **Syntacts** in its entirety and then install it to your system 
 |**Output**|2x8 0.1" Header|2x8 0.1" Header|
 |**CAD Files**| [syntacts_amp_v1.2.0.zip](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/amps/syntacts_amp_v1.2.0.zip) | [syntacts_amp_v3.1.0.zip](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/amps/syntacts_amp_v3.1.0.zip) | 
 |**Manual**|Comming Soon|Comming Soon|
+|**License**|[TAPR Open Hardware License](https://tapr.org/the-tapr-open-hardware-license/)|[APR Open Hardware License](https://tapr.org/the-tapr-open-hardware-license/)|
