@@ -32,3 +32,7 @@ The following table lists actuators that have been tested and are known to run w
 |---|---|---|---|---|
 |Mplus|1040W|LRA|[Link](http://www.mpluskr.com/?page_id=200)|Same as JME G1040001D|
 |Jinlong Machinery & Electronics|G1040001D|LRA|[Link](https://www.vibration-motor.com/coin-vibration-motors/coin-linear-resonant-actuators-lra/g1040003d)|Same as Mplus 1040W|
+|Jinlong Machinery & Electronics|	LV061228B-L65-A|LRA|[Link](https://www.digikey.com/product-detail/en/jinlong-machinery-electronics-inc/LV061228B-L65-A/1670-1050-ND/7732325)| Z-axis motor|
+|Engineering Acoustics, Inc.|C-2|Voice Coil|[Link](https://www.eaiinfo.com/tactor-info)|Larger version of C-3|
+|Engineering Acoustics, Inc.|C-3|Voice Coil|[Link](https://www.eaiinfo.com/tactor-info)|Larger version of C-2|
+|Nanoport|TacHammer-Carlton|Voice Coil|[Link](https://nanoport.io/haptics/)||
