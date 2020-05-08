@@ -6,3 +6,6 @@ header_pages:
   - tutorials.md
   - amp.md
   - faq.md
+
+plugins:
+ - jekyll-seo-tag
