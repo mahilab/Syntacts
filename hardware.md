@@ -29,7 +29,7 @@ CAD/EDA files, bill of materials, and documentation for both variants can be fou
 The following table lists actuators that have been tested and are known to run well on the Syntacts amplifier. This list is by no means exhaustive. If you discover that the amplifier runs an actuator not listed here, please let us know by submitted an Issue on GitHub.
 
 |Manufacturer|Part Number|Type|Link|
-|---|---|---|---|---|
+|---|---|---|---|
 |Mplus|1040W|LRA|[Link](http://www.mpluskr.com/?page_id=200)|
 |Jinlong Machinery & Electronics|G1040001D|LRA|[Link](https://www.vibration-motor.com/coin-vibration-motors/coin-linear-resonant-actuators-lra/g1040003d)|
 |Jinlong Machinery & Electronics|	LV061228B-L65-A|LRA|[Link](https://www.digikey.com/product-detail/en/jinlong-machinery-electronics-inc/LV061228B-L65-A/1670-1050-ND/7732325)|
