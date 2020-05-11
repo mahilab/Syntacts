@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Amplifier
+title: Hardware
 permalink: /hardware/
 ---
 
