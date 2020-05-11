@@ -1,7 +1,7 @@
 ---
 layout: page
-title: Quick Start
-permalink: /start/
+title: Software
+permalink: /software/
 order: 1
 ---
 
