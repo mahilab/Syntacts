@@ -24,6 +24,18 @@ CAD/EDA files, bill of materials, and documentation for both variants can be fou
 |**Manual**| [syntacts_amp_v1.2.pdf](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/amps/syntacts_amp_v1.2.pdf) | [syntacts_amp_v3.1.pdf](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/amps/syntacts_amp_v3.1.pdf) | 
 |**License**|[TAPR Open Hardware License](https://tapr.org/the-tapr-open-hardware-license/)|[TAPR Open Hardware License](https://tapr.org/the-tapr-open-hardware-license/)|
 
+## Tactile Displays
+
+Below are a few open source tactile displays that you can create or learn from as you get started with Syntacts. You may modify the designs however you like.
+
+|Display|Syntacts 3x8 Array|
+|---|:-:|
+|**Image**|<img src="https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/array.png" width="200">|
+|**Description**|High density 2D tactile array|
+|**Actuators**|24x MPlus 1040W|
+|**CAD/BOM**|[syntacts_array_3x8.zip]()|
+|**License**|[TAPR Open Hardware License](https://tapr.org/the-tapr-open-hardware-license/)|
+
 ## Actuators
 
 The following table lists actuators that have been tested and are known to run well on the Syntacts amplifier. This list is by no means exhaustive. If you discover that the amplifier runs an actuator not listed here, please let us know by submitted an Issue on GitHub.
@@ -36,9 +48,6 @@ The following table lists actuators that have been tested and are known to run w
 |Engineering Acoustics, Inc.|[C2](https://www.eaiinfo.com/tactor-info)|Voice Coil|
 |Engineering Acoustics, Inc.|[C3](https://www.eaiinfo.com/tactor-info)|Voice Coil|
 |Nanoport|[TacHammer-Carlton](https://nanoport.io/haptics/)|Voice Coil|
-
-## Tactile Displays
-
 
 ## Audio Interfaces
 
