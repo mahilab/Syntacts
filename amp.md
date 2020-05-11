@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Amplifier
-permalink: /amp/
+permalink: /hardware/
 ---
 
 ![Syntacts Amps](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/syntacts_amps.png)
