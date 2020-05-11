@@ -2,22 +2,40 @@
 layout: page
 title: Software
 permalink: /software/
-order: 1
 ---
 
-### If you came for the GUI and/or Python/C#/Unity bindings...
-- Check the [Releases](https://github.com/mahilab/Syntacts/releases) page for the latest pre-compiled binaries. 
-- Run the GUI exectuable. On Windows, you may receive a "Windows protected your PC" screen. Click "More info", then "Run anyway".
-- Bindings:
-  - For **Python**, run `example.py`
-  - For **C#**, see the included `README.md`
-  - For **Unity**, open `Demo.unity`
+Syntacts provides you with low level access to audio hardware and a variety of mechanisms to generate tactile cues. Softwre APIs and examples for C/C++, C#, Python, and Unity are provided. In addition, Syntacts contains a cross-platform GUI for prototyping and playing back cues. Follow the steps below to get started in your prefered environment.
 
-### If you came for the C++ version...
-1) Get the source code from the latest [Release](https://github.com/mahilab/Syntacts/releases) or by pulling `master`
-2) Build and install **Syntacts** for your system (see directions below)
-3) Use the [template](https://github.com/mahilab/Syntacts/tree/master/template) to make a new Syntacts project with CMake
+## GUI
+- Get the latest [Release](https://github.com/mahilab/Syntacts/releases) and extract the files.
+- Run the GUI exectuable in the top level directory. On Windows, you may receive a "Windows protected your PC" screen. Click "More info", then "Run anyway".
 
-### Having issues?
+## C/C++
+- Get the source code by pulling `master` or from the latest [Release](https://github.com/mahilab/Syntacts/releases). 
+- Build and install **Syntacts** for your system my following the [tutorial](build.md).
+- Use the [template](https://github.com/mahilab/Syntacts/tree/master/template) to make a new Syntacts project with CMake.
+
+## C#
+- Get the latest [Release](https://github.com/mahilab/Syntacts/releases) and extract the files.
+- Navigate to the `csharp` directory.
+- From the command line, build the Syntacts library and then run each example you want to try out:
+    ```shell
+    > cd csharp/Syntacts
+    > dotnet build
+    > cd ../examples/example_basic
+    > dotnet run
+    ```
+    
+## Python
+- Get the latest [Release](https://github.com/mahilab/Syntacts/releases) and extract the files.
+- Navigate to the `python` directory.
+- Run any of the `example.py` files
+
+## Unity
+- Get the latest [Release](https://github.com/mahilab/Syntacts/releases) and extract the files.
+- Navigate to the `unity/SyntactsDemo/Assets` directory.
+- Open `Demo.unity` in Unity.
+
+## Having issues?
+- Check the [Tutorials](tutorials.md) and [FAQ](faq.md) pages.
 - Head over to the [Issues](https://github.com/mahilab/Syntacts/issues) page and tell us your problem.
-- If you get a `VCRUNTIME140.dll missing` or similar issue, first try installing the latest [MSVC redistributable](https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads)
