@@ -1,13 +1,11 @@
 theme: minima
 
 header_pages:
-  - start.md
-  - build.md
+  - software.md
+  - hardware.md
   - tutorials.md
-  - amp.md
   - faq.md
 
 plugins:
   - jekyll-seo-tag
   - jekyll-sitemap
-
