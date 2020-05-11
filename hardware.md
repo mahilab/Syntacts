@@ -24,19 +24,30 @@ CAD/EDA files, bill of materials, and documentation for both variants can be fou
 |**Manual**| [syntacts_amp_v1.2.pdf](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/amps/syntacts_amp_v1.2.pdf) | [syntacts_amp_v3.1.pdf](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/amps/syntacts_amp_v3.1.pdf) | 
 |**License**|[TAPR Open Hardware License](https://tapr.org/the-tapr-open-hardware-license/)|[TAPR Open Hardware License](https://tapr.org/the-tapr-open-hardware-license/)|
 
-# Tested Actuators
+## Actuators
 
 The following table lists actuators that have been tested and are known to run well on the Syntacts amplifier. This list is by no means exhaustive. If you discover that the amplifier runs an actuator not listed here, please let us know by submitted an Issue on GitHub.
 
-|Manufacturer|Part Number|Type|Link|
-|---|---|---|---|
-|Mplus|1040W|LRA|[Link](http://www.mpluskr.com/?page_id=200)|
-|Jinlong Machinery & Electronics|G1040001D|LRA|[Link](https://www.vibration-motor.com/coin-vibration-motors/coin-linear-resonant-actuators-lra/g1040003d)|
-|Jinlong Machinery & Electronics|	LV061228B-L65-A|LRA|[Link](https://www.digikey.com/product-detail/en/jinlong-machinery-electronics-inc/LV061228B-L65-A/1670-1050-ND/7732325)|
-|Engineering Acoustics, Inc.|C-2|Voice Coil|[Link](https://www.eaiinfo.com/tactor-info)|
-|Engineering Acoustics, Inc.|C-3|Voice Coil|[Link](https://www.eaiinfo.com/tactor-info)|
-|Nanoport|TacHammer-Carlton|Voice Coil|[Link](https://nanoport.io/haptics/)|
+|Manufacturer|Part Number|Type|
+|---|---|---|
+|Mplus|[1040W](http://www.mpluskr.com/?page_id=200)|LRA|
+|Jinlong Machinery & Electronics|[G1040001D](https://www.vibration-motor.com/coin-vibration-motors/coin-linear-resonant-actuators-lra/g1040003d)|LRA|
+|Jinlong Machinery & Electronics|[LV061228B-L65-A](https://www.digikey.com/product-detail/en/jinlong-machinery-electronics-inc/LV061228B-L65-A/1670-1050-ND/7732325)|LRA|
+|Engineering Acoustics, Inc.|[C2](https://www.eaiinfo.com/tactor-info)|Voice Coil|
+|Engineering Acoustics, Inc.|[C3](https://www.eaiinfo.com/tactor-info)|Voice Coil|
+|Nanoport|[TacHammer-Carlton](https://nanoport.io/haptics/)|Voice Coil|
 
 ## Tactile Displays
 
 
+## Audio Interfaces
+
+We have tested the following audio interfaces with Syntacts. As above, this is not an exhaustive list and in general Syntacts will work with virtually any audio interface on the market. 
+
+|Manufacturer|Product Name|Max Channels|ASIO Driver|Approx. Cost|
+|---|---|---|---|---|
+|MOTU|[24Ao](https://motu.com/products/avb/24ai-24ao)|24|Excellent|$1000|
+|MOTU|[UltraLite Mk4](https://motu.com/products/proaudio/ultralite-mk4)|12|Excellent|$600|
+|ASUS|[Xonar U7 MKII](https://www.asus.com/us/Sound-Cards/Xonar-U7-MKII/)|8|Good|$90|
+|ASUS|[Xonar AE](https://www.asus.com/Sound-Cards/Xonar-AE/)|8|Good|$80|
+|Soundblaster|[SB Audigy RX7.1](https://us.creative.com/p/sound-blaster/sound-blaster-audigy-rx)|8|Ok|$50|
