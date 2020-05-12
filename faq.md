@@ -17,6 +17,9 @@ permalink: /faq/
 ### How can I cite Syntacts in my research?
 - We currently have a Transactions on Haptics short paper in review. Please check back later!
 
+### Who maintains Syntacts?
+- Syntacts is developed and maintained by the [Mechatronics and Haptic Interfaces Lab](https://mahilab.rice.edu/) at Rice University in Houston, TX.
+
 ### How can I get involved?
 - The easiest way to get involved is to head over to the [GitHub repository](https://github.com/mahilab/Syntacts). Here, you can submit a new issue or feature request. Better yet, consider submitting a pull request that fixes a problem you found in Syntacts or adds a cool new feature!
 
