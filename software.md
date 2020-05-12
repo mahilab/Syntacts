@@ -10,30 +10,30 @@ Syntacts provides you with low level access to audio hardware and a variety of m
 
 ## GUI
 - Get the latest [Release](https://github.com/mahilab/Syntacts/releases) and extract the files.
-- Run the GUI executable in the top level directory. On Windows, you may receive a "Windows protected your PC" screen. Click "More info", then "Run anyway".
+- Run the GUI executable `syntacts-gui` in the top level directory. On Windows, you may receive a "Windows protected your PC" screen. Click "More info", then "Run anyway".
 
-## C/C++
-- Get the source code by pulling `master` or from the latest [Release](https://github.com/mahilab/Syntacts/releases). 
+## C/C++ API
+- Get the source code by pulling the `master` branch on the GitHub repository or from the latest [Release](https://github.com/mahilab/Syntacts/releases). 
 - Build and install **Syntacts** for your system my following the [tutorial](build.md).
 - Use the [template](https://github.com/mahilab/Syntacts/tree/master/template) to make a new Syntacts project with CMake.
 
-## C#
+## C# API
 - Get the latest [Release](https://github.com/mahilab/Syntacts/releases) and extract the files.
 - Navigate to the `csharp` directory.
 - From the command line, build the Syntacts library and then run each example you want to try out:
-    ```shell
-    > cd csharp/Syntacts
-    > dotnet build
-    > cd ../examples/example_basic
-    > dotnet run
-    ```
+  ```shell
+  > cd csharp/Syntacts
+  > dotnet build
+  > cd ../examples/example_basic
+  > dotnet run
+  ```
     
-## Python
+## Python API
 - Get the latest [Release](https://github.com/mahilab/Syntacts/releases) and extract the files.
 - Navigate to the `python` directory.
 - Run any of the `example.py` files
 
-## Unity
+## Unity Example
 - Get the latest [Release](https://github.com/mahilab/Syntacts/releases) and extract the files.
 - Navigate to the `unity/SyntactsDemo/Assets` directory.
 - Open `Demo.unity` in Unity.
