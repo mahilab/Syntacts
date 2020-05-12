@@ -19,7 +19,6 @@ permalink: /faq/
 
 ### How can I get involved?
 - The easiest way to get involved is to head over to the [GitHub repository](https://github.com/mahilab/Syntacts). Here, you can submit a new issue or feature request. Better yet, consider submitting a pull request that fixes a problem you found in Syntacts or adds a cool new feature!
-- Did you modify our designs or create a device that uses Syntacts? Consider sharing them on this website!
 
 ### Do I need the Syntacts software to use the Syntacts amplifier, and vice versa?
 - No, they are independent! You can use the software with your own amplifiers, or our amplifiers with your own software.
