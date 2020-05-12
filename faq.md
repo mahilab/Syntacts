@@ -8,7 +8,7 @@ permalink: /faq/
 - The definition for *syntax* is:
   > the arrangement of words and phrases to create well-formed sentences in a language
   
-  Similarly, Syntacts deals with the arrangement primitive waveforms to create expressive vibrations and tactile cues.
+  Similarly, Syntacts deals with the arrangement of primitive waveforms to create expressive vibrations and tactile cues.
 - The portmanteau of "**syn**thesizer" and "**tact**or"
 
 ### Can I use the Syntacts software and/or hardware in my project? 
