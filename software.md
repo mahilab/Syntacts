@@ -6,11 +6,11 @@ permalink: /software/
 
 ![Syntacts Software](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/software_no_text.png)
 
-Syntacts provides you with low level access to audio hardware and a variety of mechanisms to generate tactile cues. Softwre APIs and examples for C/C++, C#, Python, and Unity are provided. In addition, Syntacts contains a cross-platform GUI for prototyping and playing back cues. Follow the steps below to get started in your prefered environment.
+Syntacts provides you with low level access to audio hardware and a variety of mechanisms to generate tactile cues. Softwre APIs and examples for C/C++, C#, Python, and Unity are provided. In addition, Syntacts contains a cross-platform GUI for prototyping and playing back cues. Follow the steps below to get started in your preferred environment.
 
 ## GUI
 - Get the latest [Release](https://github.com/mahilab/Syntacts/releases) and extract the files.
-- Run the GUI exectuable in the top level directory. On Windows, you may receive a "Windows protected your PC" screen. Click "More info", then "Run anyway".
+- Run the GUI executable in the top level directory. On Windows, you may receive a "Windows protected your PC" screen. Click "More info", then "Run anyway".
 
 ## C/C++
 - Get the source code by pulling `master` or from the latest [Release](https://github.com/mahilab/Syntacts/releases). 
@@ -41,3 +41,4 @@ Syntacts provides you with low level access to audio hardware and a variety of m
 ## Having issues?
 - Check the [Tutorials](tutorials.md) and [FAQ](faq.md) pages.
 - Head over to the [Issues](https://github.com/mahilab/Syntacts/issues) page and tell us your problem.
+
