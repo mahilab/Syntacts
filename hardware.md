@@ -26,7 +26,7 @@ CAD/EDA files, bill of materials, and documentation for both variants can be fou
 
 ## Tactile Displays
 
-Below are a few open source tactile displays that you can create or learn from as you get started with Syntacts. You may modify the designs however you like.
+Below you fill find simple tactile displays that you can create or learn from as you get started with Syntacts. You may modify the designs however you like.
 
 |Display|Syntacts 3x8 Array|
 |---|:-:|
