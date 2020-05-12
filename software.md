@@ -31,7 +31,7 @@ Syntacts provides you with low level access to audio hardware and a variety of m
 ## Python API
 - Get the latest [Release](https://github.com/mahilab/Syntacts/releases) and extract the files.
 - Navigate to the `python` directory.
-- Run any of the `example.py` files
+- Run any of the `example.py` files.
 
 ## Unity Example
 - Get the latest [Release](https://github.com/mahilab/Syntacts/releases) and extract the files.
