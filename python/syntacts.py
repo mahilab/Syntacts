@@ -218,6 +218,25 @@ class Spatializer:
         _tact.Spatializer_setRadius(self._handle, r)
 
     @property
+    def roll_off(self):
+        return None # TODO!
+
+    @roll_off.setter
+    def roll_off(self, str):
+        if str == 'linear':
+            _tact.Spatializer_setRollOff(self._handle, 0)
+        elif str == 'smoothstep':
+            _tact.Spatializer_setRollOff(self._handle, 1)
+        elif str == 'smootherstep':
+            _tact.Spatializer_setRollOff(self._handle, 2)
+        elif str == 'smootheststep':
+            _tact.Spatializer_setRollOff(self._handle, 3)
+        elif str == 'log':
+            _tact.Spatializer_setRollOff(self._handle, 4)
+        elif str == 'exp':
+            _tact.Spatializer_setRollOff(self._handle, 5)
+
+    @property
     def channel_count(self):
         return _tact.Spatializer_getChannelCount(self._handle)
 
@@ -612,6 +631,7 @@ lib_func(_tact.Spatializer_setTarget, None, [Handle, Point])
 lib_func(_tact.Spatializer_getTarget, Point, [Handle])
 lib_func(_tact.Spatializer_setRadius, None, [Handle, c_double])
 lib_func(_tact.Spatializer_getRadius, c_double, [Handle])
+lib_func(_tact.Spatializer_setRollOff, None, [Handle, c_int])
 lib_func(_tact.Spatializer_createGrid, c_bool, [Handle, c_int, c_int])
 lib_func(_tact.Spatializer_clear, None, [Handle])
 lib_func(_tact.Spatializer_remove, None, [Handle, c_int])

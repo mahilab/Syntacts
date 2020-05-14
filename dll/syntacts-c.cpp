@@ -275,6 +275,22 @@ double Spatializer_getRadius(Handle spat) {
     return static_cast<Spatializer*>(spat)->getRadius();
 }
 
+// 0 = lin, 1 = smooth, 2 = smoother, 3 = smoothest, 4 = log, 5 = exp
+EXPORT void Spatializer_setRollOff(Handle spat, int type) {
+    auto sp = static_cast<Spatializer*>(spat);
+    switch (type) {
+        case 0: sp->setRollOff(Curves::Linear()); break;
+        case 1: sp->setRollOff(Curves::Smoothstep()); break;
+        case 2: sp->setRollOff(Curves::Smootherstep()); break;
+        case 3: sp->setRollOff(Curves::Smootheststep()); break;
+        case 4: sp->setRollOff(Curves::Exponential::In()); break;
+        case 5: sp->setRollOff(Curves::Exponential::Out()); break;
+        default: sp->setRollOff(Curves::Linear()); break;
+    }
+} 
+
+
+
 bool Spatializer_createGrid(Handle spat, int rows, int cols) {
     return static_cast<Spatializer*>(spat)->createGrid(rows,cols);
 }
