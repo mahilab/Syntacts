@@ -97,7 +97,7 @@ EXPORT double Spatializer_getPitch(Handle spat);
 EXPORT void Spatializer_autoUpdate(Handle spat, bool enable);
 EXPORT void Spatializer_update(Handle spat);
 
-// TODO: setRollOff, getRollOff, getChannels
+// TODO: getRollOff, getChannels
 
 ///////////////////////////////////////////////////////////////////////////////
 // SIGNAL
