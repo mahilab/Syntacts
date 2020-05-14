@@ -27,6 +27,8 @@ public:
     double getRadius() const;
     void setRollOff(Curve rollOff);
     Curve getRollOff() const;
+    
+    bool createGrid(int rows, int cols);
 
     void clear();
     void remove(int channel);

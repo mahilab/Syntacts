@@ -171,6 +171,9 @@ class Spatializer:
     def get_position(self, channel):
         return _tact.Spatializer_getPosition(self._handle, channel)
 
+    def create_grid(self, rows, cols):
+        return _tact.Spatializer_createGrid(self._handle, rows, cols)
+
     def clear(self):
         _tact.Spatializer_clear(self._handle)
 
@@ -609,6 +612,7 @@ lib_func(_tact.Spatializer_setTarget, None, [Handle, Point])
 lib_func(_tact.Spatializer_getTarget, Point, [Handle])
 lib_func(_tact.Spatializer_setRadius, None, [Handle, c_double])
 lib_func(_tact.Spatializer_getRadius, c_double, [Handle])
+lib_func(_tact.Spatializer_createGrid, c_bool, [Handle, c_int, c_int])
 lib_func(_tact.Spatializer_clear, None, [Handle])
 lib_func(_tact.Spatializer_remove, None, [Handle, c_int])
 lib_func(_tact.Spatializer_getChannelCount, c_int , [Handle])

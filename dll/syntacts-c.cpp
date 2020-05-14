@@ -275,6 +275,10 @@ double Spatializer_getRadius(Handle spat) {
     return static_cast<Spatializer*>(spat)->getRadius();
 }
 
+bool Spatializer_createGrid(Handle spat, int rows, int cols) {
+    return static_cast<Spatializer*>(spat)->createGrid(rows,cols);
+}
+
 void Spatializer_clear(Handle spat) {
     static_cast<Spatializer*>(spat)->clear();
 }

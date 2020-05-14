@@ -93,6 +93,23 @@ namespace tact {
         return m_rollOff;
     }
 
+    bool Spatializer::createGrid(int rows, int cols) {
+        clear();
+        int n_ch = m_session->getChannelCount();
+        int ch = 0; 
+        for (int r = 0; r < rows; ++r) {
+            for (int c = 0; c < cols; ++c) {
+                if (ch == n_ch)
+                    return false;
+                float x = (float)c / (float)(cols-1);
+                float y = (float)r / (float)(rows-1);
+                m_positions[ch] = {x,y};
+                ch++;
+            }
+        }
+        return true;
+    }
+
     void Spatializer::clear() {
         if (m_session) {
             for (auto& pair : m_positions) {

@@ -1,6 +1,7 @@
 from syntacts import *
 from time import sleep
-from math import sin
+import math
+from math import cos
 from math import pi
 
 # create an audio context
@@ -15,7 +16,8 @@ for dev in session.available_devices:
 
 # open device 6 with 24 channels at 48 kHz
 # session.open(6,24,48000)
-session.open()
+session.open(22)
+sleep(1)
 
 sqr = Square(440) # 100 Hz square
 sin = Sine(10) # 10 Hz triangle
@@ -40,3 +42,25 @@ session.play(0,sig7)
 
 sleep(3)
 
+spatial = Spatializer(session) # 2D Spatializer
+
+print(spatial.create_grid(4,6)) # 4 rows by 6 cols
+spatial.set_position(0,(0.2,0.1))
+spatial.radius = 0.3 # effect radius
+spatial.target = (0.2, 0.1) # location to play
+# spatial.('linear') # roll-off law
+spatial.play(sig1)
+
+t = 0
+while (t < 10):
+    x = 0.5 + 0.5 * math.cos(2*pi*t)
+    y = 0.5 + 0.5 * math.sin(2*pi*t)
+    spatial.target = (x, y)
+    spatial.volume = 0.5 + 0.5 * math.sin(2*pi*t)
+    spatial.pitch  = 1 + 0.5 * math.sin(2*pi*t)
+    sleep(0.01)
+    t = t + 0.01
+
+spatial.stop()
+
+del spatial
