@@ -40,9 +40,28 @@ EXPORT int Session_getChannelCount(Handle session);
 EXPORT double Session_getSampleRate(Handle session);
 EXPORT double Session_getCpuLoad(Handle session);
 
+EXPORT int Session_getCurrentDevice(Handle session);
+EXPORT int Session_getDefaultDevice(Handle session);
+EXPORT int Session_getAvailableDevicedCount(Handle session);
+EXPORT void Session_getAvailableDevices(Handle session, int* devices);
+
 EXPORT int Session_count();
 
-// TODO: Device related functions
+///////////////////////////////////////////////////////////////////////////////
+// DEVICES
+///////////////////////////////////////////////////////////////////////////////
+
+EXPORT int  Device_nameLength(Handle session, int d);
+EXPORT void Device_name(Handle session, int d, char* buf);
+EXPORT bool Device_isDefault(Handle session, int d);
+EXPORT int  Device_apiIndex(Handle session, int d);
+EXPORT int  Device_apiNameLength(Handle session, int d);
+EXPORT void Device_apiName(Handle session, int d, char* buf);
+EXPORT bool Device_isApiDefault(Handle session, int d);
+EXPORT int  Device_maxChannels(Handle session, int d);
+EXPORT int  Device_sampleRatesCount(Handle session, int d);
+EXPORT void Device_sampleRates(Handle session, int d, int* sampleRates);
+EXPORT int  Device_defaultSampleRate(Handle session, int d);
 
 ///////////////////////////////////////////////////////////////////////////////
 // SPATIALIZER

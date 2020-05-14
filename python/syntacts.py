@@ -11,6 +11,31 @@ elif platform.uname()[0] == "Darwin":
 _tact = cdll.LoadLibrary(_lib_name)
 
 ###############################################################################
+## DEVICE
+###############################################################################
+
+class Device:
+    def __init__(self, handle, index):
+        self.index = index
+        name_len = _tact.Device_nameLength(handle, index)
+        buf = (c_char * (name_len + 1))()
+        _tact.Device_name(handle, index, cast(buf, c_char_p))
+        self.name = buf.value.decode()
+        self.is_default = _tact.Device_isDefault(handle, index)
+        self.api_index  = _tact.Device_apiIndex(handle, index)
+        api_name_len = _tact.Device_apiNameLength(handle, index)
+        buf = (c_char * (api_name_len + 1))()
+        _tact.Device_apiName(handle, index, cast(buf, c_char_p))
+        self.api_name = buf.value.decode()
+        self.is_api_default = _tact.Device_isApiDefault(handle, index)
+        self.max_channels = _tact.Device_maxChannels(handle, index)
+        sr_count = _tact.Device_sampleRatesCount(handle, index)
+        buf = (c_int * sr_count)()
+        _tact.Device_sampleRates(handle, index, cast(buf, POINTER(c_int)))
+        self.sample_rates = buf[:]
+        self.default_sample_rate = _tact.Device_defaultSampleRate(handle, index)        
+
+###############################################################################
 ## SESSION
 ###############################################################################
 
@@ -74,6 +99,26 @@ class Session:
 
     def get_pitch(self, channel):
         return _tact.Session_getPitch(self._handle, channel)
+
+    @property
+    def current_device(self):
+        idx = _tact.Session_getCurrentDevice(self._handle)
+        return Device(self._handle, idx)
+
+    @property
+    def default_device(self):
+        idx = _tact.Session_getDefaultDevice(self._handle)
+        return Device(self._handle, idx)
+
+    @property 
+    def available_devices(self):    
+        n = _tact.Session_getAvailableDevicedCount(self._handle)
+        devs = (c_int * n)()
+        _tact.Session_getAvailableDevices(self._handle, cast(devs, POINTER(c_int)))
+        avail = []
+        for d in devs:
+            avail.append(Device(self._handle, d))
+        return avail
 
     @property
     def channel_count(self):
@@ -359,7 +404,7 @@ class Noise(Signal):
 
 class Expression(Signal):
     def __init__(self, expr):
-        self._handle = _tact.Expression_create(c_char_p(expr.encode))
+        self._handle = _tact.Expression_create(c_char_p(expr.encode()))
 
 # TODO: class Samples (not sure how to handle float* yet)
 
@@ -530,7 +575,26 @@ lib_func(_tact.Session_getChannelCount, c_int, [Handle])
 lib_func(_tact.Session_getSampleRate, c_double, [Handle])
 lib_func(_tact.Session_getCpuLoad, c_double, [Handle])
 
+lib_func(_tact.Session_getCurrentDevice, c_int, [Handle])
+lib_func(_tact.Session_getDefaultDevice, c_int, [Handle])
+lib_func(_tact.Session_getAvailableDevicedCount, c_int, [Handle])
+lib_func(_tact.Session_getAvailableDevices, None, [Handle, POINTER(c_int)])
+
 lib_func(_tact.Session_count, c_int, None)
+
+# Devices
+
+lib_func(_tact.Device_nameLength, c_int, [Handle, c_int])
+lib_func(_tact.Device_name, None, [Handle, c_int, c_char_p])
+lib_func(_tact.Device_isDefault, c_bool, [Handle, c_int])
+lib_func(_tact.Device_apiIndex, c_int, [Handle, c_int])
+lib_func(_tact.Device_apiNameLength, c_int, [Handle, c_int])
+lib_func(_tact.Device_apiName, None, [Handle, c_int, c_char_p])
+lib_func(_tact.Device_isApiDefault, c_bool, [Handle, c_int])
+lib_func(_tact.Device_maxChannels, c_int, [Handle, c_int])
+lib_func(_tact.Device_sampleRatesCount, c_int, [Handle, c_int])
+lib_func(_tact.Device_sampleRates, None, [Handle, c_int, POINTER(c_int)])
+lib_func(_tact.Device_defaultSampleRate, c_int, [Handle, c_int])
 
 # Spatializer
 

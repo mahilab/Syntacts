@@ -133,10 +133,92 @@ double Session_getCpuLoad(Handle session) {
     return static_cast<Session*>(session)->getCpuLoad();
 }
 
+int Session_getCurrentDevice(Handle session) {
+    return static_cast<Session*>(session)->getCurrentDevice().index;
+}
+
+int Session_getDefaultDevice(Handle session) {
+    return static_cast<Session*>(session)->getDefaultDevice().index;
+}
+
+int Session_getAvailableDevicedCount(Handle session) {
+    return static_cast<int>(static_cast<Session*>(session)->getAvailableDevices().size());
+}
+
+void Session_getAvailableDevices(Handle session, int* devices) {
+    int i = 0; 
+    for (auto& dev : static_cast<Session*>(session)->getAvailableDevices()) {
+        devices[i++] = dev.second.index;
+    }
+}
 
 int Session_count() {
     return Session::count();
 }
+
+///////////////////////////////////////////////////////////////////////////////
+
+int  Device_nameLength(Handle session, int d) {
+    auto& devs = static_cast<Session*>(session)->getAvailableDevices();
+    return (int)devs.at(d).name.length();
+}
+
+void Device_name(Handle session, int d, char* buf) {
+    auto& devs = static_cast<Session*>(session)->getAvailableDevices();
+    auto& name = devs.at(d).name;
+    name.copy(buf, name.length());
+    buf[name.length()] = '\0';
+}
+
+bool Device_isDefault(Handle session, int d) {
+    auto& devs = static_cast<Session*>(session)->getAvailableDevices();
+    return devs.at(d).isDefault;
+}
+
+int  Device_apiIndex(Handle session, int d) {
+    auto& devs = static_cast<Session*>(session)->getAvailableDevices();
+    return devs.at(d).apiIndex;
+}
+
+int  Device_apiNameLength(Handle session, int d) {
+    auto& devs = static_cast<Session*>(session)->getAvailableDevices();
+    return (int)devs.at(d).apiName.length();
+}
+
+void Device_apiName(Handle session, int d, char* buf) {
+    auto& devs = static_cast<Session*>(session)->getAvailableDevices();
+    auto& name = devs.at(d).apiName;
+    name.copy(buf, name.length());
+    buf[name.length()] = '\0';
+}
+
+bool Device_isApiDefault(Handle session, int d) {
+    auto& devs = static_cast<Session*>(session)->getAvailableDevices();
+    return devs.at(d).isApiDefault;
+}
+
+int  Device_maxChannels(Handle session, int d) {
+    auto& devs = static_cast<Session*>(session)->getAvailableDevices();
+    return devs.at(d).maxChannels;
+}
+
+int  Device_sampleRatesCount(Handle session, int d) {
+    auto& devs = static_cast<Session*>(session)->getAvailableDevices();
+    return (int)devs.at(d).sampleRates.size();
+}
+
+void Device_sampleRates(Handle session, int d, int* sampleRates) {
+    auto& devs = static_cast<Session*>(session)->getAvailableDevices();
+    auto& srs = devs.at(d).sampleRates;
+    for (int i = 0; i < srs.size(); ++i)
+        sampleRates[i] = srs[i];
+}
+
+int  Device_defaultSampleRate(Handle session, int d) {
+    auto& devs = static_cast<Session*>(session)->getAvailableDevices();
+    return devs.at(d).defaultSampleRate;
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
