@@ -289,8 +289,6 @@ EXPORT void Spatializer_setRollOff(Handle spat, int type) {
     }
 } 
 
-
-
 bool Spatializer_createGrid(Handle spat, int rows, int cols) {
     return static_cast<Spatializer*>(spat)->createGrid(rows,cols);
 }
