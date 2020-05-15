@@ -38,7 +38,7 @@ Below you fill find simple tactile displays that you can create or learn from as
 
 ## Actuators
 
-The following table lists actuators that have been tested and are known to run well on the Syntacts amplifier. This list is by no means exhaustive. If you discover that the amplifier runs an actuator not listed here, please let us know by submitted an Issue on GitHub.
+The following table lists actuators that have been tested and are known to run well on the Syntacts amplifier. This list is by no means exhaustive. If you discover that the amplifier runs an actuator not listed here, please let us know by submitting an Issue on GitHub.
 
 |Manufacturer|Part Number|Type|
 |---|---|---|
