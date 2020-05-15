@@ -16,14 +16,14 @@ int main(int argc, char const *argv[])
         std::cout << std::endl;
         std::cout << "Index:        " << dev.index << std::endl;
         std::cout << "Name:         " << dev.name  << std::endl;
-        std::cout << "Default:      " << (dev.isDefault ? "Yes" : "No") << std::endl;
+        std::cout << "Default:      " << (dev.isDefault ? "True" : "False") << std::endl;
         std::cout << "API:          " << dev.apiName << std::endl;
-        std::cout << "API Default:  " << (dev.isApiDefault ? "Yes" : "No") << std::endl;
+        std::cout << "API Default:  " << (dev.isApiDefault ? "True" : "False") << std::endl;
         std::cout << "Max Channels: " << dev.maxChannels << std::endl;
-        std::cout << "Sample Rates: ";
+        std::cout << "Sample Rates: [";
                                         for (auto& s : dev.sampleRates)
-                                            std::cout << s << " ";
-                                        std::cout << std::endl;
+                                            std::cout << s << (s != dev.sampleRates.back() ? ", " : "");
+                                        std::cout << "]" << std::endl;
     }
     std::cout << std::endl;
 

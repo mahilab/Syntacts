@@ -141,7 +141,7 @@ int Session_getDefaultDevice(Handle session) {
     return static_cast<Session*>(session)->getDefaultDevice().index;
 }
 
-int Session_getAvailableDevicedCount(Handle session) {
+int Session_getAvailableDevicesCount(Handle session) {
     return static_cast<int>(static_cast<Session*>(session)->getAvailableDevices().size());
 }
 
