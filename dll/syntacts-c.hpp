@@ -42,7 +42,7 @@ EXPORT double Session_getCpuLoad(Handle session);
 
 EXPORT int Session_getCurrentDevice(Handle session);
 EXPORT int Session_getDefaultDevice(Handle session);
-EXPORT int Session_getAvailableDevicedCount(Handle session);
+EXPORT int Session_getAvailableDevicesCount(Handle session);
 EXPORT void Session_getAvailableDevices(Handle session, int* devices);
 
 EXPORT int Session_count();

@@ -15,25 +15,25 @@ _tact = cdll.LoadLibrary(_lib_name)
 ###############################################################################
 
 class Device:
-    def __init__(self, handle, index):
+    def __init__(self, session_handle, index):
         self.index = index
-        name_len = _tact.Device_nameLength(handle, index)
-        buf = (c_char * (name_len + 1))()
-        _tact.Device_name(handle, index, cast(buf, c_char_p))
+        size = _tact.Device_nameLength(session_handle, index)
+        buf = (c_char * (size + 1))()
+        _tact.Device_name(session_handle, index, cast(buf, c_char_p))
         self.name = buf.value.decode()
-        self.is_default = _tact.Device_isDefault(handle, index)
-        self.api_index  = _tact.Device_apiIndex(handle, index)
-        api_name_len = _tact.Device_apiNameLength(handle, index)
-        buf = (c_char * (api_name_len + 1))()
-        _tact.Device_apiName(handle, index, cast(buf, c_char_p))
+        self.is_default = _tact.Device_isDefault(session_handle, index)
+        self.api_index  = _tact.Device_apiIndex(session_handle, index)
+        size = _tact.Device_apiNameLength(session_handle, index)
+        buf = (c_char * (size + 1))()
+        _tact.Device_apiName(session_handle, index, cast(buf, c_char_p))
         self.api_name = buf.value.decode()
-        self.is_api_default = _tact.Device_isApiDefault(handle, index)
-        self.max_channels = _tact.Device_maxChannels(handle, index)
-        sr_count = _tact.Device_sampleRatesCount(handle, index)
-        buf = (c_int * sr_count)()
-        _tact.Device_sampleRates(handle, index, cast(buf, POINTER(c_int)))
+        self.is_api_default = _tact.Device_isApiDefault(session_handle, index)
+        self.max_channels = _tact.Device_maxChannels(session_handle, index)
+        size = _tact.Device_sampleRatesCount(session_handle, index)
+        buf = (c_int * size)()
+        _tact.Device_sampleRates(session_handle, index, cast(buf, POINTER(c_int)))
         self.sample_rates = buf[:]
-        self.default_sample_rate = _tact.Device_defaultSampleRate(handle, index)        
+        self.default_sample_rate = _tact.Device_defaultSampleRate(session_handle, index)        
 
 ###############################################################################
 ## SESSION
@@ -42,6 +42,12 @@ class Device:
 class Session:
     def __init__(self):
         self._handle = _tact.Session_create()
+        n = _tact.Session_getAvailableDevicesCount(self._handle)
+        indices = (c_int * n)()
+        _tact.Session_getAvailableDevices(self._handle, cast(indices, POINTER(c_int)))
+        self.available_devices = []
+        for d in indices:
+            self.available_devices.append(Device(self._handle, d))
     
     def __del__(self):
         _tact.Session_delete(self._handle)
@@ -109,16 +115,6 @@ class Session:
     def default_device(self):
         idx = _tact.Session_getDefaultDevice(self._handle)
         return Device(self._handle, idx)
-
-    @property 
-    def available_devices(self):    
-        n = _tact.Session_getAvailableDevicedCount(self._handle)
-        devs = (c_int * n)()
-        _tact.Session_getAvailableDevices(self._handle, cast(devs, POINTER(c_int)))
-        avail = []
-        for d in devs:
-            avail.append(Device(self._handle, d))
-        return avail
 
     @property
     def channel_count(self):
@@ -599,7 +595,7 @@ lib_func(_tact.Session_getCpuLoad, c_double, [Handle])
 
 lib_func(_tact.Session_getCurrentDevice, c_int, [Handle])
 lib_func(_tact.Session_getDefaultDevice, c_int, [Handle])
-lib_func(_tact.Session_getAvailableDevicedCount, c_int, [Handle])
+lib_func(_tact.Session_getAvailableDevicesCount, c_int, [Handle])
 lib_func(_tact.Session_getAvailableDevices, None, [Handle, POINTER(c_int)])
 
 lib_func(_tact.Session_count, c_int, None)

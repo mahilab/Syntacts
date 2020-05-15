@@ -21,11 +21,8 @@ Gsharp = key("G#",6)
 G      = key("G", 6)  
 funkytown << Dsharp << Dsharp << Csharp << Dsharp  << 0.2 << Asharp  << 0.2 << Asharp << Dsharp << Gsharp << G << Dsharp
 
-
 dixie = Sequence() 
 dixie << key("B", 5) << key("G#",5) << key("E", 5) << key("E", 5) << key("E", 5) << key("F#",5) << key("G#",5) << key("A", 5) << key("B", 5) << key("B", 5) << key("B", 5) << key("G#",5)
-
-
 
 session = Session()
 session.open()
