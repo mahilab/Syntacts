@@ -21,8 +21,6 @@ Open PowerShell **as an administrator** in a directory of your choice and run th
 ```shell
 > git clone --recurse-submodules https://github.com/mahilab/Syntacts 
 > cd Syntacts
-> wget https://www.steinberg.net/asiosdk -outfile "3rdparty/asiosdk.zip"
-> Expand-Archive -Path "3rdparty/asiosdk.zip" -DestinationPath "3rdparty"
 > mkdir build
 > cd build
 > cmake .. -G "Visual Studio 16 2019" -A x64
@@ -32,7 +30,6 @@ Open PowerShell **as an administrator** in a directory of your choice and run th
 This will build **Syntacts** in its entirety and then install it to your system (likely in `C:\Program Files\Syntacts` or `C:\Program Files (x86)\Syntacts`). 
 
 >- Syntacts uses **git submodules**. Make sure you use the `--recurse-submodules` option when cloning, otherwise your compilation will fail due to missing libraries!
->- The reason we require you to manually download the ASIO SDK with `wget` is because Steinberg's licensing agreement forbids that we distribute it. You can skip these two steps if you don't plan on using ASIO (though, you definitely should if you can!).
 >- You may need to specify a different CMake generator with `-G` if you have a another version of Visual Studio installed (e.g. `cmake .. -G "Visual Studio 15 2017 Win64"`)
 
 ## Building on macOS
