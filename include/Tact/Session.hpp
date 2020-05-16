@@ -10,13 +10,31 @@
 
 namespace tact {
 
+/// Support device APIs
+enum class API {
+    Unknown         = 0,
+    DirectSound     = 1,
+    MME             = 2,
+    ASIO            = 3,
+    SoundManager    = 4,
+    CoreAudio       = 5,
+    OSS             = 7,
+    ALSA            = 8,
+    AL              = 9,
+    BeOS            = 10,
+    WDMKS           = 11,
+    JACK            = 12,
+    WASAPI          = 13,
+    AudioScienceHPI = 14
+};
+
 /// Useful device information
 struct Device {
     Device();
     int index;                     ///< device index
     std::string name;              ///< device name
     bool isDefault;                ///< is this the default device?
-    int apiIndex;                  ///< device API index
+    API api;                       ///< device API index
     std::string apiName;           ///< device API name
     bool isApiDefault;             ///< is this the default device for its API?
     int maxChannels;               ///< maximum number of output channels
@@ -35,6 +53,9 @@ public:
 
     /// Opens the default device with its max channels and default sample rate
     int open();
+
+    /// Opens the default device for a specific API with its max channels and default sample rate
+    int open(API api); 
 
     /// Opens a specific device with its max channels and default sample rate
     int open(const Device& device);

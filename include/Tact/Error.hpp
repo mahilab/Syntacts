@@ -10,5 +10,6 @@ enum SyntactsError : int {
   SyntactsError_InvalidChannelCount = -5,
   SyntactsError_InvalidSampleRate = -6,
   SyntactsError_NoWaveform = -7,
-  SyntactsError_ControlPanelFail = -8
+  SyntactsError_ControlPanelFail = -8,
+  SyntactsError_InvalidAPI = -9
 };

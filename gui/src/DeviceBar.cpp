@@ -268,7 +268,7 @@ void DeviceBar::getCurrent()
 {
     if (session) {
         m_currentDev = session->getCurrentDevice();
-        if (m_currentDev.apiIndex != -1)
+        if (m_currentDev.api != tact::API::Unknown)
             m_currentApi = m_currentDev.apiName;
     }
 }
@@ -280,7 +280,7 @@ void DeviceBar::getAvailable()
         auto devs = session->getAvailableDevices();
         for (auto &dev : devs)
         {
-            if (dev.second.apiIndex != -1 && dev.second.index != -1 && dev.second.apiName != "N/A") {
+            if (dev.second.api != tact::API::Unknown && dev.second.index != -1 && dev.second.apiName != "N/A") {
                 if (dev.second.isApiDefault)
                     m_available[dev.second.apiName].push_front(dev.second);
                 else

@@ -48,10 +48,10 @@ add_custom_command(TARGET syntacts-c POST_BUILD
 add_custom_command(TARGET syntacts-c POST_BUILD 
                 COMMAND ${CMAKE_COMMAND} -E copy_if_different
                 $<TARGET_FILE:syntacts-c>              
-                "${PROJECT_SOURCE_DIR}/unity/SyntactsDemo/Assets/Plugins/")
+                "${PROJECT_SOURCE_DIR}/unity/SyntactsDemo/Assets/Syntacts/Plugins/")
 
 add_custom_command(TARGET syntacts-c POST_BUILD 
                 COMMAND ${CMAKE_COMMAND} -E copy_if_different
                 "${PROJECT_SOURCE_DIR}/csharp/Syntacts/Syntacts.cs"             
-                "${PROJECT_SOURCE_DIR}/unity/SyntactsDemo/Assets/")
+                "${PROJECT_SOURCE_DIR}/unity/SyntactsDemo/Assets/Syntacts/")
 

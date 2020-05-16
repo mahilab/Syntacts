@@ -18,6 +18,7 @@ EXPORT bool Session_valid(Handle session);
 EXPORT int Session_open1(Handle session);
 EXPORT int Session_open2(Handle session, int index);
 EXPORT int Session_open3(Handle session, int index, int channelCount, double sampleRate);
+EXPORT int Session_open4(Handle session, int api);
 EXPORT int Session_close(Handle session);
 EXPORT bool Session_isOpen(Handle session);
 
@@ -54,7 +55,7 @@ EXPORT int Session_count();
 EXPORT int  Device_nameLength(Handle session, int d);
 EXPORT void Device_name(Handle session, int d, char* buf);
 EXPORT bool Device_isDefault(Handle session, int d);
-EXPORT int  Device_apiIndex(Handle session, int d);
+EXPORT int  Device_api(Handle session, int d);
 EXPORT int  Device_apiNameLength(Handle session, int d);
 EXPORT void Device_apiName(Handle session, int d, char* buf);
 EXPORT bool Device_isApiDefault(Handle session, int d);

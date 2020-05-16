@@ -42,7 +42,7 @@ public class SyntactsDemo : MonoBehaviour
 
     void Update() {
         // update monitor 
-        open = session.open;
+        open = session.isOpen;
         valid = session.valid;
         cpuLoad = session.cpuLoad;
         count = Session.count;

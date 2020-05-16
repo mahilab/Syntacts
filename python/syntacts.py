@@ -1,5 +1,6 @@
 import platform
 from ctypes import *
+from enum import Enum
 
 # DLL Import
 # get the right filename
@@ -14,26 +15,45 @@ _tact = cdll.LoadLibrary(_lib_name)
 ## DEVICE
 ###############################################################################
 
+class API(Enum):
+    Unknown         = 0
+    DirectSound     = 1
+    MME             = 2
+    ASIO            = 3
+    SoundManager    = 4
+    CoreAudio       = 5
+    OSS             = 7
+    ALSA            = 8
+    AL              = 9
+    BeOS            = 10
+    WDMKS           = 11
+    JACK            = 12
+    WASAPI          = 13
+    AudioScienceHPI = 14
+
 class Device:
     def __init__(self, session_handle, index):
         self.index = index
-        size = _tact.Device_nameLength(session_handle, index)
-        buf = (c_char * (size + 1))()
-        _tact.Device_name(session_handle, index, cast(buf, c_char_p))
-        self.name = buf.value.decode()
-        self.is_default = _tact.Device_isDefault(session_handle, index)
-        self.api_index  = _tact.Device_apiIndex(session_handle, index)
-        size = _tact.Device_apiNameLength(session_handle, index)
-        buf = (c_char * (size + 1))()
-        _tact.Device_apiName(session_handle, index, cast(buf, c_char_p))
-        self.api_name = buf.value.decode()
-        self.is_api_default = _tact.Device_isApiDefault(session_handle, index)
-        self.max_channels = _tact.Device_maxChannels(session_handle, index)
-        size = _tact.Device_sampleRatesCount(session_handle, index)
-        buf = (c_int * size)()
-        _tact.Device_sampleRates(session_handle, index, cast(buf, POINTER(c_int)))
-        self.sample_rates = buf[:]
-        self.default_sample_rate = _tact.Device_defaultSampleRate(session_handle, index)        
+        if (index != -1):
+            size = _tact.Device_nameLength(session_handle, index)
+            buf = (c_char * (size + 1))()
+            _tact.Device_name(session_handle, index, cast(buf, c_char_p))
+            self.name = buf.value.decode()
+            self.is_default = _tact.Device_isDefault(session_handle, index)
+            self.api  = API(_tact.Device_api(session_handle, index))
+            size = _tact.Device_apiNameLength(session_handle, index)
+            buf = (c_char * (size + 1))()
+            _tact.Device_apiName(session_handle, index, cast(buf, c_char_p))
+            self.api_name = buf.value.decode()
+            self.is_api_default = _tact.Device_isApiDefault(session_handle, index)
+            self.max_channels = _tact.Device_maxChannels(session_handle, index)
+            size = _tact.Device_sampleRatesCount(session_handle, index)
+            buf = (c_int * size)()
+            _tact.Device_sampleRates(session_handle, index, cast(buf, POINTER(c_int)))
+            self.sample_rates = buf[:]
+            self.default_sample_rate = _tact.Device_defaultSampleRate(session_handle, index)
+        else:
+            self.name = self.is_default = self.api = self.api_name = self.is_api_default = self.max_channels = self.sample_rates = self.default_sample_rate = None        
 
 ###############################################################################
 ## SESSION
@@ -54,7 +74,10 @@ class Session:
 
     def open(self, index=None, channelCount=0, sampleRate=0):
         if index:
-            return _tact.Session_open3(self._handle, index, channelCount, sampleRate)
+            if isinstance(index, API):
+                return _tact.Session_open4(self._handle, index.value)
+            else:            
+                return _tact.Session_open3(self._handle, index, channelCount, sampleRate)
         else:
             return _tact.Session_open1(self._handle)
 
@@ -571,6 +594,7 @@ lib_func(_tact.Session_delete, None, [Handle])
 lib_func(_tact.Session_open1, c_int, [Handle])
 lib_func(_tact.Session_open2, c_int, [Handle, c_int])
 lib_func(_tact.Session_open3, c_int, [Handle, c_int, c_int, c_double])
+lib_func(_tact.Session_open4, c_int, [Handle, c_int])
 lib_func(_tact.Session_close, c_int, [Handle])
 lib_func(_tact.Session_isOpen, c_bool, [Handle])
 
@@ -605,7 +629,7 @@ lib_func(_tact.Session_count, c_int, None)
 lib_func(_tact.Device_nameLength, c_int, [Handle, c_int])
 lib_func(_tact.Device_name, None, [Handle, c_int, c_char_p])
 lib_func(_tact.Device_isDefault, c_bool, [Handle, c_int])
-lib_func(_tact.Device_apiIndex, c_int, [Handle, c_int])
+lib_func(_tact.Device_api, c_int, [Handle, c_int])
 lib_func(_tact.Device_apiNameLength, c_int, [Handle, c_int])
 lib_func(_tact.Device_apiName, None, [Handle, c_int, c_char_p])
 lib_func(_tact.Device_isApiDefault, c_bool, [Handle, c_int])

@@ -164,7 +164,7 @@ Device::Device() :
     index(-1),
     name("N/A"),
     isDefault(false),
-    apiIndex(-1),
+    api(API::Unknown),
     apiName("N/A"),
     isApiDefault(false),
     maxChannels(0),
@@ -214,7 +214,7 @@ public:
         if (isOpen())
             return SyntactsError_AlreadyOpen;
 
-        if (device.index == -1 || device.apiIndex == -1)
+        if (device.index == -1 || device.api == API::Unknown)
             return SyntactsError_InvalidDevice;
 
         // generat list of channel numbers
@@ -451,7 +451,7 @@ public:
         dev.index = index;
         dev.name = pa_dev_info->name;
         dev.isDefault = index == Pa_GetDefaultOutputDevice();
-        dev.apiIndex = pa_api_info->type;
+        dev.api      =   static_cast<API>(pa_api_info->type);
         dev.apiName = pa_api_info->name;
         dev.isApiDefault = index == Pa_GetHostApiInfo( pa_dev_info->hostApi )->defaultOutputDevice;
         dev.maxChannels = pa_dev_info->maxOutputChannels;
@@ -459,9 +459,6 @@ public:
         dev.defaultSampleRate = static_cast<int>(pa_dev_info->defaultSampleRate);
         return dev;
     }
-
-
-
 
     void tidyNames() {
         static std::vector<std::string> apiRemoves = {"Windows "};
@@ -479,7 +476,7 @@ public:
         std::vector<std::string*> mme;
         std::set<std::string> notMME;
         for (auto& d : m_devices) {
-            if (d.second.apiIndex == paMME)
+            if (d.second.api == API::MME)
                 mme.push_back(&d.second.name);
             else
                 notMME.insert(d.second.name);
@@ -547,6 +544,16 @@ int Session::open(const Device& device) {
 
 int Session::open(const Device& device, int channelCount, double sampleRate) {
     return m_impl->open(device, std::min(channelCount, device.maxChannels), sampleRate);
+}
+
+int Session::open(API api) {
+    if (api == API::Unknown)
+        return SyntactsError_InvalidAPI;
+    for (auto& dev : getAvailableDevices()) {
+        if (dev.second.api == api && dev.second.isApiDefault)
+            return open(dev.second);
+    }
+    return SyntactsError_InvalidAPI;
 }
 
 int Session::open(int index) {

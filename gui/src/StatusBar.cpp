@@ -67,7 +67,7 @@ void StatusBar::renderButtons()
 {
     bool modalOpen = true;
 
-    ImGui::SameLine(ImGui::GetWindowWidth() - 225);
+    ImGui::SameLine(ImGui::GetWindowWidth() - 255);
     double cpu = 0;
     if (gui.device.session)
         cpu = gui.device.session->getCpuLoad();
@@ -77,6 +77,11 @@ void StatusBar::renderButtons()
     ImGui::PopStyleColor();
     showTooltip("Session CPU Thread Load");
 
+    ImGui::SameLine();
+    if (ImGui::Button(ICON_FA_HOME)) {
+        System::openUrl("https://www.syntacts.org");
+    }
+    showTooltip("Open Syntacts Website");
     ImGui::SameLine();
     if (ImGui::Button(ICON_FA_GITHUB)) {
         System::openUrl("https://github.com/mahilab/Syntacts");

@@ -57,6 +57,10 @@ int Session_open3(Handle session, int index, int channelCount, double sampleRate
     return static_cast<Session*>(session)->open(index, channelCount, sampleRate);
 }
 
+int Session_open4(Handle session, int api) {
+    return static_cast<Session*>(session)->open(static_cast<API>(api));
+}
+
 int Session_close(Handle session) {
     return static_cast<Session*>(session)->close();
 }
@@ -175,9 +179,9 @@ bool Device_isDefault(Handle session, int d) {
     return devs.at(d).isDefault;
 }
 
-int  Device_apiIndex(Handle session, int d) {
+int  Device_api(Handle session, int d) {
     auto& devs = static_cast<Session*>(session)->getAvailableDevices();
-    return devs.at(d).apiIndex;
+    return static_cast<int>(devs.at(d).api);
 }
 
 int  Device_apiNameLength(Handle session, int d) {

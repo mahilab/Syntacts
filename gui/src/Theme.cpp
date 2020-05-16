@@ -10,7 +10,7 @@ using namespace mahi::gui;
 
 ThemeManager::ThemeManager(Gui &gui) : Widget(gui)
 {
-    setTheme(Theme::DarkDefault);
+    setTheme(Theme::DarkAlt1);
     ImGuiStyle *imStyle = &ImGui::GetStyle();
     // Main
     imStyle->WindowPadding = ImVec2(8, 8);

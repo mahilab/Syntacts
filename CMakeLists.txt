@@ -95,6 +95,25 @@ set(SYNTACTS_SRC
     "src/Tact/General.cpp"
 )
 
+function(download_zip url filename)
+if(NOT EXISTS ${filename})
+  file(DOWNLOAD ${url} ${filename}
+       TIMEOUT 60  # seconds
+       )
+endif()
+endfunction(download_zip)
+
+# get ASIO SDK
+if (WIN32)
+    set(ASIO_ZIP_FILENAME "${PROJECT_SOURCE_DIR}/3rdparty/asio.zip")
+    if (NOT EXISTS ${ASIO_ZIP_FILENAME})
+        # download
+        file(DOWNLOAD "https://www.steinberg.net/asiosdk" ${ASIO_ZIP_FILENAME} TIMEOUT 60)
+        # extract
+        execute_process(COMMAND ${CMAKE_COMMAND} -E tar -xf ${ASIO_ZIP_FILENAME} WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/3rdparty/")
+    endif()
+endif()
+
 # portaudio
 set(PA_DLL_LINK_WITH_STATIC_RUNTIME ON CACHE BOOL "" FORCE)
 set(PA_BUILD_SHARED OFF CACHE BOOL "" FORCE)

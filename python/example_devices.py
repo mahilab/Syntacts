@@ -11,4 +11,3 @@ for dev in session.available_devices:
     print("API Default: ", dev.is_api_default)
     print("Max Channels:", dev.max_channels)
     print("Sample Rates:", dev.sample_rates)
- 

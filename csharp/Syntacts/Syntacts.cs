@@ -10,36 +10,55 @@ namespace Syntacts
     // DEVICE
     //////////////////////////////////////////////////////////////////////////
 
+    public enum API {
+        Unknown         = 0,
+        DirectSound     = 1,
+        MME             = 2,
+        ASIO            = 3,
+        SoundManager    = 4,
+        CoreAudio       = 5,
+        OSS             = 7,
+        ALSA            = 8,
+        AL              = 9,
+        BeOS            = 10,
+        WDMKS           = 11,
+        JACK            = 12,
+        WASAPI          = 13,
+        AudioScienceHPI = 14
+    }
+
     public class Device {
 
         public int index;
         public string name;
         public bool isDefault;
-        public int apiIndex;
+        public API api;
         public string apiName;
         public bool isApiDefault;
         public int maxChannels;
         public int[] sampleRates;
         public int defaultSampleRate;
 
-        internal Device(Handle session, int index) {
+        internal Device(Handle session, int index) {            
             this.index = index;
-            int size = Dll.Device_nameLength(session, index);
-            StringBuilder buf = new StringBuilder(size + 1);
-            Dll.Device_name(session, index, buf);
-            this.name = buf.ToString();
-            this.isDefault = Dll.Device_isDefault(session, index);
-            this.apiIndex = Dll.Device_apiIndex(session, index);
-            size = Dll.Device_apiNameLength(session, index);
-            buf = new StringBuilder(size + 1);
-            Dll.Device_apiName(session, index, buf);
-            this.apiName = buf.ToString();
-            this.isApiDefault = Dll.Device_isApiDefault(session, index);
-            this.maxChannels = Dll.Device_maxChannels(session, index);
-            size = Dll.Device_sampleRatesCount(session, index);
-            this.sampleRates = new int[size];
-            Dll.Device_sampleRates(session, index, sampleRates);
-            this.defaultSampleRate = Dll.Device_defaultSampleRate(session, index);
+            if (this.index != -1) {
+                int size = Dll.Device_nameLength(session, index);
+                StringBuilder buf = new StringBuilder(size + 1);
+                Dll.Device_name(session, index, buf);
+                this.name = buf.ToString();
+                this.isDefault = Dll.Device_isDefault(session, index);
+                this.api = (API)Dll.Device_api(session, index);
+                size = Dll.Device_apiNameLength(session, index);
+                buf = new StringBuilder(size + 1);
+                Dll.Device_apiName(session, index, buf);
+                this.apiName = buf.ToString();
+                this.isApiDefault = Dll.Device_isApiDefault(session, index);
+                this.maxChannels = Dll.Device_maxChannels(session, index);
+                size = Dll.Device_sampleRatesCount(session, index);
+                this.sampleRates = new int[size];
+                Dll.Device_sampleRates(session, index, sampleRates);
+                this.defaultSampleRate = Dll.Device_defaultSampleRate(session, index);
+            }
         }      
     }
 
@@ -63,6 +82,10 @@ namespace Syntacts
         public int Open()
         {
             return Dll.Session_open1(handle);
+        }
+
+        public int Open(API api) {
+            return Dll.Session_open4(handle, (int)api);
         }
 
         public int Open(int index)
@@ -152,7 +175,7 @@ namespace Syntacts
 
         public Device[] availableDevices;
 
-        public bool is_open
+        public bool isOpen
         {
             get { return Dll.Session_isOpen(handle); }
         }
@@ -752,6 +775,8 @@ namespace Syntacts
         [DllImport("syntacts-c")]
         public static extern int Session_open3(Handle session, int index, int channelCount, double sampleRate);
         [DllImport("syntacts-c")]
+        public static extern int Session_open4(Handle session, int api);
+        [DllImport("syntacts-c")]
         public static extern int Session_close(Handle session);
         [DllImport("syntacts-c")]
         public static extern bool Session_isOpen(Handle session);
@@ -807,7 +832,7 @@ namespace Syntacts
         [DllImport("syntacts-c")]
         public static extern bool Device_isDefault(Handle session, int d);
         [DllImport("syntacts-c")]
-        public static extern int  Device_apiIndex(Handle session, int d);
+        public static extern int  Device_api(Handle session, int d);
         [DllImport("syntacts-c")]
         public static extern int  Device_apiNameLength(Handle session, int d);
         [DllImport("syntacts-c", CallingConvention = CallingConvention.Cdecl)]
