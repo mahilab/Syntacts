@@ -14,10 +14,10 @@
 - ~~spatializer class~~
 - ~~change to bias/gain~~
 - ~~import WAV files~~
+- ~~grid mechanism in spatializers~~
 - import CSV
 - import Macaron JSON
 - save/load spatializers
-- grid mechanism in spatializers
 - channel polyphony 
 
 ## Optimization
@@ -73,7 +73,7 @@
 
 # Distribution / Documentation
 - ~~embed PortAudio / ASIO / gui~~
+- ~~update examples~~
 - create installer with NSIS
 - document all classes/functions
-- update examples
 

@@ -8,7 +8,7 @@ using Syntacts;
 [CustomEditor(typeof(SyntactsHub))]
 public class SyntactsHubEditor : Editor
 {
-    
+
     SerializedProperty openMode;
     SerializedProperty index;
     SerializedProperty channelCount;
@@ -18,16 +18,29 @@ public class SyntactsHubEditor : Editor
 
     bool showDeviceInfo = true;
     bool showAvailable = false;
+    bool showChannelInfo = false;
+    bool showDebug = false;
+
+    GUIStyle italicLabel;
+    GUIStyle errorLabel;
 
     Dictionary<API, List<Device>> availableDevices;
 
-    public virtual void OnEnable() {
+
+    public virtual void OnEnable()
+    {
         openMode = serializedObject.FindProperty("openMode");
         index = serializedObject.FindProperty("index");
         channelCount = serializedObject.FindProperty("channelCount");
         sampleRate = serializedObject.FindProperty("sampleRate");
         api = serializedObject.FindProperty("api");
         name = serializedObject.FindProperty("name");
+
+        italicLabel = new GUIStyle();
+        italicLabel.fontStyle = FontStyle.Italic;
+        errorLabel = new GUIStyle();
+        errorLabel.fontStyle = FontStyle.Bold;
+        errorLabel.normal.textColor = Color.red;
 
         Session temp = new Session();
         availableDevices = new Dictionary<API, List<Device>>();
@@ -40,11 +53,14 @@ public class SyntactsHubEditor : Editor
         temp.Dispose();
     }
 
-    public override void OnInspectorGUI() {
-
+    public override void OnInspectorGUI()
+    {
         SyntactsHub script = (SyntactsHub)target;
 
         serializedObject.Update();
+
+        EditorGUI.BeginDisabledGroup(Application.isPlaying);
+            
         EditorGUI.BeginChangeCheck();
         EditorGUILayout.PropertyField(openMode, new GUIContent("Open Mode", "Determines how Devices will be opened."));
 
@@ -52,52 +68,117 @@ public class SyntactsHubEditor : Editor
             EditorGUILayout.PropertyField(index, new GUIContent("Device Index"));
         else if (openMode.enumValueIndex == (int)SyntactsHub.OpenMode.ByAPI)
             EditorGUILayout.PropertyField(api, new GUIContent("Device API"));
-        else if (openMode.enumValueIndex == (int)SyntactsHub.OpenMode.Custom) {
+        else if (openMode.enumValueIndex == (int)SyntactsHub.OpenMode.Custom)
+        {
             EditorGUILayout.PropertyField(index, new GUIContent("Device Index"));
             EditorGUILayout.PropertyField(channelCount, new GUIContent("Channel Count"));
             EditorGUILayout.PropertyField(sampleRate, new GUIContent("Sample Rate"));
         }
-        else if (openMode.enumValueIndex == (int)SyntactsHub.OpenMode.ByName) {
+        else if (openMode.enumValueIndex == (int)SyntactsHub.OpenMode.ByName)
+        {
             EditorGUILayout.PropertyField(name, new GUIContent("Device Name"));
-            EditorGUILayout.PropertyField(api,  new GUIContent("Device API"));
+            EditorGUILayout.PropertyField(api, new GUIContent("Device API"));
         }
 
         if (EditorGUI.EndChangeCheck())
             serializedObject.ApplyModifiedProperties();
+        
+        EditorGUI.EndDisabledGroup();
 
 
-        if (script.session != null && script.session.isOpen) {
-             showDeviceInfo = EditorGUILayout.BeginFoldoutHeaderGroup(showDeviceInfo, "Current Device");
-             if (showDeviceInfo) {
+        showDeviceInfo = EditorGUILayout.BeginFoldoutHeaderGroup(showDeviceInfo, "Device");
+        if (showDeviceInfo)
+        {
+
+            if (!Application.isPlaying) {
+                EditorGUI.BeginDisabledGroup(true);
+                EditorGUILayout.LabelField("Only available when the Application is running.", italicLabel);
+                EditorGUI.EndDisabledGroup();
+            }
+            else if (script.session != null && script.session.isOpen)
+            {
                 EditorGUILayout.LabelField("Index:", script.device.index.ToString());
-                EditorGUILayout.LabelField("Name:",  script.device.name.ToString());
+                EditorGUILayout.LabelField("Name:", script.device.name.ToString());
                 EditorGUILayout.LabelField("Default:", script.device.isDefault.ToString());
                 EditorGUILayout.LabelField("API:", script.device.apiName.ToString());
                 EditorGUILayout.LabelField("API Default:", script.device.isDefault.ToString());
                 EditorGUILayout.LabelField("Max Channels:", script.device.maxChannels.ToString());
-             }
-             EditorGUILayout.EndFoldoutHeaderGroup();
+                EditorGUILayout.LabelField("Channels:", script.session.channelCount.ToString());
+                EditorGUILayout.LabelField("Sample Rate:", script.session.sampleRate.ToString());
+                EditorGUILayout.LabelField("CPU Load:", Mathf.Round((float)script.session.cpuLoad * 100).ToString()+"%");
+            }
+            else {
+                EditorGUILayout.LabelField("Failed to open Device!",errorLabel);
+            }
         }
+        EditorGUILayout.EndFoldoutHeaderGroup();
+
+        showChannelInfo = EditorGUILayout.BeginFoldoutHeaderGroup(showChannelInfo, "Channels");
+        if (showChannelInfo) {
+            // EditorGUI.BeginDisabledGroup(true);
+            if (!Application.isPlaying) {
+                EditorGUI.BeginDisabledGroup(true);
+                EditorGUILayout.LabelField("Only available when the Application is running.", italicLabel);
+                EditorGUI.EndDisabledGroup();
+            }
+            else if (script.session != null && script.session.isOpen) {
+                int count = script.session.channelCount;
+                for (int i = 0; i < count; ++i) {
+                    EditorGUILayout.LabelField("Channel " + i.ToString(), EditorStyles.miniBoldLabel);
+                    EditorGUI.BeginChangeCheck();
+                    float vol = EditorGUILayout.Slider("Volume", (float)script.session.GetVolume(i), 0, 1); 
+                    if (EditorGUI.EndChangeCheck())
+                        script.session.SetVolume(i, vol);
+
+                    EditorGUI.BeginChangeCheck();
+                    float pitch = EditorGUILayout.Slider("Pitch",  (float)script.session.GetPitch(i), 0, 10);
+                    if (EditorGUI.EndChangeCheck())
+                        script.session.SetPitch(i, pitch);
+                    
+                }
+            }
+            else {
+                EditorGUILayout.LabelField("Failed to open Device!",errorLabel);
+            }
+            // EditorGUI.EndDisabledGroup();
+        }
+        EditorGUILayout.EndFoldoutHeaderGroup();
+        
 
         showAvailable = EditorGUILayout.BeginFoldoutHeaderGroup(showAvailable, "Available Devices");
-        if (showAvailable) {
-            foreach (var pair in availableDevices) {
+        if (showAvailable)
+        {
+            foreach (var pair in availableDevices)
+            {
                 EditorGUILayout.LabelField(pair.Key.ToString(), EditorStyles.boldLabel);
                 foreach (Device dev in pair.Value)
                     EditorGUILayout.LabelField(dev.index.ToString(), dev.name);
             }
-        }        
+        }
         EditorGUILayout.EndFoldoutHeaderGroup();
+
+
+        showDebug = EditorGUILayout.BeginFoldoutHeaderGroup(showDebug, "Debug");
+        if (showDebug) {
+            EditorGUILayout.LabelField("Session Count:", Syntacts.Session.count.ToString());
+            EditorGUILayout.LabelField("Signal Count:", Syntacts.Signal.count.ToString());
+        }
+        EditorGUILayout.EndFoldoutHeaderGroup();
+
 
         // if (GUILayout.Button("Open Session")) {
 
-            
+
 
         // }
         // if (GUILayout.Button("Close Session")) {
 
         // }
 
-        
+
+    }
+
+    public override bool RequiresConstantRepaint() {
+        return true;
     }
 }
