@@ -264,6 +264,15 @@ namespace Syntacts
         public double y;
     }
 
+    public enum Curve {
+        Linear = 0, 
+        Smoothstep = 1,
+        Smootherstep = 2,
+        Smootheststep = 3,
+        Lograthmic = 4,
+        Exponential = 5
+    }
+
     public class Spatializer : IDisposable {
 
         public Spatializer(Session session = null) {
@@ -287,6 +296,10 @@ namespace Syntacts
 
         public Point GetPosition(int channel) {
             return Dll.Spatializer_getPosition(handle, channel);
+        }
+
+        public bool CreateGrid(int rows, int cols) {
+            return Dll.Spatializer_createGrid(handle, rows, cols);
         }
 
         public void Clear() {
@@ -341,6 +354,10 @@ namespace Syntacts
         public double radius {
             get { return Dll.Spatializer_getRadius(handle); }
             set { Dll.Spatializer_setRadius(handle, value); }
+        }
+
+        public Curve rollOff {
+            set { Dll.Spatializer_setRollOff(handle, (int)value); }
         }
 
         public int channelCount {
@@ -895,6 +912,10 @@ namespace Syntacts
         public static extern void Spatializer_setRadius(Handle spat, double r);
         [DllImport("syntacts-c")]
         public static extern double Spatializer_getRadius(Handle spat);
+        [DllImport("syntacts-c")]
+        public static extern void Spatializer_setRollOff(Handle spat, int type);
+        [DllImport("syntacts-c")] 
+        public static extern bool Spatializer_createGrid(Handle spat, int rows, int cols);
         [DllImport("syntacts-c")]
         public static extern void Spatializer_clear(Handle spat);
         [DllImport("syntacts-c")]
