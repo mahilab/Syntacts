@@ -33,7 +33,7 @@ Syntacts provides you with low level access to audio hardware and a variety of m
 - Navigate to the `python` directory.
 - Run any of the `example.py` files.
 
-## Unity Example
+## Unity
 - Get the latest [Release](https://github.com/mahilab/Syntacts/releases) and extract the files.
 - Import `unity/syntacts.unitypackage` to your project.
 - Add the `SyntactsHub` script to a scene object.
