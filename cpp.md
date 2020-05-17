@@ -23,11 +23,12 @@ However, the process should be similar if you are using an IDE such as Visual St
 - Create a new `CMakeLists.txt` build script with the following contents:
 
 ```cmake
+# create a new CMake project
 cmake_minimum_required(VERSION 3.13.0)
 project(MySyntactsProject VERSION 1.0.0)
-
+# find the installed Syntact libraries
 find_package(syntacts REQUIRED)
-
+# create an executable from main.cpp and link it against Syntacts
 add_executable(myApp main.cpp)
 target_link_libraries(myApp syntacts)
 ```
