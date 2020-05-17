@@ -29,6 +29,18 @@ using System.Text;
 namespace Syntacts
 {
     using Handle = System.IntPtr; // ~ C void*
+
+    ///////////////////////////////////////////////////////////////////////////
+    // VERSION 
+    //////////////////////////////////////////////////////////////////////////
+
+    public class Version {
+        public static int major { get { return Dll.Syntacts_versionMajor(); } }
+        public static int minor { get { return Dll.Syntacts_versionMinor(); } }
+        public static int patch { get { return Dll.Syntacts_versionPatch(); } }
+        public static bool asio { get { return Dll.Syntacts_asioSupport(); } }
+        public static string text { get { return major.ToString() + "." + minor.ToString() + "." + patch.ToString(); } }
+    } 
     
     ///////////////////////////////////////////////////////////////////////////
     // DEVICE
@@ -250,7 +262,6 @@ namespace Syntacts
         }
 
         public Handle handle = Handle.Zero;
-
     }
     
     ///////////////////////////////////////////////////////////////////////////
@@ -803,6 +814,15 @@ namespace Syntacts
 
     class Dll
     {
+        [DllImport("syntacts-c")]
+        public static extern int Syntacts_versionMajor();
+        [DllImport("syntacts-c")]
+        public static extern int Syntacts_versionMinor();
+        [DllImport("syntacts-c")]
+        public static extern int Syntacts_versionPatch();
+        [DllImport("syntacts-c")]
+        public static extern bool Syntacts_asioSupport();
+
         [DllImport("syntacts-c")]
         public static extern Handle Session_create();
         [DllImport("syntacts-c")]

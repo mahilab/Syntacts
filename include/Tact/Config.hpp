@@ -26,7 +26,7 @@
 
 // Syntacts version numbers
 #define SYNTACTS_VERSION_MAJOR 1
-#define SYNTACTS_VERSION_MINOR 1
+#define SYNTACTS_VERSION_MINOR 2
 #define SYNTACTS_VERSION_PATCH 0
 
 /// If uncommented, Signals will use a fixed size memory pool for allocation.

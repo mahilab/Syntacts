@@ -26,6 +26,8 @@ public class SyntactsHubEditor : Editor
 
     Dictionary<API, List<Device>> availableDevices;
 
+    string version;
+    bool asio;
 
     public virtual void OnEnable()
     {
@@ -51,6 +53,9 @@ public class SyntactsHubEditor : Editor
             availableDevices[dev.api].Add(dev);
         }
         temp.Dispose();
+
+        version = Syntacts.Version.text;
+        asio = Syntacts.Version.asio;
     }
 
     public override void OnInspectorGUI()
@@ -160,6 +165,8 @@ public class SyntactsHubEditor : Editor
 
         showDebug = EditorGUILayout.BeginFoldoutHeaderGroup(showDebug, "Debug");
         if (showDebug) {
+            EditorGUILayout.LabelField("Syntacts Version:", version);
+            EditorGUILayout.LabelField("ASIO Support:", asio.ToString());
             EditorGUILayout.LabelField("Session Count:", Syntacts.Session.count.ToString());
             EditorGUILayout.LabelField("Signal Count:", Syntacts.Signal.count.ToString());
         }

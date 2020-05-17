@@ -30,6 +30,28 @@ inline Handle store(const S& s) {
 
 ///////////////////////////////////////////////////////////////////////////////
 
+int Syntacts_versionMajor() {
+    return SYNTACTS_VERSION_MAJOR;
+}
+
+int Syntacts_versionMinor() {
+    return SYNTACTS_VERSION_MINOR;
+}
+
+int Syntacts_versionPatch() {
+    return SYNTACTS_VERSION_PATCH;
+}
+
+bool Syntacts_asioSupport() {
+#ifdef PA_USE_ASIO
+    return true;
+#else
+    return false;
+#endif
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 Handle Session_create() {
     std::unique_ptr session = std::make_unique<Session>();
     Handle h = static_cast<Handle>(session.get());
