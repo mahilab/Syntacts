@@ -13,7 +13,8 @@ However, the process should be similar if you are using an IDE such as Visual St
 
 ## Requirements
 
-[CMake](https://cmake.org/)
+- C++ compiler
+- [CMake](https://cmake.org/)
 
 ## Basic Setup
 
