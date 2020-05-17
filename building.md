@@ -12,18 +12,18 @@ This page will walk you through the process of building the Syntacts libraries a
 `syntacts-c.dll`, the Syntacts library exported to a C dynamic library (basis for language bindings)
 `syntacts-gui.exe`, the Syntacts GUI application|
 
-When the build completes, the binaries ande Syntacts C++ headers will be installed to your system for use. Note that if you don't intend to use the C++ API, you can skip this build process by downloading the latest compiled [Release](https://github.com/mahilab/Syntacts/releases).
+When the build completes, the binaries and Syntacts C++ headers will be installed to your system for use. Note that if you don't intend to use the C++ API, you can skip this build process by downloading the latest compiled [Release](https://github.com/mahilab/Syntacts/releases).
 
 ## Requirements
 
 - [git](https://git-scm.com/)
 - [CMake](https://cmake.org/)
 
->- Makre sure **git** and **CMake** are added to your system PATH
+> Make sure **git** and **CMake** are added to your system PATH
 
 ## Building on Windows
 
-1. The recommended C++ compiler on Windows is **Microsoft Visual C++ (MSVC)**. You can aquire the compiler by installing the [Visual Studio](https://visualstudio.microsoft.com/) IDE or the [standalone MSVC build tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/).
+1. The recommended C++ compiler on Windows is **Microsoft Visual C++ (MSVC)**. You can acquire the compiler by installing the [Visual Studio](https://visualstudio.microsoft.com/) IDE or the [standalone MSVC build tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/).
 2. Open PowerShell **as an administrator** in a directory of your choice and run the following commands:
 ```shell
 git clone --recurse-submodules https://github.com/mahilab/Syntacts 
@@ -35,7 +35,7 @@ cmake --build . --target install --config Release
 ```
 3. When the build completes, **Syntacts**  will be installed to `C:\Program Files (x86)\Syntacts`. 
 
->- You may need to specify a different CMake generator with `-G` if you have a another version of Visual Studio installed (e.g. `cmake .. -G "Visual Studio 15 2017 Win64"`). 
+> You may need to specify a different CMake generator with `-G` if you have a another version of Visual Studio installed (e.g. `cmake .. -G "Visual Studio 15 2017 Win64"`). 
 
 ## Building on macOS
 
@@ -48,4 +48,4 @@ cmake --build . --target install --config Release
 > cmake .. -DCMAKE_BUILD_TYPE="Release"
 > sudo cmake --build . --target install
 ```
-3. When the build completes, **Syntacts**  will be installed to `/user/local/...`. 
+3. When the build completes, **Syntacts**  will be installed to `/user/local/...`.
