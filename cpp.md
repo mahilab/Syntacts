@@ -55,6 +55,6 @@ cd build                         # change directory
 cmake ..                         # generate build files from our CMakeLists.txt file
 cmake --build . --config Release # build the project
 ```
-3. When the build completes, find the output file `myApp.exe` in the build folder and run it. You should hear a two second 440 Hz sine wave from you default speakers.
+3. When the build completes, find the output file `myApp.exe` in the build folder and run it. You should hear a two second 440 Hz sine wave from your default speakers.
 
 
