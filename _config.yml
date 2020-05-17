@@ -1,6 +1,6 @@
 theme: minima
 minima:
-  skin: classic
+  skin: dark
   
 header_pages:
   - software.md
