@@ -8,4 +8,4 @@ Below you can find a list of Syntacts tutorials related to both the software and
 
 |Tutorial|Description|
 |---|---|
-|[Building](build.md)|Learn to build the Syntacts library, plugin, and GUI from the C++ source code.|
+|[Building](building.md)|Learn to build the Syntacts library, plugin, and GUI from the C++ source code.|
