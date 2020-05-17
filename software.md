@@ -8,9 +8,19 @@ permalink: /software/
 
 Syntacts provides you with low level access to audio hardware and a variety of mechanisms to generate tactile cues. Softwre APIs and examples for C/C++, C#, Python, and Unity are provided. In addition, Syntacts contains a cross-platform GUI for prototyping and playing back cues. Follow the steps below to get started in your preferred environment.
 
-## GUI
+## Syntacts GUI
 - Get the latest [Release](https://github.com/mahilab/Syntacts/releases) and extract the files.
 - Run the GUI executable `syntacts-gui` in the top level directory. On Windows, you may receive a "Windows protected your PC" screen. Click "More info", then "Run anyway".
+
+## Unity 
+- Get the latest [Release](https://github.com/mahilab/Syntacts/releases) and extract the files.
+- Import `unity/syntacts.unitypackage` to your project.
+- Add the `SyntactsHub` script to a scene object.
+
+OR
+
+- Navigate to the `unity/SyntactsDemo/Assets` directory.
+- Open `Demo.unity` in Unity.
 
 ## C/C++ API
 - Get the source code by pulling the `master` branch on the GitHub repository or from the latest [Release](https://github.com/mahilab/Syntacts/releases). 
@@ -33,17 +43,6 @@ Syntacts provides you with low level access to audio hardware and a variety of m
 - Navigate to the `python` directory.
 - Run any of the `example.py` files.
 
-## Unity
-- Get the latest [Release](https://github.com/mahilab/Syntacts/releases) and extract the files.
-- Import `unity/syntacts.unitypackage` to your project.
-- Add the `SyntactsHub` script to a scene object.
-
-OR
-
-- Navigate to the `unity/SyntactsDemo/Assets` directory.
-- Open `Demo.unity` in Unity.
-
 ## Having issues?
 - Check the [Tutorials](tutorials.md) and [FAQ](faq.md) pages.
 - Head over to the [Issues](https://github.com/mahilab/Syntacts/issues) page and tell us your problem.
-
