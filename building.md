@@ -8,9 +8,9 @@ permalink: /building/
 
 This page will walk you through the process of building the Syntacts libraries and GUI from the C++ source files. Syntacts uses [CMake](https://cmake.org/) as its build system, which is scripted through a file named `CMakeLists.txt`. The build process creates three binary objects:
 
-`syntacts.lib`, the main Syntacts C++ static library|
-`syntacts-c.dll`, the Syntacts library exported to a C dynamic library (basis for language bindings)
-`syntacts-gui.exe`, the Syntacts GUI application|
+- `syntacts.lib`, the main Syntacts C++ static library
+- `syntacts-c.dll`, the Syntacts library exported to a C dynamic library (basis for language bindings)
+- `syntacts-gui.exe`, the Syntacts GUI application
 
 When the build completes, the binaries and Syntacts C++ headers will be installed to your system for use. Note that if you don't intend to use the C++ API, you can skip this build process by downloading the latest compiled [Release](https://github.com/mahilab/Syntacts/releases).
 
