@@ -20,6 +20,7 @@ However, the process should be similar if you are using an IDE such as Visual St
 1. If you haven't already, [build and install](building.md) Syntacts.
 2. Create an empty directory for your project.
 3. Create a new `CMakeLists.txt` build script with the following contents:
+
 ```
 cmake_minimum_required(VERSION 3.13.0)
 project(MySyntactsProject VERSION 1.0.0)
