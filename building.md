@@ -23,8 +23,8 @@ When the build completes, the binaries and Syntacts C++ headers will be installe
 
 ## Building on Windows
 
-1. The recommended C++ compiler on Windows is **Microsoft Visual C++ (MSVC)**. You can acquire the compiler by installing the [Visual Studio](https://visualstudio.microsoft.com/) IDE or the [standalone MSVC build tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/).
-2. Open PowerShell **as an administrator** in a directory of your choice and run the following commands:
+- The recommended C++ compiler on Windows is **Microsoft Visual C++ (MSVC)**. You can acquire the compiler by installing the [Visual Studio](https://visualstudio.microsoft.com/) IDE or the [standalone MSVC build tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/).
+- Open PowerShell **as an administrator** in a directory of your choice and run the following commands:
 ```shell
 git clone --recurse-submodules https://github.com/mahilab/Syntacts 
 cd Syntacts
@@ -33,14 +33,14 @@ cd build
 cmake .. -G "Visual Studio 16 2019" -A x64
 cmake --build . --target install --config Release
 ```
-3. When the build completes, **Syntacts**  will be installed to `C:\Program Files (x86)\Syntacts`. 
+- When the build completes, **Syntacts**  will be installed to `C:\Program Files (x86)\Syntacts`. 
 
 > You may need to specify a different CMake generator with `-G` if you have a another version of Visual Studio installed (e.g. `cmake .. -G "Visual Studio 15 2017 Win64"`). 
 
 ## Building on macOS
 
-1. The recommended C++ compiler on macOS is the Apple supplied Clang compiler. Syntacts has been tested on macOS Catalina with Apple Clang 11.0.0 (clang-1100.0.0.33.17). You may also consider using a mainline version of [Clang](https://clang.llvm.org/).
-2. Open a Terminal in a directory of your choice and run the following commands:
+- The recommended C++ compiler on macOS is the Apple supplied Clang compiler. Syntacts has been tested on macOS Catalina with Apple Clang 11.0.0 (clang-1100.0.0.33.17). You may also consider using a mainline version of [Clang](https://clang.llvm.org/).
+- Open a Terminal in a directory of your choice and run the following commands:
 ```shell
 > git clone --recurse-submodules https://github.com/mahilab/Syntacts 
 > cd Syntacts
@@ -48,4 +48,4 @@ cmake --build . --target install --config Release
 > cmake .. -DCMAKE_BUILD_TYPE="Release"
 > sudo cmake --build . --target install
 ```
-3. When the build completes, **Syntacts**  will be installed to `/user/local/...`.
+- When the build completes, **Syntacts**  will be installed to `/user/local/...`.
