@@ -1,25 +1,31 @@
 ---
 layout: page
 title: Building
-permalink: /build/
+permalink: /building/
 ---
 
 ## Overview
 
 This page will walk you through the process of building the Syntacts libraries and GUI from the C++ source files. Syntacts uses [CMake](https://cmake.org/) as its build system, which is scripted through a file named `CMakeLists.txt`. The build creates three binary objects:
 
-- `syntacts.lib` - the main Syntacts C++ static library 
-- `syntacts-c.dll` - the Syntacts C dynamic library which serves the basis of the C# and Python bindings
-- `syntacts-gui.exe` the Syntacts GUI application
+|---|---|
+|`syntacts.lib`|main Syntacts C++ static library|
+|`syntacts-c.dll`|Syntacts C dynamic library which serves the basis of the C# and Python bindings|
+|`syntacts-gui.exe`|Syntacts GUI application|
+
+When the build completes, the above binaries, the Syntacts C++ headers, and  the other language binding will be installed to your system for use.
 
 ## Requirements
 
+- C++17 compiler
 - [git](https://git-scm.com/)
 - [CMake](https://cmake.org/)
-- C++17 Compiler (e.g. [MSVC](https://visualstudio.microsoft.com/vs/) or [Clang](https://clang.llvm.org/))
 
+>- Makre sure **git** and **CMake** are added to your system PATH
 
 ## Building on Windows
+
+1. 
 
 Open PowerShell **as an administrator** in a directory of your choice and run the following commands:
 
