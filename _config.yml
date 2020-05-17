@@ -1,5 +1,7 @@
 theme: minima
-
+minima:
+  skin: classic
+  
 header_pages:
   - software.md
   - hardware.md
