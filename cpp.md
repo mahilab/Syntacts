@@ -30,7 +30,9 @@ find_package(syntacts REQUIRED)
 add_executable(myApp main.cpp)
 target_link_libraries(myApp syntacts)
 ```
+
 - Add a C++ source file `main.cpp` with the following contents:
+
 ```cpp
 #include <syntacts>
 
@@ -50,12 +52,14 @@ int main(int argc, char const *argv[])
 
 - After you've created `CMakeLists.txt` and `main.cpp`, open Powershell (or Terminal) in the current directory.
 - Run the following commands:
+
 ```shell
 mkdir build                      # make out-of-source build folder
 cd build                         # change directory
 cmake ..                         # generate build files from our CMakeLists.txt file
 cmake --build . --config Release # build the project
 ```
+
 - When the build completes, find the output file `myApp.exe` in the build folder and run it. You should hear a two second 440 Hz sine wave from your default speakers.
 
 
