@@ -35,6 +35,11 @@ Syntacts provides you with low level access to audio hardware and a variety of m
 
 ## Unity Example
 - Get the latest [Release](https://github.com/mahilab/Syntacts/releases) and extract the files.
+- Import `unity/syntacts.unitypackage` to your project.
+- Add the `SyntactsHub` script to a scene object.
+
+OR
+
 - Navigate to the `unity/SyntactsDemo/Assets` directory.
 - Open `Demo.unity` in Unity.
 
