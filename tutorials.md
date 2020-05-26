@@ -11,6 +11,6 @@ Below you can find a list of Syntacts tutorials related to both the software and
 |[Building](building.md)|Learn to build the Syntacts library, plugin, and GUI from the C++ source code.|
 |[C++ API](cpp.md)|Learn to setup and program a project using the Syntacts C++ API.|
 |C# API|*Coming soon*|
-|Python API|*Coming soon*|
+|Python API|*Coming soon (Ahalya TODO)*|
 |Unity|*Coming soon*|
 |GUI|*Coming soon*|
