@@ -39,7 +39,7 @@ cmake --build . --target install --config Release
 
 ## Building on macOS
 
-- The recommended C++ compiler on macOS is the Apple supplied Clang compiler. Syntacts has been tested on macOS Catalina with Apple Clang 11.0.0 (clang-1100.0.0.33.17). You may also consider using a mainline version of [Clang](https://clang.llvm.org/).
+- The recommended C++ compiler on macOS is the Apple supplied Clang compiler. Syntacts has been tested on macOS Catalina with Apple Clang 11.0.0 (clang-1100.0.0.33.17). To check if you have Clang, open a Terminal window and enter the command **clang --version**. You may also consider using a mainline version of [Clang](https://clang.llvm.org/).
 - Open a Terminal in a directory of your choice and run the following commands:
 ```shell
 > git clone --recurse-submodules https://github.com/mahilab/Syntacts 
