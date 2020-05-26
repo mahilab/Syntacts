@@ -92,7 +92,7 @@ You can retrieve your device's index by iterating the available devices as in th
 
 > **Warning:** Device indices are NOT persistent. They may change when devices are power cycled, plugged/unplugged, or when other devices are connected to the PC. However, generally they will not change if the devices connected to the PC have not changed. If you need a more robust method of opening your device, consider iterating available devices and checking against string `name`, which *is* persistent. 
 
-|Header(s)|Examples(s)|
+|Relevant Header(s)|Relevant Examples(s)|
 |---|---|
 |[Session.hpp](https://github.com/mahilab/Syntacts/blob/master/include/Tact/Session.hpp)|[example_devices.cpp](https://github.com/mahilab/Syntacts/blob/master/examples/example_devices.cpp)|
 
