@@ -124,6 +124,10 @@ namespace Syntacts
             return Dll.Session_open4(handle, (int)api);
         }
 
+        public int Open(string name, API api) {
+            return Dll.Session_open5(handle, name, (int)api);
+        }
+
         public int Open(int index)
         {
             return Dll.Session_open2(handle, index);
@@ -837,6 +841,8 @@ namespace Syntacts
         public static extern int Session_open3(Handle session, int index, int channelCount, double sampleRate);
         [DllImport("syntacts-c")]
         public static extern int Session_open4(Handle session, int api);
+        [DllImport("syntacts-c", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int Session_open5(Handle session, string name, int api);
         [DllImport("syntacts-c")]
         public static extern int Session_close(Handle session);
         [DllImport("syntacts-c")]

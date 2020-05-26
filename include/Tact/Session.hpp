@@ -81,17 +81,20 @@ public:
     /// Opens the default device for a specific API with its max channels and default sample rate
     int open(API api); 
 
+     /// Opens a specific device by name and API with its max channels and default sample rate
+    int open(const std::string& name, API api);
+
+    /// Opens a specific device by index with its max channels and default sample rate
+    int open(int index);
+
+    /// Opens a specific device by index with a specified number of channels and sample rate
+    int open(int index, int channelCount, double sampleRate);
+
     /// Opens a specific device with its max channels and default sample rate
     int open(const Device& device);
 
     /// Opens a specific device with a specified number of channels and sample rate
     int open(const Device& device, int channelCount, double sampleRate);
-
-    /// Opens a specific device by index with a specified number of channels
-    int open(int index);
-
-    /// Opens a specific device by index with a specified number of channels and sample rate
-    int open(int index, int channelCount, double sampleRate);
 
     /// Closes the currently opened device
     int close();

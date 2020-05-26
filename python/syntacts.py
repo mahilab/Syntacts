@@ -96,12 +96,15 @@ class Session:
     def __del__(self):
         _tact.Session_delete(self._handle)
 
-    def open(self, index=None, channelCount=0, sampleRate=0):
+    def open(self, index=None, channelCount=0, sampleRate=0, name=None, api=None):
         if index:
             if isinstance(index, API):
                 return _tact.Session_open4(self._handle, index.value)
-            else:            
-                return _tact.Session_open3(self._handle, index, channelCount, sampleRate)
+            return _tact.Session_open3(self._handle, index, channelCount, sampleRate)
+        elif (name and api):
+            return _tact.Session_open5(self._handle, c_char_p(name.encode()), api.value)
+        elif (api):
+            return _tact.Session_open4(self._handle, api.value)
         else:
             return _tact.Session_open1(self._handle)
 
@@ -619,6 +622,7 @@ lib_func(_tact.Session_open1, c_int, [Handle])
 lib_func(_tact.Session_open2, c_int, [Handle, c_int])
 lib_func(_tact.Session_open3, c_int, [Handle, c_int, c_int, c_double])
 lib_func(_tact.Session_open4, c_int, [Handle, c_int])
+lib_func(_tact.Session_open5, c_int, [Handle, c_char_p, c_int])
 lib_func(_tact.Session_close, c_int, [Handle])
 lib_func(_tact.Session_isOpen, c_bool, [Handle])
 

@@ -83,6 +83,12 @@ int Session_open4(Handle session, int api) {
     return static_cast<Session*>(session)->open(static_cast<API>(api));
 }
 
+int Session_open5(Handle session, char* name, int api) {
+    std::string name_str(name);
+    return static_cast<Session*>(session)->open(name_str, static_cast<API>(api));
+}
+
+
 int Session_close(Handle session) {
     return static_cast<Session*>(session)->close();
 }

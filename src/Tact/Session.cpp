@@ -553,7 +553,7 @@ int Session::open(API api) {
         if (dev.second.api == api && dev.second.isApiDefault)
             return open(dev.second);
     }
-    return SyntactsError_InvalidAPI;
+    return SyntactsError_InvalidDevice;
 }
 
 int Session::open(int index) {
@@ -568,6 +568,16 @@ int Session::open(int index, int channelCount, double sampleRate) {
         return open(getAvailableDevices().at(index),channelCount, sampleRate);
     else
         return SyntactsError_InvalidDevice;
+}
+
+int Session::open(const std::string& name, API api) {
+    if (api == API::Unknown)
+        return SyntactsError_InvalidAPI;
+    for (auto& dev : getAvailableDevices()) {
+        if (dev.second.name == name && dev.second.api == api)
+            return open(dev.second);
+    }
+    return SyntactsError_InvalidDevice;
 }
 
 int Session::close() {

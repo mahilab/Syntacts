@@ -28,6 +28,7 @@ EXPORT int Session_open1(Handle session);
 EXPORT int Session_open2(Handle session, int index);
 EXPORT int Session_open3(Handle session, int index, int channelCount, double sampleRate);
 EXPORT int Session_open4(Handle session, int api);
+EXPORT int Session_open5(Handle session, char* name, int api);
 EXPORT int Session_close(Handle session);
 EXPORT bool Session_isOpen(Handle session);
 
