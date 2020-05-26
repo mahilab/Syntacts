@@ -24,7 +24,7 @@ OR
 
 ## C/C++ API
 - Get the source code by pulling the `master` branch on the GitHub repository or from the latest [Release](https://github.com/mahilab/Syntacts/releases). 
-- Build and install **Syntacts** for your system my following the [tutorial](build.md).
+- Build and install **Syntacts** for your system my following the [tutorial](tutorials.md).
 - Use the [template](https://github.com/mahilab/Syntacts/tree/master/template) to make a new Syntacts project with CMake.
 
 ## C# API
