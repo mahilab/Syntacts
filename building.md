@@ -20,6 +20,10 @@ When the build completes, the binaries and Syntacts C++ headers will be installe
 - [CMake](https://cmake.org/)
 
 > Make sure **git** and **CMake** are added to your system PATH
+  >To add CMake to your PATH on macOS, open a Terminal and enter the following command:
+  ```shell
+  >  PATH="/Applications/CMake.app/Contents/bin":"$PATH"
+  ```
 
 ## Building on Windows
 
