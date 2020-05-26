@@ -64,4 +64,43 @@ cmake --build . --config Release # build the project
 
 - When the build completes, find the output file `myApp.exe` in the build folder and run it. You should hear a two second 440 Hz sine wave from your default speakers.
 
+## API Walkthrough
+
+# Session
+
+Using Syntacts begins with creating a `Session`, or an audio-context that manages communication with an output device. Devices available for opening can be enumerated and queried for information using a `Session`: 
+
+```cpp
+Session session;
+
+for (auto& d : session.getAvailableDevices()) {
+    auto& dev = d.second;
+    std::cout << dev.index << std::endl;
+    std::cout << dev.name  << std::endl;
+}
+```
+
+Devices can be opened using the `open` function. The no-argument overload will open the system default audio device (usually the main speakers). Non-default devices can be opened by passing a device index argument:
+
+```cpp
+session.open();   // opens default device
+session.close();  // closes current device
+session.open(22); // opens device 22
+```
+
+You can retrieve your device's index by iterating the available devices as in the above example, or by opening the [Syntacts GUI](gui.md) and viewing the available devices there. 
+
+> **Warning:** Device indices are NOT persistent. They may change when devices are power cycled, plugged/unplugged, or when other devices are connected to the PC. However, generally they will not change if the devices connected to the PC have not changed. If you need a more robust method of opening your device, consider iterating available devices and checking against string `name`, which *is* persistent. 
+
+# Signals
+
+*Coming soon*
+
+# Sequences
+
+*Coming soon*
+
+# Spatializers
+
+*Coming soon*
 
