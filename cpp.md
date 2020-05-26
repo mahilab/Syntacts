@@ -80,17 +80,23 @@ for (auto& d : session.getAvailableDevices()) {
 }
 ```
 
-Devices can be opened using the `open` function. The no-argument overload will open the system default audio device (usually the main speakers). Non-default devices can be opened by passing a device index argument:
+Devices can be opened using the `open` function. The no-argument overload will open the system default audio device (usually the main speakers). Non-default devices can be opened by passing a device index argument or the device name and preferred API:
 
 ```cpp
-session.open();   // opens default device
-session.close();  // closes current device
-session.open(22); // opens device 22
+// open default device
+session.open();   
+session.close();  
+// open device by index
+session.open(22); 
+session.close();  
+// open device by name and preferred API
+session.open("MOTU Pro Audio", API::ASIO);
+session.close();
 ```
 
-You can retrieve your device's index by iterating the available devices as in the above example, or by opening the [Syntacts GUI](gui.md) and viewing the available devices there. 
+Device indices represent the combination of a device and an API it supports. Therefore, one device may have multiple indices each with a diffrent API. You can retrieve your device's index and/or name by iterating as in the above example, or by opening the [Syntacts GUI](gui.md) and viewing the information there.
 
-> **Warning:** Device indices are NOT persistent. They may change when devices are power cycled, plugged/unplugged, or when other devices are connected to the PC. However, generally they will not change if the devices connected to the PC have not changed. If you need a more robust method of opening your device, consider iterating available devices and checking against string `name`, which *is* persistent. 
+> **Warning:** Device indices are NOT persistent. They may change when devices are power cycled, plugged/unplugged, or when other devices are connected to the PC. If you need a persistent method of opening a device, use the **name + API** version of `open`.
 
 |Relevant Header(s)|Relevant Examples(s)|
 |---|---|
