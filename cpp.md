@@ -4,7 +4,7 @@ title: C++ API
 permalink: /cpp/
 ---
 
-## Overview
+## Introduction
 
 This tutorial will teach you how to setup and use the Syntacts C++ API. 
 You should have first built and installed the Syntacts library to your system. 
@@ -64,7 +64,7 @@ cmake --build . --config Release # build the project
 
 - When the build completes, find the output file `myApp.exe` in the build folder and run it. You should hear a two second 440 Hz sine wave from your default speakers.
 
-## API Walkthrough
+## API Overview
 
 # Session
 
@@ -91,6 +91,10 @@ session.open(22); // opens device 22
 You can retrieve your device's index by iterating the available devices as in the above example, or by opening the [Syntacts GUI](gui.md) and viewing the available devices there. 
 
 > **Warning:** Device indices are NOT persistent. They may change when devices are power cycled, plugged/unplugged, or when other devices are connected to the PC. However, generally they will not change if the devices connected to the PC have not changed. If you need a more robust method of opening your device, consider iterating available devices and checking against string `name`, which *is* persistent. 
+
+|Header(s)|Examples(s)|
+|---|---|
+|[Session.hpp](https://github.com/mahilab/Syntacts/blob/master/include/Tact/Session.hpp)|[example_devices.cpp](https://github.com/mahilab/Syntacts/blob/master/examples/example_devices.cpp)|
 
 # Signals
 
