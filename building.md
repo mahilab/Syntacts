@@ -4,7 +4,7 @@ title: Building
 permalink: /building/
 ---
 
-## Overview
+## Introduction
 
 This page will walk you through the process of building the Syntacts libraries and GUI from the C++ source files. Syntacts uses [CMake](https://cmake.org/) as its build system, which is scripted through a file named `CMakeLists.txt`. The build process creates three binary objects:
 
