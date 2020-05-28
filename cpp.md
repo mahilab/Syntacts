@@ -53,6 +53,7 @@ int main(int argc, char const *argv[])
 ## Building
 
 - After you've created `CMakeLists.txt` and `main.cpp`, open Powershell (or Terminal) in the current directory.
+- Make sure CMake is added to your system PATH.
 - Run the following commands:
 
 ```shell
