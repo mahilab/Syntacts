@@ -150,6 +150,10 @@ Device indices represent the combination of a device and an API it supports. The
     session.stop(0) // stop sig1
 ```
 
+|Relevant Header(s)|Relevant Examples(s)|
+|---|---|
+|[Signal.hpp](include/Tact/Signal.hpp)|[example_signals.cpp](examples/example_signals.cpp)|
+
 # Sequences
 
 *Coming soon*
