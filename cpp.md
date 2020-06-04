@@ -152,7 +152,7 @@ Device indices represent the combination of a device and an API it supports. The
 
 |Relevant Header(s)|Relevant Examples(s)|
 |---|---|
-|[Signal.hpp](include/Tact/Signal.hpp)|[example_signals.cpp](examples/example_signals.cpp)|
+|[Signal.hpp](https://github.com/mahilab/Syntacts/blob/master/include/Tact/Signal.hpp)|[example_signals.cpp](https://github.com/mahilab/Syntacts/blob/master/examples/example_signals.cpp)|
 
 # Sequences
 
