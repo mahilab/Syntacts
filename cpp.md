@@ -105,7 +105,50 @@ Device indices represent the combination of a device and an API it supports. The
 
 # Signals
 
-*Coming soon*
+- Vibration waveforms are represented by one or more Signals.
+- In Syntacts, you can create Signals of different behaviors and lengths.
+- Sine, Square, Saw, and Triangle classes are available in Syntacts. These implement typical oscillators with normalized amplitude and infinite duration. 
+- Basic oscillators can be created using simple functions:
+
+```cpp
+    Signal sin = Sine(10); // 10 Hz Sine wave
+    Signal sqr = Square(100); // 100 Hz Square wave
+    Signal saw = Saw(440); // 440 Hz Saw wave (audible and ok for speakers)
+    Signal tri = Triangle(440); // 440 Hz Triangle wave
+```
+
+- Envelope and ASR (Attack, Sustain, Release) define amplitude modifiers with finite duration:
+
+```cpp
+    // This is a basic envelope that specifies amplitude (0.9), and duration        (0.5 sec)
+    Signal bas = Envelope(0.9, 0.5);
+    // This is an attack (0.1 sec), sustain (0.1 sec), release (0.1 sec) envelope. The sustain amplitude is 1.0. 
+    // Envelopes can interpolate between amplitudes with different curves, this example uses a smooth s-curve and linear.
+    Signal asr = ASR(0.1, 0.1, 0.1, 1.0, Curves::Smootheststep(), Curves::Linear());
+```
+
+-Signals can be mixed using basic arithmetic.
+-Multiplying two Signals creates a new Signal of duration equal to the shortest operand.  
+-Adding two Signals creates a new Signal of duration equal to the longest operand.
+-Gain and bias can also be applied to Signals with scalar operands.
+-Additionally, some signals can accept other Signals as their input arguments.
+-Below are basic examples of mixing the Signals from above:
+
+```cpp
+    Signal sig1 = sqr * sin; // duration is infinite
+    Signal sig2 = sig1 * asr; // duration is 0.3 seconds
+    Signal sig3 = 0.5 * (sqr + sin) * asr;
+```
+
+-Custom Signals can be created through classes that define the functions sample and length.
+-Signals can be played and stopped:
+
+```cpp
+    // play Signals on channel 0 and 1
+    session.play(0, sig1) // plays until stopped
+    session.play(1, sig2) // plays for 0.3 seconds
+    session.stop(0) // stop sig1
+```
 
 # Sequences
 
