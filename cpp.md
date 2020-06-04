@@ -120,19 +120,19 @@ Device indices represent the combination of a device and an API it supports. The
 - Envelope and ASR (Attack, Sustain, Release) define amplitude modifiers with finite duration:
 
 ```cpp
-    // This is a basic envelope that specifies amplitude (0.9), and duration        (0.5 sec)
+    // This is a basic envelope that specifies amplitude (0.9), and duration (0.5 sec)
     Signal bas = Envelope(0.9, 0.5);
     // This is an attack (0.1 sec), sustain (0.1 sec), release (0.1 sec) envelope. The sustain amplitude is 1.0. 
     // Envelopes can interpolate between amplitudes with different curves, this example uses a smooth s-curve and linear.
     Signal asr = ASR(0.1, 0.1, 0.1, 1.0, Curves::Smootheststep(), Curves::Linear());
 ```
 
--Signals can be mixed using basic arithmetic.
--Multiplying two Signals creates a new Signal of duration equal to the shortest operand.  
--Adding two Signals creates a new Signal of duration equal to the longest operand.
--Gain and bias can also be applied to Signals with scalar operands.
--Additionally, some signals can accept other Signals as their input arguments.
--Below are basic examples of mixing the Signals from above:
+- Signals can be mixed using basic arithmetic.
+- Multiplying two Signals creates a new Signal of duration equal to the shortest operand.  
+- Adding two Signals creates a new Signal of duration equal to the longest operand.
+- Gain and bias can also be applied to Signals with scalar operands.
+- Additionally, some signals can accept other Signals as their input arguments.
+- Below are basic examples of mixing the Signals from above:
 
 ```cpp
     Signal sig1 = sqr * sin; // duration is infinite
