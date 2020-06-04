@@ -127,9 +127,9 @@ Device indices represent the combination of a device and an API it supports. The
     Signal asr = ASR(0.1, 0.1, 0.1, 1.0, Curves::Smootheststep(), Curves::Linear());
 ```
 
-- Signals can be mixed using basic arithmetic.
-- Multiplying two Signals creates a new Signal of duration equal to the shortest operand.  
-- Adding two Signals creates a new Signal of duration equal to the longest operand.
+- Signals can be mixed using basic arithmetic. Multiplying and adding Signals can be thought of as an element-wise operation between two vectors.
+    - Multiplying two Signals creates a new Signal of duration equal to the    shortest operand.  
+    - Adding two Signals creates a new Signal of duration equal to the longest operand.
 - Gain and bias can also be applied to Signals with scalar operands.
 - Additionally, some signals can accept other Signals as their input arguments.
 - Below are basic examples of mixing the Signals from above:
@@ -140,8 +140,8 @@ Device indices represent the combination of a device and an API it supports. The
     Signal sig3 = 0.5 * (sqr + sin) * asr;
 ```
 
--Custom Signals can be created through classes that define the functions sample and length.
--Signals can be played and stopped:
+- Custom Signals can be created through classes that define the functions `sample` and `length`.
+- Signals can be played and stopped:
 
 ```cpp
     // play Signals on channel 0 and 1
