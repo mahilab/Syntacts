@@ -182,7 +182,7 @@ Sequence seq2 = 1 << sigA << 2 << sigB; // 1 sec delay and 2 sec pause, 10 sec S
 Sequence seq3 = sigA << -1 << sigB; // 1 sec fade/overlay between sigA and sigB, 6 sec sequence
 ```
 
-- Sequences of Signals can also be concatenated:
+- Sequences can also be concatenated:
 
 ```cpp
 Sequence seq4 = seq1 << seq2 << seq3; // Sequence of seq1, seq2, and seq3
