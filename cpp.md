@@ -154,6 +154,8 @@ sleep(sig2.length()); // sig2 plays for its length of 0.3 seconds
 // Do not need to stop sig2 because it is finite
 ```
 
+> **Note:** If testing Signals on a computer, make sure the frequency is high enough to be audible for speakers (ie. 440 Hz). If using tactors, many tactors are closer to 150-250 Hz.
+
 |Relevant Header(s)|Relevant Examples(s)|
 |---|---|
 |[Signal.hpp](https://github.com/mahilab/Syntacts/blob/master/include/Tact/Signal.hpp)|[example_signals.cpp](https://github.com/mahilab/Syntacts/blob/master/examples/example_signals.cpp)|
