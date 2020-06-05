@@ -69,7 +69,8 @@ cmake --build . --config Release # build the project
 
 # Session
 
-Using Syntacts begins with creating a `Session`, or an audio-context that manages communication with an output device. Devices available for opening can be enumerated and queried for information using a `Session`: 
+- Using Syntacts begins with creating a `Session`, or an audio-context that manages communication with an output device. 
+- Devices available for opening can be enumerated and queried for information using a `Session`: 
 
 ```cpp
 Session session;
@@ -81,7 +82,9 @@ for (auto& d : session.getAvailableDevices()) {
 }
 ```
 
-Devices can be opened using the `open` function. The no-argument overload will open the system default audio device (usually the main speakers). Non-default devices can be opened by passing a device index argument or the device name and preferred API:
+- Devices can be opened using the `open` function. 
+- The no-argument overload will open the system default audio device (usually the main speakers). 
+- Non-default devices can be opened by passing a device index argument or the device name and preferred API:
 
 ```cpp
 // open default device
