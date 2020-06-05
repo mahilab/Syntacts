@@ -145,9 +145,13 @@ Signal sig3 = 0.5 * (sqr + sin) * asr;
 
 ```cpp
 // play Signals on channel 0 and 1
-session.play(0, sig1) // plays until stopped
-session.play(1, sig2) // plays for 0.3 seconds
+session.play(0, sig1); // plays sig 1 on channel 0
+sleep(3); // sig1 plays for 3 seconds
 session.stop(0) // stop sig1
+
+session.play(1, sig2); // plays sig2 on channel 1
+sleep(sig2.length()); // sig2 plays for its length of 0.3 seconds
+// Do not need to stop sig2 because it is finite
 ```
 
 |Relevant Header(s)|Relevant Examples(s)|
