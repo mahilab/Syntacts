@@ -167,7 +167,28 @@ sleep(sig2.length()); // sig2 plays for its length of 0.3 seconds
 
 # Sequences
 
-*Coming soon*
+- Multiple Signals can be ordered in time using Sequences.
+- You can concatenate Signals using the insertion, or left-shift, operator.
+- Delay and pause are achieved through the insertion of positive scalar operands.
+- Negative scalar operands moves the insertion points backwards in time, allowing the overlay or fading of Signals into each other.
+
+```cpp
+Signal sigA = Sine(440) * ASR(1,1,1); // create 3 second Signal
+Signal sigB = Square(440) * ADSR(1,1,1,1); // create 4 second Signal
+
+Sequence seq1 = sigA << sigB; // 7 second Sequence with sigA before sigB
+Sequence seq2 = 1 << sigA << 2 << sigB; // 1 sec delay and 2 sec pause, 10 sec sequence
+Sequence seq3 = sigA << -1 << sigB; // 1 sec fade/overlay between sigA and sigB, 6 sec sequence
+```
+
+- Sequences of Signals can also be sequenced:
+
+```cpp
+Signal seq4 = seq1 << seq2 << seq3; // Sequence of previous Sequences
+// Play seq4 for its length of 23 seconds
+s.playAll(seq4);
+sleep(seq4.length());
+
 
 # Spatializers
 
