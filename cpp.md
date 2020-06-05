@@ -171,24 +171,38 @@ sleep(sig2.length()); // sig2 plays for its length of 0.3 seconds
 - You can concatenate Signals using the insertion, or left-shift, operator.
 - Delay and pause are achieved through the insertion of positive scalar operands.
 - Negative scalar operands moves the insertion points backwards in time, allowing the overlay or fading of Signals into each other.
+- Below is a basic example of Sequences:
 
 ```cpp
 Signal sigA = Sine(440) * ASR(1,1,1); // create 3 second Signal
 Signal sigB = Square(440) * ADSR(1,1,1,1); // create 4 second Signal
 
 Sequence seq1 = sigA << sigB; // 7 second Sequence with sigA before sigB
-Sequence seq2 = 1 << sigA << 2 << sigB; // 1 sec delay and 2 sec pause, 10 sec sequence
+Sequence seq2 = 1 << sigA << 2 << sigB; // 1 sec delay and 2 sec pause, 10 sec Sequence
 Sequence seq3 = sigA << -1 << sigB; // 1 sec fade/overlay between sigA and sigB, 6 sec sequence
 ```
 
 - Sequences of Signals can also be sequenced:
 
 ```cpp
-Signal seq4 = seq1 << seq2 << seq3; // Sequence of previous Sequences
-// Play seq4 for its length of 23 seconds
-s.playAll(seq4);
+Sequence seq4 = seq1 << seq2 << seq3; // Sequence of seq1, seq2, and seq3
+// Note this will also modify seq1 and seq2
+
+// Play seq4 on channel 0 for its length of 23 seconds
+session.play(0, seq4);
 sleep(seq4.length());
 ```
+
+- Noise can be added to a Sequence using the `insert` function:
+
+```cpp
+seq1.insert(Noise() * Envelope(1), 4); // 1 s of noise starts at the 4 second mark
+session.play(0, seq1); // play seq1 on channel 0
+sleep(seq1.length());
+
+|Relevant Header(s)|Relevant Examples(s)|
+|---|---|
+|[Signal.hpp](https://github.com/mahilab/Syntacts/blob/master/include/Tact/Signal.hpp)|[example_sequences.cpp](https://github.com/mahilab/Syntacts/blob/master/examples/example_signals.cpp)|
 
 # Spatializers
 
