@@ -188,7 +188,7 @@ Signal seq4 = seq1 << seq2 << seq3; // Sequence of previous Sequences
 // Play seq4 for its length of 23 seconds
 s.playAll(seq4);
 sleep(seq4.length());
-
+```
 
 # Spatializers
 
