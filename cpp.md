@@ -197,6 +197,7 @@ sleep(seq4.length());
 
 ```cpp
 seq2.insert(Noise() * Envelope(1), 4); // 1 s of noise starts at the 4 second mark of seq2
+
 session.play(0, seq2); // play seq2 on channel 0
 sleep(seq2.length())
 ```
