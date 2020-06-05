@@ -170,7 +170,7 @@ sleep(sig2.length()); // sig2 plays for its length of 0.3 seconds
 - Multiple Signals can be ordered in time using Sequences.
 - You can concatenate Signals using the insertion, or left-shift, operator.
 - Delay and pause are achieved through the insertion of positive scalar operands.
-- Negative scalar operands moves the insertion points backwards in time, allowing the overlay or fading of Signals into each other.
+- Negative scalar operands move the insertion points backwards in time, allowing the overlay or fading of Signals into each other.
 - Below is a basic example of Sequences:
 
 ```cpp
