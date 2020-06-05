@@ -203,7 +203,7 @@ sleep(seq2.length())
 
 |Relevant Header(s)|Relevant Examples(s)|
 |---|---|
-|[Sequence.hpp](https://github.com/mahilab/Syntacts/blob/master/include/Tact/Sequence.hpp)|[example_sequences.cpp](https://github.com/mahilab/Syntacts/blob/master/examples/example_signals.cpp)|
+|[Sequence.hpp](https://github.com/mahilab/Syntacts/blob/master/include/Tact/Sequence.hpp)|[example_sequences.cpp](https://github.com/mahilab/Syntacts/blob/master/examples/example_sequences.cpp)|
 
 # Spatializers
 
