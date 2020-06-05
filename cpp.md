@@ -186,7 +186,7 @@ Sequence seq3 = sigA << -1 << sigB; // 1 sec fade/overlay between sigA and sigB,
 
 ```cpp
 Sequence seq4 = seq1 << seq2 << seq3; // Sequence of seq1, seq2, and seq3
-// Note this will also modify seq1 and seq2
+// Note this will also modify seq1
 
 // Play seq4 on channel 0 for its length of 23 seconds
 session.play(0, seq4);
@@ -196,13 +196,14 @@ sleep(seq4.length());
 - Noise can be added to a Sequence using the `insert` function:
 
 ```cpp
-seq1.insert(Noise() * Envelope(1), 4); // 1 s of noise starts at the 4 second mark
-session.play(0, seq1); // play seq1 on channel 0
-sleep(seq1.length());
+seq2.insert(Noise() * Envelope(1), 4); // 1 s of noise starts at the 4 second mark of seq2
+session.play(0, seq2); // play seq2 on channel 0
+sleep(seq2.length())
+```
 
 |Relevant Header(s)|Relevant Examples(s)|
 |---|---|
-|[Signal.hpp](https://github.com/mahilab/Syntacts/blob/master/include/Tact/Signal.hpp)|[example_sequences.cpp](https://github.com/mahilab/Syntacts/blob/master/examples/example_signals.cpp)|
+|[Sequence.hpp](https://github.com/mahilab/Syntacts/blob/master/include/Tact/Sequence.hpp)|[example_sequences.cpp](https://github.com/mahilab/Syntacts/blob/master/examples/example_signals.cpp)|
 
 # Spatializers
 
