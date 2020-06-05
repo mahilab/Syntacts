@@ -98,7 +98,9 @@ session.open("MOTU Pro Audio", API::ASIO);
 session.close();
 ```
 
-Device indices represent the combination of a device and an API it supports. Therefore, one device may have multiple indices each with a diffrent API. You can retrieve your device's index and/or name by iterating as in the above example, or by opening the [Syntacts GUI](gui.md) and viewing the information there.
+- Device indices represent the combination of a device and an API it supports. 
+- Therefore, one device may have multiple indices each with a different API. 
+- You can retrieve your device's index and/or name by iterating as in the above example, or by opening the [Syntacts GUI](gui.md) and viewing the information there.
 
 > **Warning:** Device indices are NOT persistent. They may change when devices are power cycled, plugged/unplugged, or when other devices are connected to the PC. If you need a persistent method of opening a device, use the **name + API** version of `open`.
 
