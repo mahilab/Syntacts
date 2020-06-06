@@ -211,10 +211,30 @@ sleep(seq2.length())
 - Spatializers map multiple channels to a normalized continuous 1D or 2D spatial representation.
 - You can configure a virtual grid to match the physical layout of a tactor array.
 - You can then set a virtual target coordinate and radius to play and blend multiple tactors at once.
-- Channel positions can be set individually or as uniformly spaced grids.
+- Only channels within a target radius are played.
 - Below is an example of creating a spatializer: 
 
 ```cpp
+Spatializer spatial(&session); // create 2D Spatializer
 
+spatial.createGrid(4,6); // Grid of 4 rows x 6 cols
+spatial.setPosition(18,0.1,0.8); // move channel 18 by x = 0.1, y = 0.8
+spatial.setRadius(0.3); // effect radius
+spatial.setTarget(0.2, 0.1); // target location
+spatial.play(sig1); // play Signal
+sleep(3); // Signal plays for 3 sec
 ```
+
+- Channel positions can be set individually or as uniformly spaced grids.
+- You can set up an evenly distributed position of channels using the functions `getChannelCount` and `setPosition'.
+- Below is an example of channel positioning:
+
+```cpp
+int chs = session.getChannelCount(); // choose the number of channels you want to use
+// set up position of channels, evenly distributed
+double spc = 1.0 / (chs - 1);
+for (int i = 0; i < session.getChannelCount(); ++i)
+    spatial.setPosition(i, i * spc);
+```
+
 
