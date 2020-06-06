@@ -237,4 +237,20 @@ for (int i = 0; i < session.getChannelCount(); ++i)
     spatial.setPosition(i, i * spc);
 ```
 
+- Master volume and pitch can be modified for Spatializers.
+- To create sweeping motions with tactile arrays, you can move the target location in a `while` loop. This can make the target move on a predescribed path:
 
+```cpp
+while (condition) {     // set condition
+    ...
+    spatial.setTarget(x,y); // make modification of target in a loop
+    spatial.volume = v;
+    spatial.pitch = p;
+}
+```
+
+- Volume of channels is scaled according to a specified drop-off law (ie. linear, logarithmic, etc.) based on their proximity to the target location using the function `setRollOff`.
+
+|Relevant Header(s)|Relevant Examples(s)|
+|---|---|
+|[Spatializer.hpp](https://github.com/mahilab/Syntacts/blob/master/include/Tact/Spatializer.hpp)|[example_spatializer.cpp](https://github.com/mahilab/Syntacts/blob/master/examples/example_spatializer.cpp)|
