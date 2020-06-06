@@ -181,12 +181,15 @@ sleep(sig2.length()); // sig2 plays for its length of 0.3 seconds
 - Below is a basic example of creating Sequences:
 
 ```cpp
-Signal sigA = Sine(440) * ASR(1,1,1); // create 3 second Signal
+Signal sigA = Sine(440) * ASR(1,1,1);      // create 3 second Signal
 Signal sigB = Square(440) * ADSR(1,1,1,1); // create 4 second Signal
 
-Sequence seq1 = sigA << sigB; // 7 second Sequence with sigA before sigB
-Sequence seq2 = 1 << sigA << 2 << sigB; // 1 sec delay and 2 sec pause, 10 sec Sequence
-Sequence seq3 = sigA << -1 << sigB; // 1 sec fade/overlay between sigA and sigB, 6 sec sequence
+// 7 second Sequence with sigA before sigB
+Sequence seq1 = sigA << sigB; 
+// 1 sec delay and 2 sec pause, 10 sec Sequence
+Sequence seq2 = 1 << sigA << 2 << sigB; 
+// 1 sec fade/overlay between sigA and sigB, 6 sec sequence
+Sequence seq3 = sigA << -1 << sigB; 
 ```
 
 ![Sequences](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/seq.png)
