@@ -244,7 +244,7 @@ spatial.setRollOff(
 while (condition) {
     spatial.setTarget(x,y); 
     spatial.setVolume(v);
-    spatial.setPithc(p);
+    spatial.setPitch(p);
 }
 ```
 
