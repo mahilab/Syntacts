@@ -208,5 +208,13 @@ sleep(seq2.length())
 
 # Spatializers
 
-*Coming soon*
+- Spatializers map multiple channels to a normalized continuous 1D or 2D spatial representation.
+- You can configure a virtual grid to match the physical layout of a tactor array.
+- You can then set a virtual target coordinate and radius to play and blend multiple tactors at once.
+- Channel positions can be set individually or as uniformly spaced grids.
+- Below is an example of creating a spatializer: 
+
+```cpp
+
+```
 
