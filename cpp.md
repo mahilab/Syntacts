@@ -240,7 +240,6 @@ sleep(3);                             // wait 3 seconds while the Signal plays
 - Master volume and pitch of Spatializer can also be modified using `setVolume` and `setPitch`.
 
 ```cpp
-spatial.setRollOff(
 while (condition) {
     spatial.setTarget(x,y); 
     spatial.setVolume(v);
