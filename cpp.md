@@ -226,7 +226,7 @@ sleep(3); // Signal plays for 3 sec
 ```
 
 - Channel positions can be set individually or as uniformly spaced grids.
-- You can set up an evenly distributed position of channels using the functions `getChannelCount` and `setPosition'.
+- You can set up an evenly distributed position of channels using the functions `getChannelCount` and `setPosition`.
 - Below is an example of channel positioning:
 
 ```cpp
