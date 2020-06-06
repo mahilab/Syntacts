@@ -156,14 +156,13 @@ Signal sig4 = Square(250) * Sine(20) * ASR(1,1,1);
 - Once you have create a complete Signal, it can be played on the Session.
 
 ```cpp
-// play Signals on channel 0 and 1
 session.play(0, sig1); // plays sig 1 on channel 0
-sleep(3); // sig1 plays for 3 seconds
-session.stop(0) // stop sig1
+sleep(3);              // sig1 plays for 3 seconds
+session.stop(0)        // stop sig1
 
 session.play(1, sig2); // plays sig2 on channel 1
-sleep(sig2.length()); // sig2 plays for its length of 0.3 seconds
-// Do not need to stop sig2 because it is finite
+sleep(sig2.length());  // sig2 plays for its length of 0.3 seconds
+                       // Do not need to stop sig2 because it is finite
 ```
 
 > **Note:** If you want to evaluate Syntacts without tactor hardware, make sure the frequency is high enough to be audible for speakers (e.g. 440 Hz). Low frequencies can potentially damage speakers! For this reason, most of the Syntacts examples are coded with frequencies in the hearing range. If you are actually outputting to a tactor, use frequencies appropriate for it (e.g. 150-250 Hz).
