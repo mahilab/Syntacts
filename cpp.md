@@ -120,15 +120,15 @@ Signal saw = Saw(175);      // 175 Hz Saw wave
 Signal tri = Triangle(440); // 440 Hz Triangle wave (audible and ok for speakers)
 ```
 
-- Oscillators alone have an infinite duration or legnth and a constant amplitude. 
-- You can use the Envelope, ASR, and ADSR (Attack, (Decay), Sustain, Release) Signals to define define amplitude modifiers with finite duration:
+- Oscillators alone have an *infinite* duration or length and a constant amplitude. 
+- You can use the Envelope, ASR, and ADSR (Attack, (Decay), Sustain, Release) Signals to define amplitude modifiers with *finite* duration:
 
 ```cpp
 // This is a basic envelope that specifies amplitude (0.9), and duration (0.5 sec)
 Signal bas = Envelope(0.9, 0.5);
 // This is an attack (0.1 sec), sustain (0.1 sec), release (0.1 sec) envelope. The sustain amplitude is 1.0. 
 // Envelopes can interpolate between amplitudes with different curves.
-/// This example uses smoothstep interpolation (sigmoid) for the attack and linear interoplation for release. 
+// This example uses smoothstep interpolation (sigmoid) for the attack and linear interoplation for release. 
 Signal asr = ASR(0.1, 0.1, 0.1, 1.0, Curves::Smootheststep(), Curves::Linear());
 ```
 
@@ -136,18 +136,24 @@ Signal asr = ASR(0.1, 0.1, 0.1, 1.0, Curves::Smootheststep(), Curves::Linear());
     - Multiplying two Signals creates a new Signal of duration equal to the    shortest operand.  
     - Adding two Signals creates a new Signal of duration equal to the longest operand.
 - Gain and bias can also be applied to Signals with scalar operands.
-- Additionally, some signals can accept other Signals as their input arguments.
 - Below are basic examples of mixing the Signals from above:
 
 ```cpp
 Signal sig1 = sqr * sin;  // duration is infinite
 Signal sig2 = sig1 * asr; // duration is 0.3 seconds
 Signal sig3 = 0.5 * (sqr + sin) * asr;
+```
+
+![Signals](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/sigs.png)
+
+- Complete signals can be made and mixed in-place as well.
+
+```cpp
 // 250 Hz square wave amplitude modulated with a 20 Hz sine wave and ASR envelope.
 Signal sig4 = Square(250) * Sine(20) * ASR(1,1,1);
 ```
 
-- Once you have create a complete Signal, they can be played on the Device.
+- Once you have create a complete Signal, it can be played on the Session.
 
 ```cpp
 // play Signals on channel 0 and 1
@@ -160,7 +166,7 @@ sleep(sig2.length()); // sig2 plays for its length of 0.3 seconds
 // Do not need to stop sig2 because it is finite
 ```
 
-> **Note:** If you want to evaluate Syntacts without tactor hardware, make sure the frequency is high enough to be audible for speakers (ie. 440 Hz). If you are outputting to tactors, many tactors are closer to 150-250 Hz.
+> **Note:** If you want to evaluate Syntacts without tactor hardware, make sure the frequency is high enough to be audible for speakers (e.g. 440 Hz). Low frequencies can potentially damage speakers! For this reason, most of the Syntacts examples are coded with frequencies in the hearing range. If you are actually outputting to a tactor, use frequencies appropriate for it (e.g. 150-250 Hz).
 
 |Relevant Header(s)|Relevant Examples(s)|
 |---|---|
@@ -169,10 +175,10 @@ sleep(sig2.length()); // sig2 plays for its length of 0.3 seconds
 # Sequences
 
 - Multiple Signals can be ordered in time using Sequences.
-- You can concatenate Signals using the insertion, or left-shift, operator.
+- You can concatenate Signals using the insertion, or left-shift, operator `<<`.
 - Delay and pause are achieved through the insertion of positive scalar operands.
-- Negative scalar operands move the insertion points backwards in time, allowing the overlay or fading of Signals into each other.
-- Below is a basic example of Sequences:
+- Negative scalar operands move the insertion points backwards in time, allowing fpr the overlay or fading of Signals into each other.
+- Below is a basic example of creating Sequences:
 
 ```cpp
 Signal sigA = Sine(440) * ASR(1,1,1); // create 3 second Signal
@@ -183,12 +189,13 @@ Sequence seq2 = 1 << sigA << 2 << sigB; // 1 sec delay and 2 sec pause, 10 sec S
 Sequence seq3 = sigA << -1 << sigB; // 1 sec fade/overlay between sigA and sigB, 6 sec sequence
 ```
 
+![Sequences](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/seq.png)
+
 - Sequences can also be concatenated:
 
 ```cpp
-Sequence seq4 = seq1 << seq2 << seq3; // Sequence of seq1, seq2, and seq3
-// Note this will also modify seq1
-
+// Sequence of seq1, seq2, and seq3. Note this will also modify seq1.
+Sequence seq4 = seq1 << seq2 << seq3; 
 // Play seq4 on channel 0 for its length of 23 seconds
 session.play(0, seq4);
 sleep(seq4.length());
@@ -197,9 +204,10 @@ sleep(seq4.length());
 - You can also insert Signals into an existing Sequence timeline:
 
 ```cpp
-seq2.insert(Noise() * Envelope(1), 4); // 1 s of noise starts at the 4 second mark of seq2
-
-session.play(0, seq2); // play seq2 on channel 0
+// insert 1 s of noise starts at the 4 second mark of seq2
+seq2.insert(Noise() * Envelope(1), 4); 
+// play seq2 on channel 0
+session.play(0, seq2); 
 sleep(seq2.length())
 ```
 
@@ -213,11 +221,11 @@ sleep(seq2.length())
 - For example, you can configure a virtual grid to match the physical layout of a tactor array.
 - You can then set a virtual target coordinate and radius to play and blend multiple tactors at once.
 - Only channels within a target radius are played.
-- Volume of channels is interpolated according to a specified drop-off law (ie. linear, logarithmic, etc.) based on their proximity to the target location using the function `setRollOff`.
+- The volume of channels is interpolated according to a specified roll-off law (ie. linear, logarithmic, etc.) based on their proximity to the target location using. The roll-off law can be changed with `setRollOff`.
 - Below is an example of creating a spatializer: 
 
 ```cpp
-Spatializer spatial(&session); // create 2D Spatializer
+Spatializer spatial(&session);        // create 2D Spatializer
 
 spatial.createGrid(4,6);              // Grid of 4 rows x 6 cols
 spatial.setPosition(18,0.1,0.8);      // move channel 18 by x = 0.1, y = 0.8
@@ -228,18 +236,7 @@ spatial.play(sig1);                   // play Signal
 sleep(3);                             // wait 3 seconds while the Signal plays
 ```
 
-- Channel positions can be set as uniform grids (as above) or individually using `setPosition`.
-- Below is an example of channel positioning:
-
-```cpp
-int chs = session.getChannelCount();
-// set up position of channels, evenly distributed
-double spc = 1.0 / (chs - 1);
-for (int i = 0; i < chs; ++i)
-    spatial.setPosition(i, i * spc);
-```
-
-- To create sweeping motions with tactile arrays, you can move the target location in a `while` or `for` loop. This can make the target move on a predescribed path:
+- To create sweeping motions with tactile arrays, you can move the target location in a `while` or `for` loop along a predescribed path:
 - Master volume and pitch of Spatializer can also be modified using `setVolume` and `setPitch`.
 
 ```cpp
@@ -249,6 +246,19 @@ while (condition) {
     spatial.setVolume(v);
     spatial.setPithc(p);
 }
+```
+
+![Spatializers](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/spatial.png)
+
+- Channel positions can be set as uniform grids (as above) or individually using `setPosition`.
+- Below is an example of custom channel positioning:
+
+```cpp
+int chs = session.getChannelCount();
+// set up position of channels, evenly distributed
+double spc = 1.0 / (chs - 1);
+for (int i = 0; i < chs; ++i)
+    spatial.setPosition(i, i * spc);
 ```
 
 |Relevant Header(s)|Relevant Examples(s)|
