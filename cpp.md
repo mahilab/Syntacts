@@ -271,10 +271,10 @@ for (int i = 0; i < chs; ++i)
 
 # Library
 
-- Signals can be saved to a disk and reloaded at a later time.
+- Signals can be saved to a disk and reloaded at a later time using Library.
 - In Syntacts, the default file format is a binary representation of the serialized Signal. 
     - This saves only the parameters needed to reconstruct the Signal at runtime instead of saving all individual audio samples.
-    - Using this creates smaller files which can be loaded more quickly on the fly than other audio file formats.
+    - Using this format creates smaller files which can be loaded more quickly on the fly than other audio file formats.
 - To save and import in the default location (i.e. APPDATA/Syntacts/Library), use the functions `saveSignal` and `loadSignal`.
     
 ```cpp
@@ -288,13 +288,39 @@ Library::loadSignal(in, "out");
 ```
 
 - Signals can be saved and imported in other file locations using the functions `exportSignal` and `importSignal`.
-- You can customize the file location by specifying the location in the file name. This is changed using quotation marks: `"file name"`.
+- You can customize the file location by specifying the location in the file path. This is changed using quotation marks: `"file path"`.
+- Files can be saved with a relative or absolute path:
 
 ```cpp
+// Binary format saved in a custom location
+// Export/import with a relative path
+Library::exportSignal(out, "relative/folder/out.sig");
+Library::importSignal(in, "relative/folder/out.sig");
 
+// Export/import with an absolute path
+Library::exportSignal(out, "/absolute/folder/out.sig"));
+Library::importSignal(in, "/absolute/folder/out.sig"));
 ```
 
+- Syntacts can also export and import JSON, WAV, and AIFF file formats to use with existing haptic libraries. CSV and TXT files can only be exported.
+- To use the above file formats, simply change the file name in your path to your desired file type:
 
-- Syntacts can also export and import JSON, WAV, AIFF, and CSV file formats to use with existing haptic libraries.
-- To use the above file formats, simply change the name/location of your Signal to your desired file type:
+```cpp
+// JSON format
+Library::exportSignal(out, "folder/out.json"));
+Library::importSignal(in, "folder/out.json"));
 
+// WAV format - can use .wav, .WAV, or .wave
+Library::exportSignal(out, "folder/out.wav"));
+Library::importSignal(in, "folder/out.wav"));
+
+// AIFF format - can use .aiff, .AIFF, or .aifc
+Library::exportSignal(out, "folder/out.aiff"));
+Library::importSignal(in, "folder/out.aiff"));
+
+// CSV format
+Library::exportSignal(out, "folder/out.csv"));
+
+// TXT format
+Library::exportSignal(out, "folder/out.txt"));
+```
