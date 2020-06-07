@@ -275,7 +275,7 @@ for (int i = 0; i < chs; ++i)
 - In Syntacts, the default file format is a binary representation of the serialized Signal. 
     - This saves only the parameters needed to reconstruct the Signal at runtime instead of saving all individual audio samples.
     - Using this format creates smaller files which can be loaded more quickly on the fly than other audio file formats.
-- To save and import in the default location (i.e. APPDATA/Syntacts/Library), use the functions `saveSignal` and `loadSignal`.
+- To save and import in the default location (i.e. APPDATA/Syntacts/Library), use the functions `saveSignal` and `loadSignal`:
     
 ```cpp
 // Make a Signal to save/export, and a blank Signal to import in to
