@@ -288,7 +288,7 @@ Library::loadSignal(in, "out");
 ```
 
 - Signals can be saved and imported in other file locations using the functions `exportSignal` and `importSignal`.
-- You can customize the file location by specifying the location in the file name. This is changed in the quotation marks `"file name"`:
+- You can customize the file location by specifying the location in the file name. This is changed using quotation marks: `"file name"`.
 
 ```cpp
 
