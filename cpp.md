@@ -303,7 +303,7 @@ Library::importSignal(in, "/absolute/folder/out.sig"));
 ```
 
 - Syntacts can also export and import JSON, WAV, and AIFF file formats to use with existing haptic libraries. CSV and TXT files can only be exported.
-- To use the above file formats, simply change the file name in your path to your desired file type:
+- To use the above file formats, simply change the file format in your path to your desired file type:
 
 ```cpp
 // JSON format
