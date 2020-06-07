@@ -283,12 +283,12 @@ Signal out = Sine(440) * ASR(1,1,1);
 Signal in;
 
 // Syntacts Binary Format (Default Location, i.e. APPDATA/Syntacts/Library)
-Library::saveSignal(out, "out");
+Library::saveSignal(out, "out"); // file name is in quotation marks
 Library::loadSignal(in, "out");
 ```
 
 - Signals can be saved and imported in other file locations using the functions `exportSignal` and `importSignal`.
-- You can customize the file location by specifying the location in the file path. This is changed using quotation marks: `"file path"`.
+- You can customize the file location by specifying the file path. This is changed using quotation marks: `"file path"`.
 - Files can be saved with a relative or absolute path:
 
 ```cpp
@@ -318,9 +318,9 @@ Library::importSignal(in, "folder/out.wav"));
 Library::exportSignal(out, "folder/out.aiff"));
 Library::importSignal(in, "folder/out.aiff"));
 
-// CSV format
+// CSV format (import not yet supported)
 Library::exportSignal(out, "folder/out.csv"));
 
-// TXT format
+// TXT format (import not yet supported)
 Library::exportSignal(out, "folder/out.txt"));
 ```
