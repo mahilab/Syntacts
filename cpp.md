@@ -185,11 +185,11 @@ Signal sigA = Sine(440) * ASR(1,1,1);      // create 3 second Signal
 Signal sigB = Square(440) * ADSR(1,1,1,1); // create 4 second Signal
 
 // 7 second Sequence with sigA before sigB
-Sequence seq1 = sigA << sigB; 
+Sequence sig4 = sigA << sigB; 
 // 1 sec delay and 2 sec pause, 10 sec Sequence
-Sequence seq2 = 1 << sigA << 2 << sigB; 
+Sequence sig5 = 1 << sigA << 2 << sigB; 
 // 1 sec fade/overlay between sigA and sigB, 6 sec sequence
-Sequence seq3 = sigA << -1 << sigB; 
+Sequence sig6 = sigA << -1 << sigB; 
 ```
 
 - Sequenced signals created above:
@@ -198,21 +198,21 @@ Sequence seq3 = sigA << -1 << sigB;
 - Sequences can also be concatenated:
 
 ```cpp
-// Sequence of seq1, seq2, and seq3. Note this will also modify seq1.
-Sequence seq4 = seq1 << seq2 << seq3; 
-// Play seq4 on channel 0 for its length of 23 seconds
-session.play(0, seq4);
-sleep(seq4.length());
+// Sequence of sig4, sig5, and sig6. Note this will also modify sig4.
+Sequence sig7 = sig4 << sig5 << sig6; 
+// Play sig7 on channel 0 for its length of 23 seconds
+session.play(0, sig7);
+sleep(sig7.length());
 ```
 
 - You can also insert Signals into an existing Sequence timeline:
 
 ```cpp
-// insert 1 s of noise starts at the 4 second mark of seq2
-seq2.insert(Noise() * Envelope(1), 4); 
-// play seq2 on channel 0
-session.play(0, seq2); 
-sleep(seq2.length())
+// insert 1 s of noise starts at the 4 second mark of sig5
+sig5.insert(Noise() * Envelope(1), 4); 
+// play sig5 on channel 0
+session.play(0, sig5); 
+sleep(sig5.length())
 ```
 
 |Relevant Header(s)|Relevant Examples(s)|
