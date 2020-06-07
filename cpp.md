@@ -275,7 +275,7 @@ for (int i = 0; i < chs; ++i)
 - In Syntacts, the default file format is a binary representation of the serialized Signal. 
     - This saves only the parameters needed to reconstruct the Signal at runtime instead of saving all individual audio samples.
     - Using this creates smaller files which can be loaded more quickly on the fly than other audio file formats.
-- To save and import in the default location (APPDATA/Syntacts/Library), use the functions `saveSignal` and `loadSignal`.
+- To save and import in the default location (i.e. APPDATA/Syntacts/Library), use the functions `saveSignal` and `loadSignal`.
     
 ```cpp
 // Make a Signal to save/export, and a blank Signal to import in to
@@ -286,5 +286,15 @@ Signal in;
 Library::saveSignal(out, "out");
 Library::loadSignal(in, "out");
 ```
-    
+
+- Signals can be saved and imported in other file locations using the functions `exportSignal` and `importSignal`.
+- You can customize the file location by specifying the location in the file name. This is changed in the quotation marks `"file name"`:
+
+```cpp
+
+```
+
+
+- Syntacts can also export and import JSON, WAV, AIFF, and CSV file formats to use with existing haptic libraries.
+- To use the above file formats, simply change the name/location of your Signal to your desired file type:
 
