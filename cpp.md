@@ -153,7 +153,7 @@ Signal sig3 = 0.5 * (sqr + sin) * asr;
 Signal sig4 = Square(250) * Sine(20) * ASR(1,1,1);
 ```
 
-- Once you have create a complete Signal, it can be played on the Session.
+- Once you have created a complete Signal, it can be played on the Session.
 
 ```cpp
 session.play(0, sig1); // plays sig 1 on channel 0
@@ -176,7 +176,7 @@ sleep(sig2.length());  // sig2 plays for its length of 0.3 seconds
 - Multiple Signals can be ordered in time using Sequences.
 - You can concatenate Signals using the insertion, or left-shift, operator `<<`.
 - Delay and pause are achieved through the insertion of positive scalar operands.
-- Negative scalar operands move the insertion points backwards in time, allowing fpr the overlay or fading of Signals into each other.
+- Negative scalar operands move the insertion points backwards in time, allowing for the overlay or fading of Signals into each other.
 - Below is a basic example of creating Sequences:
 
 ```cpp
