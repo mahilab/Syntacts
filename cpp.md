@@ -144,6 +144,7 @@ Signal sig2 = sig1 * asr; // duration is 0.3 seconds
 Signal sig3 = 0.5 * (sqr + sin) * asr;
 ```
 
+- Signals created in the above examples:
 ![Signals](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/sigs.png)
 
 - Complete signals can be made and mixed in-place as well.
@@ -191,6 +192,7 @@ Sequence seq2 = 1 << sigA << 2 << sigB;
 Sequence seq3 = sigA << -1 << sigB; 
 ```
 
+- Sequenced signals created above:
 ![Sequences](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/seq.png)
 
 - Sequences can also be concatenated:
@@ -238,8 +240,8 @@ spatial.play(sig1);                   // play Signal
 sleep(3);                             // wait 3 seconds while the Signal plays
 ```
 
-- To create sweeping motions with tactile arrays, you can move the target location in a `while` or `for` loop along a predescribed path:
-- Master volume and pitch of Spatializer can also be modified using `setVolume` and `setPitch`.
+- To create sweeping motions with tactile arrays, you can move the target location in a `while` or `for` loop along a predescribed path.
+- Master volume and pitch of the Spatializer can also be modified using `setVolume` and `setPitch`.
 
 ```cpp
 while (condition) {
@@ -249,6 +251,7 @@ while (condition) {
 }
 ```
 
+- The Spatializer created in the examples above:
 ![Spatializers](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/spatial.png)
 
 - Channel positions can be set as uniform grids (as above) or individually using `setPosition`.
@@ -268,4 +271,4 @@ for (int i = 0; i < chs; ++i)
 
 # Library
 
-Comming soon ...
+Coming soon ...
