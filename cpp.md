@@ -324,3 +324,7 @@ Library::exportSignal(out, "folder/out.csv"));
 // TXT format (import not yet supported)
 Library::exportSignal(out, "folder/out.txt"));
 ```
+
+|Relevant Header(s)|Relevant Examples(s)|
+|---|---|
+|[Library.hpp](https://github.com/mahilab/Syntacts/blob/master/include/Tact/Library.hpp)|[example_library.cpp](https://github.com/mahilab/Syntacts/blob/master/examples/example_library.cpp)|
