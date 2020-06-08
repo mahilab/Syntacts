@@ -63,7 +63,7 @@ cmake ..                         # generate build files from our CMakeLists.txt 
 cmake --build . --config Release # build the project
 ```
 
-- When the build completes, find the output file `myApp.exe` in the build folder and run it. You should hear a two second 440 Hz sine wave from your default speakers. If you have a tactor connected to your aduio output, try changing the frequency to an appropriate value for the tactor (e.g. 150-250 Hz). 
+- When the build completes, find the output file `myApp.exe` in the build folder and run it. You should hear a two second 440 Hz sine wave from your default speakers. If you have a tactor connected to your audio output, try changing the frequency to an appropriate value for the tactor (e.g. 150-250 Hz). 
 
 ## API Overview
 
