@@ -13,7 +13,7 @@ However, the process should be similar if you are using another IDE such as PyCh
 
 ## Requirements
 
-- [Python] (https://www.python.org/downloads/) interpreter
+- [Python](https://www.python.org/downloads/) interpreter
 
 ## Basic Setup
 
