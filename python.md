@@ -42,6 +42,8 @@ session = Session()
 for dev in session.available_devices:
     print("Index:       ", dev.index)
     print("Name:        ", dev.name)
+    print("Max Channels:", dev.max_channels)
+    print("API:         ", dev.api_name)
 ```
 
 - Devices can be opened using the `open` function. 
@@ -69,3 +71,68 @@ session.close();
 |---|---|
 |[Session.hpp](https://github.com/mahilab/Syntacts/blob/master/include/Tact/Session.hpp)|[example_devices.py](https://github.com/mahilab/Syntacts/blob/master/python/example_devices.py)|
 
+# Signals
+
+- Vibration waveforms are represented by one or more Signals. You can create Signals of different behaviors and lengths.
+- Sine, Square, Saw, and Triangle classes are available in Syntacts. These implement typical oscillators with normalized amplitude and infinite duration. 
+- Basic oscillators can be created by calling their constructors:
+
+```python
+sin = Sine(10)      # 10 Hz Sine wave
+sqr = Square(250)   # 250 Hz Square wave
+saw = Saw(175)      # 175 Hz Saw wave
+tri = Triangle(440) # 440 Hz Triangle wave (audible and ok for speakers)
+```
+
+- Oscillators alone have an *infinite* duration or length and a constant amplitude. 
+- You can use the Envelope, ASR, and ADSR (Attack, (Decay), Sustain, Release) Signals to define amplitude modifiers with *finite* duration:
+
+```python
+# This is a basic envelope that specifies amplitude (0.9), and duration (0.5 sec)
+bas = Envelope(0.9, 0.5)
+# This is an attack (0.1 sec), sustain (0.1 sec), release (0.1 sec) envelope.  
+asr = ASR(0.1, 0.1, 0.1)
+```
+
+- Signals can be mixed using basic arithmetic. Multiplying and adding Signals can be thought of as an element-wise operation between two vectors.
+    - Multiplying two Signals creates a new Signal of duration equal to the    shortest operand.  
+    - Adding two Signals creates a new Signal of duration equal to the longest operand.
+- Gain and bias can also be applied to Signals with scalar operands.
+- Below are basic examples of mixing the Signals from above:
+
+```python
+sig1 = sqr * sin  # duration is infinite
+sig2 = sig1 * asr # duration is 0.3 seconds
+sig3 = 0.5 * (sqr + sin) * asr
+```
+
+- Signals created in the above examples:
+![Signals](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/sigs.png)
+
+- Complete signals can be made and mixed in-place as well.
+
+```python
+# 250 Hz square wave amplitude modulated with a 20 Hz sine wave and ASR envelope.
+sig4 = Square(250) * Sine(20) * ASR(1,1,1)
+```
+
+- Once you have created a complete Signal, it can be played on the Session.
+
+```python
+session.play(0, sig1) # plays sig 1 on channel 0
+sleep(3)              # sig1 plays for 3 seconds
+session.stop(0)       # stop sig1
+
+session.play(1, sig2) # plays sig2 on channel 1
+sleep(sig2.length)    # sig2 plays for its length of 0.3 seconds
+                      # Do not need to stop sig2 because it is finite
+                       
+session.play_all(sig3) # plays sig3 on all channels
+sleep(sig3.length)
+```
+
+> **Note:** If you want to evaluate Syntacts without tactor hardware, make sure the frequency is high enough to be audible for speakers (e.g. 440 Hz). Low frequencies can potentially damage speakers! For this reason, most of the Syntacts examples are coded with frequencies in the hearing range. If you are actually outputting to a tactor, use frequencies appropriate for it (e.g. 150-250 Hz).
+
+|Relevant Header(s)|Relevant Examples(s)|
+|---|---|
+|[Signal.hpp](https://github.com/mahilab/Syntacts/blob/master/include/Tact/Signal.hpp), [Oscillator.hpp](https://github.com/mahilab/Syntacts/blob/master/include/Tact/Oscillator.hpp), [Envelope.hpp](https://github.com/mahilab/Syntacts/blob/master/include/Tact/Envelope.hpp), [General.hpp](https://github.com/mahilab/Syntacts/blob/master/include/Tact/General.hpp)|[example_basic.py](https://github.com/mahilab/Syntacts/blob/master/python/example_basic.py)
