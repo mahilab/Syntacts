@@ -136,3 +136,15 @@ sleep(sig3.length)
 |Relevant Header(s)|Relevant Examples(s)|
 |---|---|
 |[Signal.hpp](https://github.com/mahilab/Syntacts/blob/master/include/Tact/Signal.hpp), [Oscillator.hpp](https://github.com/mahilab/Syntacts/blob/master/include/Tact/Oscillator.hpp), [Envelope.hpp](https://github.com/mahilab/Syntacts/blob/master/include/Tact/Envelope.hpp), [General.hpp](https://github.com/mahilab/Syntacts/blob/master/include/Tact/General.hpp)|[example_basic.py](https://github.com/mahilab/Syntacts/blob/master/python/example_basic.py)
+
+# Sequences
+
+*Coming Soon*
+
+# Spatializers
+
+*Coming Soon*
+
+# Library
+
+*Coming Soon*
