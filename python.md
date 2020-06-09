@@ -18,6 +18,16 @@ However, the process should be similar if you are using another IDE such as PyCh
 ## Basic Setup
 
 - If you haven't already, [build and install](building.md) Syntacts.
+- Install [Python](https://www.python.org/downloads/) on your device if it is not already installed.
+- Create a new script in the same directory as `syntacts.py` and the dII.
+- In the script, include the following commands:
+
+```python
+from syntacts import *
+from time import sleep
+from math import sin
+from math import pi
+```
 
 ## API Overview
 
