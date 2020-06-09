@@ -17,7 +17,7 @@ However, the process should be similar if you are using another IDE such as PyCh
 
 ## Basic Setup
 
-*Coming Soon*
+- If you haven't already, [build and install](building.md) Syntacts.
 
 ## API Overview
 
