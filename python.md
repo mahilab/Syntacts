@@ -11,3 +11,15 @@ You should have first built and installed the Syntacts library to your system.
 For this tutorial we will use IDLE to edit and manage our project. 
 However, the process should be similar if you are using another IDE such as PyCharm.
 
+## Requirements
+
+- Python interpreter
+
+## Basic Setup
+
+*Coming Soon*
+
+## API Overview
+
+*Coming Soon*
+
