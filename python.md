@@ -186,7 +186,52 @@ sleep(sig5.length)
 
 # Spatializers
 
-*Coming Soon*
+- Spatializers map multiple channels to a normalized (0 to 1) continuous 1D or 2D spatial representation.
+- For example, you can configure a virtual grid to match the physical layout of a tactor array.
+- You can then set a virtual target coordinate and radius to play and blend multiple tactors at once.
+- Only channels within a target radius are played.
+- The volume of channels is interpolated according to a specified roll-off law (ie. linear, logarithmic, etc.) based on their proximity to the target location using. The roll-off law can be changed with `setRollOff`.
+- Below is an example of creating a spatializer: 
+
+```python
+spatial = Spatializer(session)        # create 2D Spatializer
+
+spatial.create_grid(4,6)              # Grid of 4 rows x 6 cols
+spatial.set_position(18,(0.1,0.8))    # move channel 18 by x = 0.1, y = 0.8
+spatial.radius(0.3)                   # effect radius
+spatial.roll_off = 'linear'           # set roll off method
+spatial.target(0.2, 0.1);             # target location
+spatial.play(sig1);                   # play Signal
+sleep(3);                             # wait 3 seconds while the Signal plays
+```
+
+- To create sweeping motions with tactile arrays, you can move the target location in a `while` or `for` loop along a predescribed path.
+- Master volume and pitch of the Spatializer can also be modified using `setVolume` and `setPitch`.
+
+```python
+while condition:
+    spatial.target = (x,y) 
+    spatial.volume = v
+    spatial.pitch = p
+```
+
+- The Spatializer created in the examples above:
+![Spatializers](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/spatial.png)
+
+- Channel positions can be set as uniform grids (as above) or individually using `setPosition`.
+- Below is an example of custom channel positioning:
+
+```cpp
+int chs = session.getChannelCount();
+// set up position of channels, evenly distributed
+double spc = 1.0 / (chs - 1);
+for (int i = 0; i < chs; ++i)
+    spatial.setPosition(i, i * spc);
+```
+
+|Relevant Header(s)|Relevant Examples(s)|
+|---|---|
+|[Spatializer.hpp](https://github.com/mahilab/Syntacts/blob/master/include/Tact/Spatializer.hpp)|[example_spatializer.cpp](https://github.com/mahilab/Syntacts/blob/master/examples/example_spatializer.cpp)|
 
 # Library
 
