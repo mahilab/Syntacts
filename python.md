@@ -285,7 +285,7 @@ loadedsig = Library.import_signal('folder/out.aiff')
 # CSV format (import not yet supported)
 Library.export_signal(out, 'folder/out.csv')
 
-// TXT format (import not yet supported)
+# TXT format (import not yet supported)
 Library.export_signal(out, 'folder/out.txt')
 ```
 
