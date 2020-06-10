@@ -255,41 +255,40 @@ loadedsig = Library.load_signal('out')  # load into a new signal
 - You can customize the file location by specifying the file path. This is changed using quotation marks: `'file path'`.
 - Files can be saved with a relative or absolute path:
 
-```cpp
-// Binary format saved in a custom location
-// Export/import with a relative path
-Library::exportSignal(out, "relative/folder/out.sig");
-Library::importSignal(in, "relative/folder/out.sig");
+```python
+# Binary format saved in a custom location
+# Export/import with a relative path
+Library.export_signal(out, 'relative/folder/out.sig')
+loadedsig = Library.import_signal('relative/folder/out.sig')
 
-// Export/import with an absolute path
-Library::exportSignal(out, "/absolute/folder/out.sig"));
-Library::importSignal(in, "/absolute/folder/out.sig"));
+# Export/import with an absolute path
+Library.export_signal(out, '/absolute/folder/out.sig')
+loadedsig = Library.import_signal('/absolute/folder/out.sig')
 ```
 
 - Syntacts can also export and import JSON, WAV, and AIFF file formats to use with existing haptic libraries. CSV and TXT files can only be exported.
 - To use the above file formats, simply change the file format in your path to your desired file type:
 
 ```cpp
-// JSON format
-Library::exportSignal(out, "folder/out.json"));
-Library::importSignal(in, "folder/out.json"));
+# JSON format
+Library.export_signal(out, 'folder/out.json')
+loadedsig = Library.import_signal('folder/out.json')
 
-// WAV format - can use .wav, .WAV, or .wave
-Library::exportSignal(out, "folder/out.wav"));
-Library::importSignal(in, "folder/out.wav"));
+# WAV format - can use .wav, .WAV, or .wave
+Library.export_signal(out, 'folder/out.wav')
+loadedsig = Library.import_signal('folder/out.wav')
 
-// AIFF format - can use .aiff, .AIFF, or .aifc
-Library::exportSignal(out, "folder/out.aiff"));
-Library::importSignal(in, "folder/out.aiff"));
+# AIFF format - can use .aiff, .AIFF, or .aifc
+Library.export_signal(out, 'folder/out.aiff')
+loadedsig = Library.import_signal('folder/out.aiff')
 
-// CSV format (import not yet supported)
-Library::exportSignal(out, "folder/out.csv"));
+# CSV format (import not yet supported)
+Library.export_signal(out, 'folder/out.csv')
 
 // TXT format (import not yet supported)
-Library::exportSignal(out, "folder/out.txt"));
+Library.export_signal(out, 'folder/out.txt')
 ```
 
 |Relevant Header(s)|Relevant Examples(s)|
 |---|---|
-|[Library.hpp](https://github.com/mahilab/Syntacts/blob/master/include/Tact/Library.hpp)|[example_library.cpp](https://github.com/mahilab/Syntacts/blob/master/examples/example_library.cpp)|
-
+|[Library.hpp](https://github.com/mahilab/Syntacts/blob/master/include/Tact/Library.hpp)|[example_library.py](https://github.com/mahilab/Syntacts/blob/master/python/example_library.py)|
