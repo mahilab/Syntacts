@@ -146,15 +146,15 @@ sleep(sig3.length)
 - Below is a basic example of creating Sequences:
 
 ```python
-sigA = Sine(440) * ASR(1,1,1);      # create 3 second Signal
-sigB = Square(440) * ADSR(1,1,1,1); # create 4 second Signal
+sigA = Sine(440) * ASR(1,1,1)      # create 3 second Signal
+sigB = Square(440) * ADSR(1,1,1,1) # create 4 second Signal
 
 # 7 second Sequence with sigA before sigB
-sig4 = sigA << sigB; 
+sig4 = sigA << sigB 
 # 1 sec delay and 2 sec pause, 10 sec Sequence
-sig5 = 1 << sigA << 2 << sigB; 
+sig5 = 1 << sigA << 2 << sigB 
 # 1 sec fade/overlay between sigA and sigB, 6 sec sequence
-sig6 = sigA << -1 << sigB; 
+sig6 = sigA << -1 << sigB 
 ```
 
 - Sequenced signals created above:
@@ -164,19 +164,19 @@ sig6 = sigA << -1 << sigB;
 
 ```python
 # Sequence of sig4, sig5, and sig6. Note this will also modify sig4.
-sig7 = sig4 << sig5 << sig6; 
+sig7 = sig4 << sig5 << sig6 
 # Play sig7 on channel 0 for its length of 23 seconds
-session.play(0, sig7);
-sleep(sig7.length);
+session.play(0, sig7)
+sleep(sig7.length)
 ```
 
 - You can also insert Signals into an existing Sequence timeline:
 
 ```python
 # Insert 1 s of noise starts at the 4 second mark of sig5
-sig5.insert(Noise() * Envelope(1), 4); 
+sig5.insert(Noise() * Envelope(1), 4) 
 # Play sig5 on channel 0
-session.play(0, sig5); 
+session.play(0, sig5) 
 sleep(sig5.length)
 ```
 
