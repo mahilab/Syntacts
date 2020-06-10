@@ -269,7 +269,7 @@ loadedsig = Library.import_signal('/absolute/folder/out.sig')
 - Syntacts can also export and import JSON, WAV, and AIFF file formats to use with existing haptic libraries. CSV and TXT files can only be exported.
 - To use the above file formats, simply change the file format in your path to your desired file type:
 
-```cpp
+```python
 # JSON format
 Library.export_signal(out, 'folder/out.json')
 loadedsig = Library.import_signal('folder/out.json')
