@@ -182,7 +182,7 @@ sleep(sig5.length)
 
 |Relevant Header(s)|Relevant Examples(s)|
 |---|---|
-|[Sequence.hpp](https://github.com/mahilab/Syntacts/blob/master/include/Tact/Sequence.hpp)|[example_sequences.cpy](https://github.com/mahilab/Syntacts/blob/master/python/example_sequences.py)|
+|[Sequence.hpp](https://github.com/mahilab/Syntacts/blob/master/include/Tact/Sequence.hpp)|[example_sequences.py](https://github.com/mahilab/Syntacts/blob/master/python/example_sequences.py)|
 
 # Spatializers
 
