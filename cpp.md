@@ -267,7 +267,7 @@ for (int i = 0; i < chs; ++i)
 
 |Relevant Header(s)|Relevant Examples(s)|
 |---|---|
-|[Spatializer.hpp](https://github.com/mahilab/Syntacts/blob/master/include/Tact/Spatializer.hpp)|[example_spatializer.py](https://github.com/mahilab/Syntacts/blob/master/python/example_spatializer.py)|
+|[Spatializer.hpp](https://github.com/mahilab/Syntacts/blob/master/include/Tact/Spatializer.hpp)|[example_spatializer.cpp](https://github.com/mahilab/Syntacts/blob/master/examples/example_spatializer.cpp)|
 
 # Library
 
