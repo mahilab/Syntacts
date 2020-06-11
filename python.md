@@ -51,15 +51,15 @@ for dev in session.available_devices:
 - Non-default devices can be opened by passing a device index argument or the device name and preferred API:
 
 ```python
-// open default device
-session.open();   
-session.close();  
-// open device by index
-session.open(22); 
-session.close();  
-// open device by name and preferred API
-session.open("MOTU Pro Audio", API::ASIO);
-session.close();
+# open default device
+session.open()   
+session.close()  
+# open device by index
+session.open(22) 
+session.close() 
+# open device by name and preferred API
+session.open("MOTU Pro Audio", API::ASIO)
+session.close()
 ```
 
 - Device indices represent the combination of a device and an API it supports. Therefore, one device may have multiple indices each with a different API. 
@@ -190,7 +190,7 @@ sleep(sig5.length)
 - For example, you can configure a virtual grid to match the physical layout of a tactor array.
 - You can then set a virtual target coordinate and radius to play and blend multiple tactors at once.
 - Only channels within a target radius are played.
-- The volume of channels is interpolated according to a specified roll-off law (ie. linear, logarithmic, etc.) based on their proximity to the target location using. The roll-off law can be changed with `setRollOff`.
+- The volume of channels is interpolated according to a specified roll-off law (ie. linear, logarithmic, etc.) based on their proximity to the target location using. The roll-off law can be changed with `roll_off`.
 - Below is an example of creating a spatializer: 
 
 ```python
@@ -207,7 +207,7 @@ spatial.stop()
 ```
 
 - To create sweeping motions with tactile arrays, you can move the target location in a `while` or `for` loop along a predescribed path.
-- Master volume and pitch of the Spatializer can also be modified using `setVolume` and `setPitch`.
+- Master volume and pitch of the Spatializer can also be modified using `volume` and `pitch`.
 
 ```python
 while condition:
@@ -219,7 +219,7 @@ while condition:
 - The Spatializer created in the examples above:
 ![Spatializers](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/spatial.png)
 
-- Channel positions can be set as uniform grids (as above) or individually using `setPosition`.
+- Channel positions can be set as uniform grids (as above) or individually using `set_position`.
 - Below is an example of custom channel positioning:
 
 ```python
