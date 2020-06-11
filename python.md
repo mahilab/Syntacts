@@ -236,7 +236,7 @@ for i in range(chs):
 
 # Library
 
-- Signals can be saved to a disk and reloaded at a later time using Library.
+- Signals can be saved to a disk and reloaded at a later time using `Library`.
 - In Syntacts, the default file format is a binary representation of the serialized Signal. 
     - This saves only the parameters needed to reconstruct the Signal at runtime instead of saving all individual audio samples.
     - Using this format creates smaller files which can be loaded more quickly on the fly than other audio file formats.
