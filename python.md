@@ -6,27 +6,23 @@ permalink: /python/
 
 ## Introduction
 
-This tutorial will teach you how to setup and use the Syntacts Python API. 
-You should have first built and installed the Syntacts library to your system. 
-For this tutorial we will use IDLE to edit and manage our project. 
-However, the process should be similar if you are using another IDE such as PyCharm.
+This tutorial will teach you how to setup and use the Syntacts Python API. It is recommended that you use a Python IDE such as Visual Studio Code or PyCharm. The Python API can also be used from an IPython or Jupyter notebook.
 
 ## Requirements
 
-- [Python](https://www.python.org/downloads/) interpreter
+- [Python 3](https://www.python.org/downloads/)
 
 ## Basic Setup
 
-- If you haven't already, [build and install](building.md) Syntacts.
-- Install [Python](https://www.python.org/downloads/) on your device if it is not already installed.
-- Create a new script in the same directory as `syntacts.py` and the dII.
-- In the script, always include the following commands at the beginning:
+- Install [Python 3](https://www.python.org/downloads/) on your device if it is not already installed.
+- Download the [latest pre-compiled Syntacts binaries](https://github.com/mahilab/Syntacts/releases) for your system. 
+- Extract `syntacts.py` and the dynamic library `syntacts-c.dll` (or `syntacts-c.dylib`) to a directory of your choice.
+- Create a new script in the same directory as `syntacts.py` and the dynamic library.
+- In your script, import Syntacts and `sleep`:
 
 ```python
 from syntacts import *
 from time import sleep
-from math import sin
-from math import pi
 ```
 
 ## API Overview
@@ -58,7 +54,7 @@ session.close()
 session.open(22) 
 session.close() 
 # open device by name and preferred API
-session.open("MOTU Pro Audio", API::ASIO)
+session.open("MOTU Pro Audio", API.ASIO)
 session.close()
 ```
 
@@ -67,9 +63,9 @@ session.close()
 
 > **Warning:** Device indices are NOT persistent. They may change when devices are power cycled, plugged/unplugged, or when other devices are connected to the PC. If you need a persistent method of opening a device, use the **name + API** version of `open`.
 
-|Relevant Header(s)|Relevant Examples(s)|
-|---|---|
-|[Session.hpp](https://github.com/mahilab/Syntacts/blob/master/include/Tact/Session.hpp)|[example_devices.py](https://github.com/mahilab/Syntacts/blob/master/python/example_devices.py)|
+|Relevant Examples(s)|
+|---|
+|[example_devices.py](https://github.com/mahilab/Syntacts/blob/master/python/example_devices.py)|
 
 # Signals
 
@@ -133,9 +129,9 @@ sleep(sig3.length)
 
 > **Note:** If you want to evaluate Syntacts without tactor hardware, make sure the frequency is high enough to be audible for speakers (e.g. 440 Hz). Low frequencies can potentially damage speakers! For this reason, most of the Syntacts examples are coded with frequencies in the hearing range. If you are actually outputting to a tactor, use frequencies appropriate for it (e.g. 150-250 Hz).
 
-|Relevant Header(s)|Relevant Examples(s)|
-|---|---|
-|[Signal.hpp](https://github.com/mahilab/Syntacts/blob/master/include/Tact/Signal.hpp), [Oscillator.hpp](https://github.com/mahilab/Syntacts/blob/master/include/Tact/Oscillator.hpp), [Envelope.hpp](https://github.com/mahilab/Syntacts/blob/master/include/Tact/Envelope.hpp), [General.hpp](https://github.com/mahilab/Syntacts/blob/master/include/Tact/General.hpp)|[example_basic.py](https://github.com/mahilab/Syntacts/blob/master/python/example_basic.py)
+|Relevant Examples(s)|
+|---|
+|[example_basic.py](https://github.com/mahilab/Syntacts/blob/master/python/example_basic.py)
 
 # Sequences
 
@@ -180,9 +176,9 @@ session.play(0, sig5)
 sleep(sig5.length)
 ```
 
-|Relevant Header(s)|Relevant Examples(s)|
-|---|---|
-|[Sequence.hpp](https://github.com/mahilab/Syntacts/blob/master/include/Tact/Sequence.hpp)|[example_sequences.py](https://github.com/mahilab/Syntacts/blob/master/python/example_sequences.py)|
+|Relevant Examples(s)|
+|---|
+|[example_sequences.py](https://github.com/mahilab/Syntacts/blob/master/python/example_sequences.py)|
 
 # Spatializers
 
@@ -230,9 +226,9 @@ for i in range(chs):
     spatial.set_position(i, (i * spc, 0))
 ```
 
-|Relevant Header(s)|Relevant Examples(s)|
-|---|---|
-|[Spatializer.hpp](https://github.com/mahilab/Syntacts/blob/master/include/Tact/Spatializer.hpp)|[example_spatializer.py](https://github.com/mahilab/Syntacts/blob/master/python/example_spatializer.py)|
+|Relevant Examples(s)|
+|---|
+|[example_spatializer.py](https://github.com/mahilab/Syntacts/blob/master/python/example_spatializer.py)|
 
 # Library
 
@@ -289,6 +285,6 @@ Library.export_signal(out, 'folder/out.csv')
 Library.export_signal(out, 'folder/out.txt')
 ```
 
-|Relevant Header(s)|Relevant Examples(s)|
-|---|---|
-|[Library.hpp](https://github.com/mahilab/Syntacts/blob/master/include/Tact/Library.hpp)|[example_library.py](https://github.com/mahilab/Syntacts/blob/master/python/example_library.py)|
+|Relevant Examples(s)|
+|---|
+|[example_library.py](https://github.com/mahilab/Syntacts/blob/master/python/example_library.py)|
