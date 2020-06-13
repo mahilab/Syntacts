@@ -15,7 +15,16 @@ permalink: /faq/
 - Yes, of course! All software is licensed under the [MIT License](https://en.wikipedia.org/wiki/MIT_License). All hardware is licensed under the [TAPR Open Hardware License](https://tapr.org/the-tapr-open-hardware-license/). 
 
 ### How can I cite Syntacts in my research?
-- We currently have a Transactions on Haptics short paper in review. Please check back later!
+- You can cite our Transactions on Haptics [paper](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/pdfs/pezent2020_syntacts.pdf): 
+
+```bib
+@ARTICLE{pezent2020_syntacts,
+  author={E. Pezent and B. Cambio and M. K. {O'Malley}},
+  journal={IEEE Transactions on Haptics}, 
+  title={Syntacts: Open-Source Software and Hardware for Audio-Controlled Haptics}, 
+  year={2020}
+}
+```
 
 ### Who maintains Syntacts?
 - Syntacts is developed and maintained by the [Mechatronics and Haptic Interfaces Lab](https://mahilab.rice.edu/) at Rice University in Houston, TX.
