@@ -22,4 +22,32 @@ This tutorial will teach you how to setup and use the Syntacts GUI. This will al
 ```shell
 > sudo chmod 777 syntacts-gui
 ```
-  
+
+## GUI Overview
+
+# Device Bar
+
+
+# Status and Info Bar
+
+*Coming Soon*
+
+# Palette/Library
+
+*Coming Soon*
+
+# Player
+
+*Coming Soon*
+
+# Designer
+
+*Coming Soon*
+
+# Sequencer
+
+*Coming Soon*
+
+# Spatializer
+
+*Coming Soon*
