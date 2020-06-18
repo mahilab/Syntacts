@@ -23,10 +23,14 @@ This tutorial will teach you how to setup and use the Syntacts GUI. This will al
 > sudo chmod 777 syntacts-gui
 ```
 
-## GUI Overview
+## GUI Panel Overview
+
+This will provide an overview of the GUI's panels and a basic guide about their uses. For more detailled information on how to use different components of the GUI, simply drag the help button (the question mark in the bottom right corner) over the area of interest.
 
 # Device Bar
 
+- The Device Bar is located at the top-center of the GUI.
+- Using the drop down arrows, you can choose your API, device, and sample rate.
 
 # Status and Info Bar
 
