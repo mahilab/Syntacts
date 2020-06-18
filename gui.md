@@ -55,11 +55,14 @@ This will provide an overview of the GUI's panels and a basic guide about their 
 - The Designer is the first tab located in the center of the GUI.
 - This is where you can drag Signals to create your desired cue.
 - You can combine Signals using different processes. Signals can be mixed using basic arithmetic. Multiplying and adding Signals can be thought of as an element-wise operation between two vectors.
-- You can also change the frequency of Signals.
+- You can also change the frequency of Signals by using your mouse to move the frequency toggle.
 
 # Sequencer
 
-*Coming Soon*
+- The Sequencer is the second tab located in the center of the GUI.
+- This can be used to concatenate multiple Signals.
+- You can drag Signals from the Library into the Sequencer and order the Signals to create your desired Sequence.
+- You can also adjust the starting time of each Signal as well as the gain and bias using the Time, Gain, and Bias toggles.
 
 # Spatializer
 
