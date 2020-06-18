@@ -10,7 +10,7 @@ This tutorial will teach you how to setup and use the Syntacts GUI. This will al
 
 ## Requirements
 
-- Latest [Syntacts release](https://github.com/mahilab/Syntacts/releases)
+- Latest [Syntacts Release](https://github.com/mahilab/Syntacts/releases)
 
 ## Basic Setup
 
