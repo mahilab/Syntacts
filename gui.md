@@ -34,19 +34,28 @@ This will provide an overview of the GUI's panels and a basic guide about their 
 
 # Status and Info Bar
 
-*Coming Soon*
+- The Status and Info Bar is located at the bottom-right of the GUI.
+- When you hover your mouse over different areas/panels of the GUI, the Info Bar states the function of that component.
 
 # Palette/Library
 
-*Coming Soon*
+- The Palette and Library panels are located on the left side of the GUI.
+- The Palette contains tools to create different Signals. Signals represent various vibration waveforms. 
+- Using the Palette, you can use different types of oscillators, envelopes, and processes to create your desired cue.
+- The Library allows you to save and load created Signals.
 
 # Player
 
-*Coming Soon*
+- The Player is located on the right side of the GUI.
+- This is used to play Signals on different channels.
+- Using the Player, you can also change the volume and pitch by moving the V and P toggles.
 
 # Designer
 
-*Coming Soon*
+- The Designer is the first tab located in the center of the GUI.
+- This is where you can drag Signals to create your desired cue.
+- You can combine Signals using different processes. Signals can be mixed using basic arithmetic. Multiplying and adding Signals can be thought of as an element-wise operation between two vectors.
+- You can also change the frequency of Signals.
 
 # Sequencer
 
