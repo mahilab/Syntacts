@@ -13,4 +13,4 @@ Below you can find a list of Syntacts tutorials related to both the software and
 |C# API|*Coming soon*|
 |[Python API](python.md)|Learn to setup and program a project using the Syntacts Python API.| 
 |Unity|*Coming soon*|
-|GUI|*Coming soon*|
+|[GUI](gui.md)|*Coming soon*|
