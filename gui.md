@@ -25,7 +25,7 @@ This tutorial will teach you how to setup and use the Syntacts GUI. This will al
 
 ## GUI Panel Overview
 
-This will provide an overview of the GUI's panels and a basic guide about their uses. For more detailled information on how to use different components of the GUI, simply drag the help button (the question mark in the bottom right corner) over the area of interest.
+This will provide an overview of the GUI's panels and a basic guide about their uses. For more detailed information on how to use different components of the GUI, simply drag the help button (the question mark in the bottom right corner) over the area of interest.
 
 # Device Bar
 
