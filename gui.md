@@ -69,10 +69,12 @@ This will provide an overview of the GUI's panels and a basic guide about their 
 # Spatializer
 
 - The Spatializer is the third tab located in the center of the GUI.
-- This maps multiple channels to a normalized (0 to 1) continuous 1D or 2D spatial representation. Dra
+- This maps multiple channels to a normalized (0 to 1) continuous 1D or 2D spatial representation.
 - You can create a grid with a specific number of divisions to match the physical layout of a tactor array.
 - Drag channels onto the grid to position them as desired.
 - You can then set a virtual target coordinate and radius to play and blend multiple tactors at once.
 - The volume of channels is interpolated according to a specified roll-off law (ie. linear, logarithmic, etc.) based on their proximity to the target location using.
 
 ## Using the GUI: A Demo
+
+*Coming Soon*
