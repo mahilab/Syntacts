@@ -60,10 +60,17 @@ This will provide an overview of the GUI's panels and a basic guide about their 
 # Sequencer
 
 - The Sequencer is the second tab located in the center of the GUI.
-- This can be used to concatenate multiple Signals.
+- This can be used to concatenate multiple Signals to create a Sequence.
 - You can drag Signals from the Library into the Sequencer and order the Signals to create your desired Sequence.
 - You can also adjust the starting time of each Signal as well as the gain and bias using the Time, Gain, and Bias toggles.
 
 # Spatializer
 
-*Coming Soon*
+- The Spatializer is the third tab located in the center of the GUI.
+- This maps multiple channels to a normalized (0 to 1) continuous 1D or 2D spatial representation. Dra
+- You can create a grid with a specific number of divisions to match the physical layout of a tactor array.
+- Drag channels onto the grid to position them as desired.
+- You can then set a virtual target coordinate and radius to play and blend multiple tactors at once.
+- The volume of channels is interpolated according to a specified roll-off law (ie. linear, logarithmic, etc.) based on their proximity to the target location using.
+
+## Using the GUI: A Demo
