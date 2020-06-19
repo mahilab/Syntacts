@@ -42,6 +42,8 @@ This will provide an overview of the GUI's panels and a basic guide about their 
 - The Palette and Library panels are located on the left side of the GUI.
 - The Palette contains tools to create different Signals. Signals represent various vibration waveforms. 
 - Using the Palette, you can use different types of oscillators, envelopes, and processes to create your desired cue.
+  - Sine, Square, Saw, and Triangle classes are available in Syntacts. These implement typical oscillators with normalized amplitude and infinite duration.
+  - You can use the Envelope, ASR, and ADSR (Attack, (Decay), Sustain, Release) Signals to define amplitude modifiers with finite duration.
 - The Library allows you to save and load created Signals.
 
 # Player
