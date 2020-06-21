@@ -81,13 +81,24 @@ This will run you through an example to teach you how to use the various compone
 
 # Designing a Cue
 
-- We will begin by designing a cue using the Paletter and the Designer.
+- We will begin by designing a cue using the Palette and the Designer.
+- To design a cue, drag a Signal from the Palette into the Designer.
+- You can change the frequency of the cue by dragging the frequency toggle. 
+    - If you want to evaluate Syntacts without tactor hardware, make sure the frequency is high enough to be audible for speakers (e.g. 440 Hz). Low frequencies can potentially damage speakers! For this reason, most of the Syntacts examples are coded with frequencies in the hearing range. If you are actually outputting to a tactor, use frequencies appropriate for it (e.g. 150-250 Hz).
+
+*Demo:*
 - First, drag a Sine cue from the Palette into the Designer.
 - Change the frequency of the Sine cue to 10 Hz.
-  - You can change the frequency of the cue by dragging the frequency toggle. 
-    - If you want to evaluate Syntacts without tactor hardware, make sure the frequency is high enough to be audible for speakers (e.g. 440 Hz). Low frequencies can potentially damage speakers! For this reason, most of the Syntacts examples are coded with frequencies in the hearing range. If you are actually outputting to a tactor, use frequencies appropriate for it (e.g. 150-250 Hz).
 - Next, drag a Square cue from the Palette into the Designer below the Sine cue.
 - Change the frequency of the Square cue to 250 Hz.
 - This should have created a Signal of infinite duration that looks like repeated vertical ovals.
+
+# Saving a Cue to the Library
+
+- You can save a designed cue in the Library.
+- After creating a cue, type the desired name of the cue into the library. Click the `+` button to save the cue under that name.
+
+*Demo:*
+- Save the cue created above to the Library under the name "Tutorial".
 
 *To be continued*
