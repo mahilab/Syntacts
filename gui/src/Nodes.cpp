@@ -37,6 +37,7 @@ const std::string &signalName(std::type_index id)
         {typeid(tact::Envelope), "Envelope"},
         {typeid(tact::ASR), "ASR"},
         {typeid(tact::ADSR), "ADSR"},
+        {typeid(tact::ExpDec), "Exponential Decay"},
         {typeid(tact::KeyedEnvelope), "Keyed Envelope"},
         {typeid(tact::SignalEnvelope), "Signal Envelope"},
         {typeid(tact::Stretcher), "Stretcher"},
@@ -86,6 +87,8 @@ std::shared_ptr<Node> makeNode(PItem id)
         return std::make_shared<ASRNode>();
     if (id == PItem::ADSR)
         return std::make_shared<ADSRNode>();
+    if (id == PItem::ExpDec)
+        return std::make_shared<ExpDecNode>();
     if (id == PItem::PolyBezier)
         return std::make_shared<PolyBezierNode>();
     if (id == PItem::Stretcher)
@@ -549,6 +552,19 @@ void ADSRNode::update()
 
     if (changed)
         sig = tact::ADSR(adsr[0], adsr[1], adsr[2], adsr[3], amp[0], amp[1]);
+}
+
+void ExpDecNode::update() {
+    bool changed = false;
+    auto cast = (tact::ExpDec*)sig.get();
+    float amplitude = (float)cast->amplitude;
+    float decay     = (float)cast->decay;
+    if (ImGui::DragFloat("Amplitude", &amplitude, 0.001, 0, 1))
+        changed = true;
+    if (ImGui::DragFloat("Decay", &decay, 0.01, 0.000001, 100))
+        changed = true;
+    if (changed)
+        sig = tact::ExpDec(amplitude, decay);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

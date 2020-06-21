@@ -166,6 +166,11 @@ struct ADSRNode : public SignalNode<tact::ADSR> {
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+struct ExpDecNode : public SignalNode<tact::ExpDec> {
+    void update();
+};
+
+///////////////////////////////////////////////////////////////////////////////
 
 struct NoiseNode : public SignalNode<tact::Noise> {
     void update();

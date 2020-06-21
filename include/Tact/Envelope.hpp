@@ -104,6 +104,22 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/// Exponential decay according to the law y = A*e^(-Bt)
+class SYNTACTS_API ExpDec {
+public:
+    /// Default constructor
+    ExpDec(double amplitude = 1, double decay = 6.907755);
+    double sample(double t) const;
+    double length() const;
+public:
+    double amplitude;
+    double decay;
+private:
+    TACT_SERIALIZE(TACT_MEMBER(amplitude), TACT_MEMBER(decay));
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
 /// An object which gives a Cue a length and/or shape
 class SYNTACTS_API SignalEnvelope
 {

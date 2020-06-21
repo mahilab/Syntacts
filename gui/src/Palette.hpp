@@ -25,6 +25,7 @@ enum class PItem {
     Envelope,
     ASR,
     ADSR,
+    ExpDec,
     KeyedEnvelope,
     SignalEnvelope,
     PolyLine,

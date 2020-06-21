@@ -31,6 +31,7 @@ const std::string &palletteString(PItem id)
         {PItem::Envelope, "Envelope"},
         {PItem::ASR, "ASR"},
         {PItem::ADSR, "ADSR"},
+        {PItem::ExpDec, "Exponential Decay"},
         {PItem::KeyedEnvelope, "Keyed Envelope"},
         {PItem::SignalEnvelope, "Signal Envelope"},
         {PItem::PolyLine, "PolyLine"},
@@ -48,7 +49,7 @@ void Palette::update()
     ImGui::BeginChild("PalleteList", ImVec2(0, avail.y));
     static std::vector<std::pair<std::string, std::vector<PItem>>> signals = {
         {"Oscillators", {PItem::Sine, PItem::Square, PItem::Saw, PItem::Triangle, PItem::Chirp, PItem::FM, PItem::Pwm, PItem::Noise}},
-        {"Envelopes", {PItem::Envelope, PItem::ASR, PItem::ADSR, PItem::PolyBezier}},
+        {"Envelopes", {PItem::Envelope, PItem::ASR, PItem::ADSR, PItem::ExpDec, PItem::PolyBezier}},
         {"Processes", {PItem::Sum, PItem::Product, PItem::Repeater, PItem::Stretcher, PItem::Reverser}},
         {"General", {PItem::Expression, PItem::Ramp, PItem::Scalar}}};
     for (auto &section : signals)
