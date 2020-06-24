@@ -70,9 +70,6 @@ This will provide an overview of the GUI's panels and a basic guide about their 
 - The Spatializer is the third tab located in the center of the GUI.
 - This maps multiple channels to a normalized (0 to 1) continuous 1D or 2D spatial representation.
 - You can create a grid with a specific number of divisions to match the physical layout of a tactor array.
-- Drag channels onto the grid to position them as desired.
-- You can then set a virtual target coordinate and radius to play and blend multiple tactors at once.
-- The volume of channels is interpolated according to a specified roll-off law (ie. linear, logarithmic, etc.) based on their proximity to the target location using.
 
 ## Using the GUI: A Demo
 
@@ -118,7 +115,12 @@ This will run you through an example to teach you how to use the various compone
 
 # Using the Spatializer
 
-- You can change the spatial layout of a Signal using the Spatializer.
-- Start by dragging a Signal from the Library onto the Signal bar on the right side of the Spatializer.
+- You can change the spatial layout of how a Signal is played using the Spatializer.
+- Start by dragging the desired Signal from the Library onto the Signal bar on the right side of the Spatializer.
 - You can create a grid representing the physical layout of your tactor array by changing the number of X and Y divisions.
   - To make the grid 1-Dimensional, click the grid button next to the divisions.
+- Position the channels on the grid using the `Fill` button and dragging the channel numbers to the desired locations.
+- You can then set a virtual target coordinate and radius to play and blend multiple tactors at once. Do this by right-mouse dragging the target around the grid or by using the Position and Radius toggles on the right side of the Spatializer.
+- The volume of channels is interpolated according to a specified roll-off law (ie. linear, logarithmic, etc.) based on their proximity to the target location using. You can change this using the Roll-Off drop-down bar.
+
+*Demo:*
