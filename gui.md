@@ -84,6 +84,7 @@ This will run you through an example to teach you how to use the various compone
 - To design a cue, drag a Signal from the Palette into the Designer.
 - You can change the frequency of the cue by dragging the frequency toggle or double clicking the frequency bar. 
     - If you want to evaluate Syntacts without tactor hardware, make sure the frequency is high enough to be audible for speakers (e.g. 440 Hz). Low frequencies can potentially damage speakers! For this reason, most of the Syntacts examples are coded with frequencies in the hearing range. If you are actually outputting to a tactor, use frequencies appropriate for it (e.g. 150-250 Hz).
+- To delete a cue, simply click the `X` on the Signal bar.
 
 *Demo:*
 - First, drag a Sine cue from the Palette into the Designer.
