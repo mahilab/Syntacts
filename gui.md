@@ -56,7 +56,6 @@ This will provide an overview of the GUI's panels and a basic guide about their 
 
 - The Designer is the first tab located in the center of the GUI.
 - This is where you can drag Signals to create your desired cue.
-- You can combine Signals using different processes. Signals can be mixed using basic arithmetic. Multiplying and adding Signals can be thought of as an element-wise operation between two vectors.
 - You can also change the frequency of Signals by using your mouse to move the frequency toggle.
 
 # Sequencer
@@ -83,7 +82,7 @@ This will run you through an example to teach you how to use the various compone
 
 - We will begin by designing a cue using the Palette and the Designer.
 - To design a cue, drag a Signal from the Palette into the Designer.
-- You can change the frequency of the cue by dragging the frequency toggle. 
+- You can change the frequency of the cue by dragging the frequency toggle or double clicking the frequency bar. 
     - If you want to evaluate Syntacts without tactor hardware, make sure the frequency is high enough to be audible for speakers (e.g. 440 Hz). Low frequencies can potentially damage speakers! For this reason, most of the Syntacts examples are coded with frequencies in the hearing range. If you are actually outputting to a tactor, use frequencies appropriate for it (e.g. 150-250 Hz).
 
 *Demo:*
@@ -99,6 +98,16 @@ This will run you through an example to teach you how to use the various compone
 - After creating a cue, type the desired name of the cue into the library. Click the `+` button to save the cue under that name.
 
 *Demo:*
-- Save the cue created above to the Library under the name "Tutorial".
+- Save the cue created above to the Library under the name "sig1".
 
-*To be continued*
+# Mixing Signals
+
+- Signals can be mixed using basic arithmetic. Multiplying and adding Signals can be thought of as an element-wise operation between two vectors.
+  - Multiplying two Signals creates a new Signal of duration equal to the shortest operand.
+  - Adding two Signals creates a new Signal of duration equal to the longest operand.
+- The default process for mixing Signals in the GUI is multiplication.
+  - Above, "sig1" is a 10 Hz Sine oscillator multiplied by a 250 Hz Square oscillator.
+- You can drag different Processes from the Palette into the Designer to create custom mixed Signals.
+- You can also mix custom Signals together by dragging Signals from the Library into the Designer.
+
+*Demo:*
