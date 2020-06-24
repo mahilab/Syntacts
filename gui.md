@@ -87,11 +87,6 @@ This will run you through an example to teach you how to use the various compone
 - To delete a cue, simply click the `X` on the Signal bar.
 
 *Demo:*
-- First, drag a Sine cue from the Palette into the Designer.
-- Change the frequency of the Sine cue to 10 Hz.
-- Next, drag a Square cue from the Palette into the Designer below the Sine cue.
-- Change the frequency of the Square cue to 250 Hz.
-- This should have created a Signal of infinite duration that looks like repeated vertical ovals.
 
 # Saving a Cue to the Library
 
@@ -99,7 +94,7 @@ This will run you through an example to teach you how to use the various compone
 - After creating a cue, type the desired name of the cue into the library. Click the `+` button to save the cue under that name.
 
 *Demo:*
-- Save the cue created above to the Library under the name "sig1".
+
 
 # Mixing Signals
 
@@ -107,8 +102,16 @@ This will run you through an example to teach you how to use the various compone
   - Multiplying two Signals creates a new Signal of duration equal to the shortest operand.
   - Adding two Signals creates a new Signal of duration equal to the longest operand.
 - The default process for mixing Signals in the GUI is multiplication.
-  - Above, "sig1" is a 10 Hz Sine oscillator multiplied by a 250 Hz Square oscillator.
 - You can drag different Processes from the Palette into the Designer to create custom mixed Signals.
 - You can also mix custom Signals together by dragging Signals from the Library into the Designer.
+
+*Demo:*
+
+# Sequencing Cues from the Library
+
+- Signals can be sequenced by dragging Signals from the Library into the Sequencer.
+- You can drag Signals directly onto the track or use the `+` button to place Signals immediately after each other.
+- Use the `-` button to delete a Signal from the Sequence.
+- You can move the cues backwards and forwards on the track to determine their position in time.
 
 *Demo:*
