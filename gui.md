@@ -115,3 +115,10 @@ This will run you through an example to teach you how to use the various compone
 - You can move the cues backwards and forwards on the track to determine their position in time.
 
 *Demo:*
+
+# Using the Spatializer
+
+- You can change the spatial layout of a Signal using the Spatializer.
+- Start by dragging a Signal from the Library onto the Signal bar on the right side of the Spatializer.
+- You can create a grid representing the physical layout of your tactor array by changing the number of X and Y divisions.
+  - To make the grid 1-Dimensional, click the grid button next to the divisions.
