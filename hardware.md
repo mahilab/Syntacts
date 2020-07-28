@@ -32,8 +32,8 @@ Below you fill find simple tactile displays that you can create or learn from as
 |---|:-:|
 |**Image**|<img src="https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/array.png" width="200">|
 |**Description**|High density 2D tactile array|
-|**Actuators**|24x MPlus 1040W|
-|**CAD/BOM**|[syntacts_array_3x8.zip]()|
+|**Actuators**|24x 1040 LRAs|
+|**CAD/BOM**|[syntacts_array_v1.0.zip](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/displays/syntacts_array_v1.0.zip)|
 |**License**|[TAPR Open Hardware License](https://tapr.org/the-tapr-open-hardware-license/)|
 
 ## Actuators
@@ -51,12 +51,13 @@ The following table lists actuators that have been tested and are known to run w
 
 ## Audio Interfaces
 
-We have tested the following audio interfaces with Syntacts. As above, this is not an exhaustive list and in general Syntacts will work with virtually any audio interface on the market. 
+We have tested the following audio interfaces with Syntacts. As above, this is not an exhaustive list and in general Syntacts will work with virtually any audio interface on the market. Not all devices provide an ASIO driver for Windows, so take note of this when ordering you device. 
 
-|Manufacturer|Product Name|Max Channels|ASIO Driver|Approx. Cost|
-|---|---|---|---|---|
-|MOTU|[24Ao](https://motu.com/products/avb/24ai-24ao)|24|Excellent|$1000|
-|MOTU|[UltraLite Mk4](https://motu.com/products/proaudio/ultralite-mk4)|12|Excellent|$600|
-|ASUS|[Xonar U7 MKII](https://www.asus.com/us/Sound-Cards/Xonar-U7-MKII/)|8|Good|$90|
-|ASUS|[Xonar AE](https://www.asus.com/Sound-Cards/Xonar-AE/)|8|Good|$80|
-|Soundblaster|[SB Audigy RX7.1](https://us.creative.com/p/sound-blaster/sound-blaster-audigy-rx)|8|Ok|$50|
+|Manufacturer|Product Name|Interface|Max Channels|ASIO Driver|Approx. Cost|
+|---|---|---|---|---|---|
+|MOTU|[24Ao](https://motu.com/products/avb/24ai-24ao)|USB|24|Excellent|$1000|
+|MOTU|[UltraLite Mk4](https://motu.com/products/proaudio/ultralite-mk4)|USB|12|Excellent|$600|
+|ASUS|[Xonar U7 MKII](https://www.asus.com/us/Sound-Cards/Xonar-U7-MKII/)|USB|8|Good|$90|
+|StarTech|[7.1 USB External Adapter](https://www.startech.com/Cards-Adapters/Sound/USB-Audio/USB-7-Channel-Audio-Adapter-with-SPDIF~ICUSBAUDIO7D)|USB|8|N/A|$50|
+|ASUS|[Xonar AE](https://www.asus.com/Sound-Cards/Xonar-AE/)|PCIe|8|Good|$80|
+|Soundblaster|[SB Audigy RX7.1](https://us.creative.com/p/sound-blaster/sound-blaster-audigy-rx)|PCIe|8|Ok|$50|
