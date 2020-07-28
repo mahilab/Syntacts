@@ -23,18 +23,20 @@ CAD/EDA files, bill of materials, and documentation for both variants can be fou
 |**3D Model**| [syntacts_amp_v1.2.step](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/amps/syntacts_amp_v1.2.step) | [syntacts_amp_v3.1.step](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/amps/syntacts_amp_v3.1.step) | 
 |**Manual**| [syntacts_amp_v1.2.pdf](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/amps/syntacts_amp_v1.2.pdf) | [syntacts_amp_v3.1.pdf](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/amps/syntacts_amp_v3.1.pdf) | 
 |**License**|[TAPR Open Hardware License](https://tapr.org/the-tapr-open-hardware-license/)|[TAPR Open Hardware License](https://tapr.org/the-tapr-open-hardware-license/)|
+|**Designer**|Evan Pezent|Evan Pezent|
 
 ## Tactile Displays
 
 Below you fill find simple tactile displays that you can create or learn from as you get started with Syntacts. You may modify the designs however you like.
 
-|Display|Syntacts 3x8 Array|
-|---|:-:|
-|**Image**|<img src="https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/array.png" width="200">|
-|**Description**|High density 2D tactile array|
-|**Actuators**|24x 1040 LRAs|
-|**CAD/BOM**|[syntacts_array_v1.0.zip](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/displays/syntacts_array_v1.0.zip)|
-|**License**|[TAPR Open Hardware License](https://tapr.org/the-tapr-open-hardware-license/)|
+|Display|Syntacts Array|Syntacts Bracelet|
+|---|:-:|:-:|
+|**Image**|<img src="https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/array.png" width="200">|<img src="https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/bracelet.png" width="200">|
+|**Description**|High density 2D tactile array|Tactile bracelet|
+|**Actuators**|24x 10mm LRAs|8x 10mm LRAs|
+|**CAD/BOM**|[syntacts_array_v1.0.zip](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/displays/syntacts_array_v1.0.zip)|*Comming Soon*|
+|**License**|[TAPR Open Hardware License](https://tapr.org/the-tapr-open-hardware-license/)|[TAPR Open Hardware License](https://tapr.org/the-tapr-open-hardware-license/)|
+|**Designer**|Brandon Cambio|Roderico Garcia|
 
 ## Actuators
 
