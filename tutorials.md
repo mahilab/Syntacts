@@ -10,7 +10,7 @@ Below you can find a list of Syntacts tutorials related to both the software and
 |---|---|
 |[Building](building.md)|Learn to build the Syntacts library, plugin, and GUI from the C++ source code.|
 |[C++ API](cpp.md)|Learn to setup and program a project using the Syntacts C++ API.|
-|C# API|*Coming soon*|
+|[C# API](cs.md)|Learn to setup and program a project using the Syntacts C# API.|
 |[Python API](python.md)|Learn to setup and program a project using the Syntacts Python API.| 
 |Unity|*Coming soon*|
 |[GUI](gui.md)|*Coming soon*|
