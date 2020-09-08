@@ -112,7 +112,7 @@ Signal sig3 = 0.5 * (sqr + sin) * asr;
 
 ```cs
 // 250 Hz square wave amplitude modulated with a 20 Hz sine wave and ASR envelope.
-Signal sig4 = Square(250) * Sine(20) * ASR(1,1,1);
+Signal sig4 = new Square(250) * new Sine(20) * new ASR(1,1,1);
 ```
 
 - Once you have created a complete Signal, it can be played on the Session.
@@ -168,7 +168,7 @@ sig6.Push(sigA).Push(-1).Push(sigB);
 // Sequence of sig4, sig5, and sig6. Note this will also modify sig4.
 Sequence sig7 = new Sequence();
 sig7.Push(sig4).Push(sig5).Push(sig6); 
-# Play sig7 on channel 0 for its length of 23 seconds
+// Play sig7 on channel 0 for its length of 23 seconds
 session.Play(0, sig7)
 Sleep(sig7.length)
 ```
@@ -178,7 +178,7 @@ Sleep(sig7.length)
 ```cs
 // insert 1 s of noise starts at the 4 second mark of sig5
 sig5.Insert(new Noise() * new Envelope(1), 4); 
-# Play sig5 on channel 0
+// Play sig5 on channel 0
 session.Play(0, sig5) 
 Sleep(sig5.length)
 ```
