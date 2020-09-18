@@ -39,15 +39,16 @@ using namespace rigtorp;
 /// Channel structure
 class Channel {
 public:
-    Signal signal;
-    double time   = 0.0; 
-    double sampleLength = 0.0;
-    double  volume = 1.0f;
-    double  lastVolume = 1.0f;
-    double  pitch  = 1.0f;
-    double  lastPitch = 1.0f;
-    bool   paused = false;
-    bool   stopped = true;
+    Signal  signal;
+    double  time         = 0.0; 
+    double  sampleLength = 0.0;
+    double  volume       = 1.0;
+    double  lastVolume   = 1.0;
+    double  pitch        = 1.0;
+    double  lastPitch    = 1.0;
+    double  level        = 0.0;
+    bool    paused       = false;
+    bool    stopped      = true;
     
     void fillBuffer(float* buffer, unsigned long frames) {
         // interp volume
@@ -60,17 +61,23 @@ public:
         pitch = lastPitch;
 
         if (paused || stopped) {
-            for (unsigned long f = 0; f < frames; ++f) 
+            for (unsigned long f = 0; f < frames; ++f) {
                 buffer[f] = 0;
+                level     = 0;
+            }
         }
         else {
             // fill buffer
+            double sum_output = 0;
             for (unsigned long f = 0; f < frames; ++f) {
                 pitch += pitchIncr;
                 volume += volumeIncr;
-                buffer[f] = volume > 0 ? static_cast<float>( signal.sample(time) * volume ) : 0;
+                double output = signal.sample(time) * volume;
+                sum_output += std::abs(output);
+                buffer[f] = static_cast<float>(output);
                 time += sampleLength * pitch;
             }
+            level = 2 * sum_output / frames;
         }
         if (time > signal.length()) {
             // paused = true;
@@ -156,6 +163,13 @@ struct GetPitch : public Command {
         pitch = channel.pitch;
     }
     double pitch;
+};
+
+struct GetLevel : public Command {
+    virtual void performImpl(Channel& channel) override {
+        level = channel.level;
+    }
+    double level;
 };
 
 } // private namespace
@@ -274,11 +288,11 @@ public:
     }
 
     bool isPlaying(int channel) {
-        return !m_channels[channel].paused && !m_channels[channel].stopped; // this *should* be thread safe, TBD
+        return !m_channels[channel].paused && !m_channels[channel].stopped; 
     }
 
     bool isPaused(int channel) {
-        return m_channels[channel].paused; // this *should* be thread safe, TBD
+        return m_channels[channel].paused; 
     }
 
     int play(int channel, Signal signal) {
@@ -334,7 +348,14 @@ public:
             return SyntactsError_NotOpen;
         if (!(channel < m_channels.size()))
             return SyntactsError_InvalidChannel;
-        return m_channels[channel].volume; // this *should* be thread safe, TBD
+        if constexpr (std::atomic<double>::is_always_lock_free) 
+            return m_channels[channel].volume; // this *should* be thread safe, TBD
+        else {
+            auto command = std::make_shared<GetVolume>();
+            bool success = m_commands.try_push(std::move(command));
+            assert(success);
+            return command->volume;
+        } 
     }
 
     int setPitch(int channel, double pitch) {
@@ -355,7 +376,29 @@ public:
             return SyntactsError_NotOpen;
         if (!(channel < m_channels.size()))
             return SyntactsError_InvalidChannel;
-        return m_channels[channel].pitch; // this *should* be thread safe, TBD
+        if constexpr (std::atomic<double>::is_always_lock_free) 
+            return m_channels[channel].pitch;
+        else {
+            auto command = std::make_shared<GetPitch>();
+            bool success = m_commands.try_push(std::move(command));
+            assert(success);
+            return command->pitch;
+        } 
+    }
+
+    double getLevel(int channel) {
+        if (!isOpen())
+            return SyntactsError_NotOpen;
+        if (!(channel < m_channels.size()))
+            return SyntactsError_InvalidChannel;
+        if constexpr (std::atomic<double>::is_always_lock_free) 
+            return m_channels[channel].level;
+        else {        
+            auto command = std::make_shared<GetLevel>();
+            bool success = m_commands.try_push(std::move(command));
+            assert(success);
+            return command->level;
+        }
     }
 
     const Device& getCurrentDevice() const {
@@ -659,6 +702,10 @@ int Session::setPitch(int channel, double pitch) {
 
 double Session::getPitch(int channel) {
     return m_impl->getPitch(channel);
+}
+
+double Session::getLevel(int channel) {
+    return m_impl->getLevel(channel);
 }
 
 const Device& Session::getCurrentDevice() const {

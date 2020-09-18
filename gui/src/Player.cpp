@@ -123,15 +123,26 @@ void Player::updateChannels()
 
             ImGui::BeginDisabled(inSpat);
             float xRem = ImGui::GetContentRegionAvail().x;
-            ImGui::PushItemWidth((xRem-4) * 0.5f);
+            float item_width = (xRem-4) * 0.5f;
+            float item_height = ImGui::GetFrameHeight();
+            ImGui::PushItemWidth(item_width);
             ImGui::SameLine();
             float v = (float)gui.device.session->getVolume(i);
+            auto old_cpos = ImGui::GetCurrentWindow()->DC.CursorPos;
             if (ImGui::SliderFloat(str("##Volume", i).c_str(), &v, 0, 1, ""))
                 gui.device.session->setVolume(i, v);
+            auto new_cpos = ImGui::GetCurrentWindow()->DC.CursorPos;
             if (ImGui::IsItemClicked(1))
             {
                 v = v == 0.0f ? 1.0f : v == 1.0f ? 0.0f : v < 0.5f ? 0.0f : 1.0f;
                 gui.device.session->setVolume(i, v);
+            }
+            float level = (float)gui.device.session->getLevel(i);
+            if (level != 0) {
+                float meter_width = level * (item_width - 4 - ImGui::GetStyle().GrabMinSize);
+                ImGui::GetCurrentWindow()->DC.CursorPos = old_cpos;
+                ImGui::GetWindowDrawList()->AddRectFilled(old_cpos + ImVec2(2,2), old_cpos + ImVec2(meter_width,item_height-2), IM_COL32(255,255,0,255), ImGui::GetStyle().GrabRounding);
+                ImGui::GetCurrentWindow()->DC.CursorPos = new_cpos;        
             }
 
             ImGui::SameLine();
