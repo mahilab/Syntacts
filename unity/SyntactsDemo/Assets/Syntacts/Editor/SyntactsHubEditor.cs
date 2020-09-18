@@ -140,6 +140,7 @@ public class SyntactsHubEditor : Editor
                     if (EditorGUI.EndChangeCheck())
                         script.session.SetPitch(i, pitch);
                     
+                    EditorGUILayout.Slider("Level", (float)script.session.GetLevel(i), 0, 1);
                 }
             }
             else {
