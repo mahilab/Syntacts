@@ -682,6 +682,12 @@ namespace Syntacts
         { }
     }
 
+    public class ExpDec : Signal {
+        public ExpDec(double amplitude = 1, double decay = 6.907755) :
+            base(Dll.ExpDec_create(amplitude,decay))
+        { }
+    }
+
     ///////////////////////////////////////////////////////////////////////////
     // OSCILLATOR
     ///////////////////////////////////////////////////////////////////////////
@@ -915,7 +921,6 @@ namespace Syntacts
         [DllImport("syntacts-c")]
         public static extern int  Device_defaultSampleRate(Handle session, int d);
 
-
         [DllImport("syntacts-c")]
         public static extern Handle Spatializer_create(Handle session);
         [DllImport("syntacts-c")]
@@ -1022,7 +1027,6 @@ namespace Syntacts
         [DllImport("syntacts-c")]
         public static extern void Sequence_clear(Handle handle);
 
-
         [DllImport("syntacts-c")]
         public static extern Handle Sequence_SigSig(Handle lhs, Handle rhs);
         [DllImport("syntacts-c")]
@@ -1069,6 +1073,8 @@ namespace Syntacts
         public static extern Handle ASR_create(double a, double s, double r, double amp);
         [DllImport("syntacts-c")]
         public static extern Handle ADSR_create(double a, double d, double s, double r, double amp1, double amp2);
+        [DllImport("syntacts-c")]
+        public static extern Handle ExpDec_create(double amplitude, double decay);
 
         [DllImport("syntacts-c")]
         public static extern Handle Sine_create1(Handle x);

@@ -593,6 +593,10 @@ Handle ADSR_create(double a, double d, double s, double r, double amp1, double a
     return store(ADSR(a,d,s,r, amp1, amp2));
 }
 
+Handle ExpDec_create(double amplitude, double decay) {
+    return store(ExpDec(amplitude, decay));
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 Handle Sine_create1(Handle x) {
