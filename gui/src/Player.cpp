@@ -138,10 +138,11 @@ void Player::updateChannels()
                 gui.device.session->setVolume(i, v);
             }
             float level = (float)gui.device.session->getLevel(i);
-            if (level != 0) {
-                float meter_width = level * (item_width - 4 - ImGui::GetStyle().GrabMinSize);
+            level = ImClamp(level, 0.0f, 1.0f);
+            float meter_width = level * (item_width - 4 - ImGui::GetStyle().GrabMinSize);
+            if (level > 0.01f) {
                 ImGui::GetCurrentWindow()->DC.CursorPos = old_cpos;
-                ImGui::GetWindowDrawList()->AddRectFilled(old_cpos + ImVec2(2,2), old_cpos + ImVec2(meter_width,item_height-2), IM_COL32(255,255,0,255), ImGui::GetStyle().GrabRounding);
+                ImGui::GetWindowDrawList()->AddRectFilled(old_cpos + ImVec2(2,2), old_cpos + ImVec2(meter_width,item_height-2), IM_COL32(255,200,0,255), ImGui::GetStyle().GrabRounding);
                 ImGui::GetCurrentWindow()->DC.CursorPos = new_cpos;        
             }
 

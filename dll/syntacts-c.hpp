@@ -47,6 +47,7 @@ EXPORT int Session_setVolume(Handle session, int channel, double volume);
 EXPORT double Session_getVolume(Handle session, int channel);
 EXPORT int Session_setPitch(Handle session, int channel, double pitch);
 EXPORT double Session_getPitch(Handle session, int channel);
+EXPORT double Session_getLevel(Handle session, int channel);
 EXPORT int Session_getChannelCount(Handle session);
 EXPORT double Session_getSampleRate(Handle session);
 EXPORT double Session_getCpuLoad(Handle session);

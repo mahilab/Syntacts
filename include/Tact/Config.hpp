@@ -26,11 +26,11 @@
 
 // Syntacts version numbers
 #define SYNTACTS_VERSION_MAJOR 1
-#define SYNTACTS_VERSION_MINOR 2
+#define SYNTACTS_VERSION_MINOR 3
 #define SYNTACTS_VERSION_PATCH 0
 
 /// If uncommented, Signals will use a fixed size memory pool for allocation.
-/// At this, there doesn't seem to a great deal of benifit from doing this,
+/// At this time, there doesn't seem to a great deal of benifit from doing this,
 /// but one day it may be be possible to reap the benifits of 
 /// cache coherence by using a more efficient pool scheme.
 // #define SYNTACTS_USE_POOL   

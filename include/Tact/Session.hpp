@@ -144,7 +144,7 @@ public:
     /// Gets the pitch on the specified channel of the current device
     double getPitch(int channel);
 
-    /// Gets the mean output level on the specified channel of the current device averaged over an entire buffer.
+    /// Gets the max output level between 0 and 1 for the most recent buffer (useful for visualizations)
     double getLevel(int channel);
 
     /// Gets info for the currently opened device

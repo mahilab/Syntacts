@@ -68,16 +68,16 @@ public:
         }
         else {
             // fill buffer
-            double sum_output = 0;
+            double max_level = 0;
             for (unsigned long f = 0; f < frames; ++f) {
                 pitch += pitchIncr;
                 volume += volumeIncr;
                 double output = signal.sample(time) * volume;
-                sum_output += std::abs(output);
+                max_level = std::abs(output) > max_level ? std::abs(output) : max_level;
                 buffer[f] = static_cast<float>(output);
                 time += sampleLength * pitch;
             }
-            level = 2 * sum_output / frames;
+            level = max_level; // sum_output / frames;
         }
         if (time > signal.length()) {
             // paused = true;

@@ -156,6 +156,9 @@ class Session:
     def get_pitch(self, channel):
         return _tact.Session_getPitch(self._handle, channel)
 
+    def get_level(self, channel):
+        return _tact.Session_getLevel(self._handle, channel)
+
     @property
     def current_device(self):
         idx = _tact.Session_getCurrentDevice(self._handle)
@@ -645,6 +648,7 @@ lib_func(_tact.Session_setVolume, c_int, [Handle, c_int, c_double])
 lib_func(_tact.Session_getVolume, c_double, [Handle, c_int])
 lib_func(_tact.Session_setPitch, c_int, [Handle, c_int, c_double])
 lib_func(_tact.Session_getPitch, c_double, [Handle, c_int])
+lib_func(_tact.Session_getLevel, c_double, [Handle, c_int])
 lib_func(_tact.Session_getChannelCount, c_int, [Handle])
 lib_func(_tact.Session_getSampleRate, c_double, [Handle])
 lib_func(_tact.Session_getCpuLoad, c_double, [Handle])

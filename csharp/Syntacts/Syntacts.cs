@@ -203,6 +203,10 @@ namespace Syntacts
             return Dll.Session_getPitch(handle, channel);
         }
 
+        public double GetLevel(int channel) {
+            return Dll.Session_getLevel(handle, channel);
+        }
+
         public Device currentDevice
         {
             get { return new Device(handle, Dll.Session_getCurrentDevice(handle)); }
@@ -881,6 +885,8 @@ namespace Syntacts
         public static extern int Session_setPitch(Handle session, int channel, double pitch);
         [DllImport("syntacts-c")]
         public static extern double Session_getPitch(Handle session, int channel);
+        [DllImport("syntacts-c")]
+        public static extern double Session_getLevel(Handle session, int channel);
         [DllImport("syntacts-c")]
         public static extern int Session_getChannelCount(Handle session);
         [DllImport("syntacts-c")]

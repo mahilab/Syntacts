@@ -153,6 +153,10 @@ double Session_getPitch(Handle session, int channel) {
     return static_cast<Session*>(session)->getPitch(channel);
 }
 
+double Session_getLevel(Handle session, int channel) {
+    return static_cast<Session*>(session)->getLevel(channel);
+}
+
 int Session_getChannelCount(Handle session) {
     return static_cast<Session*>(session)->getChannelCount();
 }

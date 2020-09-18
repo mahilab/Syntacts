@@ -26,7 +26,7 @@ option(SYNTACTS_USE_STATIC_STD_LIBS "Turn ON to link Syntacts against static run
                                      (i.e. eliminate VCRUNTIME140.dll, etc. dependency" OFF)
 
 # create project
-project(Syntacts VERSION 1.2.0)
+project(Syntacts VERSION 1.3.0)
 
 # add modules
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
