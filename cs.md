@@ -179,8 +179,8 @@ Sleep(sig7.length)
 // insert 1 s of noise starts at the 4 second mark of sig5
 sig5.Insert(new Noise() * new Envelope(1), 4); 
 // Play sig5 on channel 0
-session.Play(0, sig5) 
-Sleep(sig5.length)
+session.PlayAll(signal5);
+Sleep(signal5.length);
 ```
 
 |Relevant Examples(s)|
