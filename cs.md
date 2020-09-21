@@ -147,16 +147,17 @@ Sleep(sig3.length)
 ```cs
 Signal sigA = new Sine(440) * new ASR(1,1,1);      // create 3 second Signal
 Signal sigB = new Square(440) * new ADSR(1,1,1,1); // create 4 second Signal
-
+Console.WriteLine(sigA.length); // 3 s
+Console.WriteLine(sigB.length); // 4 s
+    
 // 7 second Sequence with sigA before sigB
 Sequence sig4 = new Sequence();
 sig4.Push(sigA).Push(sigB); 
-// 1 sec delay and 2 sec pause, 10 sec Sequence
+Console.WriteLine(sig4.length); // 7 s
+// 1 s delay, 2 s pause, 1 s fade
 Sequence sig5 = new Sequence();
-sig5.Push(1).Push(sigA).Push(2).Push(sigB); 
-// 1 sec fade/overlay between sigA and sigB, 6 sec sequence
-Sequence sig6 = new Sequence();
-sig6.Push(sigA).Push(-1).Push(sigB); 
+sig5.Push(1).Push(sigA).Push(2).Push(sigB).Push(-1).Push(sigA);
+Console.WriteLine(sig5.length); //12 s
 ```
 
 - Sequenced signals created above:
@@ -165,12 +166,13 @@ sig6.Push(sigA).Push(-1).Push(sigB);
 - Sequences can also be concatenated:
 
 ```cs
-// Sequence of sig4, sig5, and sig6. Note this will also modify sig4.
-Sequence sig7 = new Sequence();
-sig7.Push(sig4).Push(sig5).Push(sig6); 
-// Play sig7 on channel 0 for its length of 23 seconds
-session.Play(0, sig7)
-Sleep(sig7.length)
+// Sequence of sig4 and sig5. Note this will also modify sig4.
+Sequence sig6 = new Sequence();
+sig6.Push(sig4).Push(sig5); 
+Console.WriteLine(sig6.length); // 19
+// Play sig6 on channel 0 for its length of 19 seconds
+session.Play(0, sig6)
+Sleep(sig6.length)
 ```
 
 - You can also insert Signals into an existing Sequence timeline:
@@ -178,9 +180,9 @@ Sleep(sig7.length)
 ```cs
 // insert 1 s of noise starts at the 4 second mark of sig5
 sig5.Insert(new Noise() * new Envelope(1), 4); 
-// Play sig5 on channel 0
-session.PlayAll(signal5);
-Sleep(signal5.length);
+// Play sig5 on all channels
+session.Play(0, sig5);
+Sleep(sig5.length);
 ```
 
 |Relevant Examples(s)|
