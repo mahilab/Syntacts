@@ -207,7 +207,7 @@ spatial.radius = 0.3;                               // effect radius
 spatial.rollOff = 0;                                // set roll off method (Linear=0)
 spatial.target = new Point(0.2, 0.1);               // target location
 spatial.Play(sig1);                                 // play Signal
-sleep(3);                                           // wait 3 seconds while the Signal plays
+Sleep(3);                                           // wait 3 seconds while the Signal plays
 ```
 
 - To create sweeping motions with tactile arrays, you can move the target location in a `while` or `for` loop along a predescribed path.
