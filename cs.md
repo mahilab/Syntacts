@@ -154,10 +154,12 @@ Console.WriteLine(sigB.length); // 4 s
 Sequence sig4 = new Sequence();
 sig4.Push(sigA).Push(sigB); 
 Console.WriteLine(sig4.length); // 7 s
+
 // 1 sec delay and 2 sec pause, 10 sec Sequence
 Sequence sig5 = new Sequence();
 sig5.Push(1).Push(sigA).Push(2).Push(sigB);
 Console.WriteLine(sig5.length); //10 s
+
 // 1 sec fade/overlay between sigA and sigB, 6 sec sequence
 Sequence sig6 = new Sequence();
 sig6.Push(sigA).Push(-1).Push(sigB);
