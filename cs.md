@@ -147,23 +147,18 @@ Sleep(sig3.length)
 ```cs
 Signal sigA = new Sine(440) * new ASR(1,1,1);      // create 3 second Signal
 Signal sigB = new Square(440) * new ADSR(1,1,1,1); // create 4 second Signal
-Console.WriteLine(sigA.length); // 3 s
-Console.WriteLine(sigB.length); // 4 s
     
 // 7 second Sequence with sigA before sigB
 Sequence sig4 = new Sequence();
 sig4.Push(sigA).Push(sigB); 
-Console.WriteLine(sig4.length); // 7 s
 
 // 1 sec delay and 2 sec pause, 10 sec Sequence
 Sequence sig5 = new Sequence();
 sig5.Push(1).Push(sigA).Push(2).Push(sigB);
-Console.WriteLine(sig5.length); //10 s
 
 // 1 sec fade/overlay between sigA and sigB, 6 sec sequence
 Sequence sig6 = new Sequence();
 sig6.Push(sigA).Push(-1).Push(sigB);
-Console.WriteLine(sig6.length); //6 s
 ```
 
 - Sequenced signals created above:
@@ -175,7 +170,6 @@ Console.WriteLine(sig6.length); //6 s
 // Sequence of sig4, sig5, and sig6. Note this will also modify sig4.
 Sequence sig7 = new Sequence();
 sig7.Push(sig4).Push(sig5).Push(sig6); 
-Console.WriteLine(sig7.length); // 23
 // Play sig7 on channel 0 for its length of 23 seconds
 session.Play(0, sig7)
 Sleep(sig7.length)
