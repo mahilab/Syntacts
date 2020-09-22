@@ -12,7 +12,7 @@ Workspace::Workspace(Gui& gui) : Widget(gui),
 
 void Workspace::update()
 {
-    ImGui::BeginFixed("Workspace", position, size);
+    ImGui::BeginFixed("Workspace", position, size, ImGuiWindowFlags_NoTitleBar);
     if (ImGui::BeginTabBar("WorkspaceTabs"))
     {
         if (ImGui::BeginTabItem(" Designer ##Tab"))

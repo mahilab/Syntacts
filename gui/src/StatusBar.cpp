@@ -38,7 +38,7 @@ StatusBar::StatusBar(Gui& gui) : Widget(gui)
 void StatusBar::update()
 {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(7, 7));
-    ImGui::BeginFixed("StatusBar", position, size);
+    ImGui::BeginFixed("StatusBar", position, size, ImGuiWindowFlags_NoTitleBar);
     renderText();
     renderButtons();
     ImGui::End();
@@ -55,7 +55,7 @@ void StatusBar::renderText()
     else
     {
         m_fadeTime += ImGui::GetIO().DeltaTime;
-        float t = Math::clamp01(m_fadeTime / m_fadeDuration);
+        float t = mahi::util::clamp01(m_fadeTime / m_fadeDuration);
         auto color = m_fadeColors(t);
         ImGui::PushStyleColor(ImGuiCol_Text, color);
         ImGui::LabelText("##InfoText", m_notification.c_str());
@@ -72,19 +72,19 @@ void StatusBar::renderButtons()
     if (gui.device.session)
         cpu = gui.device.session->getCpuLoad();
     float rounded = (int)(cpu * 100.0f)/100.0f;
-    ImGui::PushStyleColor(ImGuiCol_PlotHistogram, m_cpuGradient(Math::clamp01((float)cpu)));
+    ImGui::PushStyleColor(ImGuiCol_PlotHistogram, m_cpuGradient(mahi::util::clamp01((float)cpu)));
     ImGui::ProgressBar(rounded, ImVec2(100, 0));
     ImGui::PopStyleColor();
     showTooltip("Session CPU Thread Load");
 
     ImGui::SameLine();
     if (ImGui::Button(ICON_FA_HOME)) {
-        System::openUrl("https://www.syntacts.org");
+        mahi::gui::open_url("https://www.syntacts.org");
     }
     showTooltip("Open Syntacts Website");
     ImGui::SameLine();
     if (ImGui::Button(ICON_FA_GITHUB)) {
-        System::openUrl("https://github.com/mahilab/Syntacts");
+        mahi::gui::open_url("https://github.com/mahilab/Syntacts");
     }
     showTooltip("Open GitHub Repository");
 
@@ -127,25 +127,25 @@ void StatusBar::renderButtons()
         ImGui::Text("MAHI Lab");
         ImGui::SameLine(150);
         if (ImGui::Button(ICON_FA_HOME "##MAHI")) {
-            System::openUrl("https://mahilab.rice.edu/");
+            mahi::gui::open_url("https://mahilab.rice.edu/");
         }
         ImGui::SameLine(175);
         if (ImGui::Button(ICON_FA_GITHUB "##MAHI")) {
-            System::openUrl("https://github.com/mahilab");
+            mahi::gui::open_url("https://github.com/mahilab");
         }
 
         ImGui::Text("Evan Pezent");
         ImGui::SameLine(150);
         if (ImGui::Button(ICON_FA_HOME "##Evan")) {
-            System::openUrl("http://www.evanpezent.com");
+            mahi::gui::open_url("http://www.evanpezent.com");
         }
         ImGui::SameLine(125);
         if (ImGui::Button(ICON_FA_ENVELOPE "##Evan")) {
-            System::openEmail("epezent@rice.edu", "Syntacts");
+            mahi::gui::open_email("epezent@rice.edu", "Syntacts");
         }
         ImGui::SameLine(175);
         if (ImGui::Button(ICON_FA_GITHUB "##Evan")) {
-            System::openUrl("https://github.com/epezent");
+            mahi::gui::open_url("https://github.com/epezent");
         }
         ImGui::EndPopup();
     }

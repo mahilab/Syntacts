@@ -12,7 +12,7 @@ Player::Player(Gui& gui) : Widget(gui)
 
 void Player::update()
 {
-    ImGui::BeginFixed("Player", position, size);
+    ImGui::BeginFixed("Player", position, size, ImGuiWindowFlags_NoTitleBar);
     ImGui::BeginGroup(); // help group
     BeginPulsable(false,true);
     if (ImGui::Button(ICON_FA_PLAY, ImVec2(25, 0)))
@@ -91,7 +91,7 @@ void Player::updateChannels()
             bool playing = gui.device.session->isPlaying(i);
             if (playing)
                 ImGui::PushStyleColor(ImGuiCol_Button, Grays::Gray50);
-            auto label = str(i);
+            auto label = std::to_string(i);
             bool inSpat = gui.workspace.spatializer.spatializer.hasChannel(i);
             if (inSpat)
                 ImGui::PushStyleColor(ImGuiCol_Text, gui.theme.spatializerColor);
@@ -129,8 +129,10 @@ void Player::updateChannels()
             ImGui::SameLine();
             float v = (float)gui.device.session->getVolume(i);
             auto old_cpos = ImGui::GetCurrentWindow()->DC.CursorPos;
-            if (ImGui::SliderFloat(str("##Volume", i).c_str(), &v, 0, 1, ""))
+            ImGui::PushID(i);
+            if (ImGui::SliderFloat("##Volume", &v, 0, 1, ""))
                 gui.device.session->setVolume(i, v);
+            ImGui::PopID();
             auto new_cpos = ImGui::GetCurrentWindow()->DC.CursorPos;
             if (ImGui::IsItemClicked(1))
             {
@@ -149,12 +151,14 @@ void Player::updateChannels()
             ImGui::SameLine();
             float p = (float)gui.device.session->getPitch(i);
             p = std::log10(p);
-            if (ImGui::SliderFloat(str("##Pitch", i).c_str(), &p, -1, 1, ""))
+            ImGui::PushID(i);
+            if (ImGui::SliderFloat("##Ptich", &p, -1, 1, ""))
                 gui.device.session->setPitch(i, std::pow(10, p));
+            ImGui::PopID();
             if (ImGui::IsItemClicked(1))            
                 gui.device.session->setPitch(i, 1);
             ImGui::PopItemWidth();
-            ImGui::EndDisabled(inSpat);
+            ImGui::EndDisabled();
 
             ImGui::PopID();
         }

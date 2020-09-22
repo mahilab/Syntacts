@@ -69,7 +69,7 @@ void ThemeManager::setTheme(Theme theme)
     m_theme = theme;
     if (theme == DarkDefault)
     {
-        gui.backgroundColor = Grays::Gray5;
+        gui.set_background(Grays::Gray5);
         colors[ImGuiCol_Text] = ImVec4(0.80f, 0.80f, 0.83f, 1.00f);
         colors[ImGuiCol_TextDisabled] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
         colors[ImGuiCol_WindowBg] = ImVec4(0.06f, 0.05f, 0.07f, 0.95f);
@@ -123,7 +123,7 @@ void ThemeManager::setTheme(Theme theme)
     }
     else if (theme == LightDefault)
     {
-        gui.backgroundColor = Grays::Gray90;
+        gui.set_background(Grays::Gray90);
         colors[ImGuiCol_Text] = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
         colors[ImGuiCol_TextDisabled] = ImVec4(0.60f, 0.60f, 0.60f, 1.00f);
         colors[ImGuiCol_WindowBg] = ImVec4(0.94f, 0.94f, 0.94f, 1.00f);
@@ -177,7 +177,7 @@ void ThemeManager::setTheme(Theme theme)
     }
     else if (theme == DarkAlt1)
     {
-        gui.backgroundColor = fromBits(19, 25, 28);
+        gui.set_background(RGBA(19, 25, 28));
         colors[ImGuiCol_Text] = ImVec4(0.95f, 0.96f, 0.98f, 1.00f);
         colors[ImGuiCol_TextDisabled] = ImVec4(0.36f, 0.42f, 0.47f, 1.00f);
         colors[ImGuiCol_WindowBg] = ImVec4(0.11f, 0.15f, 0.17f, 1.00f);
@@ -213,7 +213,7 @@ void ThemeManager::setTheme(Theme theme)
         colors[ImGuiCol_ResizeGripActive] = ImVec4(0.26f, 0.59f, 0.98f, 0.95f);
         colors[ImGuiCol_Tab] = ImVec4(0.20f, 0.25f, 0.29f, 1.00f);
         colors[ImGuiCol_TabHovered] = ImVec4(0.26f, 0.59f, 0.98f, 0.80f);
-        colors[ImGuiCol_TabActive] = fromBits(19, 25, 28);
+        colors[ImGuiCol_TabActive] = RGBA(19, 25, 28);
         colors[ImGuiCol_TabUnfocused] = ImVec4(0.11f, 0.15f, 0.17f, 1.00f);
         colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.11f, 0.15f, 0.17f, 1.00f);
         colors[ImGuiCol_DockingPreview] = ImVec4(0.26f, 0.59f, 0.98f, 0.70f);
@@ -231,7 +231,7 @@ void ThemeManager::setTheme(Theme theme)
     }
     else if (theme == DarkAlt2)
     {
-        gui.backgroundColor = Grays::Gray10;
+        gui.set_background(Grays::Gray10);
         colors[ImGuiCol_Text]                   = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
         colors[ImGuiCol_TextDisabled]           = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
         colors[ImGuiCol_WindowBg]               = ImVec4(0.18f, 0.18f, 0.18f, 1.00f);
@@ -285,7 +285,7 @@ void ThemeManager::setTheme(Theme theme)
     }
     else if (theme == Valve)
     {
-        gui.backgroundColor = fromBits(32, 36, 27);
+        gui.set_background(RGBA(32, 36, 27));
         colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
         colors[ImGuiCol_TextDisabled] = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
         colors[ImGuiCol_WindowBg] = ImVec4(0.29f, 0.34f, 0.26f, 1.00f);

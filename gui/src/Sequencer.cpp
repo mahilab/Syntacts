@@ -7,6 +7,8 @@
 #include <algorithm>
 #include <imgui_internal.h>
 
+inline float Remap(float x, float x0, float x1, float y0, float y1) { return y0 + (x - x0) * (y1 - y0) / (x1 - x0); }
+
 Sequencer::Sequencer(Gui& gui)
     : Widget(gui)
 {

@@ -20,8 +20,8 @@ private:
     void getCurrent();
     void getAvailable();
 public:
-    mahi::gui::Event<void(void)> onSessionOpen;
-    mahi::gui::Event<void(void)> onSessionDestroy;
+    mahi::util::Event<void(void)> onSessionOpen;
+    mahi::util::Event<void(void)> onSessionDestroy;
     std::shared_ptr<tact::Session> session;
 private:
     tact::Device m_currentDev;

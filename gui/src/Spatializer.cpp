@@ -73,10 +73,10 @@ void Spatializer::update()
             ImGui::SliderInt2("##Grid Size", m_divs, 1, 25);    
     ImGui::SameLine();
 
-    ImGui::EnableButton(ICON_FA_MAGNET, &m_snap);
+    ImGui::ToggleButton(ICON_FA_MAGNET, &m_snap);
     
     ImGui::SameLine();
-    ImGui::EnableButton(ICON_FA_TH, &m_2d);
+    ImGui::ToggleButton(ICON_FA_TH, &m_2d);
 
     if (ImGui::Button("Fill", ImVec2(240, 0))) {
         spatializer.clear();
@@ -310,11 +310,11 @@ bool Spatializer(const char *label, SpatializerTarget &target, tact::Curve rollo
     };
     auto snapNode = [&](SpatializerNode &node) {
         if (xdivs > 1)
-            node.pos.x = mahi::gui::Math::roundToNearest(node.pos.x, 1.0f / (xdivs - 1));
+            node.pos.x = mahi::util::round_nearest(node.pos.x, 1.0f / (xdivs - 1));
         else
             node.pos.x = 0;
         if (ydivs > 1)
-            node.pos.y = mahi::gui::Math::roundToNearest(node.pos.y, 1.0f / (ydivs - 1));
+            node.pos.y = mahi::util::round_nearest(node.pos.y, 1.0f / (ydivs - 1));
         else
             node.pos.y = 0;
     };

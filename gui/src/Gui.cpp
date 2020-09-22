@@ -19,6 +19,7 @@ Gui::Gui() : Application(960, 540, "Syntacts", false),
     fs::create_directories(saveDir());
     static auto inifile = saveDir() + "imgui.ini";
     ImGui::GetIO().IniFilename = inifile.c_str();
+    // ImGui::DisableViewports();
     positionWindows();
     
     // ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_ViewportsEnable;
@@ -26,6 +27,7 @@ Gui::Gui() : Application(960, 540, "Syntacts", false),
 }
 
 void Gui::update() {
+    positionWindows();
     static ImGuiIO& io = ImGui::GetIO();
     theme.update();
     device.update();
@@ -55,6 +57,7 @@ const std::string &Gui::saveDir()
 void Gui::positionWindows()
 {
     ImVec2 windowSize = {960, 540};
+    ImVec2 vpPos = ImGui::GetMainViewport()->Pos;
     float margin = 5;
     float barHeight = 33;
     float sidePanelWidth = 180;
@@ -64,23 +67,23 @@ void Gui::positionWindows()
     float fullWidth = windowSize.x - 2 * margin;
     float l = margin;
     float t = margin;
-    library.position = {l,t};
+    library.position = vpPos + ImVec2(l,t);
     library.size =  {sidePanelWidth, columnHeight};
     t += columnHeight + margin;
-    status.position = {l,t};
+    status.position = vpPos + ImVec2(l,t);
     status.size = {fullWidth, barHeight};
     t = margin;
     l += sidePanelWidth + margin;
-    device.position = {l,t};
+    device.position = vpPos + ImVec2(l,t);
     device.size = {centerWidth, barHeight};
     t += barHeight + margin;
-    workspace.position = {l,t};
+    workspace.position = vpPos + ImVec2(l,t);
     workspace.size = {centerWidth, workspaceHeight};
     t += workspaceHeight + margin;
-    visualizer.position = {l,t};
+    visualizer.position = vpPos + ImVec2(l,t);
     visualizer.size = {centerWidth, windowSize.y - workspaceHeight - barHeight * 2 - margin * 5};
     t = margin;
     l += centerWidth + margin;
-    player.position = {l,t};
+    player.position = vpPos + ImVec2(l,t);
     player.size = {sidePanelWidth, columnHeight};
 }

@@ -17,7 +17,7 @@ void Visualizer::setRenderedSignal(tact::Signal sig, Color color)
 
 void Visualizer::update()
 {
-    ImGui::BeginFixed("Visualizer", position, size);
+    ImGui::BeginFixed("Visualizer", position, size, ImGuiWindowFlags_NoTitleBar);
     ImGui::BeginGroup();
     float h = ImGui::GetContentRegionAvail().y - ImGui::GetStyle().ScrollbarSize - ImGui::GetStyle().ItemSpacing.y;
     float len = (float)m_signal.length();

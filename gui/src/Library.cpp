@@ -21,7 +21,7 @@ Library::Library(Gui& gui) : Widget(gui),
                              palette(gui)
 {
     init();
-    gui.onFileDrop.connect(this, &Library::onFileDrop);
+    gui.on_file_drop.connect(this, &Library::onFileDrop);
 }
 
 tact::Signal Library::getSelectedSignal()
@@ -126,7 +126,7 @@ void Library::update()
 {
     bool dummy = true;
     std::lock_guard<std::mutex> lock(m_mtx);
-    ImGui::BeginFixed("Library", position, size);
+    ImGui::BeginFixed("Library", position, size, ImGuiWindowFlags_NoTitleBar);
     if (ImGui::BeginTabBar("LibraryWindowTabs"))
     {
         if (ImGui::BeginTabItem(" Palette ##Tab"))
@@ -159,7 +159,7 @@ void Library::update()
                 if (ImGui::Button("Reveal in File Browser"))
 #endif
                 {
-                    System::openFolder(tact::Library::getLibraryDirectory());
+                    mahi::gui::open_folder(tact::Library::getLibraryDirectory());
                     ImGui::CloseCurrentPopup();
                 }
                 ImGui::PopStyleColor();
@@ -220,7 +220,7 @@ void Library::renderCreateDialog()
         }
     }
     gui.status.showTooltip("Create new Signal");
-    ImGui::EndDisabled(!valid);
+    ImGui::EndDisabled();
 }
 
 void Library::renderLibraryList()
@@ -293,7 +293,7 @@ void Library::renderLibraryControls()
     // EXPORT
     ImGui::SameLine();
     static std::string savePath;
-    if (ImGui::Button(ICON_FA_FILE_EXPORT, ImVec2(buttonWidth, 0)) && System::pickFolder("",savePath) == System::Okay)
+    if (ImGui::Button(ICON_FA_FILE_EXPORT, ImVec2(buttonWidth, 0)) && mahi::gui::pick_dialog(savePath) == DialogResult::DialogOkay)
     {
         fs::path p = savePath + "/" + m_selected + ".sig";
         tact::Library::exportSignal(getSelectedSignal(), p.generic_string(), tact::FileFormat::SIG);
@@ -301,7 +301,7 @@ void Library::renderLibraryControls()
     }
     gui.status.showTooltip("Export Selected Signal");
     ImGui::SameLine();
-    if (ImGui::Button(ICON_FA_MUSIC, ImVec2(buttonWidth, 0)) && System::pickFolder("",savePath) == System::Okay)
+    if (ImGui::Button(ICON_FA_MUSIC, ImVec2(buttonWidth, 0)) && mahi::gui::pick_dialog(savePath) == DialogResult::DialogOkay)
     {
         fs::path p = savePath + "/" + m_selected + ".wav";
         tact::Library::exportSignal(getSelectedSignal(), p.generic_string(), tact::FileFormat::WAV);
@@ -309,7 +309,7 @@ void Library::renderLibraryControls()
     }
     gui.status.showTooltip("Export Selected Signal as WAV");
     ImGui::SameLine();
-    if (ImGui::Button(ICON_FA_TABLE, ImVec2(buttonWidth, 0)) && System::pickFolder("",savePath) == System::Okay)
+    if (ImGui::Button(ICON_FA_TABLE, ImVec2(buttonWidth, 0)) && mahi::gui::pick_dialog(savePath) == DialogResult::DialogOkay)
     {
         fs::path p = savePath + "/" + m_selected + ".csv";
         tact::Library::exportSignal(getSelectedSignal(), p.generic_string(), tact::FileFormat::CSV);
@@ -318,7 +318,7 @@ void Library::renderLibraryControls()
     gui.status.showTooltip("Export Selected Signal as CSV");
 
     ImGui::SameLine();
-    if (ImGui::Button(ICON_FA_CODE, ImVec2(buttonWidth, 0)) && System::pickFolder("",savePath) == System::Okay)
+    if (ImGui::Button(ICON_FA_CODE, ImVec2(buttonWidth, 0)) && mahi::gui::pick_dialog(savePath) == DialogResult::DialogOkay)
     {
         fs::path p = savePath + "/" + m_selected + ".json";
         tact::Library::exportSignal(getSelectedSignal(), p.generic_string(), tact::FileFormat::JSON);
@@ -326,5 +326,5 @@ void Library::renderLibraryControls()
     }
     gui.status.showTooltip("Export Selected Signal as JSON");
 
-    ImGui::EndDisabled(disabled);
+    ImGui::EndDisabled();
 }

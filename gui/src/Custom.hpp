@@ -1,5 +1,5 @@
 #pragma once
-#include <mahi/imgui_custom.hpp>
+#include <Mahi/Gui/imgui_custom.hpp>
 #include <imgui_internal.h>
 #include <vector>
 #include <string>
@@ -9,8 +9,8 @@ namespace ImGui {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool MiniSliderScalar(const char* label, ImGuiDataType data_type, void* p_data, const void* p_min, const void* p_max, bool top, float power);
-bool MiniSliderFloat(const char* label, float* v, float v_min, float v_max, bool top = true, float power = 1.0f);
+// bool MiniSliderScalar(const char* label, ImGuiDataType data_type, void* p_data, const void* p_min, const void* p_max, bool top, float power);
+// bool MiniSliderFloat(const char* label, float* v, float v_min, float v_max, bool top = true, float power = 1.0f);
 
 void RenderGrid(ImRect bb, int nx, int ny, ImU32 gridColor, ImU32 bgColor, float thickness = 1.0f, float rounding = 0);
 void PlotSignal(const char* label,  const tact::Signal& sig, std::vector<ImVec2>& points, float t1, float t2, ImVec4 color, float thickness, ImVec2 size = ImVec2(-1,0), bool grid = true, bool text = true);
@@ -22,19 +22,6 @@ void RenderSignalInBounds(ImDrawList* DrawList, const tact::Signal& sig, float t
 bool TimelineScrollbar(float* ltime, float* rtime, bool* lrgrabbed, bool* rgrabbed, bool* cgrabbed, ImVec2 size = ImVec2(-1, 0), float grabWidth = 10);
 
 ///////////////////////////////////////////////////////////////////////////////
-
-/// Begins a fixed size window without a header
-inline void BeginFixed(const char* name, const ImVec2& pos, const ImVec2& size) {
-    // ImGui::SetNextWindowPos(pos, ImGuiCond_Always);
-    // ImGui::SetNextWindowSize(size, ImGuiCond_Always);
-    // ImGui::Begin(name, nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
-    auto posV = ImGui::GetMainViewport()->Pos;
-    posV.x += pos.x;
-    posV.y += pos.y;
-    ImGui::SetNextWindowPos(posV, ImGuiCond_Appearing);
-    ImGui::SetNextWindowSize(size, ImGuiCond_Appearing);
-    ImGui::Begin(name, nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
-}
 
 inline bool TintedButton(const char* label, ImVec4 color, const ImVec2& size = ImVec2(0,0)) {
     ImGui::PushStyleColor(ImGuiCol_Button, color);
@@ -70,7 +57,7 @@ inline double NiceNum(double x, bool round)
         nf = 5;
     else
         nf = 10;
-    return nf * std::pow(10., expv);
+    return nf * std::pow(10, expv);
 }
 
 } // namespace ImGui

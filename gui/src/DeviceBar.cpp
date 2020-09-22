@@ -64,7 +64,7 @@ void DeviceBar::switchDevice(const tact::Device &dev, double sampleRate)
         result = session->close();
     if (result != SyntactsError_NoError)
     {
-        gui.status.pushMessage("Failed to close device! Error: " + str(result), StatusBar::Error);
+        gui.status.pushMessage("Failed to close device! Error: " + std::to_string(result), StatusBar::Error);
         return;
     }
     // open requested device
@@ -72,11 +72,11 @@ void DeviceBar::switchDevice(const tact::Device &dev, double sampleRate)
     getCurrent();
     if (result != SyntactsError_NoError)
     {
-        gui.status.pushMessage("Failed to open device! Error: " + str(result), StatusBar::Error);
+        gui.status.pushMessage("Failed to open device! Error: " + std::to_string(result), StatusBar::Error);
         return;
     }
     // update current and available
-    std::string msg = "Opened \"" + dev.name + "\" under " + dev.apiName + " @ " + str(session->getSampleRate()) + " Hz";
+    std::string msg = "Opened \"" + dev.name + "\" under " + dev.apiName + " @ " + std::to_string((int)session->getSampleRate()) + " Hz";
     gui.status.pushMessage(msg, StatusBar::Info);
     onSessionOpen.emit();
 }
@@ -99,7 +99,7 @@ void DeviceBar::switchSampleRate(double sampleRate)
 
 void DeviceBar::update() {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(7, 7));
-    ImGui::BeginFixed("Device Bar", position, size);
+    ImGui::BeginFixed("Device Bar", position, size, ImGuiWindowFlags_NoTitleBar);
 
     ImGui::BeginGroup(); // help group
     renderApiSelection();
@@ -188,12 +188,12 @@ void DeviceBar::renderDeviceSampleRates()
     static std::string rate;
     rate.clear();
     if (session)
-        rate = str(session->getSampleRate(), "Hz");
+        rate = fmt::format("{} Hz", (int)session->getSampleRate());
     if (ImGui::BeginCombo("##SampleRates", rate.c_str()))
     {
         for (auto &s : m_currentDev.sampleRates)
         {
-            rate = str(s, "Hz");
+            rate = fmt::format("{} Hz", (int)s);
             bool selected = false;
             if (session)
                 selected = session->getSampleRate() == s;
@@ -237,15 +237,17 @@ void DeviceBar::renderDeviceDetails()
             auto api = d.apiName;
             if (d.isApiDefault)
                 api += "*";
-            std::string id = str(d.index);
+            std::string id = std::to_string(d.index);
             if (d.isDefault)
                 id += "*";
             // ImGui::Separator();
-            if (ImGui::Button(str("##", d.index).c_str(), ImVec2(-1, 0)))
+            ImGui::PushID(d.index);
+            if (ImGui::Button("##", ImVec2(-1, 0)))
             {
                 switchDevice(d);
                 ImGui::CloseCurrentPopup();
             }
+            ImGui::PopID();
             ImGui::SameLine(9);
             ImGui::Text(id.c_str());
             ImGui::SameLine(50);
@@ -253,7 +255,7 @@ void DeviceBar::renderDeviceDetails()
             ImGui::SameLine(400);
             ImGui::Text(api.c_str());
             ImGui::SameLine(500);
-            ImGui::Text(str(d.maxChannels).c_str());
+            ImGui::Text(std::to_string(d.maxChannels).c_str());
         }
         ImGui::PopStyleColor();
         ImGui::PushStyleVar(ImGuiStyleVar_Alpha, 0.5f);

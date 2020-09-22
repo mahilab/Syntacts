@@ -1,5 +1,6 @@
 #pragma once
-#include <mahi/gui.hpp>
+#include <Mahi/Gui.hpp>
+#include <Mahi/Util.hpp>
 #include "DeviceBar.hpp"
 #include "Workspace.hpp"
 #include "Player.hpp"
