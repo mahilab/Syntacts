@@ -37,8 +37,8 @@ namespace tact {
     }
 
     void Spatializer::setPosition(int channel, double x, double y) {
-        x = clamp01(x);
-        y = clamp01(y);
+        // x = clamp01(x);
+        // y = clamp01(y);
         m_positions[channel] = {x,y};
         if (m_autoUpdate)
             update();
@@ -55,8 +55,8 @@ namespace tact {
     }
 
     void Spatializer::setTarget(double x, double y) {
-        x = clamp01(x);
-        y = clamp01(y);
+        // x = clamp01(x);
+        // y = clamp01(y);
         m_target = {x,y};
         if (m_autoUpdate)
             update();
