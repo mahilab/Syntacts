@@ -25,7 +25,7 @@ namespace tact {
 
 namespace {
 
-constexpr int    QUEUE_SIZE        = 256;
+constexpr int    QUEUE_SIZE        = 1024;
 constexpr int    FRAMES_PER_BUFFER = 0;
 
 static std::array<double,13> STANDARD_SAMPLE_RATES = {
