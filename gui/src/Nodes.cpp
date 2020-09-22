@@ -62,8 +62,6 @@ std::shared_ptr<Node> makeNode(PItem id)
         return std::make_shared<PwmNode>();
     if (id == PItem::FM)
         return std::make_shared<FmNode>();
-    // static auto gui = Engine::getRoot().as<Gui>();
-    // gui.status->pushMessage("Failed to create Node!", StatusBar::Error);
     return nullptr;
 }
 
