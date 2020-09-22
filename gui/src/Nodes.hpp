@@ -9,9 +9,6 @@
 
 void NodeSlot(const char* label, const ImVec2& size = ImVec2(-1, 0));
 
-const std::string& signalName(std::type_index id);
-const std::string& signalName(const tact::Signal& sig);
-
 ///////////////////////////////////////////////////////////////////////////////
 
 struct Node {
@@ -66,7 +63,7 @@ protected:
 template <typename T>
 struct SignalNode : public Node {
     tact::Signal signal() override { return sig; }
-    const std::string& name() override { return signalName(sig.typeId()); }
+    const std::string& name() override { return signalName(sig); }
 protected:
     tact::Signal sig = T();
 };
@@ -166,7 +163,7 @@ struct ADSRNode : public SignalNode<tact::ADSR> {
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-struct ExpDecNode : public SignalNode<tact::ExpDec> {
+struct ExponentialDecayNode : public SignalNode<tact::ExponentialDecay> {
     void update();
 };
 

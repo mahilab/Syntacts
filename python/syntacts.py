@@ -511,9 +511,9 @@ class ADSR(Signal):
     def __init__(self, a, d, s, r, amp1=1, amp2=0.5):
         self._handle = _tact.ADSR_create(a,d,s,r,amp1,amp2)
 
-class ExpDec(Signal):
+class ExponentialDecay(Signal):
     def __init__(self, amplitude=1, decay=6.907755):
-        self._handle = _tact.ExpDec_create(amplitude, decay)
+        self._handle = _tact.ExponentialDecay_create(amplitude, decay)
 
 ###############################################################################
 # OSCILLATOR
@@ -770,7 +770,7 @@ lib_func(_tact.Reverser_create, Handle, [Handle])
 lib_func(_tact.Envelope_create, Handle, [c_double, c_double])
 lib_func(_tact.ASR_create, Handle, [c_double, c_double, c_double, c_double])
 lib_func(_tact.ADSR_create, Handle, [c_double, c_double, c_double, c_double, c_double, c_double])
-lib_func(_tact.ExpDec_create, Handle, [c_double, c_double])
+lib_func(_tact.ExponentialDecay_create, Handle, [c_double, c_double])
 
 # Oscillator
 

@@ -27,6 +27,7 @@
 #include <cmath>
 #include <limits>
 #include <string>
+#include <functional>
 
 namespace tact {
 
@@ -71,6 +72,17 @@ void tic();
 
 /// Returns the time in seconds since tic() was called.
 double toc();
+
+///////////////////////////////////////////////////////////////////////////////
+
+// Forward declarations
+class Signal;
+
+/// Returns the string name of a Signal
+const std::string& signalName(const Signal& signal); 
+
+/// Recurse a signal for embedded signals and calls func on each
+void recurseSignal(const Signal& signal, std::function<void(const Signal&, int depth)> func);
 
 ///////////////////////////////////////////////////////////////////////////////
 

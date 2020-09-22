@@ -29,6 +29,9 @@
 #define SYNTACTS_VERSION_MINOR 3
 #define SYNTACTS_VERSION_PATCH 0
 
+/// The maximum number of signals that can be played in unison (polyphony) on a single channel
+#define SYNTACTS_MAX_VOICES 8
+
 /// If uncommented, Signals will use a fixed size memory pool for allocation.
 /// At this time, there doesn't seem to a great deal of benifit from doing this,
 /// but one day it may be be possible to reap the benifits of 

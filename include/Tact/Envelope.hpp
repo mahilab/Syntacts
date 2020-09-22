@@ -105,10 +105,10 @@ private:
 ///////////////////////////////////////////////////////////////////////////////
 
 /// Exponential decay according to the law y = A*e^(-Bt)
-class SYNTACTS_API ExpDec {
+class SYNTACTS_API ExponentialDecay {
 public:
     /// Default constructor
-    ExpDec(double amplitude = 1, double decay = 6.907755);
+    ExponentialDecay(double amplitude = 1, double decay = 6.907755);
     double sample(double t) const;
     double length() const;
 public:

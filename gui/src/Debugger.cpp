@@ -31,6 +31,9 @@ void Debugger::update()
         ImGui::Text("Signal Count:        ");
         ImGui::SameLine();
         ImGui::Text("%d", tact::Signal::count());
+        ImGui::Text("Max Voices:          ");
+        ImGui::SameLine();
+        ImGui::Text("%d", SYNTACTS_MAX_VOICES);
 #ifdef SYNTACTS_USE_POOL
         ImGui::Text("Pool Capacity:       ");
         ImGui::SameLine();
@@ -72,7 +75,7 @@ void Debugger::update()
         ImGui::Text("%d / %d", ImGui::GetIO().MetricsRenderVertices, ImGui::GetIO().MetricsRenderIndices / 3);
         ImGui::Text("RAM Usage:           "); 
         ImGui::SameLine(); ImGui::Text("%d MB", ram / 1000000);
-        ImGui::Text("CPU Load:            "); ImGui::SameLine(); ImGui::Text("%.2f %%", cpuTotal * 100);
+        ImGui::Text("CPU Load:            "); ImGui::SameLine(); ImGui::Text("%.2f %%", cpuTotal);
         ImGui::Text("Session Load:        "); ImGui::SameLine(); ImGui::Text("%.2f %%", cpuSession * 100);        
         ImGui::Separator();
         ImGui::Text("Operating System:    ");

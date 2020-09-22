@@ -56,6 +56,8 @@ public:
     template <typename T> inline bool isType() const;
     /// Gets a pointer to the underlying type-erased Signal type (use with caution)
     void* get() const;
+    /// Gets a pointer to the underlying type-erased Signal, cast as type T (use with caution and only if you know the Signal is a T!)
+    template <typename T> inline T* getAs() const;
     
     /// Returns the current count of Signals in this process
     static inline int count();

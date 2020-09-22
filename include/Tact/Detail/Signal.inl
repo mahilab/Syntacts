@@ -51,6 +51,10 @@ inline bool Signal::isType() const
     return m_ptr->typeId() == typeid(T); 
 }
 
+template <typename T> inline T* Signal::getAs() const {
+    return static_cast<T*>(m_ptr->get());
+}
+
 #ifdef SYNTACTS_USE_POOL
 inline Signal::Pool& Signal::pool() {
     static Signal::Pool p;

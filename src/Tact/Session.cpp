@@ -12,6 +12,7 @@
 #include <fstream>
 #include <set>
 #include <numeric>
+#include <array>
 
 namespace tact {
 
@@ -27,29 +28,36 @@ namespace {
 constexpr int    QUEUE_SIZE        = 256;
 constexpr int    FRAMES_PER_BUFFER = 0;
 
-static std::vector<double> STANDARD_SAMPLE_RATES = {
-    8000.0, 9600.0, 11025.0, 12000.0, 16000.0, 22050.0, 24000.0, 32000.0,
-    44100.0, 48000.0, 88200.0, 96000.0, 192000.0
+static std::array<double,13> STANDARD_SAMPLE_RATES = {
+    8000, 9600, 11025, 12000, 16000, 22050, 24000, 32000,
+    44100, 48000, 88200, 96000, 192000
 };
 
 using namespace rigtorp;
 
-
+struct Voice {
+    Signal signal;
+    double time  = 0;
+    bool stopped = true;
+    inline double step(double dt) {
+        double s = signal.sample(time);
+        time += dt;
+        return s;
+    }    
+};
 
 /// Channel structure
 class Channel {
 public:
+    std::array<Voice,SYNTACTS_MAX_VOICES> voices;
     Signal  signal;
-    double  time         = 0.0; 
     double  sampleLength = 0.0;
     double  volume       = 1.0;
-    double  lastVolume   = 1.0;
     double  pitch        = 1.0;
-    double  lastPitch    = 1.0;
     double  level        = 0.0;
     bool    paused       = false;
     bool    stopped      = true;
-    
+   
     void fillBuffer(float* buffer, unsigned long frames) {
         // interp volume
         double nextVolume = volume;
@@ -72,23 +80,71 @@ public:
             for (unsigned long f = 0; f < frames; ++f) {
                 pitch += pitchIncr;
                 volume += volumeIncr;
-                double output = signal.sample(time) * volume;
-                max_level = std::abs(output) > max_level ? std::abs(output) : max_level;
+                double dt = sampleLength * pitch;
+                double output = stepVoices(dt) * volume;
+                double abs_out = std::abs(output);
+                max_level = abs_out > max_level ? abs_out : max_level;
                 buffer[f] = static_cast<float>(output);
-                time += sampleLength * pitch;
             }
             level = max_level; // sum_output / frames;
         }
-        if (time > signal.length()) {
-            // paused = true;
-            stopped = true;
-        }
-
+        stopped = activeVoices() == 0;
         volume     = nextVolume;
         lastVolume = nextVolume;
         pitch      = nextPitch;
         lastPitch  = nextPitch;
     }
+
+    inline void play(Signal sig) {
+        stopped = false;
+        paused = false;
+        for (auto& v : voices) {
+            if (v.stopped) {
+                v.signal = std::move(sig);
+                v.stopped = false;
+                v.time = 0;
+                return;
+            }
+        }
+        voices[0].signal  = std::move(sig);
+        voices[0].stopped = false;
+        voices[0].time    = 0;
+    }
+
+    inline void stop() {
+        for (auto& v : voices) {
+            v.stopped = true;
+            v.time   = 0;
+            v.signal = std::move(Signal());
+        }
+        paused = true;
+    }
+
+    inline double stepVoices(double dt) {
+        double sum = 0;
+        for (auto& v : voices)
+            sum += v.step(dt);
+        return sum;
+    }
+
+    inline int activeVoices() {
+        int count = 0;
+        for (auto& v : voices) {
+            if (v.time > v.signal.length()) {
+                v.stopped = true;
+                v.time    = 0;
+                v.signal = std::move(Signal());
+            }
+        }
+        for (auto& v : voices) {
+            if (!v.stopped)
+                count++;
+        }        
+        return count;
+    }
+private:
+    double  lastVolume   = 1.0;
+    double  lastPitch    = 1.0;
 };
 
 /// Interface for commands sent through command queue
@@ -113,20 +169,14 @@ struct Command {
 
 struct Play : public Command {
     virtual void performImpl(Channel& channel) override {
-        channel.paused = false;
-        channel.stopped = false;
-        channel.time   = 0;
-        channel.signal = std::move(signal);
+        channel.play(std::move(signal));
     }
     Signal signal;
 };
 
 struct Stop : public Command {
     virtual void performImpl(Channel& channel) override {
-        channel.paused  = true;
-        channel.stopped = true;
-        channel.time   = 0;
-        channel.signal = std::move(Signal());
+        channel.stop();
     }
 };
 

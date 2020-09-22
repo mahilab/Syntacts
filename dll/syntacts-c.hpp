@@ -193,7 +193,7 @@ EXPORT Handle Reverser_create(Handle signal);
 EXPORT Handle Envelope_create(double duration, double amp);
 EXPORT Handle ASR_create(double a, double s, double r, double amp);
 EXPORT Handle ADSR_create(double a, double d, double s, double r, double amp1, double amp2);
-EXPORT Handle ExpDec_create(double amplitude, double decay);
+EXPORT Handle ExponentialDecay_create(double amplitude, double decay);
 
 // TODO: KeyedEnvelope, Curves, SignalEnvelope 
 

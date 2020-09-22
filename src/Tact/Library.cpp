@@ -53,7 +53,7 @@ CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Envelope>);
 CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::KeyedEnvelope>);
 CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::ASR>);
 CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::ADSR>);
-CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::ExpDec>);
+CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::ExponentialDecay>);
 CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::SignalEnvelope>);
 
 CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Repeater>);

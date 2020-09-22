@@ -34,6 +34,14 @@ namespace tact {
 /// A Signal formed by the sequencing of other Signals at various time points
 class Sequence {
 public:
+
+    /// A Key in the Sequence
+    struct Key { 
+        double t; 
+        Signal signal; 
+        TACT_SERIALIZE(TACT_MEMBER(t), TACT_MEMBER(signal));
+    };
+
     /// Default constructor
     Sequence();
     /// Moves the insertion head forward/backward by t
@@ -54,6 +62,11 @@ public:
     /// Returns the length of the Sequence
     double length() const;
 
+    /// Returns the number of keys in the sequence
+    int keyCount() const;
+    /// Returns a key in the sequence.
+    const Key& getKey(int idx) const;
+
     /// Moves the insertion head of this Sequence by the specified amount
     inline Sequence& operator<<(double rhs);
     /// Pushes a Signal into this Sequence at the current insertion head
@@ -64,12 +77,6 @@ public:
 public:
     double head; ///< the current insertion head position/time
 private:
-    /// A Key in the Sequence
-    struct Key { 
-        double t; 
-        Signal signal; 
-        TACT_SERIALIZE(TACT_MEMBER(t), TACT_MEMBER(signal));
-    };
     std::vector<Key> m_keys; ///< all keys
     double m_length;
 private:

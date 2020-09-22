@@ -686,9 +686,9 @@ namespace Syntacts
         { }
     }
 
-    public class ExpDec : Signal {
-        public ExpDec(double amplitude = 1, double decay = 6.907755) :
-            base(Dll.ExpDec_create(amplitude,decay))
+    public class ExponentialDecay : Signal {
+        public ExponentialDecay(double amplitude = 1, double decay = 6.907755) :
+            base(Dll.ExponentialDecay_create(amplitude,decay))
         { }
     }
 
@@ -1080,7 +1080,7 @@ namespace Syntacts
         [DllImport("syntacts-c")]
         public static extern Handle ADSR_create(double a, double d, double s, double r, double amp1, double amp2);
         [DllImport("syntacts-c")]
-        public static extern Handle ExpDec_create(double amplitude, double decay);
+        public static extern Handle ExponentialDecay_create(double amplitude, double decay);
 
         [DllImport("syntacts-c")]
         public static extern Handle Sine_create1(Handle x);

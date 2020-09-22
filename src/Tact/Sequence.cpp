@@ -58,4 +58,12 @@ void Sequence::clear() {
     m_length = 0;
 }
 
+int Sequence::keyCount() const {
+    return m_keys.size();
+}
+
+const Sequence::Key& Sequence::getKey(int idx) const {
+    return m_keys[idx];
+}
+
 } // namespace tact

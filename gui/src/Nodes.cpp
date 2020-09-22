@@ -16,45 +16,6 @@ void NodeSlot(const char *label, const ImVec2 &size)
     EndPulsable();
 }
 
-/// Returns the name of a Syntacts signal
-const std::string &signalName(std::type_index id)
-{
-    static std::string unkown = "Unkown";
-    static std::unordered_map<std::type_index, std::string> names = {
-        // {typeid(tact::Zero),           "Zero"},
-        {typeid(tact::Time), "Time"},
-        {typeid(tact::Scalar), "Scalar"},
-        {typeid(tact::Ramp), "Ramp"},
-        {typeid(tact::Noise), "Noise"},
-        {typeid(tact::Expression), "Expression"},
-        {typeid(tact::Sum), "Sum"},
-        {typeid(tact::Product), "Product"},
-        {typeid(tact::Sine), "Sine"},
-        {typeid(tact::Square), "Square"},
-        {typeid(tact::Saw), "Saw"},
-        {typeid(tact::Triangle), "Triangle"},
-        {typeid(tact::Pwm), "PWM"},
-        {typeid(tact::Envelope), "Envelope"},
-        {typeid(tact::ASR), "ASR"},
-        {typeid(tact::ADSR), "ADSR"},
-        {typeid(tact::ExpDec), "Exponential Decay"},
-        {typeid(tact::KeyedEnvelope), "Keyed Envelope"},
-        {typeid(tact::SignalEnvelope), "Signal Envelope"},
-        {typeid(tact::Stretcher), "Stretcher"},
-        {typeid(tact::Repeater), "Repeater"},
-        {typeid(tact::Reverser), "Reverser"},
-        {typeid(tact::PolyBezier), "PolyBezier"}};
-    if (names.count(id))
-        return names[id];
-    else
-        return unkown;
-}
-
-const std::string &signalName(const tact::Signal &sig)
-{
-    return signalName(sig.typeId());
-}
-
 std::shared_ptr<Node> makeNode(PItem id)
 {
     if (id == PItem::Time)
@@ -87,8 +48,8 @@ std::shared_ptr<Node> makeNode(PItem id)
         return std::make_shared<ASRNode>();
     if (id == PItem::ADSR)
         return std::make_shared<ADSRNode>();
-    if (id == PItem::ExpDec)
-        return std::make_shared<ExpDecNode>();
+    if (id == PItem::ExponentialDecay)
+        return std::make_shared<ExponentialDecayNode>();
     if (id == PItem::PolyBezier)
         return std::make_shared<PolyBezierNode>();
     if (id == PItem::Stretcher)
@@ -554,9 +515,9 @@ void ADSRNode::update()
         sig = tact::ADSR(adsr[0], adsr[1], adsr[2], adsr[3], amp[0], amp[1]);
 }
 
-void ExpDecNode::update() {
+void ExponentialDecayNode::update() {
     bool changed = false;
-    auto cast = (tact::ExpDec*)sig.get();
+    auto cast = (tact::ExponentialDecay*)sig.get();
     float amplitude = (float)cast->amplitude;
     float decay     = (float)cast->decay;
     if (ImGui::DragFloat("Amplitude", &amplitude, 0.001, 0, 1))
@@ -564,7 +525,7 @@ void ExpDecNode::update() {
     if (ImGui::DragFloat("Decay", &decay, 0.01, 0.000001, 100))
         changed = true;
     if (changed)
-        sig = tact::ExpDec(amplitude, decay);
+        sig = tact::ExponentialDecay(amplitude, decay);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
