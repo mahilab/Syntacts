@@ -25,6 +25,15 @@ CAD/EDA files, bill of materials, and documentation for both variants can be fou
 |**License**|[TAPR Open Hardware License](https://tapr.org/the-tapr-open-hardware-license/)|[TAPR Open Hardware License](https://tapr.org/the-tapr-open-hardware-license/)|
 |**Designer**|Evan Pezent|Evan Pezent|
 
+## Cases and Kits
+
+![Syntacts Cases](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/cases2.png)
+
+|**Version**|**v3.x**|
+|:--|:-:|
+|**CAD**|[syntacts_case_v3.x.zip](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/amps/syntacts_case_v3.x.zip)|
+|**Kit**|*Comming Soon*|
+
 ## Tactile Displays
 
 Below you fill find simple tactile displays that you can create or learn from as you get started with Syntacts. You may modify the designs however you like.
