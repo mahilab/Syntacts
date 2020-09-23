@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Building
-permalink: /building/
+permalink: /tutorials/building/
 ---
 
 ## Introduction
