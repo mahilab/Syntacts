@@ -46,17 +46,25 @@ The GUI is composed of five main widget areas: `Device Bar`, `Info Bar`, `Palett
 
 # Info Bar
 
-- The Status and Info Bar is located at the bottom-right of the GUI.
-- When you hover your mouse over different areas/panels of the GUI, the Info Bar states the function of that component.
+- The Info Bar displays relevant information and tooltips when you hover buttons and areas in the GUI.
+- You can get helpful information and tips by dragging and dropping the `**?**` button over widgets.
+- You can change the color theme of the GUI from the Info Bar.
+- The meter displays the CPU thread load of the Syntacts session.
+- Buttons for openning the Syntacts website and GitHub page are available.
+- The `bug` button will display debug and diagnostics information.
 
-# Palette/Library
+<p align="center">
+    <img src="https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/tut-gui/info_bar.gif" width="600">
+</p>
 
-- The Palette and Library panels are located on the left side of the GUI.
-- The Palette contains tools to create different Signals. Signals represent various vibration waveforms. 
-- Using the Palette, you can use different types of oscillators, envelopes, and processes to create your desired cue.
-  - Sine, Square, Saw, and Triangle classes are available in Syntacts. These implement typical oscillators with normalized amplitude and infinite duration.
-  - You can use the Envelope, ASR, and ADSR (Attack, (Decay), Sustain, Release) Signals to define amplitude modifiers with finite duration.
-- The Library allows you to save and load created Signals.
+# Palette
+
+- The Palette lists available Signals for creating cues. Signals represent various vibration waveforms, envelopes, and processes. 
+- You can drag and drop Signals from the Palette into slots on the Designer widget.
+
+<p align="center">
+    <img src="https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/tut-gui/palette.gif" width="600">
+</p>
 
 # Player
 
