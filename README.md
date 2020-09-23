@@ -6,11 +6,17 @@ Syntacts is a haptic rendering framework for vibrotactile feedback. It eliminate
 
 # Quick Start
 
-You can find in-depth tutorials on the main [wesbite](https://www.syntacts.org/), but if you're in a hurry, follow the quick start guides below:
+You can find in-depth [tutorials](https://www.syntacts.org/tutorials/) on the main website, but if you're in a hurry, follow these quick start guides:
 
 ## Syntacts GUI
 - Get the latest [Release](https://github.com/mahilab/Syntacts/releases) and extract the files.
-- Run the GUI executable `syntacts-gui` in the top level directory. On Windows, you may receive a "Windows protected your PC" screen. Click "More info", then "Run anyway".
+- Run the GUI executable `syntacts-gui` in the top level directory. 
+- On Windows, you may receive a "Windows protected your PC" screen. Click "More info", then "Run anyway".
+- On macOS, the executable `syntacts-gui` may not run, and it will instead open the binary code. If this occurs, open a Terminal and run the following command in the directory of `syntacts-gui`. After this, you will be able to successfully run `syntacts-gui`.
+
+```shell
+> sudo chmod 777 syntacts-gui
+```
 
 ## C/C++ API
 - Get the source code by pulling the `master` branch on the GitHub repository or from the latest [Release](https://github.com/mahilab/Syntacts/releases). 
