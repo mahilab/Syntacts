@@ -53,7 +53,7 @@ The following table lists actuators that have been tested and are known to run w
 
 ## Audio Interfaces
 
-We have tested the following audio interfaces with Syntacts. As above, this is not an exhaustive list and in general Syntacts will work with virtually any audio interface on the market. Not all devices provide an ASIO driver for Windows, so take note of this when ordering you device. 
+We have tested the following audio interfaces with Syntacts. As above, this is not an exhaustive list and in general Syntacts will work with virtually any audio interface on the market. Not all devices provide an ASIO driver for Windows, so take note of this when ordering your device. 
 
 |Manufacturer|Product Name|Interface|Max Channels|ASIO Driver|Approx. Cost|
 |---|---|---|---|---|---|
