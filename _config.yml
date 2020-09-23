@@ -1,9 +1,8 @@
 theme: minima
   
 header_pages:
-  - software.md
-  - hardware.md
   - tutorials.md
+  - hardware.md
   - faq.md
 
 plugins:
