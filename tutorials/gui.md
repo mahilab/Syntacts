@@ -1,7 +1,7 @@
 ---
 layout: page
 title: GUI
-permalink: /gui/
+permalink: /tutorials/gui/
 ---
 
 ## Introduction
