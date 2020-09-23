@@ -12,7 +12,9 @@ The Syntacts amplifier is a purpose built, 8-channel amplifier designed for driv
 
 ![Syntacts Cases](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/cases2.png)
 
-CAD/EDA files, bill of materials, and documentation for both variants can be found below. The files have been formatted so that you can upload or send them directly to your favorite board house. Need a recommendation? We have used [Sunstone Circuits](https://www.sunstone.com/) for basic PCB printing, and both [Sierra Circuits](https://www.protoexpress.com/) and [Screaming Circuits](https://www.screamingcircuits.com/) for turn-key printing and assembly with great results. Both designs are licensed under the [TAPR Open Hardware License](https://tapr.org/the-tapr-open-hardware-license/). Feel free to modify and/or redistribute the board designs within the confines of the license, *but understand that we are not liable for any damage or harm the amplifier may cause to you or your equipment*. **It is your responsibility to safely integrate the amplifier with your projects**.  
+CAD/EDA files, bill of materials, and documentation for both variants can be found below. The files have been formatted so that you can upload or send them directly to your favorite board house. Need a recommendation? We have used [Sunstone Circuits](https://www.sunstone.com/) for basic PCB printing, and both [Sierra Circuits](https://www.protoexpress.com/) and [Screaming Circuits](https://www.screamingcircuits.com/) for turn-key printing and assembly with great results.
+
+All designs are licensed under the [TAPR Open Hardware License](https://tapr.org/the-tapr-open-hardware-license/). Feel free to modify and/or redistribute the board designs within the confines of the license, *but understand that we are not liable for any damage or harm the amplifier may cause to you or your equipment*. **It is your responsibility to safely integrate the amplifier with your projects**.  
 
 |**Version**|**v1.2**|**v3.1**|
 |:--|:-:|:-:|
