@@ -1,7 +1,7 @@
 ---
 layout: page
 title: C++ API
-permalink: /tutorials//cpp/
+permalink: /tutorials/cpp/
 ---
 
 ## Introduction
