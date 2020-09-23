@@ -47,7 +47,7 @@ The GUI is composed of five main widget areas: `Device Bar`, `Info Bar`, `Palett
 # Info Bar
 
 - The Info Bar displays relevant information and tooltips when you hover buttons and areas in the GUI.
-- You can get helpful information and tips by dragging and dropping the `**?**` button over widgets.
+- You can get helpful information and tips by dragging and dropping the **`?`** button over widgets.
 - You can change the color theme of the GUI from the Info Bar.
 - The meter displays the CPU thread load of the Syntacts session.
 - Buttons for openning the Syntacts website and GitHub page are available.
@@ -60,7 +60,21 @@ The GUI is composed of five main widget areas: `Device Bar`, `Info Bar`, `Palett
 # Palette
 
 - The Palette lists available Signals for creating cues. Signals represent various vibration waveforms, envelopes, and processes. 
-- You can drag and drop Signals from the Palette into slots on the Designer widget.
+- Drag and drop Signals from the Palette into slots on the Designer widget.
+
+# Designer
+
+- The Designer widget offers a node based design were you can drag and drop any number of Signals from the Palette into slots.
+- The resulting waveform is the **product** of each slotted Signal, and is displayed in the Visualizer widget.
+- When a Signal is slotted into the Designer, a variety of context dependent controls will be presented.
+- For numeric controls, you can double click for keyboard entry, or click and drag the control from left to right to change the value.
+- Some Signal nodes accept other Signals or Library items as their inputs (e.g. Sum, Repeater, etc.).
+
+# Visualizer
+
+- The Visualizer displays a 2D graph of the current Signal.
+- The displayed Signal is context dependent and changes depending on what tab you are in, or if you hovering a Library item.
+- A horizontal scrollbar at the bottom of the Visualizer allows you to zoom in on the Signal.
 
 <p align="center">
     <img src="https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/tut-gui/palette.gif" width="600">
@@ -71,12 +85,6 @@ The GUI is composed of five main widget areas: `Device Bar`, `Info Bar`, `Palett
 - The Player is located on the right side of the GUI.
 - This is used to play Signals on different channels.
 - Using the Player, you can also change the volume and pitch by moving the V and P toggles.
-
-# Designer
-
-- The Designer is the first tab located in the center of the GUI.
-- This is where you can drag Signals to create your desired cue.
-- You can also change the frequency of Signals by using your mouse to move the frequency toggle.
 
 # Sequencer
 
