@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Python API
-permalink: /python/
+permalink: /tutorials/python/
 ---
 
 ## Introduction
