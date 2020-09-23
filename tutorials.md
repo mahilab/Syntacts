@@ -15,7 +15,12 @@ Below you can find a list of Syntacts tutorials related to both the software and
 |[C# API](tutorials/cs.md)|Learn to setup and program a project using the Syntacts C# API.|
 |[Python API](tutorials/python.md)|Learn to setup and program a project using the Syntacts Python API.| 
 |[Unity](tutorials/unity.md)|Learn to setup and program a project using Syntats in Unity Engine.|
-|[GUI](tutorials/gui.md)|Learn to design tactile cues in the Syntacts GUI.|
+
+### Syntacts GUI
+
+|Tutorial|Description|
+|---|---|
+|[GUI Overview](tutorials/gui.md)|Learn the basics of using the Syntacts GUI application.|
 
 ### Case Studies
 
