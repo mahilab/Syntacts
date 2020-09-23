@@ -20,7 +20,7 @@ You can find in-depth [tutorials](https://www.syntacts.org/tutorials/) on the ma
 
 ## C/C++ API
 - Get the source code by pulling the `master` branch on the GitHub repository or from the latest [Release](https://github.com/mahilab/Syntacts/releases). 
-- Build and install **Syntacts** for your system my following the [tutorial](tutorials.md).
+- Build and install **Syntacts** for your system my following the [tutorial](https://www.syntacts.org/tutorials/).
 - Use the [template](https://github.com/mahilab/Syntacts/tree/master/template) to make a new Syntacts project with CMake.
 
 ## C# API
@@ -50,5 +50,5 @@ OR
 - Run any of the `example.py` files.
 
 # Having issues?
-- Check the [Tutorials](tutorials.md) and [FAQ](faq.md) pages.
+- Check the [Tutorials](https://www.syntacts.org/tutorials/) and [FAQ](https://www.syntacts.org/faq/) pages.
 - Head over to the [Issues](https://github.com/mahilab/Syntacts/issues) page and tell us your problem.
