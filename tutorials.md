@@ -10,16 +10,16 @@ Below you can find a list of Syntacts tutorials related to both the software and
 
 |Tutorial|Description|
 |---|---|
-|[Building](building.md)|Learn to build the Syntacts library, plugin, and GUI from the C++ source code.|
-|[C++ API](cpp.md)|Learn to setup and program a project using the Syntacts C++ API.|
-|[C# API](cs.md)|Learn to setup and program a project using the Syntacts C# API.|
-|[Python API](python.md)|Learn to setup and program a project using the Syntacts Python API.| 
-|[Unity](unity.md)|*Coming soon*|
-|[GUI](gui.md)|*Coming soon*|
+|[Building](tutorials/building.md)|Learn to build the Syntacts library, plugin, and GUI from the C++ source code.|
+|[C++ API](tutorials/cpp.md)|Learn to setup and program a project using the Syntacts C++ API.|
+|[C# API](tutorials/cs.md)|Learn to setup and program a project using the Syntacts C# API.|
+|[Python API](tutorials/python.md)|Learn to setup and program a project using the Syntacts Python API.| 
+|[Unity](tutorials/unity.md)|*Coming soon*|
+|[GUI](tutorials/gui.md)|*Coming soon*|
 
 ### Case Studies
 
 |Tutorial|Description|
 |---|---|
-|[Syntacts Draw](draw.md)|Develop a 2D tactile "drawing" GUI for the Syntacts Array (C++).|
-|[VR Bracelet](bracelet.md)|Develop VR hand interactions for the Syntacts Bracelet (Unity).|
+|[Syntacts Draw](tutorials/draw.md)|Develop a 2D tactile "drawing" GUI for the Syntacts Array (C++).|
+|[VR Bracelet](tutorials/bracelet.md)|Develop VR hand interactions for the Syntacts Bracelet (Unity).|
