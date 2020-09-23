@@ -6,7 +6,9 @@ permalink: /tutorials/gui/
 
 ## Introduction
 
-This tutorial will teach you how to setup and use the Syntacts GUI. This will allow you to create, visualize, and sequence cues for your desired use.
+This tutorial will teach you how to setup and use the Syntacts GUI. The GUI can be thought of as a companion app to the programming API, where you can quickly prototype and design cues before implementing them in your Syntacts-driven application. 
+
+![GUI](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/syntacts_gui.png)
 
 ## Requirements
 
@@ -23,16 +25,21 @@ This tutorial will teach you how to setup and use the Syntacts GUI. This will al
 > sudo chmod 777 syntacts-gui
 ```
 
-## GUI Panel Overview
+## GUI Widgets Overview
 
-This will provide an overview of the GUI's panels and a basic guide about their uses. For more detailed information on how to use different components of the GUI, simply drag the help button (the question mark in the bottom right corner) over the area of interest.
+The GUI is composed of five main widget areas: `Device Bar`, `Info Bar`, `Palette/Library`, `Designer/Sequencer/Spatializer`, and `Player`. The functionality of each widget is broken down in the following sections.
+
+![GUI](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/tut-gui/layout.png)
+
 
 # Device Bar
 
-- The Device Bar is located at the top-center of the GUI.
+- The Device Bar is where you select the audio interface you wish to use. 
 - Using the drop down arrows, you can choose your API, device, and sample rate.
+- The second icon from the right will show a pop-up window listing all available devices. Devices denoted with a `*` are system defaults.
+- The last icon will refresh the Syntacts session in the event that you need to reconnect/reboot a device.
 
-# Status and Info Bar
+# Info Bar
 
 - The Status and Info Bar is located at the bottom-right of the GUI.
 - When you hover your mouse over different areas/panels of the GUI, the Info Bar states the function of that component.
