@@ -39,6 +39,8 @@ The GUI is composed of five main widget areas: `Device Bar`, `Info Bar`, `Palett
 - The second icon from the right will show a pop-up window listing all available devices. Devices denoted with a `*` are system defaults.
 - The last icon will refresh the Syntacts session in the event that you need to reconnect/reboot a device.
 
+![GUI](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/tut-gui/device_bar.gif)
+
 # Info Bar
 
 - The Status and Info Bar is located at the bottom-right of the GUI.
