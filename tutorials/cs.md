@@ -1,7 +1,7 @@
 ---
 layout: page
 title: C# API
-permalink: /cs/
+permalink: /tutorials/cs/
 ---
 
 ## Introduction
