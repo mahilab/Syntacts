@@ -29,8 +29,9 @@ This tutorial will teach you how to setup and use the Syntacts GUI. The GUI can 
 
 The GUI is composed of five main widget areas: `Device Bar`, `Info Bar`, `Palette/Library`, `Designer/Sequencer/Spatializer`, and `Player`. The functionality of each widget is broken down in the following sections.
 
-![GUI](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/tut-gui/layout.png)
-
+<p align="center">
+    <img src="https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/tut-gui/layout.png" width="600">
+</p>
 
 # Device Bar
 
@@ -39,7 +40,9 @@ The GUI is composed of five main widget areas: `Device Bar`, `Info Bar`, `Palett
 - The second icon from the right will show a pop-up window listing all available devices. Devices denoted with a `*` are system defaults.
 - The last icon will refresh the Syntacts session in the event that you need to reconnect/reboot a device.
 
-![GUI](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/tut-gui/device_bar_small.gif)
+<p align="center">
+    <img src="https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/tut-gui/device_bar.gif" width="600">
+</p>
 
 # Info Bar
 
