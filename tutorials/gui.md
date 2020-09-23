@@ -75,16 +75,35 @@ The GUI is composed of five main widget areas: `Device Bar`, `Info Bar`, `Palett
 - The Visualizer displays a 2D graph of the current Signal.
 - The displayed Signal is context dependent and changes depending on what tab you are in, or if you hovering a Library item.
 - A horizontal scrollbar at the bottom of the Visualizer allows you to zoom in on the Signal.
+- The duration of the Signal in seconds is displayed in the bottom-right. Infinitely long Signals display "inf".
 
 <p align="center">
     <img src="https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/tut-gui/palette.gif" width="600">
 </p>
 
+# Library
+
+- Once you've created a Signal to your liking, you can save it to the global Syntacts Library.
+- Saved Signals can be loaded from any of the programming APIs.
+- Buttons at the bottom of the widget allow you to delete, overwrite, and export Library items to `.tact`, `.wav`, `.json`, and `.csv` file formats.
+- If you right click a Library item, a context menu with various actions will be displayed.
+
+<p align="center">
+    <img src="https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/tut-gui/library.gif" width="600">
+</p>
+
 # Player
 
-- The Player is located on the right side of the GUI.
-- This is used to play Signals on different channels.
-- Using the Player, you can also change the volume and pitch by moving the V and P toggles.
+- The Player widget is where you can play Signals on the currently selected Device.
+- Clicking the main Play button will play the current Signal on all available channels.
+- Click a channel number button will play the current Signal on only that channel.
+- Right clicking either the Play or channel number buttons will stop the channel.
+- You can drag Signals from the Library onto buttons to play them.
+- Sliders for volume (V column) and pitch (P column) are available. Right clicking these will toggle them on/off.
+
+<p align="center">
+    <img src="https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/tut-gui/player.gif" width="600">
+</p>
 
 # Sequencer
 
