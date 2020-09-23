@@ -6,7 +6,7 @@ permalink: /tutorials/gui/
 
 ## Introduction
 
-This tutorial will teach you how to setup and use the Syntacts GUI. The GUI can be thought of as a companion app to the programming API, where you can quickly prototype and design cues before implementing them in your Syntacts-driven application. 
+This tutorial will teach you how to setup and use the Syntacts GUI. The GUI can be thought of as a companion app to the programming API, where you can quickly prototype and design cues before implementing them in your Syntacts-driven application. Before reading this tutorial, it is recommended that you read one of the programming API tutorials so you have a basic understanding on Syntacts mechanisms and terminology. 
 
 ![GUI](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/syntacts_gui.png)
 
@@ -69,6 +69,7 @@ The GUI is composed of five main widget areas: `Device Bar`, `Info Bar`, `Palett
 - When a Signal is slotted into the Designer, a variety of context dependent controls will be presented.
 - For numeric controls, you can double click for keyboard entry, or click and drag the control from left to right to change the value.
 - Some Signal nodes accept other Signals or Library items as their inputs (e.g. Sum, Repeater, etc.).
+- To delete a cue, simply click the `X` on the Signal bar.
 
 # Visualizer
 
@@ -107,67 +108,27 @@ The GUI is composed of five main widget areas: `Device Bar`, `Info Bar`, `Palett
 
 # Sequencer
 
-- The Sequencer is the second tab located in the center of the GUI.
-- This can be used to concatenate multiple Signals to create a Sequence.
-- You can drag Signals from the Library into the Sequencer and order the Signals to create your desired Sequence.
+- The Sequencer widget can be used to concatenate multiple Signals to create a Sequence.
+- Add or remove tracks with the **`+`** and **`-`** buttons.
+- Drag Signals from the Library onto the **`+`** button or into an unoccupied track.
+- Drag slotted Signals horizontally to change their start time.
 - You can also adjust the starting time of each Signal as well as the gain and bias using the Time, Gain, and Bias toggles.
+- You can play the sequenced Signal on the Player, or save it to the Library.
+
+<p align="center">
+    <img src="https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/tut-gui/sequencer.gif" width="600">
+</p>
 
 # Spatializer
 
-- The Spatializer is the third tab located in the center of the GUI.
-- This maps multiple channels to a normalized (0 to 1) continuous 1D or 2D spatial representation.
-- You can create a grid with a specific number of divisions to match the physical layout of a tactor array.
+- The Spatializer widget allows you to create "continous" 1D or 2D arrays from your device's channels. 
+- Channels in the Spatializer will have their volumn scaled based on their proximity to the target zone and its roll-off method.
+- You can drag channels from the Player onto the grid, or change the grid dimensions and automatically fill it (click twice to change between row or column major).
+- Channels consumed by the Spatializer will be highlighted and disabled in the Player.
+- You can slot a Signal to be spatialized by dragging from the Library.
+- The target location can be changed by right-click dragging in the grid area.
+- The target radius can be changed with the mouse wheel, and the roll-off method can be changed via a dropdown menu.
 
-## Using the GUI: A Demo
-
-This will run you through an example to teach you how to use the various components of the GUI.
-
-# Designing a Cue
-
-- We will begin by designing a cue using the Palette and the Designer.
-- To design a cue, drag a Signal from the Palette into the Designer.
-- You can change the frequency of the cue by dragging the frequency toggle or double clicking the frequency bar. 
-    - If you want to evaluate Syntacts without tactor hardware, make sure the frequency is high enough to be audible for speakers (e.g. 440 Hz). Low frequencies can potentially damage speakers! For this reason, most of the Syntacts examples are coded with frequencies in the hearing range. If you are actually outputting to a tactor, use frequencies appropriate for it (e.g. 150-250 Hz).
-- To delete a cue, simply click the `X` on the Signal bar.
-
-*Demo:*
-
-# Saving a Cue to the Library
-
-- You can save a designed cue in the Library.
-- After creating a cue, type the desired name of the cue into the library. Click the `+` button to save the cue under that name.
-
-*Demo:*
-
-
-# Mixing Signals
-
-- Signals can be mixed using basic arithmetic. Multiplying and adding Signals can be thought of as an element-wise operation between two vectors.
-  - Multiplying two Signals creates a new Signal of duration equal to the shortest operand.
-  - Adding two Signals creates a new Signal of duration equal to the longest operand.
-- The default process for mixing Signals in the GUI is multiplication.
-- You can drag different Processes from the Palette into the Designer to create custom mixed Signals.
-- You can also mix custom Signals together by dragging Signals from the Library into the Designer.
-
-*Demo:*
-
-# Sequencing Cues from the Library
-
-- Signals can be sequenced by dragging Signals from the Library into the Sequencer.
-- You can drag Signals directly onto the track or use the `+` button to place Signals immediately after each other.
-- Use the `-` button to delete a Signal from the Sequence.
-- You can move the cues backwards and forwards on the track to determine their position in time.
-
-*Demo:*
-
-# Using the Spatializer
-
-- You can change the spatial layout of how a Signal is played using the Spatializer.
-- Start by dragging the desired Signal from the Library onto the Signal bar on the right side of the Spatializer.
-- You can create a grid representing the physical layout of your tactor array by changing the number of X and Y divisions.
-  - To make the grid 1-Dimensional, click the grid button next to the divisions.
-- Position the channels on the grid using the `Fill` button and dragging the channel numbers to the desired locations.
-- You can then set a virtual target coordinate and radius to play and blend multiple tactors at once. Do this by right-mouse dragging the target around the grid or by using the Position and Radius toggles on the right side of the Spatializer.
-- The volume of channels is interpolated according to a specified roll-off law (ie. linear, logarithmic, etc.) based on their proximity to the target location using. You can change this using the Roll-Off drop-down bar.
-
-*Demo:*
+<p align="center">
+    <img src="https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/tut-gui/spatializer.gif" width="600">
+</p>
