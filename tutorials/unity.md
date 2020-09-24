@@ -5,7 +5,7 @@ permalink: /tutorials/unity/
 ---
 
 ## Introduction
-In this tutorial, we will learn how to integrate Syntacts into Unity projects. Since Unity uses C# as its scripting language, programming Syntacts in Unity is no different than programming in pure C#. As such, this tutorial will not cover the C# API - refer to the official [C# tutorial](/tutorials/cs.md) for that. Instead, we will discuss important details and tips that are specific to Unity.
+In this tutorial, we will learn how to integrate Syntacts into Unity projects. Since Unity uses C# as its scripting language, programming Syntacts in Unity is no different than programming in pure C#. As such, this tutorial will not cover the C# API - refer to the official [C# tutorial](/tutorials/cs) for that. Instead, we will discuss important details and tips that are specific to Unity.
 
 ## Requirements
 
@@ -114,7 +114,3 @@ void Update()
 ```
 
 ![GUI](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/tut-unity/gui_unity.png)
-
-
-
-
