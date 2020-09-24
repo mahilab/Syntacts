@@ -10,7 +10,8 @@ namespace ImGui {
 struct SpatializerNode {
     int index;
     ImVec2 pos;
-    bool held;
+    bool held   = false;
+    float level = 0;
 };
 
 struct SpatializerTarget {
@@ -18,7 +19,9 @@ struct SpatializerTarget {
     float radius;
 };
 
-bool Spatializer(const char* label, SpatializerTarget& target, tact::Curve rolloff, std::map<int,SpatializerNode>& nodes, float nodeRadius, ImVec4 color, ImVec2 size, const char* dnd, int xdivs = 10, int ydivs = 10, bool snap = false);
+bool Spatializer(const char* label, SpatializerTarget& target, tact::Curve rolloff, 
+                 std::map<int,SpatializerNode>& nodes, float nodeRadius, ImVec4 color, 
+                 ImVec2 size, const char* dnd, int xdivs = 10, int ydivs = 10, bool snap = false, bool wrap = false);
 
 } // namespace ImGui
 
@@ -45,6 +48,7 @@ private:
     int m_divs[2] = {5,5};
     bool m_snap = true;
     bool m_2d   = true;
+    bool m_wrap = false;
     bool xFirst = false;
     char m_inputBuffer[64] = "";
     std::map<int, ImGui::SpatializerNode> m_channels;

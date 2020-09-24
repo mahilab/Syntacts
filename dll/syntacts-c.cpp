@@ -325,6 +325,17 @@ EXPORT void Spatializer_setRollOff(Handle spat, int type) {
     }
 } 
 
+void Spatializer_setWrap(Handle spat, Point wrapInterval) {
+    auto sp = static_cast<Spatializer*>(spat);
+    sp->setWrap({wrapInterval.x, wrapInterval.y});
+}
+
+Point Spatializer_getWrap(Handle spat) {
+    auto sp = static_cast<Spatializer*>(spat);
+    auto wr = sp->getWrap();
+    return {wr.x, wr.y};
+}
+
 bool Spatializer_createGrid(Handle spat, int rows, int cols) {
     return static_cast<Spatializer*>(spat)->createGrid(rows,cols);
 }

@@ -286,6 +286,20 @@ class Spatializer:
             _tact.Spatializer_setRollOff(self._handle, 5)
 
     @property
+    def wrap(self):
+        return _tact.Spatializer_getWrap(self._handle)
+
+    @wrap.setter
+    def wrap(self, p):
+        if type(p) is Point:
+            _tact.Spatializer_setWrap(self._handle, p)
+        else:
+            pt = Point()
+            pt.x = p[0]
+            pt.y = p[1]
+            _tact.Spatializer_setWrap(self._handle, pt)
+
+    @property
     def channel_count(self):
         return _tact.Spatializer_getChannelCount(self._handle)
 
@@ -688,6 +702,8 @@ lib_func(_tact.Spatializer_getTarget, Point, [Handle])
 lib_func(_tact.Spatializer_setRadius, None, [Handle, c_double])
 lib_func(_tact.Spatializer_getRadius, c_double, [Handle])
 lib_func(_tact.Spatializer_setRollOff, None, [Handle, c_int])
+lib_func(_tact.Spatializer_setWrap, None, [Handle, Point])
+lib_func(_tact.Spatializer_getWrap, Point, [Handle])
 lib_func(_tact.Spatializer_createGrid, c_bool, [Handle, c_int, c_int])
 lib_func(_tact.Spatializer_clear, None, [Handle])
 lib_func(_tact.Spatializer_remove, None, [Handle, c_int])

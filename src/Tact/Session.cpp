@@ -40,7 +40,7 @@ struct Voice {
     double time  = 0;
     bool stopped = true;
     inline double step(double dt) {
-        double s = signal.sample(time);
+        double s = signal.sample(time) * (!stopped);
         time += dt;
         return s;
     }    
@@ -115,7 +115,6 @@ public:
         for (auto& v : voices) {
             v.stopped = true;
             v.time   = 0;
-            v.signal = std::move(Signal());
         }
         paused = true;
     }
@@ -133,7 +132,6 @@ public:
             if (v.time > v.signal.length()) {
                 v.stopped = true;
                 v.time    = 0;
-                v.signal = std::move(Signal());
             }
         }
         for (auto& v : voices) {
@@ -395,9 +393,9 @@ public:
 
     double getVolume(int channel) {
         if (!isOpen())
-            return SyntactsError_NotOpen;
+            return 0;
         if (!(channel < m_channels.size()))
-            return SyntactsError_InvalidChannel;
+            return 0;
         if constexpr (std::atomic<double>::is_always_lock_free) 
             return m_channels[channel].volume; // this *should* be thread safe, TBD
         else {
@@ -423,9 +421,9 @@ public:
 
     double getPitch(int channel) {
         if (!isOpen())
-            return SyntactsError_NotOpen;
+            return 1;
         if (!(channel < m_channels.size()))
-            return SyntactsError_InvalidChannel;
+            return 1;
         if constexpr (std::atomic<double>::is_always_lock_free) 
             return m_channels[channel].pitch;
         else {
@@ -438,9 +436,9 @@ public:
 
     double getLevel(int channel) {
         if (!isOpen())
-            return SyntactsError_NotOpen;
+            return 0;
         if (!(channel < m_channels.size()))
-            return SyntactsError_InvalidChannel;
+            return 0;
         if constexpr (std::atomic<double>::is_always_lock_free) 
             return m_channels[channel].level;
         else {        

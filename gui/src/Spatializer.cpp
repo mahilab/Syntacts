@@ -56,12 +56,14 @@ Spatializer::~Spatializer() {
 void Spatializer::update()
 {
     ImGui::BeginGroup(); //  help group
-    if (ImGui::Spatializer("Spatializer##Grid", m_target, g_curveMap[m_rollOffIndex].second, m_channels, 10, gui.theme.spatializerColor, ImVec2(260, -1), "DND_CHANNEL", m_divs[0], !m_2d ? 1 : m_divs[1], m_snap)) {
+    if (ImGui::Spatializer("Spatializer##Grid", m_target, g_curveMap[m_rollOffIndex].second, m_channels, 10, 
+                            gui.theme.spatializerColor, ImVec2(260, -1), "DND_CHANNEL", m_divs[0], !m_2d ? 1 : m_divs[1], m_snap, m_wrap)) {
         sync();
     }
     ImGui::SameLine();
     ImGui::BeginGroup();
-    ImGui::PushItemWidth(240);
+    float control_width = 225;
+    ImGui::PushItemWidth(control_width);
     ImGui::Text(m_2d ? "X Divisions" : "Divisions");
     if (m_2d) {
         ImGui::SameLine(112);
@@ -71,21 +73,37 @@ void Spatializer::update()
         ImGui::SliderInt("##Grid Size", m_divs, 1, 25);
     else
             ImGui::SliderInt2("##Grid Size", m_divs, 1, 25);    
-    ImGui::SameLine();
-
-    ImGui::ToggleButton(ICON_FA_MAGNET, &m_snap);
     
     ImGui::SameLine();
-    ImGui::ToggleButton(ICON_FA_TH, &m_2d);
+    ImGui::ToggleButton(ICON_FA_MAGNET, &m_snap);
+    gui.status.showTooltip("Toggle Snap");
 
-    if (ImGui::Button("Fill", ImVec2(240, 0))) {
+    ImGui::SameLine();
+    ImGui::ToggleButton(ICON_FA_TH, &m_2d);
+    gui.status.showTooltip("Toggle 2D");
+
+    ImGui::SameLine();
+    if (ImGui::ToggleButton(ICON_FA_CIRCLE_NOTCH, &m_wrap)) {
+        if (m_wrap)
+            spatializer.setWrap(1,1);
+        else
+            spatializer.setWrap(0,0);
+    }
+    gui.status.showTooltip("Toggle Wrapping");
+
+
+    if (ImGui::Button("Fill", ImVec2(control_width, 0))) {
         spatializer.clear();
         fillGrid();
     }
-    if (ImGui::Button("Clear", ImVec2(240, 0))) {
+    gui.status.showTooltip("Fill All Channels");
+
+    if (ImGui::Button("Clear", ImVec2(control_width, 0))) {
         spatializer.clear();
         m_channels.clear();
     }
+    gui.status.showTooltip("Clear All Channels");
+
 
     // ImGui::PushItemWidth(175);
     // bool entered = ImGui::InputText("##SignalName", m_inputBuffer, 64, ImGuiInputTextFlags_CharsNoBlank | ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue);
@@ -100,7 +118,7 @@ void Spatializer::update()
         ImGui::DragFloat("Position", &m_target.pos.x, 0.005f, 0.0f, 1.0f);
     ImGui::DragFloat("Radius", &m_target.radius, 0.005f, 0.0f, 1.0f);
     static std::vector<ImVec2> points(100);
-    ImGui::PlotSignal("##Empty", CurveSignal(g_curveMap[m_rollOffHoveredIdx == -1 ? m_rollOffIndex : m_rollOffHoveredIdx].second), points, 0, 2, Greens::Chartreuse, 1, ImVec2(240,45), false, false);     
+    ImGui::PlotSignal("##Empty", CurveSignal(g_curveMap[m_rollOffHoveredIdx == -1 ? m_rollOffIndex : m_rollOffHoveredIdx].second), points, 0, 2, Greens::Chartreuse, 1, ImVec2(control_width,45), false, false);     
     m_rollOffHoveredIdx = -1;
     ImGui::SameLine();
     ImGui::Text("Roll-Off");
@@ -121,7 +139,7 @@ void Spatializer::update()
     }
 
     ImGui::Separator();
-    NodeSlot(m_sigName.c_str(), ImVec2(240, 0));
+    NodeSlot(m_sigName.c_str(), ImVec2(control_width, 0));
     if (SignalTarget()) {
         m_sigName = SignalPayload().first;
         m_signal = SignalPayload().second;
@@ -136,7 +154,7 @@ void Spatializer::update()
     ImGui::SameLine();
 
 
-    ImGui::PushItemWidth(103);
+    ImGui::PushItemWidth(96);
     float v = (float)spatializer.getVolume();
     if (ImGui::SliderFloat("##V", &v, 0, 1, "V"))
         spatializer.setVolume(v);
@@ -172,12 +190,14 @@ void Spatializer::update()
 
     
 
-    for (auto& chan : m_channels) 
+    for (auto& chan : m_channels)  {
         spatializer.setPosition(chan.first, chan.second.pos.x, chan.second.pos.y);
+        if (gui.device.session)
+            chan.second.level = (float)gui.device.session->getLevel(chan.first);
+    }
     spatializer.setTarget(m_target.pos.x, m_target.pos.y);
     spatializer.setRadius(m_target.radius);
-    spatializer.update();
-    
+    spatializer.update();   
 
 }
 
@@ -256,7 +276,7 @@ namespace ImGui {
 
 
 bool Spatializer(const char *label, SpatializerTarget &target, tact::Curve rolloff, std::map<int, SpatializerNode> &nodes, float nodeRadius,
-                 ImVec4 color, ImVec2 size, const char *dnd, int xdivs, int ydivs, bool snap)
+                 ImVec4 color, ImVec2 size, const char *dnd, int xdivs, int ydivs, bool snap, bool wrap)
 {
 
     ImU32 gridColor = GetColorU32(ImGuiCol_FrameBg);
@@ -359,9 +379,10 @@ bool Spatializer(const char *label, SpatializerTarget &target, tact::Curve rollo
     {
         SpatializerNode &node = it->second;
         float dtarget = std::sqrt(ImLengthSqr(node.pos - target.pos));
-        float ttarget = ImClamp(dtarget / target.radius, 0.0f, 1.0f);
-        ttarget = 1.0f - ttarget;
-        ttarget = (float)rolloff(ttarget);
+        // float ttarget = ImClamp(dtarget / target.radius, 0.0f, 1.0f);
+        // ttarget = 1.0f - ttarget;
+        // ttarget = (float)rolloff(ttarget);
+        float ttarget = node.level;
         ImVec4 heldColor = ImLerp(style.Colors[ImGuiCol_ButtonActive], color, ttarget);
         ImVec4 normColor = ImLerp(style.Colors[ImGuiCol_ButtonHovered], color, ttarget);
         auto posPx = toPx(node.pos);
@@ -377,83 +398,103 @@ bool Spatializer(const char *label, SpatializerTarget &target, tact::Curve rollo
         nodes.erase(toDelete);
         changed = true;
     }
-    // render target
-    ImVec2 targetPosPx = toPx(target.pos);
-    if (IO.MouseDown[1] && hovered)
-    {
-        targetPosPx = mousePos;
-    }
+    // render target(s) ... lol, this is so lazy
+    ImVec2 targetPosPx[9] = {toPx(target.pos), 
+                             toPx(target.pos + ImVec2(-1, 0)), 
+                             toPx(target.pos + ImVec2( 1, 0)),
+                             toPx(target.pos + ImVec2(-1,-1)), 
+                             toPx(target.pos + ImVec2( 0,-1)), 
+                             toPx(target.pos + ImVec2( 1,-1)),              
+                             toPx(target.pos + ImVec2(-1, 1)),
+                             toPx(target.pos + ImVec2( 0, 1)),
+                             toPx(target.pos + ImVec2( 1, 1))};
+
+    if (IO.MouseDown[1] && hovered)    
+        targetPosPx[0] = mousePos;    
     if (xdivs == 1)
-        targetPosPx.x = grid_cntr.x;
+        targetPosPx[0].x = grid_cntr.x;
     if (ydivs == 1)
-        targetPosPx.y = grid_cntr.y;
+        targetPosPx[0].y = grid_cntr.y;
 
     float r = target.radius * grid.GetWidth();
-    if (hovered)
-    {
+    if (hovered) {
         r += IO.MouseWheel;
         r = ImClamp(r, 1.0f, FLT_MAX);
     }
-
     DrawList->PushClipRect(grid.Min, grid.Max, true);
-            color.w = 0.2f;
+    color.w = 0.2f;
 
     if (xdivs > 1 && ydivs > 1) {
-        color.w = 0.2f;
-        int rings = 25;
-        DrawList->AddCircleFilled(targetPosPx, 0.5f * r / rings, ColorConvertFloat4ToU32(color), 20);
-        for (int i = 0; i < rings+1; ++i) {
-            float t = (i + 1.0f) / rings;
-            color.w = rolloff(1 - t) * 0.1f;
-            DrawList->AddCircleFilled(targetPosPx, t * r, ColorConvertFloat4ToU32(color), 20);
+        int target_count = wrap ? 9 : 1;
+        for (int tg = 0; tg < target_count; ++tg) {
+            color.w = 0.2f;
+            int rings = 25;
+            DrawList->AddCircleFilled(targetPosPx[tg], 0.5f * r / rings, ColorConvertFloat4ToU32(color), 20);
+            for (int i = 0; i < rings+1; ++i) {
+                float t = (i + 1.0f) / rings;
+                color.w = rolloff(1 - t) * 0.1f;
+                DrawList->AddCircleFilled(targetPosPx[tg], t * r, ColorConvertFloat4ToU32(color), 20);
+            }
         }
     }
     else
     {
+        int target_count = wrap ? 3 : 1;
         color.w = 1;
-        ImRect box;
-        box.Min = targetPosPx - ImVec2(r, r);
-        box.Max = targetPosPx + ImVec2(r, r);
         if (xdivs == 1 && ydivs == 1) {
             DrawList->AddRectFilled(grid.Min, grid.Max, ColorConvertFloat4ToU32(color));
         }
         else if (xdivs == 1)
         {
-            int n = 50;
-            box.Min.x = grid.Min.x;
-            box.Max.x = grid.Max.x;
-            float H = box.GetHeight();
-            float h = H / n;
-            ImRect b = ImRect(box.Min, ImVec2(box.Max.x, box.Min.y + h));
-            float C = box.GetCenter().y;
-            for (int i = 0; i < n; ++i) {
-                float c = b.GetCenter().y;
-                float t = 1 - std::abs(C-c) / (0.5 * H);
-                color.w = rolloff(t) * 0.5f;
-                DrawList->AddRectFilled(b.Min, b.Max, ColorConvertFloat4ToU32(color));
-                b.Min.y += h; b.Max.y += h;
+            int indices[3] = {0,4,7};
+            for (int i = 0; i < target_count; ++i) {
+                ImRect box;
+                box.Min = targetPosPx[indices[i]] - ImVec2(r, r);
+                box.Max = targetPosPx[indices[i]] + ImVec2(r, r);
+                int n = 50;
+                box.Min.x = grid.Min.x;
+                box.Max.x = grid.Max.x;
+                float H = box.GetHeight();
+                float h = H / n;
+                ImRect b = ImRect(box.Min, ImVec2(box.Max.x, box.Min.y + h));
+                float C = box.GetCenter().y;
+                for (int i = 0; i < n; ++i) {
+                    float c = b.GetCenter().y;
+                    float t = 1 - std::abs(C-c) / (0.5 * H);
+                    color.w = rolloff(t) * 0.5f;
+                    DrawList->AddRectFilled(b.Min, b.Max, ColorConvertFloat4ToU32(color));
+                    b.Min.y += h; b.Max.y += h;
+                }
             }
         }
         else if (ydivs == 1)
         {
-            int n = 50;
-            box.Min.y = grid.Min.y;
-            box.Max.y = grid.Max.y;
-            float W = box.GetWidth();
-            float w = W / n;
-            ImRect b = ImRect(box.Min, ImVec2(box.Min.x + w, box.Max.y));
-            float C = box.GetCenter().x;
-            for (int i = 0; i < n; ++i) {
-                float c = b.GetCenter().x;
-                float t = 1 - std::abs(C-c) / (0.5 * W);
-                color.w = rolloff(t) * 0.5f;
-                DrawList->AddRectFilled(b.Min, b.Max, ColorConvertFloat4ToU32(color));
-                b.Min.x += w; b.Max.x += w;
+            int indices[3] = {0,1,2};
+            for (int i = 0; i < target_count; ++i) {
+                ImRect box;
+                box.Min = targetPosPx[indices[i]] - ImVec2(r, r);
+                box.Max = targetPosPx[indices[i]] + ImVec2(r, r);
+                int n = 50;
+                box.Min.y = grid.Min.y;
+                box.Max.y = grid.Max.y;
+                float W = box.GetWidth();
+                float w = W / n;
+                ImRect b = ImRect(box.Min, ImVec2(box.Min.x + w, box.Max.y));
+                float C = box.GetCenter().x;
+                for (int i = 0; i < n; ++i) {
+                    float c = b.GetCenter().x;
+                    float t = 1 - std::abs(C-c) / (0.5 * W);
+                    color.w = rolloff(t) * 0.5f;
+                    DrawList->AddRectFilled(b.Min, b.Max, ColorConvertFloat4ToU32(color));
+                    b.Min.x += w; b.Max.x += w;
+                }
             }
         }
+        
     }
     DrawList->PopClipRect();
-    target.pos = toNm(targetPosPx);
+
+    target.pos = toNm(targetPosPx[0]);
     target.radius = r / grid.GetWidth();
     // render position label
     if (grid.Contains(mousePos))
@@ -474,6 +515,7 @@ bool Spatializer(const char *label, SpatializerTarget &target, tact::Curve rollo
             node.index = dropped;
             node.pos = ImClamp(toNm(mousePos), ImVec2(0, 0), ImVec2(1, 1));
             node.held = false;
+            node.level = 0;
             if (snap)
                 snapNode(node);
             nodes[node.index] = node;

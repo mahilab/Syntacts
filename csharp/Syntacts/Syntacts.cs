@@ -379,6 +379,11 @@ namespace Syntacts
             set { Dll.Spatializer_setRollOff(handle, (int)value); }
         }
 
+        public Point wrapInterval {
+            get { return Dll.Spatializer_getWrap(handle); }
+            set { Dll.Spatializer_setWrap(handle, value); }
+        }
+
         public int channelCount {
             get { return Dll.Spatializer_getChannelCount(handle); }
         }
@@ -951,6 +956,11 @@ namespace Syntacts
         public static extern double Spatializer_getRadius(Handle spat);
         [DllImport("syntacts-c")]
         public static extern void Spatializer_setRollOff(Handle spat, int type);
+        [DllImport("syntacts-c")]
+        public static extern void Spatializer_setWrap(Handle spat, Point wrapInterval);
+        [DllImport("syntacts-c")]
+        public static extern Point Spatializer_getWrap(Handle spat);
+
         [DllImport("syntacts-c")] 
         public static extern bool Spatializer_createGrid(Handle spat, int rows, int cols);
         [DllImport("syntacts-c")]

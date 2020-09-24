@@ -93,6 +93,9 @@ EXPORT Point Spatializer_getTarget(Handle spat);
 EXPORT void Spatializer_setRadius(Handle spat, double r);
 EXPORT double Spatializer_getRadius(Handle spat);
 EXPORT void Spatializer_setRollOff(Handle spat, int type); 
+EXPORT void Spatializer_setWrap(Handle spat, Point wrapInterval);
+EXPORT Point Spatializer_getWrap(Handle spat);
+
 EXPORT bool Spatializer_createGrid(Handle spat, int rows, int cols);
 EXPORT void Spatializer_clear(Handle spat);
 EXPORT void Spatializer_remove(Handle spat, int channel);
