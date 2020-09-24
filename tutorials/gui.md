@@ -6,7 +6,7 @@ permalink: /tutorials/gui/
 
 ## Introduction
 
-This tutorial will teach you how to setup and use the Syntacts GUI. The GUI can be thought of as a companion app to the programming API, where you can quickly prototype and design cues before implementing them in your Syntacts-driven application. Before reading this tutorial, it is recommended that you read one of the programming API tutorials so you have a basic understanding on Syntacts mechanisms and terminology. 
+This tutorial will teach you how to set up and use the Syntacts GUI. The GUI can be thought of as a companion app to the programming API, where you can quickly prototype and design cues before implementing them in your Syntacts-driven application. Before reading this tutorial, it is recommended that you read one of the programming API tutorials so you have a basic understanding of Syntacts mechanisms and terminology. 
 
 ![GUI](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/syntacts_gui.png)
 
