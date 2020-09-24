@@ -3,9 +3,10 @@
 namespace tact {
 
 inline double wrappedDifference(double p1, double p2, double interval) { 
-    double half = interval * 0.5;
-    double diff = fmod(p2 - p1 + half, interval) - half;
-    return diff < -half ? diff + interval : diff;
+    // double half = interval * 0.5;
+    // double diff = fmod(p2 - p1 + half, interval) - half;
+    // return diff + (diff < -half) * interval;
+    return p1 - p2 - floor(((p1 - p2) + interval * 0.5) / interval) * interval;
 }
 
 Spatializer::Spatializer(Session* session) :
