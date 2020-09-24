@@ -26,7 +26,7 @@ The Syntacts Release folder contains a Unity demo you may wish to explore. Navig
 
 Adding Syntacts to a new or existing Unity project is simple. From the Release folder, import `unity/syntacts.unitypackage` into your project either by 1) dragging it into the Project window of the Editor, or 2) from the Editor menu **Assets -> Import Package -> Custom Package ...**. Click **Import** and the Syntacts assets will be added to the top level of your project:
 
-![Demo](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/tut-unity/import.png)
+![Import](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/tut-unity/import.png)
 
 Only two scripts are noteworthy:
 
@@ -36,4 +36,85 @@ Only two scripts are noteworthy:
 The `Plugin` folder contains `syntacts-c.dll`, the compiled Syntacts dynamic library which is loaded by Unity, and the `Editor` folder contains custom Unity Editor code. You can safely ignore both.
 
 ## SyntactsHub
+
+Although not required, the `SyntactsHub` component is useful for opening and managing the lifetime of a Syntacts Device Session. Simply attach this component to an existing or empty GameObject in your scene:
+
+![SyntactsHub](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/tut-unity/hub1.png)
+
+You can use the `SyntactsHub` to open an audio device in one of five different modes:
+
+- **Default** - Opens the system default Device. This is usually your computer's speakers.
+- **By Index** - Opens a Device by its index number. You can retrieve device indices from the *Available Devices* section.
+- **By Name** - Opens a Device by its string name under a specified API. The string name must exactly match that shown in the *Available Devices* section. You should prefer this method over **By Index**, as Device indices can change when other devices are added or removed from your system.
+- **By API** - Opens the default Device for a particular API (e.g ASIO, MME, WASAPI, etc.).
+- **Custom** - Opens a Device by index with a specified number of channels and sampling frequency. The modes above always open Devices at their default sampling frequency (likely 44,100Hz) and maximum output channels.
+
+The Device Session will be opened in the `Awake` call of `SyntactsHub.cs`, and closed in `OnApplicationQuit`. *This means that you should only reference the SyntactsHub from other scripts in between these Event function calls (see Unity [Order of Execution](https://docs.unity3d.com/Manual/ExecutionOrder.html) for more details).*
+
+If you choose not use the `SyntactsHub`, you can always open and close device Sessions from your own scripts. Just be sure to call `Session.Dispose` before Unity quites, otherwise you will create a memory leak. 
+
+## Typical Usage
+
+Assuming you've chosen to use `SyntactsHub.cs`, usage typically looks something like this:
+
+```cs
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+// import Syntacts namespace
+using Syntacts; 
+
+// My Component
+public class MyComponent : MonoBehaviour
+{
+    private SyntactsHub hub;
+
+    void Start()
+    {
+        // find our SyntactsHub in the Scene
+        hub = FindObjectOfType<SyntactsHub>();
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space)) {
+            // create a new Signal to play
+            Signal sig = new Sine(250) * new Envelope(1);
+            // play the Signal on channel 0
+            hub.session.Play(0,sig);
+        }
+    }
+}
+```
+
+First, we find the `SyntactsHub` in the Scene inside of `Start` and save a local reference to `hub`. From here, we can access the the `hub`'s `Session` object and use it as we would in the standard C# API. A few important notes:
+
+- Prefer initializing in `Start` over `Awake`. It's OK to find the `SyntactsHub` in `Awake`, but don't attempt to call any of `SyntactsHub.session`'s member functions there. Unity does not garuntee the order of each components `Awake` call, and since the device is opened inside of `SyntactsHub.Awake`, it may not be opened before `MyComponent.Awake`. Intializing in `Start` solves this since `Start` is always called after `Awake`.
+- In the event that you have multiple `SyntactsHub`s in the scene (i.e. you are outputting to multiple devices), you will need to use an approach different from `FindObjectOfType`. The simplest fix is to make my `MyComponent.hub` public and assign the `SyntactsHub` from the Unity Editor.
+
+## Using Syntacts GUI with Unity
+
+A common requirement of designing haptic effects is needing to tune them online. Instead of repeatedly Playing, Stopping, and editting your code, you can use Syntact's Library features and the [GUI](/tutorials/gui.md) to iterate in realtime. First, create a string variable containing the name of the Signal to be loaded. You can optionally make this public and assign it from the Unity Editor.
+
+```cs
+public string signalName = "my_signal";
+
+void Update()
+{
+    if (Input.GetKeyDown(KeyCode.Space)) {
+        // attempt to load the Signal and play it
+        Signal sig;
+        if (Syntacts.Library.LoadSignal(out sig, signalName))
+            hub.session.Play(0,sig);
+        else
+            Debug.LogError("Failed to load Signal " + signalName);
+    }
+}
+```
+
+![GUI](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/tut-unity/gui_unity.png)
+
+
+
 
