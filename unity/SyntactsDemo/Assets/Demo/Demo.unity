@@ -329,8 +329,8 @@ MonoBehaviour:
   index: 0
   channelCount: 2
   sampleRate: 44100
-  api: 2
-  name: 
+  deviceApi: 2
+  deviceName: 
 --- !u!4 &1324504780
 Transform:
   m_ObjectHideFlags: 0
@@ -623,7 +623,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2135910096}
   m_Layer: 0
-  m_Name: Examples
+  m_Name: Demo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

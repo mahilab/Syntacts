@@ -27,3 +27,5 @@ relative/
 *.csv
 
 .DS_Store
+
+debug.log

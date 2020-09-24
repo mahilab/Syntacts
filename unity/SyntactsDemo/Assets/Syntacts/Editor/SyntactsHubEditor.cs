@@ -8,13 +8,12 @@ using Syntacts;
 [CustomEditor(typeof(SyntactsHub))]
 public class SyntactsHubEditor : Editor
 {
-
     SerializedProperty openMode;
     SerializedProperty index;
     SerializedProperty channelCount;
     SerializedProperty sampleRate;
-    SerializedProperty api;
-    SerializedProperty name;
+    SerializedProperty deviceApi;
+    SerializedProperty deviceName;
 
     bool showDeviceInfo = true;
     bool showAvailable = false;
@@ -35,8 +34,8 @@ public class SyntactsHubEditor : Editor
         index = serializedObject.FindProperty("index");
         channelCount = serializedObject.FindProperty("channelCount");
         sampleRate = serializedObject.FindProperty("sampleRate");
-        api = serializedObject.FindProperty("api");
-        name = serializedObject.FindProperty("name");
+        deviceApi = serializedObject.FindProperty("deviceApi");
+        deviceName = serializedObject.FindProperty("deviceName");
 
         italicLabel = new GUIStyle();
         italicLabel.fontStyle = FontStyle.Italic;
@@ -72,7 +71,7 @@ public class SyntactsHubEditor : Editor
         if (openMode.enumValueIndex == (int)SyntactsHub.OpenMode.ByIndex)
             EditorGUILayout.PropertyField(index, new GUIContent("Device Index"));
         else if (openMode.enumValueIndex == (int)SyntactsHub.OpenMode.ByAPI)
-            EditorGUILayout.PropertyField(api, new GUIContent("Device API"));
+            EditorGUILayout.PropertyField(deviceApi, new GUIContent("Device API"));
         else if (openMode.enumValueIndex == (int)SyntactsHub.OpenMode.Custom)
         {
             EditorGUILayout.PropertyField(index, new GUIContent("Device Index"));
@@ -81,8 +80,8 @@ public class SyntactsHubEditor : Editor
         }
         else if (openMode.enumValueIndex == (int)SyntactsHub.OpenMode.ByName)
         {
-            EditorGUILayout.PropertyField(name, new GUIContent("Device Name"));
-            EditorGUILayout.PropertyField(api, new GUIContent("Device API"));
+            EditorGUILayout.PropertyField(deviceName, new GUIContent("Device Name"));
+            EditorGUILayout.PropertyField(deviceApi, new GUIContent("Device API"));
         }
 
         if (EditorGUI.EndChangeCheck())
@@ -172,18 +171,6 @@ public class SyntactsHubEditor : Editor
             EditorGUILayout.LabelField("Signal Count:", Syntacts.Signal.count.ToString());
         }
         EditorGUILayout.EndFoldoutHeaderGroup();
-
-
-        // if (GUILayout.Button("Open Session")) {
-
-
-
-        // }
-        // if (GUILayout.Button("Close Session")) {
-
-        // }
-
-
     }
 
     public override bool RequiresConstantRepaint() {

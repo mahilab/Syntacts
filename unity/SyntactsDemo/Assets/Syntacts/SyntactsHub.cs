@@ -21,7 +21,7 @@ public class SyntactsHub : MonoBehaviour
     };
  
     [SerializeField]
-    private OpenMode openMode;
+    private OpenMode openMode = OpenMode.Default;
     [SerializeField]
     int index = 0;  
     [SerializeField]
@@ -31,17 +31,17 @@ public class SyntactsHub : MonoBehaviour
 
 #if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
     [SerializeField]     
-    API api = API.MME;
+    API deviceApi = API.MME;
 #elif UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX 
     [SerializeField]     
-    API api = API.CoreAudio;
+    API deviceApi = API.CoreAudio;
 #else
     [SerializeField]     
-    API api = API.Unknown;
+    API deviceApi = API.Unknown;
 #endif
 
     [SerializeField]
-    string name;
+    string deviceName = "";
 
     private Device currentDevice;
 
@@ -52,14 +52,14 @@ public class SyntactsHub : MonoBehaviour
         if (openMode == OpenMode.Default)
             result = session.Open();
         else if (openMode == OpenMode.ByAPI)
-            result = session.Open(api);
+            result = session.Open(deviceApi);
         else if (openMode == OpenMode.ByIndex)
             result = session.Open(index);
         else if (openMode == OpenMode.Custom) 
             result = session.Open(index, channelCount, sampleRate);
         else if (openMode == OpenMode.ByName) {
             foreach (Device dev in session.availableDevices) {
-                if (dev.name == name && (api == API.Unknown || dev.api == api)) {
+                if (dev.name == deviceName && (deviceApi == API.Unknown || dev.api == deviceApi)) {
                     result = session.Open(dev.index);
                     break;
                 }

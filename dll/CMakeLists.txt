@@ -35,7 +35,7 @@ add_custom_command(TARGET syntacts-c POST_BUILD
                $<TARGET_FILE:syntacts-c>              
                "${PROJECT_SOURCE_DIR}/csharp/examples/example_spatializer/")
 
-               add_custom_command(TARGET syntacts-c POST_BUILD 
+add_custom_command(TARGET syntacts-c POST_BUILD 
                COMMAND ${CMAKE_COMMAND} -E copy_if_different
                $<TARGET_FILE:syntacts-c>              
                "${PROJECT_SOURCE_DIR}/csharp/examples/example_devices/")
