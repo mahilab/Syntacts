@@ -24,9 +24,9 @@ Below you can find a list of Syntacts tutorials related to both the software and
 |---|---|
 |[GUI Overview](tutorials/gui.md)|Learn the basics of using the Syntacts GUI application.|
 
-### Case Studies
+### Example Projects
 
 |Tutorial|Description|
 |---|---|
 |[Syntacts Draw](tutorials/draw.md)|Develop a 2D tactile "drawing" GUI for the Syntacts Array (C++).|
-|[VR Bracelet](tutorials/bracelet.md)|Develop VR hand interactions for the Syntacts Bracelet (Unity).|
+|[VR Bracelet](tutorials/bracelet.md)|Develop VR hand interactions for a virtual fan and the Syntacts Bracelet (Unity).|
