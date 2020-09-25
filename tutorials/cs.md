@@ -5,7 +5,7 @@ permalink: /tutorials/cs/
 ---
 
 ## Introduction
-This tutorial will teach you how to setup and use the Syntacts C# API. For this purpose, a C# IDE such as Visual Studio is required.
+This tutorial will teach you how to setup and use the Syntacts C# API.
  
 ## Requirements
 
@@ -14,12 +14,12 @@ This tutorial will teach you how to setup and use the Syntacts C# API. For this 
 ## Basic Setup
 
 - Download the [latest pre-compiled Syntacts binaries](https://github.com/mahilab/Syntacts/releases) for your system. 
-- Extract `syntacts-c.dll` and add it to each project folder that you want to run. 
 
 ## Building
 
 - Navigate to the csharp directory of the latest release of Syntacts
 - Build the Syntacts library from the command line and then run the required project.
+- ensure that `syntacts-c.dll` is located in each example directory
 
 ```shell
   > cd csharp/Syntacts
@@ -61,6 +61,8 @@ session.Close();
 // open device by name and preferred API
 session.Open("MOTU Pro Audio", API::ASIO);
 session.Close();
+// dispose of resources to avoid memory leaks
+session.Dispose();
 ```
 
 - Device indices represent the combination of a device and an API it supports. Therefore, one device may have multiple indices each with a different API. 
