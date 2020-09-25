@@ -6,7 +6,7 @@ permalink: /tutorials/draw/
 
 ## Introduction
 
-In this tutorial, we will create a GUI interface that allows us to "draw" 2D tactile animations on the 24-tactor [Syntacts Array](/hardware). We will leverage Syntact's Spatializer to blend the amplitudes of adjacent tactors so that we can create the illusion of continuous motion. The program will be written in C++ using the [mahi-gui](https://github.com/mahilab/mahi-gui) library. You should already have a decent understanding of C++ and completed the [tutorial](/tutorials/cpp/). The Syntacts Array is driven by a MOTU 24Ao audio interface. Even if you don't have a MOTU 24Ao or the Array, this tutorial is still a good example of creating user interfaces around Syntacts. Completed code is [available on GitHub](https://github.com/mahilab/SyntactsDraw).
+In this tutorial, we will create a GUI interface that allows us to "draw" 2D tactile animations on the 24-tactor [Syntacts Array](/hardware). We will leverage Syntact's Spatializer to blend the amplitudes of adjacent tactors so that we can create the illusion of continuous motion. The program will be written in C++ using the [mahi-gui](https://github.com/mahilab/mahi-gui) library. You should already have a decent understanding of C++ and completed the [C++ API tutorial](/tutorials/cpp/). The Syntacts Array is driven by a MOTU 24Ao audio interface. Even if you don't have a MOTU 24Ao or the Array, this tutorial is still a good example of creating user interfaces around Syntacts. Completed code is [available on GitHub](https://github.com/mahilab/SyntactsDraw).
 
 ![GUI](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/tut-draw/draw.gif)
 
@@ -20,7 +20,7 @@ In this tutorial, we will create a GUI interface that allows us to "draw" 2D tac
 
 ## Setting Up with CMake
 
-We will use CMake as our build system. Our build script, `CMakeLists.txt` is given below. Using `FetchContent`, we can automatically retrieve mahi-gui and Syntacts from their GitHub repositories. Finally, we will make an executable from a source file named `draw.cpp`, and link it to mahi-gui and Syntacts.
+We will use CMake as our build system. Our build script, `CMakeLists.txt`, is given below. Using `FetchContent`, we can automatically retrieve mahi-gui and Syntacts from their GitHub repositories and build them as a part of our application. Finally, we will make an executable from a source file named `draw.cpp`, and link it to mahi-gui and Syntacts.
 
 ```cmake
 # CMakeLists.txt
@@ -46,7 +46,7 @@ target_link_libraries(draw mahi::gui syntacts)
 
 ## Making an Application Window
 
-First, we make our source file `draw.cpp` in the same directory as `CMakeLists.txt`. We begin by including all the necessary library headers and using declarations, and defining a few constants:
+First, we create our source file `draw.cpp` in the same directory as `CMakeLists.txt`. We begin by including all the necessary library headers and using declarations, and defining a few constants:
 
 ```cpp
 // draw.cpp
@@ -67,9 +67,9 @@ constexpr int ROWS   = 8;   // array rows
 
 Next, we will create a class `SyntactsDraw` which subclasses `Application` from mahi-gui. `Application` provides us with a window and OpenGL context. You don't actually need to know anything about OpenGL for this tutorial, because we will be using [ImGui](https://github.com/ocornut/imgui) to draw our widgets and 2D graphics. ImGui is an incredibly powerful, yet simple "immediate-mode" GUI library for C++ and is excellent for creating quick interfaces. mahi-gui comes pre-integrated with ImGui, so we can use it without any additional setup.
 
-We need to call `Application`'s constructor from our class's constructor to establish the window size and name. We will also go ahead and set our theme for ImGui, and disable Viewports (i.e. multi-window features) since we only need once window.
+We need to call `Application`'s constructor from our class's constructor to establish the window size and name. We will also go ahead and set a theme for ImGui, and disable ImGui Viewports (i.e. multi-window features) since we only need one window.
 
-Next, we override `Application`'s `update` method. This function will be called every frame before the window is rendered. It is here that we will put our ImGui window code and application logic. The *ImGui window* is a separate concept from the *application window* (i.e. the window created by the operating system). It can be thought of as a window within a window. The ImGui window content starts at `ImGui::Begin` and ends with `ImGui::End`. All code in between these two functions will compose our user interface. We will set the window's position and size so that it exactly matches the Application window frame size. 
+Next, we override `Application`'s `update` method. This function will be called every frame before the window is rendered. It is here that we will put our ImGui window code and application logic. The *ImGui window* is a separate concept from the *application window* (i.e. the window created by the operating system). It can be thought of as a window within a window. The ImGui window content starts at `ImGui::Begin` and ends with `ImGui::End`. All code in between these two functions will compose our user interface. We will set the window's position and size so that it exactly matches the Application window size. 
 
 ```cpp
 /// Syntacts Array Drawing Application
@@ -97,7 +97,7 @@ private:
 };
 ```
 
-Now that we have the skeleton of `SyntactsDraw` complete, we can create an instance in `main` and run the application:
+Now that we have the skeleton of `SyntactsDraw` complete, we can create an instance in `main` and run it:
 
 ```cpp
 // main, program entry point
@@ -169,7 +169,7 @@ if (!m_session.isOpen()) {
     <img src="https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/tut-draw/button.gif" height="250">
 </p>
 
-Great! Now let's get our hands dirty and write a function to draw our array background graphics. To help us later on, will create two `Rects` to store the pixel coordinates of our array -- one bounding the outer edge, and one bounding the tactors. Because we want to be fancy, we will use the Session method `getLevel` to color each tactor circle so that its Hot Pink at max level (i.e 1.0). 
+Great! Now let's get our hands dirty and write a function to draw our array graphics. To help us later on, will create two `Rects` to store the pixel coordinates of our array -- one bounding the outer edge, and one bounding the tactors. Because we want to be fancy, we will use the Session method `getLevel` to color each tactor circle so that its Hot Pink at max level (i.e 1.0). 
 
 ```cpp
 /// Pixel rect enclosing outer array
@@ -210,9 +210,9 @@ We can call this from `update`, and see the result:
     <img src="https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/tut-draw/array.png" height="250">
 </p>
 
-Looking good, but so far we have only created a static background. Let's add some user controls. We will offer two modes of user interaction: one where the user can draw a series of paths and play them back on the array, and one where the array target position follows the mouse in realtime. 
+Looking good, but so far we have only created a static background. Let's add some interactivity. We will offer two modes of user interaction: one where the user can draw a series of paths and play them back on the array, and one where the array target position follows the mouse in realtime. 
 
-For the "playback" mode, we will define our paths as a vector of vectors of Vec2. We will also add a few boolean flags so we know what mode we are in, as well as a variable to store the position of the Spatializer target position in pixels:
+For the "playback" mode, we will define our paths as a vector of vectors of Vec2s. We will also add a few boolean flags so we know what mode we are in, as well as a variable to store the position of the Spatializer target position in pixels:
 
 ```cpp
 /// User's paths
@@ -225,9 +225,9 @@ bool m_followMode = false;
 Vec2 m_target_px;
 ```
 
-Back in our `update` method, we can add a few buttons and sliders to 1) Play the path, 2) Clear the path, 3) modify the target radius, and 4) toggle modes. Additionally, we will allow the user to modify the target radius with mouse wheel scroll.
+Back in our `update` method, we can add a few buttons and sliders to 1) play the path, 2) clear the path, 3) modify the target radius, and 4) toggle interaction modes. Additionally, we will allow the user to modify the target radius with mouse wheel scroll.
 
-Our Play button will start a coroutine that plays back the user's current set of paths (more on that later). The Clear button simply clears the vector of paths. Our Radius slider will modify the value of `m_radius`, and use it to update the target radius in `m_spat`. Similarly, we update the target radius if the mouse wheel value is not zero. When the Follow Mouse checkbox is toggled, we will play or stop our Signal on the Spatializer.
+Our *Play* button will start a coroutine that plays back the user's current set of paths (more on that later). The *Clear* button simply clears the vector of paths. Our *Radius* slider will modify the value of `m_radius`, and use it to update the target radius of `m_spat`. Similarly, we update the target radius if the mouse wheel value this frame is not zero. When the *Follow Mouse* checkbox is toggled, we will play or stop our Signal on the Spatializer.
 
 ```cpp
 ...
@@ -272,7 +272,7 @@ else {
     <img src="https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/tut-draw/controls.png" height="250">
 </p>
  
-Now, we need to appropriately update the Spatializer target position. Let's first handle the "playback" mode. First, we need to collect user's input as they draw the path on the array, and render the drawn paths. 
+Now, we need to appropriately update the Spatializer target position. Let's first handle the "playback" mode. We need to collect users' input as they draw the path on the array, and render the drawn paths:
  
 ```cpp
     ...
@@ -303,7 +303,7 @@ void drawPaths(Color col, float thickness) {
 }
 ```
 
-As noted, our Play button calls `start_coroutine(playPaths())`. A coroutine is a function can suspend execution by yielding control, and returning to the yield point upon the next frame. It's an easy way to write "asynchronous" code without threads or other complicated mechanisms. Our coroutine is simple:
+As noted, our Play button calls `start_coroutine(playPaths())`. A coroutine is a function that can suspend execution by yielding control, and returning to the yield point upon the next frame. It's an easy way to write "asynchronous" code without threads or other complicated mechanisms. Our coroutine is simple:
 
 ```cpp
 /// Coroutine that plays back user's paths
@@ -365,6 +365,7 @@ void drawTarget() {
     if (m_followMode || m_playing)
         drawTarget();
     }
+}
 ```
 
 ## The Final Application
