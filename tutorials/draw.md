@@ -6,7 +6,7 @@ permalink: /tutorials/draw/
 
 ## Introduction
 
-In this tutorial, we will create a GUI interface that allows us to "draw" 2D tactile animations on the 24-tactor [Syntacts Array](/hardware). We will leverage Syntact's Spatializer to blend the amplitudes of adjacent tactors so that we can create the illusion of continuous motion. The program will be written in C++ using the [mahi-gui](https://github.com/mahilab/mahi-gui) library. The Syntacts Array is driven by a MOTU 24Ao audio interface. Even if you don't have a MOTU 24Ao or the array, this tutorial is still a good example of creating user interfaces around Syntacts. Completed code is [available on GitHub](https://github.com/mahilab/SyntactsDraw).
+In this tutorial, we will create a GUI interface that allows us to "draw" 2D tactile animations on the 24-tactor [Syntacts Array](/hardware). We will leverage Syntact's Spatializer to blend the amplitudes of adjacent tactors so that we can create the illusion of continuous motion. The program will be written in C++ using the [mahi-gui](https://github.com/mahilab/mahi-gui) library. You should have already completed the [C++ tutorial](/tutorials/cpp/). The Syntacts Array is driven by a MOTU 24Ao audio interface. Even if you don't have a MOTU 24Ao or the array, this tutorial is still a good example of creating user interfaces around Syntacts. Completed code is [available on GitHub](https://github.com/mahilab/SyntactsDraw).
 
 ![GUI](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/tut-draw/draw.gif)
 
@@ -96,7 +96,7 @@ private:
 };
 ```
 
-Now that we have the skeleton of an `Application`, we can instantiate one in `main` and run the application:
+Now that we have the skeleton of an `SyntactsDraw`, we can instantiate one in `main` and run the application:
 
 ```cpp
 // main, program entry point
@@ -120,4 +120,50 @@ Allow the build process to complete (it may take a minute or two the first time 
 
 ## Fleshing Out Our Application
 
+Now let's add some functionality to our program! First things first, we need to initialize a Syntacts Session and configure a Spatializer. We will add both of these as member variables of our `SyntactsDraw` class (denoted with `m_` prefix). A new member function `initialize` will configure them and create the Signal that we will play on the array (a simple 175 Hz sinewave):
 
+```cpp
+/// Syntacts Session
+Session m_session;
+/// Syntacts Spatializer
+Spatializer m_spat;
+/// Spatializer radius
+float m_radius = 1;
+/// Syntacts Signal
+Signal m_sig;
+
+/// Initializes Syntacts Session and Spatializer
+void initialize() {
+    if (m_session.open("MOTU Pro Audio", API::ASIO) != SyntactsError_NoError) {
+        LOG(Fatal) << "Failed to open MOTU 24Ao! Ensure that the device is connected and that drivers are installed.";        
+        throw std::runtime_error("Failed to open MOTU 24Ao!");
+    }
+    m_spat.bind(&m_session);
+    m_spat.setTarget(0,0);
+    m_spat.setRadius(m_radius);
+    for (int c = 0; c < COLS; c++) {
+        for (int r = 0; r < ROWS; ++r) {
+            int ch = c*ROWS + r;
+            m_spat.setPosition(ch,(double)c,(double)r);
+        }
+    }
+    m_sig = Sine(175);
+}
+```
+
+Now we can add a button to our GUI code in `update` that will call the function:
+
+```cpp
+...
+ImGui::Begin("Syntacts Draw", nullptr, flags);
+// // if Session not open, offer initialization button
+if (!m_session.isOpen()) {
+    if (ImGui::Button("Initialize Syntacts", ImVec2(-1,-1)))
+        initialize(); 
+}
+...
+```
+
+<p align="center">
+    <img src="https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/tut-draw/button.gif" height="250">
+</p>
