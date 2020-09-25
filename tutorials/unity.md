@@ -10,7 +10,7 @@ In this tutorial, we will learn how to integrate Syntacts into Unity projects. S
 ## Requirements
 
 - [Unity Engine](https://unity.com/) (2019.3.7.1f or newer)
-- latest Syntacts [Release](https://github.com/mahilab/Syntacts/releases)
+- latest [Syntacts Release](https://github.com/mahilab/Syntacts/releases)
 
 ## Basic Demo
 

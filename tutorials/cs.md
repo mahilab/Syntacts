@@ -10,6 +10,7 @@ This tutorial will teach you how to setup and use the Syntacts C# API.
 ## Requirements
 
 - C# compiler such as .NET
+- latest [Syntacts Release](https://github.com/mahilab/Syntacts/releases)
 
 ## Basic Setup
 

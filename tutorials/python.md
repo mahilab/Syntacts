@@ -11,6 +11,7 @@ This tutorial will teach you how to setup and use the Syntacts Python API. It is
 ## Requirements
 
 - [Python 3](https://www.python.org/downloads/)
+- latest [Syntacts Release](https://github.com/mahilab/Syntacts/releases)
 
 ## Basic Setup
 
