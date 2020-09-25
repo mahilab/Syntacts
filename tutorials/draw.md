@@ -64,7 +64,11 @@ constexpr int COLS   = 3;   // array columns
 constexpr int ROWS   = 8;   // array rows
 ```
 
-Next, we will subclass `Application` from `mahi-gui`. `Application` provides us with a window and OpenGL context. We don't actually need to know anything about OpenGL for this tutorial, because we will be using `ImGui` (bundled with `mahi-gui`) to create our GUI widgets and 2D graphics. 
+Next, we will subclass `Application` from `mahi-gui`. `Application` provides us with a window and OpenGL context. You don't actually need to know anything about OpenGL for this tutorial, because we will be using [ImGui](https://github.com/ocornut/imgui) to draw our widgets and 2D graphics. ImGui is an incredibly powerful, yet simple "immediate-mode" GUI library for C++ that is excellent for creating quick interfaces and visualizations. `mahi-gui` comes pre-integrated with ImGui, so we can use it without any additional setup.
+
+We need to call `Application`'s constructor from our class's constructor to establish the window size and name. We will also go ahead and set our theme for ImGui, and disable Viewports (i.e. multi-window features) since we only need once window.
+
+Next, we override `Application`'s `update` method. This function will be called every frame before the window is rendered. It is here that we will put our ImGui window code and application logic. The ImGui window is a separate concept from the application window (i.e. the window created by the operating system). It can be thought of as a window within a window. The ImGui window begins with `ImGui::Begin` and ends with `ImGui::End`. All code in between these two function calls will compose our user interface. We will set the windows position and size so that it exactly matches the Application window frame size. 
 
 ```cpp
 /// Syntacts Array Drawing Application
@@ -90,7 +94,11 @@ private:
         ImGui::End();
     }
 };
+```
 
+Now that we have the skeleton of an `Application`, we can instantiate one in `main` and run the application:
+
+```cpp
 // main, program entry point
 int main(int argc, char const *argv[]) {
     SyntactsDraw app;
@@ -99,4 +107,17 @@ int main(int argc, char const *argv[]) {
 }
 ```
 
-## Initializing Syntacts
+At this point, we can build the program with CMake. Run the following commands from a shell in the directory that contains `CMakeLists.txt` and `draw.cpp`:
+
+```shell
+mkdir build
+cd build
+cmake ..
+cmake --build . --config Release
+```
+
+Allow the build process to complete (it may take a minute or two the first time around, as mahi-gui and Syntacts are built). If everything goes correctly, you should have an application `draw.exe` located in the build files. Go ahead and run it. You should see a tall skinny window with nothing in it.
+
+## Fleshing Out Our Application
+
+
