@@ -12,21 +12,22 @@ Below you can find a list of Syntacts tutorials related to both the software and
 
 |Tutorial|Description|
 |---|---|
-|[Building](tutorials/building.md)|Learn to build the Syntacts library, plugin, and GUI from the C++ source code.|
-|[C++ API](tutorials/cpp.md)|Learn to setup and program a project using the Syntacts C++ API.|
-|[C# API](tutorials/cs.md)|Learn to setup and program a project using the Syntacts C# API.|
-|[Python API](tutorials/python.md)|Learn to setup and program a project using the Syntacts Python API.| 
-|[Unity](tutorials/unity.md)|Learn to setup and program a project using Syntats in Unity Engine.|
+|[Building](/tutorials/building)|Learn to build the Syntacts library, plugin, and GUI from the C++ source code.|
+|[C++ API](/tutorials/cpp)|Learn to setup and program a project using the Syntacts C++ API.|
+|[C# API](/tutorials/cs)|Learn to setup and program a project using the Syntacts C# API.|
+|[Python API](/tutorials/python)|Learn to setup and program a project using the Syntacts Python API.| 
+|[Unity](/tutorials/unity)|Learn to setup and program a project using Syntats in Unity Engine.|
+|[MATLAB](/tutorials/matlab)|Learn to import and use the Syntacts C library in MATLAB.|
 
 ### Syntacts GUI
 
 |Tutorial|Description|
 |---|---|
-|[GUI Overview](tutorials/gui.md)|Learn the basics of using the Syntacts GUI application.|
+|[GUI Overview](/tutorials/gui)|Learn the basics of using the Syntacts GUI application.|
 
 ### Example Projects
 
 |Tutorial|Description|
 |---|---|
-|[Syntacts Draw](tutorials/draw.md)|Develop a 2D tactile "drawing" GUI for the Syntacts Array (C++).|
-|[VR Bracelet](tutorials/bracelet.md)|Develop VR hand interactions for a virtual fan and the Syntacts Bracelet (Unity).|
+|[Syntacts Draw](/tutorials/draw)|Develop a 2D tactile "drawing" GUI for the Syntacts Array (C++).|
+|[VR Bracelet](/tutorials/bracelet)|Develop VR hand interactions for a virtual fan and the Syntacts Bracelet (Unity).|

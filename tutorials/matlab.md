@@ -20,14 +20,14 @@ To import the Syntacts library into MATLAB, you first need to have installed a c
 Unless you decide to build the Syntacts C library from source using your own compiler, you need to also ensure that your compiler is compatible with compiler that was used to build the Syntacts Release:
 
 - On Windows, we use MSVC to build Syntacts. Versions 2015, 2017, and 2019 should work. MinGW *may* work. Feel free to try.
-- On macOS, we used XCode (i.e. Apple Clang) to build Syntacts. Install the latest version of XCode from the Apple Store.
+- On macOS, we use XCode (i.e. Apple Clang) to build Syntacts. Install the latest version of XCode from the Apple Store.
 
-For this example, we will use MATLAB 2020b and MSVC 2019.
+For this example, we will use MATLAB 2020b and MSVC 2019 on Windows 10.
 
 ## Loading Syntacts into MATLAB
 
-- From the `c` folder in the latest Syntacts Release, extract `syntacts-c.h` and `syntacts-c.dll` (or `syntacts-c.dylib` on macOS) to a location of your choice. 
-- Open MATLAB and set the working directory to the location containing the header file and library
+- From the `c` folder in the latest Syntacts Release, extract `syntacts.h` and `syntacts.dll` (or `syntacts.dylib` on macOS) to a location of your choice. 
+- Open MATLAB and set the working directory to the location containing the header file and library.
 - The following code can be used to load Syntacts:
     ```matlab
     loadlibrary('syntacts')
@@ -121,9 +121,9 @@ end
 
 ```matlab
 S = Syntacts(6);    % make a Syntacts Session with device 6
-S.play(0,250,1,1);  % play a Signal
-S.play(0,175,0.5,1) % play another Signal
-clear S             % resources automatically freed
+S.play(0,250,1,1);  % play a Signal on channel 0
+S.play(1,175,0.5,1) % play a Signal on channel 1
+clear S             % resources will be automatically freed
 ```
 
 Eventually we hope to support MATLAB in an official capacity using wrapper objects similar to that presented here. If this is something you would like to help with, feel free to contribute a Pull Request on the GitHub repository! 
