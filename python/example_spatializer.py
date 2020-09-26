@@ -16,8 +16,6 @@ chs = s.channel_count # choose the number of channels you want to use here
 spc = 1.0 / (chs - 1)
 for i in range(chs):
     sp.set_position(i, (i * spc, 0))
-    p = sp.get_position(i)
-    print(p[0], p[1])
 
 # set up target
 sp.target = (0,0) # arbitrary position 
