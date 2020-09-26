@@ -1,4 +1,4 @@
-#include "syntacts-c.hpp"
+#include "syntacts.h"
 #include <iostream>
 #include <thread>
 #include <chrono>

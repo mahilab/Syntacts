@@ -21,6 +21,11 @@ if os.name == 'nt':
     copy2("../LICENSE", output_dir)
     # package GUI
     copy2("../build/gui/syntacts-gui.exe",output_dir)
+    # package c
+    os.mkdir(output_dir + "/c")
+    copy2("../c/syntacts.h",output_dir + "/c")
+    copy2("../build/c/syntacts-c.dll",output_dir + "/c")
+    os.rename(output_dir + "/c/syntacts-c.dll",output_dir + "/c/syntacts.dll")
     # package csharp
     copytree("../csharp",output_dir+"/csharp",ignore=ignore_patterns(".gitignore","*-d.dll","bin","obj"))
     # package python
@@ -38,4 +43,4 @@ if os.name == 'nt':
     p.wait()
     # create zip
     make_archive(output_dir, 'zip', output_dir)
-    rmtree(output_dir)
+    # rmtree(output_dir)

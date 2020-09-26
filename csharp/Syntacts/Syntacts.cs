@@ -310,11 +310,13 @@ namespace Syntacts
         }
 
         public void SetPosition(int channel, Point p) {
-            Dll.Spatializer_setPosition(handle, channel, p);
+            Dll.Spatializer_setPosition(handle, channel, p.x, p.y);
         }
 
         public Point GetPosition(int channel) {
-            return Dll.Spatializer_getPosition(handle, channel);
+            Point p = new Point();
+            Dll.Spatializer_getPosition(handle, channel, ref p.x, ref p.y);
+            return p;
         }
 
         public bool CreateGrid(int rows, int cols) {
@@ -366,8 +368,13 @@ namespace Syntacts
         }
 
         public Point target {
-            get { return Dll.Spatializer_getTarget(handle); }
-            set { Dll.Spatializer_setTarget(handle, value);}
+            get 
+            { 
+                Point p = new Point();
+                Dll.Spatializer_getTarget(handle, ref p.x, ref p.y); 
+                return p;
+            }
+            set { Dll.Spatializer_setTarget(handle, value.x, value.y);}
         }
 
         public double radius {
@@ -380,8 +387,13 @@ namespace Syntacts
         }
 
         public Point wrapInterval {
-            get { return Dll.Spatializer_getWrap(handle); }
-            set { Dll.Spatializer_setWrap(handle, value); }
+            get 
+            { 
+                Point p = new Point();
+                Dll.Spatializer_getWrap(handle, ref p.x, ref p.y); 
+                return p;
+            }
+            set { Dll.Spatializer_setWrap(handle, value.x, value.y); }
         }
 
         public int channelCount {
@@ -943,13 +955,13 @@ namespace Syntacts
         [DllImport("syntacts-c")]
         public static extern void Spatializer_unbind(Handle spat);
         [DllImport("syntacts-c")]
-        public static extern void Spatializer_setPosition(Handle spat, int channel, Point p);
+        public static extern void Spatializer_setPosition(Handle spat, int channel, double x, double y);
         [DllImport("syntacts-c")]
-        public static extern Point Spatializer_getPosition(Handle spat, int channel);
+        public static extern void Spatializer_getPosition(Handle spat, int channel, ref double x, ref double y);
         [DllImport("syntacts-c")]
-        public static extern void Spatializer_setTarget(Handle spat, Point p);
+        public static extern void Spatializer_setTarget(Handle spat, double x, double y);
         [DllImport("syntacts-c")]
-        public static extern Point Spatializer_getTarget(Handle spat);
+        public static extern void Spatializer_getTarget(Handle spat, ref double x, ref double y);
         [DllImport("syntacts-c")]
         public static extern void Spatializer_setRadius(Handle spat, double r);
         [DllImport("syntacts-c")]
@@ -957,9 +969,9 @@ namespace Syntacts
         [DllImport("syntacts-c")]
         public static extern void Spatializer_setRollOff(Handle spat, int type);
         [DllImport("syntacts-c")]
-        public static extern void Spatializer_setWrap(Handle spat, Point wrapInterval);
+        public static extern void Spatializer_setWrap(Handle spat, double x, double y);
         [DllImport("syntacts-c")]
-        public static extern Point Spatializer_getWrap(Handle spat);
+        public static extern void Spatializer_getWrap(Handle spat, ref double x, ref double y);
 
         [DllImport("syntacts-c")] 
         public static extern bool Spatializer_createGrid(Handle spat, int rows, int cols);

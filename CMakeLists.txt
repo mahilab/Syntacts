@@ -156,11 +156,11 @@ target_include_directories(syntacts
 target_link_libraries(syntacts PUBLIC portaudio_static PRIVATE)
 
 #===============================================================================
-# Syntacts Plugin DLL
+# Syntacts C Plugin
 #===============================================================================
 
 if (SYNTACTS_BUILD_C_DLL)
-    add_subdirectory("dll")
+    add_subdirectory("c")
 endif()
 
 #===============================================================================

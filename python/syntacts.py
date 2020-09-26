@@ -189,9 +189,6 @@ class Session:
 ## SPATIALIZER
 ###############################################################################
 
-class Point(Structure):
-    _fields_ = [("x", c_double), ("y", c_double)]
-
 class Spatializer:
     def __init__(self, session=None):
         if (session):
@@ -209,16 +206,13 @@ class Spatializer:
         _tact.Spatializer_unbind(self._handle)
 
     def set_position(self, channel, p):
-        if type(p) is Point:
-            _tact.Spatializer_setPosition(self._handle, channel, p)
-        else:
-            pt = Point()
-            pt.x = p[0]
-            pt.y = p[1]
-            _tact.Spatializer_setPosition(self._handle, channel, pt)
+        _tact.Spatializer_setPosition(self._handle, channel, p[0], p[1])
 
     def get_position(self, channel):
-        return _tact.Spatializer_getPosition(self._handle, channel)
+        x = c_double()
+        y = c_double()
+        _tact.Spatializer_getPosition(self._handle, channel, byref(x), byref(y))
+        return [x.value,y.value]
 
     def create_grid(self, rows, cols):
         return _tact.Spatializer_createGrid(self._handle, rows, cols)
@@ -246,17 +240,14 @@ class Spatializer:
 
     @property
     def target(self):
-        return _tact.Spatializer_getTarget(self._handle)
+        x = c_double()
+        y = c_double()
+        _tact.Spatializer_getTarget(self._handle, byref(x), byref(y))
+        return (x.value(),y.value())
 
     @target.setter
     def target(self, p):
-        if type(p) is Point:
-            _tact.Spatializer_setTarget(self._handle, p)
-        else:
-            pt = Point()
-            pt.x = p[0]
-            pt.y = p[1]
-            _tact.Spatializer_setTarget(self._handle, pt)
+        _tact.Spatializer_setTarget(self._handle, p[0], p[1])
     
     @property
     def radius(self):
@@ -287,17 +278,14 @@ class Spatializer:
 
     @property
     def wrap(self):
-        return _tact.Spatializer_getWrap(self._handle)
+        x = c_double()
+        y = c_double()
+        _tact.Spatializer_getWrap(self._handle, byref(x), byref(y))
+        return (x.value(),y.value())
 
     @wrap.setter
     def wrap(self, p):
-        if type(p) is Point:
-            _tact.Spatializer_setWrap(self._handle, p)
-        else:
-            pt = Point()
-            pt.x = p[0]
-            pt.y = p[1]
-            _tact.Spatializer_setWrap(self._handle, pt)
+        _tact.Spatializer_setWrap(self._handle, p[0], p[1])
 
     @property
     def channel_count(self):
@@ -695,15 +683,15 @@ lib_func(_tact.Spatializer_delete, None, [Handle])
 lib_func(_tact.Spatializer_valid, c_bool, [Handle])
 lib_func(_tact.Spatializer_bind, None, [Handle, Handle])
 lib_func(_tact.Spatializer_unbind, None, [Handle])
-lib_func(_tact.Spatializer_setPosition, None, [Handle, c_int, Point])
-lib_func(_tact.Spatializer_getPosition, Point, [Handle, c_int])
-lib_func(_tact.Spatializer_setTarget, None, [Handle, Point])
-lib_func(_tact.Spatializer_getTarget, Point, [Handle])
+lib_func(_tact.Spatializer_setPosition, None, [Handle, c_int, c_double, c_double])
+lib_func(_tact.Spatializer_getPosition, None, [Handle, c_int, POINTER(c_double), POINTER(c_double)])
+lib_func(_tact.Spatializer_setTarget, None, [Handle, c_double, c_double])
+lib_func(_tact.Spatializer_getTarget, None, [Handle, POINTER(c_double), POINTER(c_double)])
 lib_func(_tact.Spatializer_setRadius, None, [Handle, c_double])
 lib_func(_tact.Spatializer_getRadius, c_double, [Handle])
 lib_func(_tact.Spatializer_setRollOff, None, [Handle, c_int])
-lib_func(_tact.Spatializer_setWrap, None, [Handle, Point])
-lib_func(_tact.Spatializer_getWrap, Point, [Handle])
+lib_func(_tact.Spatializer_setWrap, None, [Handle, c_double, c_double])
+lib_func(_tact.Spatializer_getWrap, None, [Handle, POINTER(c_double), POINTER(c_double)])
 lib_func(_tact.Spatializer_createGrid, c_bool, [Handle, c_int, c_int])
 lib_func(_tact.Spatializer_clear, None, [Handle])
 lib_func(_tact.Spatializer_remove, None, [Handle, c_int])
