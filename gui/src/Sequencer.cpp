@@ -218,7 +218,7 @@ inline void TrackSignal(ImDrawList * DrawList, const tact::Signal& signal, const
 // SEQUENCER
 //=============================================================================
 
-bool Sequencer(const char *label, SeqInterface &I)
+bool Sequencer(const char *label, SeqInterface &I, bool fullFrame)
 {
     //=========================================================================
     // IMGUI FRONT MATTER
@@ -237,7 +237,8 @@ bool Sequencer(const char *label, SeqInterface &I)
     const ImVec2 canvasSize = ImGui::GetContentRegionAvail();
     const ImRect canvas_bb(canvasPos, canvasPos + canvasSize);
     // FLAGS
-    bool fitTimeline = false;
+    bool fitTimeline = I.fitThisFrame;
+    I.fitThisFrame = false;
 
     //=========================================================================
     // HEADER
@@ -336,7 +337,8 @@ bool Sequencer(const char *label, SeqInterface &I)
     ImGui::PushStyleColor(ImGuiCol_ChildBg, {0, 0, 0, 0});
     ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, {0, 1});
     float h = ImGui::GetContentRegionAvail().y - ImGui::GetStyle().ScrollbarSize - ImGui::GetStyle().ItemSpacing.y;
-    ImGui::BeginChild(69, ImVec2(-1, h));
+    if (fullFrame)
+        ImGui::BeginChild(69, ImVec2(-1, h));
     auto child = GetCurrentWindow();
     DrawList->PushClipRect(child->ClipRect.Min - ImVec2(0,1), child->ClipRect.Max + ImVec2(1, 0));
 
@@ -395,7 +397,7 @@ bool Sequencer(const char *label, SeqInterface &I)
         // TRACK TIMELINE
         bool dim = i % 2 == 0;
         float trackHeight = ImGui::GetItemRectSize().y; // height of the control group
-        ImGui::SameLine(controlsWidth);
+        ImGui::SameLine(controlsWidth + fullFrame ? 0 : 20); // IDK WHY 20 WORKS!
         ImGui::InvisibleButton("##TrackBar", ImVec2(canvasSize.x - controlsWidth, trackHeight));
         ImRect track_bb(ImGui::GetItemRectMin(), ImGui::GetItemRectMax());
         allTracks_bb.Max = track_bb.Max;
@@ -461,7 +463,8 @@ bool Sequencer(const char *label, SeqInterface &I)
         ImGui::PopID();
     }
     DrawList->PopClipRect(); // child bb
-    ImGui::EndChild();
+    if (fullFrame)
+        ImGui::EndChild();
     ImGui::PopStyleVar();
     ImGui::PopStyleColor();
 
@@ -507,7 +510,7 @@ bool Sequencer(const char *label, SeqInterface &I)
         I.tMin = Remap(lt, 0, 1, 0, I.tEnd);
         I.tMax = Remap(rt, 0, 1, 0, I.tEnd);
     }
-    Unindent();
+    Unindent(controlsWidth);
 
     return true;
 }

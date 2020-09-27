@@ -11,10 +11,10 @@ enum class PItem {
     Expression,
     Sum,
     Product,
-    Filter,
     Repeater,
     Stretcher,
     Reverser,
+    Sequencer,
     Sine,
     Square,
     Saw,
@@ -28,12 +28,11 @@ enum class PItem {
     ExponentialDecay,
     KeyedEnvelope,
     SignalEnvelope,
-    PolyLine,
     PolyBezier
 };
 
 /// Returns the name of a Syntacts signal
-const std::string& palletteString(PItem id);
+const std::string& paletteName(PItem id);
 
 class Palette : public Widget {
 public:

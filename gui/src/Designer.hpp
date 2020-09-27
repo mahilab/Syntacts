@@ -5,9 +5,10 @@
 
 class Designer : public Widget {
 public:
-    using Widget::Widget;
+    Designer(Gui& _gui);
     tact::Signal buildSignal();
     void update() override;
+    void edit(const tact::Signal& sig);
 private:
-    ProductNode m_root;
+    std::shared_ptr<Node> m_root;
 };

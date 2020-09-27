@@ -64,7 +64,7 @@ void PaletteSource(PItem pItem)
         g_palettePayload = pItem;
         SetPaletteHeld(true);
         ImGui::SetDragDropPayload("DND_PITEM", &g_palettePayload, sizeof(PItem));
-        ImGui::Text(palletteString(pItem).c_str());
+        ImGui::Text(paletteName(pItem).c_str());
         ImGui::EndDragDropSource();
     }
 }

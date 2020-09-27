@@ -1,5 +1,5 @@
 #ifndef DEBUG
-#define MAHI_GUI_NO_CONSOLE
+// #define MAHI_GUI_NO_CONSOLE
 #endif
 #include "Gui.hpp"
 

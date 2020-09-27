@@ -9,15 +9,13 @@ namespace {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void NodeSlot(const char *label, const ImVec2 &size)
-{
+void NodeSlot(const char *label, const ImVec2 &size) {
     BeginPulsable(true,true);
     ImGui::Button(label, size);
     EndPulsable();
 }
 
-std::shared_ptr<Node> makeNode(PItem id)
-{
+std::shared_ptr<Node> makeNode(PItem id) {
     if (id == PItem::Time)
         return std::make_shared<TimeNode>();
     if (id == PItem::Scalar)
@@ -50,6 +48,8 @@ std::shared_ptr<Node> makeNode(PItem id)
         return std::make_shared<ADSRNode>();
     if (id == PItem::ExponentialDecay)
         return std::make_shared<ExponentialDecayNode>();
+    if (id == PItem::SignalEnvelope)
+        return std::make_shared<SignalEnvelopeNode>();
     if (id == PItem::PolyBezier)
         return std::make_shared<PolyBezierNode>();
     if (id == PItem::Stretcher)
@@ -58,10 +58,171 @@ std::shared_ptr<Node> makeNode(PItem id)
         return std::make_shared<RepeaterNode>();
     if (id == PItem::Reverser)
         return std::make_shared<ReverserNode>();
+    if (id == PItem::Sequencer)
+        return std::make_shared<SequencerNode>();
     if (id == PItem::Pwm)
         return std::make_shared<PwmNode>();
     if (id == PItem::FM)
         return std::make_shared<FmNode>();
+    return nullptr;
+}
+
+template <typename T>
+std::shared_ptr<Node> makeOscNode(const tact::Signal& sig, int idx) {
+    auto osc = sig.getAs<T>();
+    if (osc->x.isType<tact::Time>()) {
+        auto node = std::make_shared<OscillatorNode>(T());
+        node->sig = sig;
+        return node;
+    }
+    else if (osc->x.isType<tact::Product>()) {
+        auto x = osc->x.getAs<tact::Product>();
+        if (x->lhs.isType<tact::Time>() && x->rhs.isType<tact::Time>()) {
+            auto node = std::make_shared<ChirpNode>();
+            node->f = x->lhs.bias / tact::TWO_PI;
+            node->r = x->lhs.gain / tact::PI;
+            return node;
+        }
+    }
+    else if (osc->x.isType<tact::Sum>()) {
+        auto x = osc->x.getAs<tact::Sum>();
+        if (x->lhs.isType<tact::Time>() && x->rhs.isType<tact::Sine>()) {
+            auto node = std::make_shared<FmNode>();
+            node->f = x->lhs.gain / tact::TWO_PI;
+            node->index = x->rhs.gain;
+            node->ftype = idx;
+            node->m =  x->rhs.getAs<tact::Sine>()->x.gain / tact::TWO_PI;
+            return node;
+        }
+    }
+    else {
+        return nullptr;
+    }
+}
+
+bool recurseProduct(std::shared_ptr<ProductNode> root, const tact::Signal& sig) {
+    auto prod = sig.getAs<tact::Product>();
+    if (prod->lhs.isType<tact::Product>()) 
+        recurseProduct(root, prod->lhs);    
+    else if (auto lhs = makeNode(prod->lhs))
+        root->m_nodes.push_back(lhs);    
+    else
+        return false;
+
+    if (prod->rhs.isType<tact::Product>()) 
+        recurseProduct(root, prod->rhs);    
+    else if (auto rhs = makeNode(prod->rhs))
+        root->m_nodes.push_back(rhs);    
+    else
+        return false;
+
+    return true;
+}
+
+bool recurseSum(std::shared_ptr<SumNode> root, const tact::Signal& sig) {
+    auto prod = sig.getAs<tact::Sum>();
+    if (prod->lhs.isType<tact::Sum>()) 
+        recurseSum(root, prod->lhs);    
+    else if (auto lhs = makeNode(prod->lhs))
+        root->m_nodes.push_back(lhs);    
+    else 
+        return false;
+
+    if (prod->rhs.isType<tact::Sum>()) 
+        recurseSum(root, prod->rhs);    
+    else if (auto rhs = makeNode(prod->rhs))
+        root->m_nodes.push_back(rhs); 
+    else
+        return false;
+
+    return true;   
+}
+
+template <typename N, typename S>
+std::shared_ptr<N> makeProcessNode(const tact::Signal& sig) {
+    auto pro = sig.getAs<S>();
+    if (auto root = makeRoot(pro->signal)) {
+        auto node = std::make_shared<N>();
+        node->sig = sig;
+        node->root = root;
+        return node;
+    }
+    return nullptr;
+}
+
+std::shared_ptr<Node> makeNode(const tact::Signal& sig) {
+    if (sig.isType<tact::Scalar>()) 
+        return std::make_shared<ScalarNode>(sig); 
+    else if (sig.isType<tact::Time>()) 
+        return std::make_shared<TimeNode>(sig);  
+    else if (sig.isType<tact::Ramp>()) 
+        return std::make_shared<RampNode>(sig);  
+    else if (sig.isType<tact::Noise>())
+        return std::make_shared<NoiseNode>(sig);
+    else if (sig.isType<tact::Expression>()) 
+        return std::make_shared<ExpressionNode>(sig);    
+    else if (sig.isType<tact::PolyBezier>())
+        return std::make_shared<PolyBezierNode>(sig);
+    else if (sig.isType<tact::Samples>()) 
+        return std::make_shared<SamplesNode>(sig);
+    else if (sig.isType<tact::Sum>()) {
+        auto node = std::make_shared<SumNode>();
+        if (recurseSum(node, sig))
+            return node;
+    }
+    else if (sig.isType<tact::Product>()) {
+        auto node = std::make_shared<ProductNode>();
+        if (recurseProduct(node, sig))
+            return node;
+    }
+    else if (sig.isType<tact::Sequence>()) {
+        auto seq = sig.getAs<tact::Sequence>();
+        return std::make_shared<SequencerNode>(*seq);
+    }
+    else if (sig.isType<tact::Sine>())
+        return makeOscNode<tact::Sine>(sig, 0);    
+    else if (sig.isType<tact::Square>())
+        return makeOscNode<tact::Square>(sig, 1);    
+    else if (sig.isType<tact::Saw>())
+        return makeOscNode<tact::Saw>(sig, 2);    
+    else if (sig.isType<tact::Triangle>())
+        return makeOscNode<tact::Triangle>(sig, 3);
+    else if (sig.isType<tact::Pwm>())
+        return std::make_shared<PwmNode>(sig);  
+    else if (sig.isType<tact::Envelope>()) 
+        return std::make_shared<EnvelopeNode>(sig);  
+    // KeyedEnvelope  
+    else if (sig.isType<tact::ASR>()) 
+        return std::make_shared<ASRNode>(sig);       
+    else if (sig.isType<tact::ADSR>()) 
+        return std::make_shared<ADSRNode>(sig);   
+    else if (sig.isType<tact::ExponentialDecay>()) 
+        return std::make_shared<ExponentialDecayNode>(sig); 
+    else if (sig.isType<tact::SignalEnvelope>()) 
+        return makeProcessNode<SignalEnvelopeNode, tact::SignalEnvelope>(sig);
+    else if (sig.isType<tact::Repeater>())
+        return makeProcessNode<RepeaterNode, tact::Repeater>(sig);
+    else if (sig.isType<tact::Stretcher>())
+        return makeProcessNode<StretcherNode, tact::Stretcher>(sig);
+    else if (sig.isType<tact::Reverser>())
+        return makeProcessNode<ReverserNode, tact::Reverser>(sig);
+    return nullptr;
+}
+
+/// Make Node from Signal
+std::shared_ptr<Node> makeRoot(const tact::Signal& sig) {
+    auto root = std::make_shared<ProductNode>();
+    if (sig.isType<tact::Product>()) {
+        if (recurseProduct(root, sig))
+            return root;
+    }
+    else {
+        auto node = makeNode(sig);
+        if (node) {
+            root->m_nodes.push_back(node);
+            return root;
+        }
+    }
     return nullptr;
 }
 
@@ -91,14 +252,14 @@ void NodeList::update()
     // node slot
     if (m_nodes.size() == 0 || SignalHeld() || PaletteHeld())
         NodeSlot("##EmpySlot", ImVec2(-1, 0));
-    // check for incomming palette items
+    // check for incoming palette items
     if (PaletteTarget())
     {
         auto node = makeNode(PalettePayload());
         if (node)
             m_nodes.emplace_back(node);
     }
-    // check for incomming library items
+    // check for incoming library items
     if (SignalTarget())
     {
         auto node = std::make_shared<LibrarySignalNode>(SignalPayload().first);
@@ -176,14 +337,8 @@ void LibrarySignalNode::update()
 void StretcherNode::update()
 {
     auto cast = (tact::Stretcher *)sig.get();
-    NodeSlot(m_sigName.c_str(), ImVec2(ImGui::CalcItemWidth(), 0));
-    if (SignalTarget())
-    {
-        m_sigName = SignalPayload().first;
-        cast->signal = SignalPayload().second;
-    }
-    ImGui::SameLine();
-    ImGui::Text("Signal");
+    root->update();
+    cast->signal = root->signal();
     float factor = (float)cast->factor;
     if (ImGui::SliderFloat("Factor", &factor, 0, 10))
         cast->factor = factor;
@@ -194,14 +349,8 @@ void StretcherNode::update()
 void RepeaterNode::update()
 {
     auto cast = (tact::Repeater *)sig.get();
-    NodeSlot(m_sigName.c_str(), ImVec2(ImGui::CalcItemWidth(), 0));
-    if (SignalTarget())
-    {
-        m_sigName = SignalPayload().first;
-        cast->signal = SignalPayload().second;
-    }
-    ImGui::SameLine();
-    ImGui::Text("Signal");
+    root->update();
+    cast->signal = root->signal();
     ImGui::SliderInt("Repetitions", &cast->repetitions, 1, 100);
     float delay = (float)cast->delay;
     if (ImGui::SliderFloat("Delay", &delay, 0, 1))
@@ -213,14 +362,48 @@ void RepeaterNode::update()
 void ReverserNode::update()
 {
     auto cast = (tact::Repeater *)sig.get();
-    NodeSlot(m_sigName.c_str(), ImVec2(ImGui::CalcItemWidth(), 0));
-    if (SignalTarget())
-    {
-        m_sigName = SignalPayload().first;
-        cast->signal = SignalPayload().second;
+    root->update();
+    cast->signal = root->signal();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+SequencerNode::SequencerNode() {
+    interface.activeColor   = mahi::gui::Purples::Plum;
+    interface.inactiveColor = mahi::gui::Grays::Gray50;
+}
+
+SequencerNode::SequencerNode(tact::Sequence _seq) : SequencerNode() {
+    seq = _seq;
+    int key_count = seq.keyCount();
+    for (int i = 0; i < key_count; ++i) {
+        auto& key = seq.getKey(i);
+        ImGui::SeqInterface::Track track;
+        track.signal    = key.signal;
+        track.label     = "Track " + std::to_string(i+1);
+        track.t         = key.t;
+        track.populated = true;
+        interface.tracks.push_back(track);
     }
-    ImGui::SameLine();
-    ImGui::Text("Signal");
+    interface.fitThisFrame = true;
+}
+
+tact::Signal SequencerNode::signal() {
+    seq.clear();
+    for (auto& track : interface.tracks) {
+        if (track.populated && track.visible)
+            seq.insert(track.signal, track.t);
+    }
+    return seq;
+}
+
+const std::string& SequencerNode::name() {
+    static const std::string n = "Sequencer";
+    return n;
+}
+
+void SequencerNode::update() {
+    ImGui::Sequencer("Sequencer", interface, false);
 }
 
 
@@ -257,12 +440,7 @@ void OscillatorNode::update()
     if (cast->x.isType<tact::Time>())
     {
         float f = (float)cast->x.gain / (float)tact::TWO_PI;
-        BeginPulsable(true,true);
         ImGui::DragFloat("##Frequency", &f, 1, 0, 1000, "%.0f Hz");
-        EndPulsable();
-        if (PaletteTarget())
-        {
-        }
         ImGui::SameLine();
         ImGui::Text("Frequency");
         cast->x.gain = f * tact::TWO_PI;
@@ -305,8 +483,8 @@ void ChirpNode::update()
         if (i != 3)
             ImGui::SameLine();
     }
-    ImGui::DragFloat("Frequency", &f, 1, 0, 1000, "%.0f Hz");
-    ImGui::DragFloat("Rate", &r, 1, 0, 1000, "%.0f Hz/s");
+    ImGui::DragDouble("Frequency", &f, 1, 0, 1000, "%.0f Hz");
+    ImGui::DragDouble("Rate", &r, 1, 0, 1000, "%.0f Hz/s");
 }
 
 tact::Signal ChirpNode::signal()
@@ -330,9 +508,9 @@ void FmNode::update()
         if (i != 3)
             ImGui::SameLine();
     }
-    ImGui::DragFloat("Frequency", &f, 1, 0, 1000, "%.0f Hz");
-    ImGui::DragFloat("Modulation", &m, 0.1f, 0, 100, "%.0f Hz");
-    ImGui::DragFloat("Index", &index, 0.01f, 0, 10);
+    ImGui::DragDouble("Frequency", &f, 1, 0, 1000, "%.0f Hz");
+    ImGui::DragDouble("Modulation", &m, 0.1f, 0, 100, "%.0f Hz");
+    ImGui::DragDouble("Index", &index, 0.01f, 0, 10);
 }
 
 tact::Signal FmNode::signal()
@@ -363,6 +541,15 @@ void PwmNode::update()
 
 ExpressionNode::ExpressionNode()
 {
+    getString();
+}
+
+ExpressionNode::ExpressionNode(const tact::Signal& _sig) {
+    sig = _sig;
+    getString();
+}
+
+void ExpressionNode::getString() {
     auto cast = (tact::Expression *)sig.get();
     strcpy(buffer, cast->getExpression().c_str());
 }
@@ -393,22 +580,42 @@ void ExpressionNode::update()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-PolyBezierNode::PolyBezierNode() : pb(ImGui::GetStyle().Colors[ImGuiCol_PlotLines], ImVec2(0, 0), ImVec2(1, 1)) {
+PolyBezierNode::PolyBezierNode() : 
+    pb(ImGui::GetStyle().Colors[ImGuiCol_PlotLines], ImVec2(0, 0), ImVec2(1, 1)) 
+{
     sync();
+}
+
+PolyBezierNode::PolyBezierNode(const tact::Signal& _sig) :
+    SignalNode<tact::PolyBezier>(_sig),
+    pb(ImGui::GetStyle().Colors[ImGuiCol_PlotLines], ImVec2(0, 0), ImVec2(1, 1)) 
+{ 
+    bounds[2] = (float)(sig.length());
+    auto tpb = *sig.getAs<tact::PolyBezier>();
+    pb.clearPoints();
+    for (auto& p : tpb.points) 
+        pb.addPoint({(float)p.cpL.t, (float)p.cpL.y}, {(float)p.p.t, (float)p.p.y}, {(float)p.cpR.t, (float)p.cpR.y});       
 }
 
 void PolyBezierNode::update()
 {
     ImGui::PushItemWidth(-1);
-
-    ImGui::PolyBezierEdit("PolyBezier", &pb, 10, 10, ImVec2(-1, 125));
-    ImGui::PushItemWidth(-1);
-    ImGui::DragFloat4("##Bounds", bounds, 0.01f, -10, 10);
+    ImGui::PolyBezierEdit("##PolyBezier", &pb, 10, 10, ImVec2(-1, 125));
+    if (HelpTarget())
+        ImGui::OpenPopup("PolyBezier Editor");
+    if (ImGui::BeginHelpPopup("PolyBezier Editor")) {
+        ImGui::BulletText("Drag points and handles with left mouse");
+        ImGui::BulletText("Ctrl + left-click handles to toggle tangency constraints");
+        ImGui::BulletText("Right-click to add new points");
+        ImGui::BulletText("Press the Delete key to remove the selected point");
+        ImGui::EndPopup();
+    }
+    ImGui::PopItemWidth();
+    ImGui::DragFloat("Duration", &bounds[2], 0.1f, 0, 10, "%.3f s");
     pb.min.x = bounds[0];
     pb.min.y = bounds[1];
     pb.max.x = bounds[2];
     pb.max.y = bounds[3];
-    ImGui::PopItemWidth();
     sync();
 }
 
@@ -427,18 +634,21 @@ void PolyBezierNode::sync() {
     cast->solve();
 }
 
+////////////////////////////////////////////////////////////////////////////////
+
+void SamplesNode::update() {
+    auto samples = sig.getAs<tact::Samples>();
+    ImGui::Text("Sample Count: %d", samples->sampleCount());
+    ImGui::Text("Sample Rate:  %.0f", samples->sampleRate());
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void EnvelopeNode::update()
 {
     auto cast = (tact::Envelope *)sig.get();
-    float duration = (float)cast->duration;
-    float amplitude = (float)cast->amplitude;
-    ImGui::DragFloat("Duration", &duration, 0.001f, 0, 1, "%0.3f s");
-    ImGui::DragFloat("Amplitude", &amplitude, 0.01f, 0, 1);
-    cast->amplitude = amplitude;
-    cast->duration = duration;
+    ImGui::DragDouble("Duration", &cast->duration, 0.001f, 0, 1, "%0.3f s");
+    ImGui::DragDouble("Amplitude", &cast->amplitude, 0.01f, 0, 1);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -524,6 +734,17 @@ void ExponentialDecayNode::update() {
         changed = true;
     if (changed)
         sig = tact::ExponentialDecay(amplitude, decay);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void SignalEnvelopeNode::update()
+{
+    auto cast = sig.getAs<tact::SignalEnvelope>();
+    root->update();
+    cast->signal = root->signal();
+    ImGui::DragDouble("Duration", &cast->duration, 0.001f, 0, 1, "%0.3f s");
+    ImGui::DragDouble("Amplitude", &cast->amplitude, 0.01f, 0, 1);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

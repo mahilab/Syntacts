@@ -2,6 +2,7 @@
 #include <deque>
 #include "PolyBezier.hpp"
 #include "Palette.hpp"
+#include "Sequencer.hpp"
 #include "DragAndDrop.hpp"
 #include <utility>
 
@@ -21,7 +22,12 @@ struct Node {
     int id;
 };
 
+/// Make Node from Palette ID
 std::shared_ptr<Node> makeNode(PItem id);
+/// Make Node from Signal
+std::shared_ptr<Node> makeNode(const tact::Signal& sig);
+/// Make Node from Signal
+std::shared_ptr<Node> makeRoot(const tact::Signal& sig);
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -53,7 +59,6 @@ struct LibrarySignalNode : public Node {
     tact::Signal signal() override;
     const std::string& name() override;
     void update() override;
-protected:
     std::string libName;
     tact::Signal sig;    
 };
@@ -62,31 +67,43 @@ protected:
 
 template <typename T>
 struct SignalNode : public Node {
+    SignalNode() { sig = T(); }
+    SignalNode(const tact::Signal& _sig) { sig = _sig; }
     tact::Signal signal() override { return sig; }
     const std::string& name() override { return signalName(sig); }
-protected:
-    tact::Signal sig = T();
+    tact::Signal sig;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 struct StretcherNode : public SignalNode<tact::Stretcher> {
     void update() override;
-    std::string m_sigName = "##Empty";
+    std::shared_ptr<Node> root = std::make_shared<ProductNode>();
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 struct RepeaterNode : public SignalNode<tact::Repeater> {
     void update() override;
-    std::string m_sigName = "##Empty";
+    std::shared_ptr<Node> root = std::make_shared<ProductNode>();
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 struct ReverserNode : public SignalNode<tact::Reverser> {
     void update() override;
-    std::string m_sigName = "##Empty";
+    std::shared_ptr<Node> root = std::make_shared<ProductNode>();
+};
+
+///////////////////////////////////////////////////////////////////////////////
+struct SequencerNode : public Node {
+    SequencerNode();
+    SequencerNode(tact::Sequence _seq);
+    tact::Signal signal() override;
+    const std::string& name() override;
+    void update() override;
+    tact::Sequence seq;
+    ImGui::SeqInterface interface;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -102,8 +119,8 @@ struct ChirpNode : public Node {
     virtual void update() override;
     virtual tact::Signal signal() override;
     virtual const std::string& name() override;
-    float f = 100;
-    float r = 100;
+    double f = 100;
+    double r = 100;
     int ftype = 0;
 };
 
@@ -113,15 +130,16 @@ struct FmNode : public Node {
     virtual void update() override;
     virtual tact::Signal signal() override;
     virtual const std::string& name() override;
-    float f = 100;
-    float m = 10;
+    double f = 100;
+    double m = 10;
     int ftype = 0;
-    float index = 2;
+    double index = 2;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 struct PwmNode : public SignalNode<tact::Pwm> {
+    using SignalNode::SignalNode;
     void update() override;
 };
 
@@ -129,6 +147,8 @@ struct PwmNode : public SignalNode<tact::Pwm> {
 
 struct ExpressionNode : public SignalNode<tact::Expression> {
     ExpressionNode();
+    ExpressionNode(const tact::Signal& _sig);
+    void getString();
     void update();
     char buffer[256];
     bool ok = true;
@@ -138,6 +158,7 @@ struct ExpressionNode : public SignalNode<tact::Expression> {
 
 struct PolyBezierNode : public SignalNode<tact::PolyBezier> {
     PolyBezierNode();
+    PolyBezierNode(const tact::Signal& _sig);
     void update();
     void sync();
     ImGui::PolyBezier pb;
@@ -146,48 +167,70 @@ struct PolyBezierNode : public SignalNode<tact::PolyBezier> {
 
 ///////////////////////////////////////////////////////////////////////////////
 
+struct SamplesNode : public SignalNode<tact::Samples> {
+    using SignalNode::SignalNode;
+    void update();
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
 struct EnvelopeNode : public SignalNode<tact::Envelope> {
+    using SignalNode::SignalNode;
     void update();
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 struct ASRNode : public SignalNode<tact::ASR> {
+    using SignalNode::SignalNode;
     void update() ;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 struct ADSRNode : public SignalNode<tact::ADSR> {
+    using SignalNode::SignalNode;
     void update();
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+
+struct SignalEnvelopeNode : public SignalNode<tact::SignalEnvelope> {
+    void update() override;
+    std::shared_ptr<Node> root = std::make_shared<ProductNode>();
+};
+
+///////////////////////////////////////////////////////////////////////////////
 struct ExponentialDecayNode : public SignalNode<tact::ExponentialDecay> {
+    using SignalNode::SignalNode;
     void update();
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 struct NoiseNode : public SignalNode<tact::Noise> {
+    using SignalNode::SignalNode;
     void update();
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 struct TimeNode : public SignalNode<tact::Time> {
+    using SignalNode::SignalNode;
     void update();
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 struct ScalarNode : SignalNode<tact::Scalar> {
+    using SignalNode::SignalNode;
     void update();
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 struct RampNode : SignalNode<tact::Ramp> {
+    using SignalNode::SignalNode;
     void update();
 };
 

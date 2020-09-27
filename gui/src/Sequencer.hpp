@@ -26,11 +26,12 @@ namespace ImGui {
         bool milliseconds = false;
         bool snap = true;
         bool lg = false, rg = false, cg = false;
+        bool fitThisFrame = false;
 
         std::function<void(const char* hint)> onTooltip = [&](const char* msg){ };
     };
 
-    bool Sequencer(const char* label, SeqInterface& I);
+    bool Sequencer(const char* label, SeqInterface& I, bool fullFrame = true);
 
 }
 

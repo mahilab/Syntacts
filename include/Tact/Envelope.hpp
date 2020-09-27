@@ -120,7 +120,7 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// An object which gives a Cue a length and/or shape
+/// Constructs an Envelope from a Signal
 class SYNTACTS_API SignalEnvelope
 {
 public:

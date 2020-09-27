@@ -99,12 +99,45 @@ int PolyBezier::bezierCount() {
     return ImClamp(beziers,0,INT_MAX);
 }
 
-void PolyBezier::getPoint(int index, ImVec2* cpL, ImVec2* pos, ImVec2* clR) {
+void PolyBezier::clearPoints() {
+    root = nullptr;
+    head = nullptr;
+}
+
+void PolyBezier::addPoint(ImVec2 cpL, ImVec2 pos, ImVec2 cpR) {
+    auto newG = std::make_shared<PolyBezier::Group>(pos, 0);
+    newG->p.pos   = pos;
+    newG->cpl.pos = cpL;
+    newG->cpr.pos = cpR;
+    if (!root) {
+        root = newG;
+        head = root;
+    }
+    else {
+        bool inserted = false;
+        for (auto g = root; g; g = g->next)
+        {
+            if (g->p.pos.x > newG->p.pos.x) {
+                g->insert(newG);
+                if (g == root)
+                    root = newG;
+                inserted = true;
+                break;
+            }
+        }
+        if (!inserted) {
+            head->push(newG);
+            head = newG;
+        }
+    }
+}
+
+void PolyBezier::getPoint(int index, ImVec2* cpL, ImVec2* pos, ImVec2* cpR) {
     IM_ASSERT(index < pointCount());
     auto g = root;
     for (int i = 0; i < index; ++i)
         g = g->next;
-    *cpL = g->cpl.pos; *pos = g->p.pos; *clR = g->cpr.pos;
+    *cpL = g->cpl.pos; *pos = g->p.pos; *cpR = g->cpr.pos;
 }
 
 void PolyBezier::getBezier(int index, ImVec2* pos0, ImVec2* cp0, ImVec2* cp1, ImVec2* pos1) {
