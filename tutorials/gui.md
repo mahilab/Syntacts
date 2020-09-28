@@ -1,6 +1,6 @@
 ---
 layout: page
-title: GUI
+title: Syntacts GUI
 permalink: /tutorials/gui/
 ---
 
