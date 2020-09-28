@@ -97,9 +97,7 @@ std::shared_ptr<Node> makeOscNode(const tact::Signal& sig, int idx) {
             return node;
         }
     }
-    else {
-        return nullptr;
-    }
+    return nullptr;
 }
 
 bool recurseProduct(std::shared_ptr<ProductNode> root, const tact::Signal& sig) {
