@@ -9,7 +9,7 @@ import subprocess
 from shutil import copy2, copytree, ignore_patterns, rmtree, make_archive
 from sys import platform
 
-if os.name == 'nt':
+if platform == 'win32':
     unity_exe = "C:/Program Files/Unity/Hub/Editor/2019.3.7f1/Editor/Unity.exe"
     version    = sys.argv[1]
     output_dir = sys.argv[2] + "/" + "syntacts_v" + version + "_windows"
@@ -44,4 +44,14 @@ if os.name == 'nt':
     p.wait()
     # create zip
     make_archive(output_dir, 'zip', output_dir)
-    # rmtree(output_dir)
+    rmtree(output_dir)
+elif platform == 'darwin':
+    version    = sys.argv[1]
+    output_dir = sys.argv[2] + "/" + "syntacts_v" + version + "_mac"
+    # delete existing
+    if os.path.exists(output_dir) and os.path.isdir(output_dir):
+        rmtree(output_dir)
+    # make release folder
+    os.mkdir(output_dir)
+    # package license
+    copy2("../LICENSE", output_dir)

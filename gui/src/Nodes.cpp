@@ -72,28 +72,28 @@ std::shared_ptr<Node> makeNode(PItem id) {
 template <typename T>
 std::shared_ptr<Node> makeOscNode(const tact::Signal& sig, int idx) {
     auto osc = sig.getAs<T>();
-    if (osc->x.isType<tact::Time>()) {
+    if (osc->x.template isType<tact::Time>()) {
         auto node = std::make_shared<OscillatorNode>(T());
         node->sig = sig;
         return node;
     }
-    else if (osc->x.isType<tact::Product>()) {
-        auto x = osc->x.getAs<tact::Product>();
-        if (x->lhs.isType<tact::Time>() && x->rhs.isType<tact::Time>()) {
+    else if (osc->x.template isType<tact::Product>()) {
+        auto x = osc->x.template getAs<tact::Product>();
+        if (x->lhs.template isType<tact::Time>() && x->rhs.template isType<tact::Time>()) {
             auto node = std::make_shared<ChirpNode>();
             node->f = x->lhs.bias / tact::TWO_PI;
             node->r = x->lhs.gain / tact::PI;
             return node;
         }
     }
-    else if (osc->x.isType<tact::Sum>()) {
-        auto x = osc->x.getAs<tact::Sum>();
-        if (x->lhs.isType<tact::Time>() && x->rhs.isType<tact::Sine>()) {
+    else if (osc->x.template isType<tact::Sum>()) {
+        auto x = osc->x.template getAs<tact::Sum>();
+        if (x->lhs.template isType<tact::Time>() && x->rhs.template isType<tact::Sine>()) {
             auto node = std::make_shared<FmNode>();
             node->f = x->lhs.gain / tact::TWO_PI;
             node->index = x->rhs.gain;
             node->ftype = idx;
-            node->m =  x->rhs.getAs<tact::Sine>()->x.gain / tact::TWO_PI;
+            node->m =  x->rhs.template getAs<tact::Sine>()->x.gain / tact::TWO_PI;
             return node;
         }
     }
