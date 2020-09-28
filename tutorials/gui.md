@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Syntacts GUI
+title: GUI
 permalink: /tutorials/gui/
 ---
 
@@ -83,7 +83,6 @@ The GUI is composed of six main widget areas: `Device Bar`, `Info Bar`, `Palette
 - Once you've created a signal to your liking, you can save it to the global Syntacts library.
 - Saved signals can be loaded from any of the programming APIs.
 - Buttons at the bottom of the widget allow you to delete, overwrite, and export Library items to `.tact`, `.wav`, `.json`, and `.csv` file formats.
-- You can drag files of the same formats from your computer into the Library widget to import them.
 - If you right-click a Library item, a context menu with various actions will be displayed.
 
 <p align="center">
