@@ -5,6 +5,6 @@ theme: minima
 #   - hardware.md
 #   - faq.md
 
-plugins:
-  - jekyll-seo-tag
-  - jekyll-sitemap
+# plugins:
+#   - jekyll-seo-tag
+#   - jekyll-sitemap
