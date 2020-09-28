@@ -1,0 +1,10 @@
+theme: minima
+  
+header_pages:
+  - tutorials.md
+  - hardware.md
+  - faq.md
+
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
