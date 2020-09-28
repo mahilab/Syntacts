@@ -42,4 +42,5 @@ private:
     char m_inputBuffer[64] = "";
     std::map<std::string, Entry> m_lib;
     bool m_ignoreFilChange = false;
+    bool m_focused;
 };

@@ -42,6 +42,8 @@ std::shared_ptr<Node> makeNode(PItem id) {
         return std::make_shared<ChirpNode>();
     if (id == PItem::Envelope)
         return std::make_shared<EnvelopeNode>();
+    if (id == PItem::KeyedEnvelope)
+        return std::make_shared<KeyedEnvelopeNode>();
     if (id == PItem::ASR)
         return std::make_shared<ASRNode>();
     if (id == PItem::ADSR)
@@ -191,7 +193,8 @@ std::shared_ptr<Node> makeNode(const tact::Signal& sig) {
         return std::make_shared<PwmNode>(sig);  
     else if (sig.isType<tact::Envelope>()) 
         return std::make_shared<EnvelopeNode>(sig);  
-    // KeyedEnvelope  
+    else if (sig.isType<tact::KeyedEnvelope>())
+        return std::make_shared<KeyedEnvelopeNode>(sig);
     else if (sig.isType<tact::ASR>()) 
         return std::make_shared<ASRNode>(sig);       
     else if (sig.isType<tact::ADSR>()) 
@@ -649,6 +652,149 @@ void EnvelopeNode::update()
     auto cast = (tact::Envelope *)sig.get();
     ImGui::DragDouble("Duration", &cast->duration, 0.001f, 0, 1, "%0.3f s");
     ImGui::DragDouble("Amplitude", &cast->amplitude, 0.01f, 0, 1);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+static const char* CURVE_NAMES[] = {
+    "Instant",
+    "Delayed",
+    "Linear",
+    "Smoothstep",
+    "Smootherstep",
+    "Smootheststep",
+    "Quadratic::In",
+    "Quadratic::Out",
+    "Quadratic::InOut",
+    "Quadratic::In",
+    "Quadratic::Out",
+    "Quadratic::InOut",
+    "Cubic::In",
+    "Cubic::Out",
+    "Cubic::InOut",
+    "Quartic::In",
+    "Quartic::Out",
+    "Quartic::InOut",
+    "Quintic::In",
+    "Quintic::Out",
+    "Quintic::InOut",
+    "Sinusoidal::In",
+    "Sinusoidal::Out",
+    "Sinusoidal::InOut",
+    "Exponential::In",
+    "Exponential::Out",
+    "Exponential::InOut",
+    "Circular::In",
+    "Circular::Out",
+    "Circular::InOut",
+    "Elastic::In",
+    "Elastic::Out",
+    "Elastic::InOut",
+    "Back::In",
+    "Back::Out",
+    "Back::InOut",
+};
+
+static const tact::Curve CURVES[] = {
+    tact::Curves::Instant(),
+    tact::Curves::Delayed(),
+    tact::Curves::Linear(),
+    tact::Curves::Smoothstep(),
+    tact::Curves::Smootherstep(),
+    tact::Curves::Smootheststep(),
+    tact::Curves::Quadratic::In(),
+    tact::Curves::Quadratic::Out(),
+    tact::Curves::Quadratic::InOut(),
+    tact::Curves::Quadratic::In(),
+    tact::Curves::Quadratic::Out(),
+    tact::Curves::Quadratic::InOut(),
+    tact::Curves::Cubic::In(),
+    tact::Curves::Cubic::Out(),
+    tact::Curves::Cubic::InOut(),
+    tact::Curves::Quartic::In(),
+    tact::Curves::Quartic::Out(),
+    tact::Curves::Quartic::InOut(),
+    tact::Curves::Quintic::In(),
+    tact::Curves::Quintic::Out(),
+    tact::Curves::Quintic::InOut(),
+    tact::Curves::Sinusoidal::In(),
+    tact::Curves::Sinusoidal::Out(),
+    tact::Curves::Sinusoidal::InOut(),
+    tact::Curves::Exponential::In(),
+    tact::Curves::Exponential::Out(),
+    tact::Curves::Exponential::InOut(),
+    tact::Curves::Circular::In(),
+    tact::Curves::Circular::Out(),
+    tact::Curves::Circular::InOut(),
+    tact::Curves::Elastic::In(),
+    tact::Curves::Elastic::Out(),
+    tact::Curves::Elastic::InOut(),
+    tact::Curves::Back::In(),
+    tact::Curves::Back::Out(),
+    tact::Curves::Back::InOut()
+};
+
+void KeyedEnvelopeNode::update() {
+    auto cast = sig.getAs<tact::KeyedEnvelope>();
+    Ts.clear(); As.clear(); Cs.clear();
+    int key_count = cast->keys.size();
+    int i = 0;
+    for (auto it = cast->keys.begin(); it != cast->keys.end(); ++it) {
+        double t       = it->first;
+        double a       = it->second.first;
+        tact::Curve c  = it->second.second;
+        bool first_key = it == cast->keys.begin();
+        bool last_key  = std::next(it) == cast->keys.end();
+        double tprev, tnext;
+        if (first_key)
+            tprev = 0;
+        else 
+            tprev = std::prev(it)->first;
+        if (last_key)
+            tnext = 0;
+        else
+            tnext = std::next(it)->first;   
+        double tmin = first_key ? 0 : tprev + 0.001;
+        double tmax = last_key  ? t + 1000 : tnext - 0.001; 
+        ImGui::PushID(i);
+        ImGui::BeginDisabled(first_key);
+        ImGui::SetNextItemWidth(160);      
+        ImGui::DragDouble("##T",&t, 0.0005f, tmin, tmax, "%.3f s");
+        ImGui::EndDisabled();
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(160);
+        ImGui::DragDouble("##A",&a,0.005f,0,1);
+        ImGui::SameLine();
+        ImGui::BeginDisabled(first_key);
+        ImGui::SetNextItemWidth(160);
+        if (ImGui::BeginCombo("##Curve", c.name())) {
+            for (int i = 0; i < 36; ++i) {
+                bool selected = strcmp(c.name(),CURVE_NAMES[i]) == 0;
+                if (ImGui::Selectable(CURVE_NAMES[i],&selected))
+                    c = CURVES[i];
+            }
+            ImGui::EndCombo();
+        }
+        ImGui::SameLine();
+        if (!ImGui::Button(ICON_FA_MINUS)) {
+            Ts.push_back(first_key ?  0 : t);
+            As.push_back(a);
+            Cs.push_back(c);
+        }
+        ImGui::EndDisabled();
+        ImGui::SameLine();
+        if (ImGui::Button(ICON_FA_PLUS)) {
+            double tp = last_key ? + t + 0.1f : (t + tnext) / 2;
+            Ts.push_back(tp);
+            As.push_back(a);
+            Cs.push_back(tact::Curves::Linear());
+        }       
+        ImGui::PopID();
+        i++;
+    }
+    cast->keys.clear();
+    for (int i = 0; i < Ts.size(); ++i) 
+        cast->addKey(Ts[i], As[i], Cs[i]);    
 }
 
 ///////////////////////////////////////////////////////////////////////////////

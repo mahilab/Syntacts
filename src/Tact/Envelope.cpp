@@ -19,7 +19,7 @@ double Envelope::length() const {
 
 KeyedEnvelope::KeyedEnvelope(double amplitude0)
 {
-   addKey(0.0f, amplitude0, Curves::Linear());
+   addKey(0.0f, amplitude0, Curves::Instant());
 }
 
 void KeyedEnvelope::addKey(double t, double amplitude, Curve curve) {

@@ -47,7 +47,7 @@ const std::string& paletteDescription(PItem id) {
         {PItem::Time, "Creates a sample equal to the sample time"},
         {PItem::Scalar, "Creates a constant sample value"},
         {PItem::Ramp, "Creates a sample that linearly increases or decreases with time"},
-        {PItem::Noise, "Creates a white noise samples"},
+        {PItem::Noise, "Creates white noise"},
         {PItem::Expression, "Creates a sample by evaluating a mathematical expression"},
         {PItem::Sum, "Sums two or more Signals"},
         {PItem::Product, "Multiplies two or more Signals"},
@@ -67,7 +67,7 @@ const std::string& paletteDescription(PItem id) {
         {PItem::ADSR, "Creates an Attack, Decay, Sustain, Release envelope"},
         {PItem::ExponentialDecay, "Creates an exponentially decaying envelope"},
         {PItem::KeyedEnvelope, "Creates a keyed envelope"},
-        {PItem::SignalEnvelope, "Creates an envelope from another Signal"},
+        {PItem::SignalEnvelope, "Creates an envelope from a Signal"},
         {PItem::PolyBezier, "Creates an envelope from a cubic bezier curve"}};
     if (desc.count(id))
         return desc[id];
@@ -82,7 +82,7 @@ void Palette::update()
     ImGui::BeginChild("PalleteList", ImVec2(0, avail.y));
     static std::vector<std::pair<std::string, std::vector<PItem>>> signals = {
         {"Oscillators", {PItem::Sine, PItem::Square, PItem::Saw, PItem::Triangle, PItem::Chirp, PItem::FM, PItem::Pwm, PItem::Noise}},
-        {"Envelopes", {PItem::Envelope, PItem::ASR, PItem::ADSR, PItem::ExponentialDecay, PItem::PolyBezier, PItem::SignalEnvelope}},
+        {"Envelopes", {PItem::Envelope, PItem::KeyedEnvelope, PItem::ASR, PItem::ADSR, PItem::ExponentialDecay, PItem::PolyBezier, PItem::SignalEnvelope}},
         {"Processes", {PItem::Sum, PItem::Product, PItem::Repeater, PItem::Stretcher, PItem::Reverser, PItem::Sequencer}},
         {"General", {PItem::Expression, PItem::Ramp, PItem::Scalar}}};
     for (auto &section : signals)

@@ -29,9 +29,15 @@
 
 #define TACT_CURVE(T) struct T { \
                           double operator()(double t) const; \
+                          const char* name() const { return #T; } \
                           template <class Archive> void serialize(Archive& archive) {} \
                       };
 
+#define TACT_CURVE_N(N,T) struct T { \
+                              double operator()(double t) const; \
+                              const char* name() const { return #N"::"#T; } \
+                              template <class Archive> void serialize(Archive& archive) {} \
+                          };
 
 namespace tact {
 
@@ -48,12 +54,15 @@ public:
     /// Transforms interpolant t in range [0,1] 
     double operator()(double t) const;
     /// Returns value in between a and b given interpolant t in range [0,1]
-    double operator()(double a, double b, double t) const;    
+    double operator()(double a, double b, double t) const;
+    /// Returns curve name
+    const char* name() const;    
 public:
     struct Concept {
         Concept() = default;
         virtual ~Concept() = default;
         virtual double operator()(double t) const = 0;
+        virtual const char* name() const = 0;
         template <class Archive>
         void serialize(Archive& archive) {}
     };
@@ -63,6 +72,8 @@ public:
         Model(T model) : m_model(std::move(model)) { }
         double operator()(double t) const override
         { return m_model(t); }
+        const char* name() const 
+        { return m_model.name(); }
         T m_model;
         TACT_SERIALIZE(TACT_PARENT(Concept), TACT_MEMBER(m_model));
     };
@@ -92,72 +103,72 @@ namespace Curves {
 
     /// Transitions from a to b using 2nd order polynomial interpolation.
     namespace Quadratic {
-        TACT_CURVE(In);
-        TACT_CURVE(Out);
-        TACT_CURVE(InOut);
+        TACT_CURVE_N(Quadratic, In);
+        TACT_CURVE_N(Quadratic, Out);
+        TACT_CURVE_N(Quadratic, InOut);
     }
 
     /// Transitions from a to b using 3rd order polynomial interpolation.
     namespace Cubic {
-        TACT_CURVE(In);
-        TACT_CURVE(Out);
-        TACT_CURVE(InOut);
+        TACT_CURVE_N(Cubic, In);
+        TACT_CURVE_N(Cubic, Out);
+        TACT_CURVE_N(Cubic, InOut);
     }
 
     /// Transitions from a to b using 4th order polynomial interpolation.
     namespace Quartic {
-        TACT_CURVE(In);
-        TACT_CURVE(Out);
-        TACT_CURVE(InOut);
+        TACT_CURVE_N(Quartic, In);
+        TACT_CURVE_N(Quartic, Out);
+        TACT_CURVE_N(Quartic, InOut);
     }
 
     /// Transitions from a to b using 5th order polynomial interpolation.
     namespace Quintic {
-        TACT_CURVE(In);
-        TACT_CURVE(Out);
-        TACT_CURVE(InOut);
+        TACT_CURVE_N(Quintic, In);
+        TACT_CURVE_N(Quintic, Out);
+        TACT_CURVE_N(Quintic, InOut);
     }
 
     /// Transitions from a to b using sinusoidal interpolation.
     namespace Sinusoidal {
-        TACT_CURVE(In);
-        TACT_CURVE(Out);
-        TACT_CURVE(InOut);
+        TACT_CURVE_N(Sinusoidal, In);
+        TACT_CURVE_N(Sinusoidal, Out);
+        TACT_CURVE_N(Sinusoidal, InOut);
     }
 
     /// Transitions from a to b using exponential interpolation.
     namespace Exponential {
-        TACT_CURVE(In);
-        TACT_CURVE(Out);
-        TACT_CURVE(InOut);
+        TACT_CURVE_N(Exponential, In);
+        TACT_CURVE_N(Exponential, Out);
+        TACT_CURVE_N(Exponential, InOut);
     }
 
     /// Transitions from a to b using circular interpolation.
     namespace Circular {
-        TACT_CURVE(In);
-        TACT_CURVE(Out);
-        TACT_CURVE(InOut);
+        TACT_CURVE_N(Circular, In);
+        TACT_CURVE_N(Circular, Out);
+        TACT_CURVE_N(Circular, InOut);
     }
 
     /// Transitions from a to b with an elastic effect.
     namespace Elastic {
-        TACT_CURVE(In);
-        TACT_CURVE(Out);
-        TACT_CURVE(InOut);
+        TACT_CURVE_N(Elastic, In);
+        TACT_CURVE_N(Elastic, Out);
+        TACT_CURVE_N(Elastic, InOut);
     }
 
     /// Transitions from a to b with an overshooting effect
     namespace Back {
-        TACT_CURVE(In);
-        TACT_CURVE(Out);
-        TACT_CURVE(InOut);
+        TACT_CURVE_N(Back, In);
+        TACT_CURVE_N(Back, Out);
+        TACT_CURVE_N(Back, InOut);
     }
 
     /// Transitions from a to b with a bouncing effect.
     namespace Bounce {
-        TACT_CURVE(In);
-        TACT_CURVE(Out);
-        TACT_CURVE(InOut);
+        TACT_CURVE_N(Bounce, In);
+        TACT_CURVE_N(Bounce, Out);
+        TACT_CURVE_N(Bounce, InOut);
     }
 
 } // namespace Curves

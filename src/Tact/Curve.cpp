@@ -16,6 +16,10 @@ double Curve::operator()(double a, double b, double t) const
     return lerp(a, b, m_ptr->operator()(t));
 }
 
+const char* Curve::name() const  {
+    return m_ptr->name();
+}
+
 namespace Curves
 {
 double Instant::operator()(double t) const

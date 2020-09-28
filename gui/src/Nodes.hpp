@@ -181,6 +181,16 @@ struct EnvelopeNode : public SignalNode<tact::Envelope> {
 
 ///////////////////////////////////////////////////////////////////////////////
 
+struct KeyedEnvelopeNode : public SignalNode<tact::KeyedEnvelope> {
+    using SignalNode::SignalNode;
+    void update();
+    std::vector<double> Ts;
+    std::vector<double> As;
+    std::vector<tact::Curve> Cs;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
 struct ASRNode : public SignalNode<tact::ASR> {
     using SignalNode::SignalNode;
     void update() ;

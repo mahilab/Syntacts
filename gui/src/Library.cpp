@@ -123,6 +123,8 @@ void Library::update()
     bool dummy = true;
     std::lock_guard<std::mutex> lock(m_mtx);
     ImGui::BeginFixed("Library", position, size, ImGuiWindowFlags_NoTitleBar);
+    m_focused = false;
+
     if (ImGui::BeginTabBar("LibraryWindowTabs"))
     {
         if (ImGui::BeginTabItem(" Palette ##Tab"))
@@ -141,6 +143,8 @@ void Library::update()
         }
         if (ImGui::BeginTabItem(" Library ##Tab"))
         {
+            m_focused = true; // ImGui::IsWindowFocused();
+
             ImGui::BeginGroup();
             renderCreateDialog();
             ImGui::Separator();
@@ -156,6 +160,8 @@ void Library::update()
                 ImGui::BulletText("Signals are saved to the global Syntacts Library");
                 ImGui::BulletText("Hover over a Library Signal for a preview or right-click it for additional controls");
                 ImGui::BulletText("Use the buttons at the bottom to save, delete, and export Signals to different file formats");
+                ImGui::BulletText("Right click items for more options");
+                ImGui::BulletText("Drag files from your computer onto the GUI window to add them to the Library");
                 ImGui::EndPopup();
             }
             ImGui::EndTabItem();
@@ -209,11 +215,13 @@ void Library::renderLibraryList()
     auto avail = ImGui::GetContentRegionAvail();
     ImGui::PushStyleColor(ImGuiCol_ChildBg, {0,0,0,0});
     ImGui::BeginChild("LibraryList", ImVec2(0, avail.y - 29));
+    m_focused = m_focused || ImGui::IsWindowFocused();
     for (auto &pair : m_lib)
     {
         Entry &entry = pair.second;
-        if (ImGui::Selectable(entry.name.c_str(), m_selected == entry.name))
+        if (ImGui::Selectable(entry.name.c_str(), m_selected == entry.name)) {
             m_selected = entry.name;
+        }
         if (ImGui::IsItemHovered()) {            
             if (!entry.loaded) {            
                if (tact::Library::loadSignal(entry.disk, entry.name))
@@ -285,7 +293,7 @@ void Library::renderLibraryControls()
 
     // SAVE
     float buttonWidth = (ImGui::GetContentRegionAvailWidth() - 5 * ImGui::GetStyle().ItemSpacing.x) / 6;    
-    if (ImGui::Button(ICON_FA_SAVE, ImVec2(buttonWidth, 0)))
+    if (ImGui::Button(ICON_FA_SAVE, ImVec2(buttonWidth, 0)) || (m_focused && ImGui::IsKeyPressed(GLFW_KEY_S, false) && ImGui::GetIO().KeyCtrl))
     {
         tact::Signal sig;
         if (gui.workspace.activeTab == Workspace::TabSequencer)
@@ -320,6 +328,7 @@ void Library::renderLibraryControls()
         m_ignoreFilChange = true;
     }
     gui.status.showTooltip("Delete Selected Signal");
+
 
     // EXPORT
     ImGui::SameLine();
