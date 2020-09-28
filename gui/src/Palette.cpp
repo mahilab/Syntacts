@@ -66,7 +66,7 @@ const std::string& paletteDescription(PItem id) {
         {PItem::ASR, "Creates an Attack, Sustain, Release envelope"},
         {PItem::ADSR, "Creates an Attack, Decay, Sustain, Release envelope"},
         {PItem::ExponentialDecay, "Creates an exponentially decaying envelope"},
-        {PItem::KeyedEnvelope, "Creates a keyed envelope"},
+        {PItem::KeyedEnvelope, "Creates a envelope from a series of key frame times, amplitudes, and Curves"},
         {PItem::SignalEnvelope, "Creates an envelope from a Signal"},
         {PItem::PolyBezier, "Creates an envelope from a cubic bezier curve"}};
     if (desc.count(id))

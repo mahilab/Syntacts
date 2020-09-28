@@ -693,6 +693,9 @@ static const char* CURVE_NAMES[] = {
     "Back::In",
     "Back::Out",
     "Back::InOut",
+    "Bounce::In",
+    "Bounce::Out",
+    "Bounce::InOut",
 };
 
 static const tact::Curve CURVES[] = {
@@ -731,7 +734,10 @@ static const tact::Curve CURVES[] = {
     tact::Curves::Elastic::InOut(),
     tact::Curves::Back::In(),
     tact::Curves::Back::Out(),
-    tact::Curves::Back::InOut()
+    tact::Curves::Back::InOut(),
+    tact::Curves::Bounce::In(),
+    tact::Curves::Bounce::Out(),
+    tact::Curves::Bounce::InOut()
 };
 
 void KeyedEnvelopeNode::update() {
@@ -768,7 +774,7 @@ void KeyedEnvelopeNode::update() {
         ImGui::BeginDisabled(first_key);
         ImGui::SetNextItemWidth(160);
         if (ImGui::BeginCombo("##Curve", c.name())) {
-            for (int i = 0; i < 36; ++i) {
+            for (int i = 0; i < 39; ++i) {
                 bool selected = strcmp(c.name(),CURVE_NAMES[i]) == 0;
                 if (ImGui::Selectable(CURVE_NAMES[i],&selected))
                     c = CURVES[i];
