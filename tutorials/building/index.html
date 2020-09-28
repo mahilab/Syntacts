@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Building</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Building" />
+<meta property="og:locale" content="en_US" />
+<script type="application/ld+json">
+{"@type":"WebPage","headline":"Building","url":"/tutorials/building/","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" /></head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/"></a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/tutorials/">Tutorials</a><a class="page-link" href="/hardware/">Hardware</a><a class="page-link" href="/faq/">FAQ</a><a class="page-link" href="https://github.com/mahilab/Syntacts" target="_blank">Github</a>
+          <a class="page-link" href="https://github.com/mahilab/Syntacts/releases" target="_blank">Download</a>
+        </div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Building</h1>
+  </header>
+
+  <div class="post-content">
+    <h2 id="introduction">Introduction</h2>
+
+<p>This page will walk you through the process of building the Syntacts libraries and GUI from the C++ source files. Syntacts uses <a href="https://cmake.org/">CMake</a> as its build system, which is scripted through a file named <code class="highlighter-rouge">CMakeLists.txt</code>. The build process creates three binary objects:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">syntacts.lib</code>, the main Syntacts C++ static library</li>
+  <li><code class="highlighter-rouge">syntacts-c.dll</code>, the Syntacts library exported to a C dynamic library (basis for language bindings)</li>
+  <li><code class="highlighter-rouge">syntacts-gui.exe</code>, the Syntacts GUI application</li>
+</ul>
+
+<p>When the build completes, the binaries and Syntacts C++ headers will be installed to your system for use. Note that if you don’t intend to use the C++ API, you can skip this build process by downloading the latest compiled <a href="https://github.com/mahilab/Syntacts/releases">Release</a>.</p>
+
+<h2 id="requirements">Requirements</h2>
+
+<ul>
+  <li><a href="https://git-scm.com/">git</a></li>
+  <li><a href="https://cmake.org/">CMake</a></li>
+</ul>
+
+<blockquote>
+  <p>Make sure <strong>git</strong> and <strong>CMake</strong> are added to your system PATH. To add CMake to your PATH on macOS, open a Terminal and enter the following command:</p>
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nv">PATH</span><span class="o">=</span><span class="s2">"/Applications/CMake.app/Contents/bin"</span>:<span class="s2">"</span><span class="nv">$PATH</span><span class="s2">"</span>
+</code></pre></div>  </div>
+</blockquote>
+
+<h2 id="building-on-windows">Building on Windows</h2>
+
+<ul>
+  <li>The recommended C++ compiler on Windows is <strong>Microsoft Visual C++ (MSVC)</strong>. You can acquire the compiler by installing the <a href="https://visualstudio.microsoft.com/">Visual Studio</a> IDE or the <a href="https://visualstudio.microsoft.com/visual-cpp-build-tools/">standalone MSVC build tools</a>.</li>
+  <li>Open PowerShell <strong>as an administrator</strong> in a directory of your choice and run the following commands:
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone <span class="nt">--recurse-submodules</span> https://github.com/mahilab/Syntacts 
+<span class="nb">cd </span>Syntacts
+<span class="nb">mkdir </span>build
+<span class="nb">cd </span>build
+cmake .. <span class="nt">-G</span> <span class="s2">"Visual Studio 16 2019"</span> <span class="nt">-A</span> x64
+cmake <span class="nt">--build</span> <span class="nb">.</span> <span class="nt">--target</span> <span class="nb">install</span> <span class="nt">--config</span> Release
+</code></pre></div>    </div>
+  </li>
+  <li>When the build completes, <strong>Syntacts</strong>  will be installed to <code class="highlighter-rouge">C:\Program Files (x86)\Syntacts</code>.</li>
+</ul>
+
+<blockquote>
+  <p>You may need to specify a different CMake generator with <code class="highlighter-rouge">-G</code> if you have a another version of Visual Studio installed (e.g. <code class="highlighter-rouge">cmake .. -G "Visual Studio 15 2017 Win64"</code>).</p>
+</blockquote>
+
+<h2 id="building-on-macos">Building on macOS</h2>
+
+<ul>
+  <li>The recommended C++ compiler on macOS is the Apple supplied Clang compiler. Syntacts has been tested on macOS Catalina with Apple Clang 11.0.0 (clang-1100.0.0.33.17). To check if you have Clang, open a Terminal and enter the command <code class="highlighter-rouge">clang --version</code> . You may also consider using a mainline version of <a href="https://clang.llvm.org/">Clang</a>.</li>
+  <li>Open a Terminal in a directory of your choice and run the following commands:
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span> git clone <span class="nt">--recurse-submodules</span> https://github.com/mahilab/Syntacts 
+<span class="o">&gt;</span> <span class="nb">cd </span>Syntacts
+<span class="o">&gt;</span> <span class="nb">mkdir </span>build <span class="o">&amp;&amp;</span> <span class="nb">cd </span>build
+<span class="o">&gt;</span> cmake .. <span class="nt">-DCMAKE_BUILD_TYPE</span><span class="o">=</span><span class="s2">"Release"</span>
+<span class="o">&gt;</span> <span class="nb">sudo </span>cmake <span class="nt">--build</span> <span class="nb">.</span> <span class="nt">--target</span> <span class="nb">install</span>
+</code></pre></div>    </div>
+  </li>
+  <li>When the build completes, <strong>Syntacts</strong>  will be installed to <code class="highlighter-rouge">/user/local/...</code>.</li>
+</ul>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+  <div class="wrapper">
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p>Syntacts | The Tactor Synthesizer</p>
+        <a href="https://mahilab.rice.edu" target="_blank">Mechatronics and Haptic Interfaces Lab</a>
+      </div>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>
