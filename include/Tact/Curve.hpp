@@ -72,7 +72,7 @@ public:
         Model(T model) : m_model(std::move(model)) { }
         double operator()(double t) const override
         { return m_model(t); }
-        const char* name() const 
+        const char* name() const override
         { return m_model.name(); }
         T m_model;
         TACT_SERIALIZE(TACT_PARENT(Concept), TACT_MEMBER(m_model));

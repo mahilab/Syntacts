@@ -7,6 +7,7 @@ import sys
 import os
 import subprocess
 from shutil import copy2, copytree, ignore_patterns, rmtree, make_archive
+from sys import platform
 
 if os.name == 'nt':
     unity_exe = "C:/Program Files/Unity/Hub/Editor/2019.3.7f1/Editor/Unity.exe"

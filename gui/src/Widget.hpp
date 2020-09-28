@@ -1,6 +1,6 @@
 #pragma once
 #include <syntacts>
-#include <mahi/gui.hpp>
+#include <Mahi/Gui.hpp>
 
 class Gui;
 
