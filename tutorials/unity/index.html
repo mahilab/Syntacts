@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Unity API | Syntacts</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Unity API" />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="http://localhost:4000/tutorials/unity/" />
+<meta property="og:url" content="http://localhost:4000/tutorials/unity/" />
+<meta property="og:site_name" content="Syntacts" />
+<script type="application/ld+json">
+{"@type":"WebPage","headline":"Unity API","url":"http://localhost:4000/tutorials/unity/","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Syntacts" /></head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Syntacts</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/tutorials/">Tutorials</a><a class="page-link" href="/hardware/">Hardware</a><a class="page-link" href="/faq/">FAQ</a><a class="page-link" href="https://github.com/mahilab/Syntacts" target="_blank">Github</a>
+          <a class="page-link" href="https://github.com/mahilab/Syntacts/releases" target="_blank">Download</a>
+        </div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Unity API</h1>
+  </header>
+
+  <div class="post-content">
+    <h2 id="introduction">Introduction</h2>
+<p>In this tutorial, we will learn how to integrate Syntacts into Unity projects. Since Unity uses C# as its scripting language, programming Syntacts in Unity is no different than programming in pure C#. As such, this tutorial will not cover the C# API - refer to the official <a href="/tutorials/cs">C# tutorial</a> for that. Instead, we will discuss important details and tips that are specific to Unity.</p>
+
+<h2 id="requirements">Requirements</h2>
+
+<ul>
+  <li><a href="https://unity.com/">Unity Engine</a> (2019.3.7.1f or newer)</li>
+  <li>latest <a href="https://github.com/mahilab/Syntacts/releases">Syntacts Release</a></li>
+</ul>
+
+<h2 id="basic-demo">Basic Demo</h2>
+
+<p>The Syntacts Release folder contains a Unity demo you may choose to explore. Navigate to <code class="highlighter-rouge">unity/SyntactsDemo/Assets/Demo</code> and open <code class="highlighter-rouge">Demo.unity</code>. When Unity finishes loading, press the Play button in the Editor. You should see a ball bouncing on the screen, and a <code class="highlighter-rouge">Play Library Signal</code> button in the top-left corner. You should also hear various sound effects. The demo is actually using Syntacts to generate these sounds in the same way we might use Syntacts to generate haptic vibrations. The only difference is that we have chosen base frequencies in the hearing range. Although this demo is quite simple, three key features are on display:</p>
+
+<ol>
+  <li><strong>Discrete Syntacts Signals</strong> - when the ball collides with the floor, a procedural Signal is generated and played. The Signal is generated in the  <code class="highlighter-rouge">BouncyBall.cs</code> component, and its parameters can be changed from the Unity Editor.</li>
+  <li><strong>Continuos Syntacts Signals</strong> - the ball emits a continuous Signal, also defined in <code class="highlighter-rouge">BouncyBall.cs</code>. The pitch of the Signal is altered in realtime based on the ball’s height above the ground.</li>
+  <li><strong>Loading Syntacts Signals</strong> - the <code class="highlighter-rouge">Play Library Signal</code> loads and plays a Signal from the global Syntacts Library when it is pressed. The Signal to be loaded is determined from the string <code class="highlighter-rouge">signalName</code> found inside of the <code class="highlighter-rouge">LibraryButton.cs</code> component. The string can be changed from the Editor before or during Play.</li>
+</ol>
+
+<p><img src="https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/tut-unity/ball.gif" alt="Demo" /></p>
+
+<h2 id="getting-started">Getting Started</h2>
+
+<p>Adding Syntacts to a new or existing Unity project is simple. From the Release folder, import <code class="highlighter-rouge">unity/syntacts.unitypackage</code> into your project either by 1) dragging it into the Project window of the Editor, or 2) from the Editor menu <strong>Assets -&gt; Import Package -&gt; Custom Package …</strong>. Click <strong>Import</strong> and the Syntacts assets will be added to the top level of your project:</p>
+
+<p><img src="https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/tut-unity/import.png" alt="Import" /></p>
+
+<p>Only two scripts are needed to use Syntacts:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">Syntacts.cs</code> - the Syntacts C# binding, containing Syntacts classes, functions, and types (this is the same file found in the C# binding)</li>
+  <li><code class="highlighter-rouge">SyntactsHub.cs</code> - a special Unity component that facilitates opening Syntacts sessions (see below)</li>
+</ul>
+
+<p>The Plugin folder contains <code class="highlighter-rouge">syntacts-c.dll</code>, the compiled Syntacts dynamic library which is loaded by Unity, and the Editor folder contains custom Unity Editor code. You can safely ignore both.</p>
+
+<h2 id="syntactshub">SyntactsHub</h2>
+
+<p>Although not required, the <code class="highlighter-rouge">SyntactsHub</code> component is useful for opening and managing the lifetime of a Syntacts device Session. Simply attach this component to an existing or empty GameObject in your scene:</p>
+
+<p><img src="https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/tut-unity/hub1.png" alt="SyntactsHub" /></p>
+
+<p>You can use the <code class="highlighter-rouge">SyntactsHub</code> to open an audio device in the following modes:</p>
+
+<ul>
+  <li><strong>Default</strong> - Opens the system default device. This is usually your computer’s speakers.</li>
+  <li><strong>By Index</strong> - Opens a device by its index number. You can retrieve device indices from the <em>Available Devices</em> section.</li>
+  <li><strong>By Name</strong> - Opens a device by its string name under a specified API. The string name must exactly match that shown in the <em>Available Devices</em> section. You should prefer this method over <strong>By Index</strong>, as device indices can change when other devices are added or removed from your system.</li>
+  <li><strong>By API</strong> - Opens the default device for a particular API (e.g ASIO, MME, WASAPI, etc.).</li>
+  <li><strong>Custom</strong> - Opens a device by index with a specified number of channels and sampling frequency. The modes above always open Devices at their default sampling frequency (likely 44,100Hz) and maximum output channels.</li>
+</ul>
+
+<p>The device Session will be opened in the <code class="highlighter-rouge">Awake</code> call of <code class="highlighter-rouge">SyntactsHub.cs</code>, and closed in <code class="highlighter-rouge">OnApplicationQuit</code>. <em>This means that you should only reference the SyntactsHub from other scripts in between these Event function calls (see Unity <a href="https://docs.unity3d.com/Manual/ExecutionOrder.html">Order of Execution</a> for more details).</em></p>
+
+<p>If you choose not use the <code class="highlighter-rouge">SyntactsHub</code>, you can always open and close device Sessions from your own scripts. Just be sure to call <code class="highlighter-rouge">Session.Dispose</code> before Unity quits, otherwise you will create a memory leak.</p>
+
+<h2 id="typical-usage">Typical Usage</h2>
+
+<p>Assuming you’ve chosen to use <code class="highlighter-rouge">SyntactsHub.cs</code>, usage typically looks something like this:</p>
+
+<div class="language-cs highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="nn">System.Collections</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">UnityEngine</span><span class="p">;</span>
+
+<span class="c1">// import Syntacts namespace</span>
+<span class="k">using</span> <span class="nn">Syntacts</span><span class="p">;</span> 
+
+<span class="c1">// My Component</span>
+<span class="k">public</span> <span class="k">class</span> <span class="nc">MyComponent</span> <span class="p">:</span> <span class="n">MonoBehaviour</span>
+<span class="p">{</span>
+    <span class="k">private</span> <span class="n">SyntactsHub</span> <span class="n">hub</span><span class="p">;</span>
+
+    <span class="k">void</span> <span class="nf">Start</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="c1">// find our SyntactsHub in the Scene</span>
+        <span class="n">hub</span> <span class="p">=</span> <span class="n">FindObjectOfType</span><span class="p">&lt;</span><span class="n">SyntactsHub</span><span class="p">&gt;();</span>
+    <span class="p">}</span>
+
+    <span class="k">void</span> <span class="nf">Update</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">Input</span><span class="p">.</span><span class="nf">GetKeyDown</span><span class="p">(</span><span class="n">KeyCode</span><span class="p">.</span><span class="n">Space</span><span class="p">))</span> <span class="p">{</span>
+            <span class="c1">// create a new Signal to play</span>
+            <span class="n">Signal</span> <span class="n">sig</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Sine</span><span class="p">(</span><span class="m">250</span><span class="p">)</span> <span class="p">*</span> <span class="k">new</span> <span class="nf">Envelope</span><span class="p">(</span><span class="m">1</span><span class="p">);</span>
+            <span class="c1">// play the Signal on channel 0</span>
+            <span class="n">hub</span><span class="p">.</span><span class="n">session</span><span class="p">.</span><span class="nf">Play</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="n">sig</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>First, we find the <code class="highlighter-rouge">SyntactsHub</code> in the Scene inside of <code class="highlighter-rouge">Start</code> and save a local reference to <code class="highlighter-rouge">hub</code>. From here, we can access <code class="highlighter-rouge">hub</code>’s <code class="highlighter-rouge">Session</code> object and use it as we would in the standard C# API. A few important notes:</p>
+
+<ul>
+  <li>Prefer initializing in <code class="highlighter-rouge">Start</code> over <code class="highlighter-rouge">Awake</code>. It’s okay to <em>find</em> the <code class="highlighter-rouge">SyntactsHub</code> in <code class="highlighter-rouge">Awake</code>, but don’t attempt to call any of <code class="highlighter-rouge">SyntactsHub.session</code>’s member functions from there. Unity does not guarantee the order of each component’s <code class="highlighter-rouge">Awake</code> call, and since the device is opened inside of <code class="highlighter-rouge">SyntactsHub.Awake</code>, it may not be opened before <code class="highlighter-rouge">MyComponent.Awake</code>. Initializing in <code class="highlighter-rouge">Start</code> solves this since <code class="highlighter-rouge">Start</code> is always called after <code class="highlighter-rouge">Awake</code>.</li>
+  <li>In the event that you have multiple <code class="highlighter-rouge">SyntactsHubs</code> in the scene (i.e. you are outputting to multiple devices), you will need to use an approach different from <code class="highlighter-rouge">FindObjectOfType</code>. The simplest fix is to make my <code class="highlighter-rouge">hub</code> public and assign it from the Unity Editor.</li>
+</ul>
+
+<h2 id="using-syntacts-gui-with-unity">Using Syntacts GUI with Unity</h2>
+
+<p>A common requirement of designing haptic effects is needing to tune them online. Instead of repeatedly Playing, Stopping, and editing your code, you can use Syntact’s Library features and the <a href="/tutorials/gui.md">GUI</a> to iterate in Play mode. First, create a string variable containing the name of the Signal to be loaded. You can optionally make this public and assign it from the Unity Editor.</p>
+
+<div class="language-cs highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="kt">string</span> <span class="n">signalName</span> <span class="p">=</span> <span class="s">"my_signal"</span><span class="p">;</span>
+
+<span class="k">void</span> <span class="nf">Update</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">Input</span><span class="p">.</span><span class="nf">GetKeyDown</span><span class="p">(</span><span class="n">KeyCode</span><span class="p">.</span><span class="n">Space</span><span class="p">))</span> <span class="p">{</span>
+        <span class="c1">// attempt to load the Signal and play it</span>
+        <span class="n">Signal</span> <span class="n">sig</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">Syntacts</span><span class="p">.</span><span class="n">Library</span><span class="p">.</span><span class="nf">LoadSignal</span><span class="p">(</span><span class="k">out</span> <span class="n">sig</span><span class="p">,</span> <span class="n">signalName</span><span class="p">))</span>
+            <span class="n">hub</span><span class="p">.</span><span class="n">session</span><span class="p">.</span><span class="nf">Play</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="n">sig</span><span class="p">);</span>
+        <span class="k">else</span>
+            <span class="n">Debug</span><span class="p">.</span><span class="nf">LogError</span><span class="p">(</span><span class="s">"Failed to load Signal "</span> <span class="p">+</span> <span class="n">signalName</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Now, when we modify <code class="highlighter-rouge">my_signal</code> from the Syntacts GUI and save it, Unity will load the most recent copy without ever having to exit Play mode!</p>
+
+<p><img src="https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/tut-unity/gui_unity.png" alt="GUI" /></p>
+
+<h2 id="additional-resources">Additional Resources</h2>
+
+<ul>
+  <li><a href="/tutorials/bracelet">VR Bracelet Tutorial</a></li>
+  <li><a href="https://learn.unity.com/tutorials">Official Unity Tutorials</a></li>
+</ul>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+  <div class="wrapper">
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p>Syntacts | The Tactor Synthesizer</p>
+        <a href="https://mahilab.rice.edu" target="_blank">Mechatronics and Haptic Interfaces Lab</a>
+      </div>
+    </div>
+  </div>
+</footer>
+</body>
+
+</html>
