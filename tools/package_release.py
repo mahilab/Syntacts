@@ -2,6 +2,7 @@
 # 1) build Syntacts using CMake and Ninja
 # 2) run this script, e.g.:
 #    python package_release.py 1.3.0 C:/Users/epeze/Desktop
+#    python package_release.py 1.3.0 ~/Desktop
 
 import sys
 import os
@@ -45,6 +46,7 @@ if platform == 'win32':
     make_archive(output_dir, 'zip', output_dir)
     # rmtree(output_dir)
 elif platform == 'darwin':
+    unity_exe = "C:/Program Files/Unity/Hub/Editor/2019.3.7f1/Editor/Unity.exe"
     version    = sys.argv[1]
     output_dir = sys.argv[2] + "/" + "syntacts_v" + version + "_mac"
     # delete existing
@@ -54,3 +56,19 @@ elif platform == 'darwin':
     os.mkdir(output_dir)
     # package license
     copy2("../LICENSE", output_dir)
+    # package GUI
+    copy2("../build/gui/syntacts-gui",output_dir)
+    # package c
+    os.mkdir(output_dir + "/c")
+    copy2("../c/syntacts.h",output_dir + "/c")
+    copy2("../build/c/libsyntactsc.dylib",output_dir + "/c")
+    # package csharp
+    copytree("../csharp",output_dir+"/csharp",ignore=ignore_patterns(".gitignore","*-d.dll","bin","obj"))
+    # package python
+    copytree("../python",output_dir+"/python",ignore=ignore_patterns(".gitignore","*-d.dll","__pycache__"))
+    # package unity
+    os.mkdir(output_dir + "/unity")
+    copytree("../unity/SyntactsDemo/Assets",output_dir+"/unity/SyntactsDemo/Assets",ignore=ignore_patterns(".gitignore"))
+    copytree("../unity/SyntactsDemo/Packages",output_dir+"/unity/SyntactsDemo/Packages",ignore=ignore_patterns(".gitignore"))
+    copytree("../unity/SyntactsDemo/ProjectSettings",output_dir+"/unity/SyntactsDemo/ProjectSettings",ignore=ignore_patterns(".gitignore"))
+    # make unitypackage
