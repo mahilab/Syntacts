@@ -46,7 +46,7 @@ if platform == 'win32':
     make_archive(output_dir, 'zip', output_dir)
     # rmtree(output_dir)
 elif platform == 'darwin':
-    unity_exe = "C:/Program Files/Unity/Hub/Editor/2019.3.7f1/Editor/Unity.exe"
+    unity_exe = "/Applications/Unity/Hub/Editor/2019.4.11f1/Unity.app/Contents/MacOS/Unity"
     version    = sys.argv[1]
     output_dir = sys.argv[2] + "/" + "syntacts_v" + version + "_mac"
     # delete existing
@@ -72,3 +72,7 @@ elif platform == 'darwin':
     copytree("../unity/SyntactsDemo/Packages",output_dir+"/unity/SyntactsDemo/Packages",ignore=ignore_patterns(".gitignore"))
     copytree("../unity/SyntactsDemo/ProjectSettings",output_dir+"/unity/SyntactsDemo/ProjectSettings",ignore=ignore_patterns(".gitignore"))
     # make unitypackage
+    unity_cmd = ' -quit -batchmode -nographics -projectPath "../unity/SyntactsDemo" -exportPackage "Assets/Syntacts" "' + output_dir + '/unity/syntacts.unitypackage"'
+    os.system(unity_exe + unity_cmd)
+    # create zip
+    make_archive(output_dir, 'zip', output_dir)
