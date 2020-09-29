@@ -15,10 +15,10 @@
 - ~~change to bias/gain~~
 - ~~import WAV files~~
 - ~~grid mechanism in spatializers~~
+- ~channel polyphony ~
 - import CSV
 - import Macaron JSON
 - save/load spatializers
-- channel polyphony 
 
 ## Optimization
 - ~~consider using unique_ptr in Signal with a clone method~~
@@ -48,10 +48,10 @@
 - ~~improve dnd interface~~
 - ~~drag/drop help dialogs~~
 - improved slot header
-- PolyLine / KeyEnvelope
+- ~KeyEnvelope~
 - improve play/pause/stop interface
 - library signal references
-- library signal busting
+- ~library signal busting~
 - log file
 
 ## Nice to Have

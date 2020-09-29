@@ -29,9 +29,9 @@ from enum import Enum
 # DLL Import
 # get the right filename
 if platform.uname()[0] == "Windows":
-    _lib_name = "./syntacts-c.dll"
+    _lib_name = "./csyntacts.dll"
 elif platform.uname()[0] == "Darwin":
-    _lib_name = "./libsyntacts-c.dylib"
+    _lib_name = "./libcsyntacts.dylib"
 
 _tact = cdll.LoadLibrary(_lib_name)
 

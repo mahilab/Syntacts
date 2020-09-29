@@ -25,16 +25,15 @@ if platform == 'win32':
     # package c
     os.mkdir(output_dir + "/c")
     copy2("../c/syntacts.h",output_dir + "/c")
-    copy2("../build/c/syntacts-c.dll",output_dir + "/c")
-    os.rename(output_dir + "/c/syntacts-c.dll",output_dir + "/c/syntacts.dll")
+    copy2("../build/c/csyntacts.dll",output_dir + "/c")
     # package csharp
     copytree("../csharp",output_dir+"/csharp",ignore=ignore_patterns(".gitignore","*-d.dll","bin","obj"))
     # package python
     copytree("../python",output_dir+"/python",ignore=ignore_patterns(".gitignore","*-d.dll","__pycache__"))
     # package unity
     os.mkdir(output_dir + "/unity")
-    if os.path.exists("../unity/SyntactsDemo/Assets/Syntacts/Plygins/syntacts-c-d.dll"):
-        os.remove("../unity/SyntactsDemo/Assets/Syntacts/Plygins/syntacts-c-d.dll")
+    if os.path.exists("../unity/SyntactsDemo/Assets/Syntacts/Plygins/csyntacts-d.dll"):
+        os.remove("../unity/SyntactsDemo/Assets/Syntacts/Plygins/csyntacts-d.dll")
     copytree("../unity/SyntactsDemo/Assets",output_dir+"/unity/SyntactsDemo/Assets",ignore=ignore_patterns(".gitignore"))
     copytree("../unity/SyntactsDemo/Packages",output_dir+"/unity/SyntactsDemo/Packages",ignore=ignore_patterns(".gitignore"))
     copytree("../unity/SyntactsDemo/ProjectSettings",output_dir+"/unity/SyntactsDemo/ProjectSettings",ignore=ignore_patterns(".gitignore"))
