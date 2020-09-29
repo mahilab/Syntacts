@@ -26,15 +26,15 @@ For this example, we will use MATLAB 2020b and MSVC 2019 on Windows 10.
 
 ## Loading Syntacts into MATLAB
 
-- From the `c` folder in the latest Syntacts Release, extract `syntacts.h` and `syntacts.dll` (or `syntacts.dylib` on macOS) to a location of your choice. 
+- From the `c` folder in the latest Syntacts Release, extract `syntacts.h` and `syntactsc.dll` (or `libsyntactsc.dylib` on macOS) to a location of your choice. 
 - Open MATLAB and set the working directory to the location containing the header file and library.
 - The following code can be used to load Syntacts:
     ```matlab
-    loadlibrary('syntacts')
+    loadlibrary('syntactsc')
     ```
 - You can list the available functions with:
     ```matlab
-    libfunctions('syntacts')
+    libfunctions('syntactsc')
     ```
     ```
     ADSR_create                       Session_open1                     
@@ -48,33 +48,33 @@ For this example, we will use MATLAB 2020b and MSVC 2019 on Windows 10.
 Once the library is loaded, you can create a Syntacts Session and open a device:
 
 ```matlab
-s = calllib('syntacts','Session_create');
+s = calllib('syntactsc','Session_create');
 
-calllib('syntacts','Session_open1',s);
+calllib('syntactsc','Session_open1',s);
 ```
 
 With an open device, you can proceed to create and play Signals:
 
 ```matlab
 % equivalent to Signal = Sine(440) * ASR(1,1,1,1) in C++
-sine = calllib('syntacts','Sine_create2',440);
-asr  = calllib('syntacts','ASR_create',1,1,1,1);
-sig  = calllib('syntacts','Product_create',sine,asr);
+sine = calllib('syntactsc','Sine_create2',440);
+asr  = calllib('syntactsc','ASR_create',1,1,1,1);
+sig  = calllib('syntactsc','Product_create',sine,asr);
 % play Signal on channel 0 (left speaker will be audible)
-calllib('syntacts','Session_play',s,0,sig);
+calllib('syntactsc','Session_play',s,0,sig);
 % close device
-calllib('syntacts','Session_close',s)
+calllib('syntactsc','Session_close',s)
 ```
 
 MATLAB doesn't know how to free the resources that Syntacts creates, so we must do so explicitly to avoid memory leaks:
 
 ```matlab
 % free Signals
-calllib('syntacts','Signal_delete',sine);
-calllib('syntacts','Signal_delete',asr);
-calllib('syntacts','Signal_delete',sig);
+calllib('syntactsc','Signal_delete',sine);
+calllib('syntactsc','Signal_delete',asr);
+calllib('syntactsc','Signal_delete',sig);
 % free Session
-calllib('syntacts','Session_delete',s);
+calllib('syntactsc','Session_delete',s);
 ```
 
 Finally, when you are done using Syntacts, don't forget to unload the library:
@@ -95,25 +95,25 @@ end
 methods
     % constructor
     function obj = Syntacts(dev_idx)
-        loadlibrary('syntacts','syntacts.h');
-        obj.session = calllib('syntacts','Session_create');
-        calllib('syntacts','Session_open2',obj.session,dev_idx);
+        loadlibrary('syntactsc','syntacts.h');
+        obj.session = calllib('syntactsc','Session_create');
+        calllib('syntactsc','Session_open2',obj.session,dev_idx);
     end
     % destructor
     function delete(obj)
-        calllib('syntacts','Session_close',obj.session);
-        calllib('syntacts','Session_delete',obj.session);
-        unloadlibrary('syntacts');
+        calllib('syntactsc','Session_close',obj.session);
+        calllib('syntactsc','Session_delete',obj.session);
+        unloadlibrary('syntactsc');
     end
     % play sine wave Signal
     function play(obj,ch,freq,amp,dur)
-        sine = calllib('syntacts','Sine_create2',freq);
-        env  = calllib('syntacts','Envelope_create',dur,amp);
-        sig  = calllib('syntacts','Product_create',sine,env);
-        calllib('syntacts','Session_play',obj.session,ch,sig);
-        calllib('syntacts','Signal_delete',sine);
-        calllib('syntacts','Signal_delete',env);
-        calllib('syntacts','Signal_delete',sig);
+        sine = calllib('syntactsc','Sine_create2',freq);
+        env  = calllib('syntactsc','Envelope_create',dur,amp);
+        sig  = calllib('syntactsc','Product_create',sine,env);
+        calllib('syntactsc','Session_play',obj.session,ch,sig);
+        calllib('syntactsc','Signal_delete',sine);
+        calllib('syntactsc','Signal_delete',env);
+        calllib('syntactsc','Signal_delete',sig);
     end
 end
 end
