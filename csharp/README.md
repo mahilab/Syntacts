@@ -11,4 +11,4 @@ Then, change directories to the desired example and run it:
 > dotnet run
 ```
 
-Ensure that each example folder contains a `syntacts-c.dll` file.
+Ensure that each example folder contains the C library `syntactsc.dll`.
