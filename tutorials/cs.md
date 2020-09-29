@@ -9,7 +9,7 @@ This tutorial will teach you how to setup and use the Syntacts C# API.
  
 ## Requirements
 
-- C# compiler such as .NET
+- [.NET Core 3.1](https://dotnet.microsoft.com/download) for Windows or macOS 
 - latest [Syntacts Release](https://github.com/mahilab/Syntacts/releases)
 
 ## Basic Setup
@@ -20,7 +20,7 @@ This tutorial will teach you how to setup and use the Syntacts C# API.
 
 - Navigate to the csharp directory of the latest release of Syntacts
 - Build the Syntacts library from the command line and then run the required project.
-- ensure that `syntacts-c.dll` is located in each example directory
+- ensure that `syntactsc.dll` (or `libsyntactsc.dylib`) is located in each example directory
 
 ```shell
   > cd csharp/Syntacts
