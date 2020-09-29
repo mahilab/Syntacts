@@ -640,7 +640,7 @@ void PolyBezierNode::sync() {
 void SamplesNode::update() {
     auto samples = sig.getAs<tact::Samples>();
     ImGui::Text("Sample Count: %d", samples->sampleCount());
-    ImGui::Text("Sample Rate:  %.0f", samples->sampleRate());
+    ImGui::Text("Sample Rate:  %.0f Hz", samples->sampleRate());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
