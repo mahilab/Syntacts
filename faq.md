@@ -11,7 +11,7 @@ permalink: /faq/
   Similarly, Syntacts deals with the arrangement of primitive waveforms to create expressive vibrations and tactile cues.
 - The portmanteau of "**syn**thesizer" and "**tact**or"
 
-### Can I use the Syntacts software and/or hardware in my project? 
+### Can I use the Syntacts software and/or hardware in my project or research? 
 - Yes, of course! All software is licensed under the [MIT License](https://en.wikipedia.org/wiki/MIT_License). All hardware is licensed under the [TAPR Open Hardware License](https://tapr.org/the-tapr-open-hardware-license/). 
 
 ### How can I cite Syntacts in my research?
