@@ -48,10 +48,10 @@
 - ~~improve dnd interface~~
 - ~~drag/drop help dialogs~~
 - improved slot header
-- ~KeyEnvelope~
+- ~~KeyEnvelope~~
+- ~~library signal busting~~
 - improve play/pause/stop interface
 - library signal references
-- ~library signal busting~
 - log file
 
 ## Nice to Have
