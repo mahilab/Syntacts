@@ -13,12 +13,12 @@ This tutorial will teach you how to set up and use the Syntacts GUI. The GUI can
 ## Basic Setup
 
 - Download the [latest Syntacts release](https://github.com/mahilab/Syntacts/releases) for your system and extract the files. 
-- Run the GUI executable `syntacts-gui`, located in the top-level directory. 
+- Run the GUI executable `syntacts_gui`, located in the top-level directory. 
 - On Windows, you may receive a “Windows protected your PC” screen. Click “More info”, then “Run anyway”.
-- On macOS, the executable `syntacts-gui` may not run, and it will instead open the binary code. If this occurs, open a Terminal and run the following command in the directory of `syntacts-gui`. After this, you will be able to successfully run `syntacts-gui`.
+- On macOS, the executable `syntacts_gui` may not run, and it will instead open the binary code. If this occurs, open a Terminal and run the following command in the directory of `syntacts_gui`. After this, you will be able to successfully run `syntacts_gui`.
 
 ```shell
-> sudo chmod 777 syntacts-gui
+> sudo chmod 777 syntacts_gui
 ```
 
 ## GUI Widgets Overview

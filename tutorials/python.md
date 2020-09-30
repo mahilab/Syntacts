@@ -17,7 +17,7 @@ This tutorial will teach you how to setup and use the Syntacts Python API. It is
 
 - Install [Python 3](https://www.python.org/downloads/) on your device if it is not already installed.
 - Download the [latest pre-compiled Syntacts binaries](https://github.com/mahilab/Syntacts/releases) for your system. 
-- Extract `syntacts.py` and the dynamic library `syntacts-c.dll` (or `syntacts-c.dylib`) to a directory of your choice.
+- Extract `syntacts.py` and the dynamic library `syntacts_c.dll` (or `libsyntacts_c.dylib` on macOS) to a directory of your choice.
 - Create a new script in the same directory as `syntacts.py` and the dynamic library.
 - In your script, import Syntacts and `sleep`:
 

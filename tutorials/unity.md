@@ -33,7 +33,7 @@ Only two scripts are needed to use Syntacts:
 - `Syntacts.cs` - the Syntacts C# binding, containing Syntacts classes, functions, and types (this is the same file found in the C# binding)
 - `SyntactsHub.cs` - a special Unity component that facilitates opening Syntacts sessions (see below)
 
-The Plugin folder contains `syntacts-c.dll`, the compiled Syntacts dynamic library which is loaded by Unity, and the Editor folder contains custom Unity Editor code. You can safely ignore both.
+The Plugin folder contains `syntacts_c.dll`, the compiled Syntacts dynamic library which is loaded by Unity, and the Editor folder contains custom Unity Editor code. You can safely ignore both.
 
 ## SyntactsHub
 

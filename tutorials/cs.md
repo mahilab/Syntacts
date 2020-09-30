@@ -20,7 +20,7 @@ This tutorial will teach you how to setup and use the Syntacts C# API.
 
 - Navigate to the csharp directory of the latest release of Syntacts
 - Build the Syntacts library from the command line and then run the required project.
-- ensure that `syntactsc.dll` (or `libsyntactsc.dylib`) is located in each example directory
+- ensure that `syntacts_c.dll` (or `libsyntacts_c.dylib`) is located in each example directory
 
 ```shell
   > cd csharp/Syntacts

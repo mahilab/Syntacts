@@ -9,10 +9,10 @@ permalink: /tutorials/building/
 This page will walk you through the process of building the Syntacts libraries and GUI from the C++ source files. Syntacts uses [CMake](https://cmake.org/) as its build system, which is scripted through a file named `CMakeLists.txt`. The build process creates three binary objects:
 
 - `syntacts.lib`, the main Syntacts C++ static library
-- `syntacts-c.dll`, the Syntacts library exported to a C dynamic library (basis for language bindings)
-- `syntacts-gui.exe`, the Syntacts GUI application
+- `syntacts_c.dll`, the Syntacts library exported to a C dynamic library (basis for all language bindings)
+- `syntacts_gui.exe`, the Syntacts GUI application
 
-When the build completes, the binaries and Syntacts C++ headers will be installed to your system for use. Note that if you don't intend to use the C++ API, you can skip this build process by downloading the latest compiled [Release](https://github.com/mahilab/Syntacts/releases).
+When the build completes, the binaries and Syntacts C++ headers will be installed to your system for use. Note that if you don't intend to use the C++ API, you can skip this build process by downloading the latest pre-compiled [Release](https://github.com/mahilab/Syntacts/releases).
 
 ## Requirements
 
@@ -42,7 +42,7 @@ cmake --build . --target install --config Release
 
 ## Building on macOS
 
-- The recommended C++ compiler on macOS is the Apple supplied Clang compiler. Syntacts has been tested on macOS Catalina with Apple Clang 11.0.0 (clang-1100.0.0.33.17). To check if you have Clang, open a Terminal and enter the command ``` clang --version ``` . You may also consider using a mainline version of [Clang](https://clang.llvm.org/).
+- The recommended C++ compiler on macOS is the Apple supplied Clang compiler shipped with Xcode. Syntacts has been tested on macOS Catalina with Apple Clang 11.0.0 (clang-1100.0.0.33.17). To check if you have Clang, open a Terminal and enter the command ``` clang --version ``` . You may also consider using a mainline version of [Clang](https://clang.llvm.org/).
 - Open a Terminal in a directory of your choice and run the following commands:
 ```shell
 > git clone --recurse-submodules https://github.com/mahilab/Syntacts 

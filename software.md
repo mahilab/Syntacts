@@ -10,7 +10,7 @@ Syntacts provides you with low level access to audio hardware and a variety of m
 
 ## Syntacts GUI
 - Get the latest [Release](https://github.com/mahilab/Syntacts/releases) and extract the files.
-- Run the GUI executable `syntacts-gui` in the top level directory. On Windows, you may receive a "Windows protected your PC" screen. Click "More info", then "Run anyway".
+- Run the GUI executable `syntacts_gui` in the top level directory. On Windows, you may receive a "Windows protected your PC" screen. Click "More info", then "Run anyway".
 
 ## Unity 
 - Get the latest [Release](https://github.com/mahilab/Syntacts/releases) and extract the files.
