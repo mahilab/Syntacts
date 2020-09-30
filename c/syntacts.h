@@ -25,6 +25,7 @@ EXPORT int Syntacts_versionMajor();
 EXPORT int Syntacts_versionMinor();
 EXPORT int Syntacts_versionPatch();
 EXPORT bool Syntacts_asioSupport();
+EXPORT int Syntacts_maxVoices();
 
 ///////////////////////////////////////////////////////////////////////////////
 // SESSION

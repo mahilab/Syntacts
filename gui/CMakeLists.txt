@@ -1,4 +1,4 @@
-add_executable(syntacts-gui
+add_executable(syntacts_gui
     src/main.cpp 
     src/Gui.hpp
     src/Gui.cpp
@@ -40,6 +40,6 @@ add_executable(syntacts-gui
     src/Custom.cpp
     syntacts.rc)
 
-target_link_libraries(syntacts-gui syntacts mahi::gui)
-set_target_properties(syntacts-gui PROPERTIES DEBUG_POSTFIX -d)
-install(TARGETS syntacts-gui RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+target_link_libraries(syntacts_gui syntacts mahi::gui)
+set_target_properties(syntacts_gui PROPERTIES DEBUG_POSTFIX -d)
+install(TARGETS syntacts_gui RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})

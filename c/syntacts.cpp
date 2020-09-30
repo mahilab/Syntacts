@@ -6,7 +6,7 @@
 using namespace tact;
 
 std::unordered_map<Handle, Signal> g_sigs;
-std::unordered_map<Handle, std::unique_ptr<Session>> g_sessions; // exposes "issues" that need to be investigated
+std::unordered_map<Handle, std::unique_ptr<Session>> g_sessions;
 std::unordered_map<Handle, std::unique_ptr<Spatializer>> g_spats;
 
 struct Finalizer {
@@ -48,6 +48,10 @@ bool Syntacts_asioSupport() {
 #else
     return false;
 #endif
+}
+
+int Syntacts_maxVoices() {
+    return SYNTACTS_MAX_VOICES;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -845,317 +845,317 @@ namespace Syntacts
 
     class Dll
     {
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern int Syntacts_versionMajor();
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern int Syntacts_versionMinor();
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern int Syntacts_versionPatch();
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern bool Syntacts_asioSupport();
 
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Session_create();
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern void Session_delete(Handle session);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern bool Session_valid(Handle session);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern int Session_open1(Handle session);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern int Session_open2(Handle session, int index);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern int Session_open3(Handle session, int index, int channelCount, double sampleRate);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern int Session_open4(Handle session, int api);
-        [DllImport("syntactsc", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("syntacts_c", CallingConvention = CallingConvention.Cdecl)]
         public static extern int Session_open5(Handle session, string name, int api);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern int Session_close(Handle session);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern bool Session_isOpen(Handle session);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern int Session_play(Handle session, int channel, Handle signal);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern int Session_playAll(Handle session, Handle signal);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern int Session_stop(Handle session, int channel);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern int Session_stopAll(Handle session);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern int Session_pause(Handle session, int channel);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern int Session_pauseAll(Handle session);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern int Session_resume(Handle session, int channel);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern int Session_resumeAll(Handle session);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern bool Session_isPlaying(Handle session, int channel);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern bool Session_isPaused(Handle session, int channel);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern int Session_setVolume(Handle session, int channel, double volume);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern double Session_getVolume(Handle session, int channel);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern int Session_setPitch(Handle session, int channel, double pitch);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern double Session_getPitch(Handle session, int channel);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern double Session_getLevel(Handle session, int channel);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern int Session_getChannelCount(Handle session);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern double Session_getSampleRate(Handle session);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern double Session_getCpuLoad(Handle session);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern int Session_getCurrentDevice(Handle session);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern int Session_getDefaultDevice(Handle session);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern int Session_getAvailableDevicesCount(Handle session);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern void Session_getAvailableDevices(Handle session, int[] devices);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern int Session_count();
 
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern int  Device_nameLength(Handle session, int d);
-        [DllImport("syntactsc", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("syntacts_c", CallingConvention = CallingConvention.Cdecl)]
         public static extern void Device_name(Handle session, int d, StringBuilder buf);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern bool Device_isDefault(Handle session, int d);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern int  Device_api(Handle session, int d);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern int  Device_apiNameLength(Handle session, int d);
-        [DllImport("syntactsc", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("syntacts_c", CallingConvention = CallingConvention.Cdecl)]
         public static extern void Device_apiName(Handle session, int d, StringBuilder buf);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern bool Device_isApiDefault(Handle session, int d);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern int  Device_maxChannels(Handle session, int d);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern int  Device_sampleRatesCount(Handle session, int d);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern void Device_sampleRates(Handle session, int d, int[] sampleRates);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern int  Device_defaultSampleRate(Handle session, int d);
 
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Spatializer_create(Handle session);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern void Spatializer_delete(Handle spat);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern bool Spatializer_valid(Handle spat);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern void Spatializer_bind(Handle spat, Handle session);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern void Spatializer_unbind(Handle spat);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern void Spatializer_setPosition(Handle spat, int channel, double x, double y);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern void Spatializer_getPosition(Handle spat, int channel, ref double x, ref double y);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern void Spatializer_setTarget(Handle spat, double x, double y);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern void Spatializer_getTarget(Handle spat, ref double x, ref double y);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern void Spatializer_setRadius(Handle spat, double r);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern double Spatializer_getRadius(Handle spat);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern void Spatializer_setRollOff(Handle spat, int type);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern void Spatializer_setWrap(Handle spat, double x, double y);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern void Spatializer_getWrap(Handle spat, ref double x, ref double y);
 
-        [DllImport("syntactsc")] 
+        [DllImport("syntacts_c")] 
         public static extern bool Spatializer_createGrid(Handle spat, int rows, int cols);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern void Spatializer_clear(Handle spat);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern void Spatializer_remove(Handle spat, int channel);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern int Spatializer_getChannelCount(Handle spat);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern bool Spatializer_hasChannel(Handle spat, int channel);
 
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern void Spatializer_play(Handle spat, Handle signal);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern void Spatializer_stop(Handle spat);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern void Spatializer_setVolume(Handle spat, double volume);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern double Spatializer_getVolume(Handle spat);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern void Spatializer_setPitch(Handle spat, double pitch);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern double Spatializer_getPitch(Handle spat);
 
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern void Spatializer_autoUpdate(Handle spat, bool enable);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern void Spatializer_update(Handle spat);
 
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern void Signal_delete(Handle signal);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern bool Signal_valid(Handle signal);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern double Signal_sample(Handle signal, double t);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern double Signal_length(Handle signal);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern void Signal_setGain(Handle signal, double gain);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern double Signal_getGain(Handle signal);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern void Signal_setBias(Handle signal, double bias);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern double Signal_getBias(Handle signal);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern int Signal_count();
 
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Mul_SigFlt(Handle lhs, double rhs);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Mul_FltSig(double lhs, Handle rhs);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Add_SigFlt(Handle lhs, double rhs);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Add_FltSig(double lhs, Handle rhs);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Sub_SigFlt(Handle lhs, double rhs);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Sub_FltSig(double lhs, Handle rhs);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Neg_Sig(Handle signal);
 
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Sequence_create();
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern double Sequence_getHead(Handle handle);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern void Sequence_setHead(Handle handle, double head);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern void Sequence_pushFlt(Handle handle, double t);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern void Sequence_pushSig(Handle handle, Handle signal);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern void Sequence_pushSeq(Handle handle, Handle sequence);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern void Sequence_insertSig(Handle handle, Handle signal, double t);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern void Sequence_insertSeq(Handle handle, Handle sequence, double t);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern void Sequence_clear(Handle handle);
 
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Sequence_SigSig(Handle lhs, Handle rhs);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Sequence_SigFlt(Handle lhs, double rhs);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Sequence_FltSig(double lhs, Handle rhs);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern void Sequence_SeqFlt(Handle lhs, double rhs);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern void Sequence_SeqSig(Handle lhs, Handle rhs);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern void Sequence_SeqSeq(Handle lhs, Handle rhs);
 
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Product_create(Handle lhs, Handle rhs);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Sum_create(Handle lhs, Handle rhs);
 
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Time_create();
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Scalar_create(double value);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Ramp_create1(double initial, double rate);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Ramp_create2(double initial, double final, double duration);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Noise_create();
-        [DllImport("syntactsc", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("syntacts_c", CallingConvention = CallingConvention.Cdecl)]
         public static extern Handle Expression_create(string expr);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Samples_create(float[] samples, int nSamples, double sampleRate);
 
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Repeater_create(Handle signal, int repetitions, double delay);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Stretcher_create(Handle signal, double factor);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Reverser_create(Handle signal);
 
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Envelope_create(double duration, double amp);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle ASR_create(double a, double s, double r, double amp);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle ADSR_create(double a, double d, double s, double r, double amp1, double amp2);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle ExponentialDecay_create(double amplitude, double decay);
 
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Sine_create1(Handle x);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Sine_create2(double hertz);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Sine_create3(double initial, double rate);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Sine_create4(double hertz, Handle modulation, double index);
 
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Square_create1(Handle x);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Square_create2(double hertz);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Square_create3(double initial, double rate);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Square_create4(double hertz, Handle modulation, double index);
 
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Saw_create1(Handle x);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Saw_create2(double hertz);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Saw_create3(double initial, double rate);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Saw_create4(double hertz, Handle modulation, double index);
 
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Triangle_create1(Handle x);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Triangle_create2(double hertz);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Triangle_create3(double initial, double rate);
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Triangle_create4(double hertz, Handle modulation, double index);
 
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern Handle Pwm_create(double frequency, double dutyCycle);
 
-        [DllImport("syntactsc", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("syntacts_c", CallingConvention = CallingConvention.Cdecl)]
         public static extern bool Library_saveSignal(Handle signal, string name);
-        [DllImport("syntactsc", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("syntacts_c", CallingConvention = CallingConvention.Cdecl)]
         public static extern Handle Library_loadSignal(string name);
 
-        [DllImport("syntactsc", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("syntacts_c", CallingConvention = CallingConvention.Cdecl)]
         public static extern bool Library_deleteSignal(string name);
-        [DllImport("syntactsc", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("syntacts_c", CallingConvention = CallingConvention.Cdecl)]
         public static extern bool Library_exportSignal(Handle signal, string filePath, int format, int sampleRate, double maxLength);
-        [DllImport("syntactsc", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("syntacts_c", CallingConvention = CallingConvention.Cdecl)]
         public static extern Handle Library_importSignal(string filePath, int format, int sampleRate);
 
-        [DllImport("syntactsc")]
+        [DllImport("syntacts_c")]
         public static extern int Debug_sigMapSize();
 
     }
