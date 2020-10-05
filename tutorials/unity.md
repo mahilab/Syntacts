@@ -18,13 +18,13 @@ The Syntacts Release folder contains a Unity demo you may choose to explore. Nav
 
 1. **Discrete Syntacts Signals** - when the ball collides with the floor, a procedural signal is generated and played. The signal is generated in the  `BouncyBall.cs` component, and its parameters can be changed from the Unity Editor.  
 2. **Continuos Syntacts Signals** - the ball emits a continuous signal, also defined in `BouncyBall.cs`. The pitch of the signal is altered in realtime based on the ball's height above the ground.
-3. **Loading Syntacts Signals** - the `Play Library Signal` loads and plays a signal from the global Syntacts Library when it is pressed. The signal to be loaded is determined from the string `signalName` found inside of the `LibraryButton.cs` component. The string can be changed from the Editor before or during play.
+3. **Loading Syntacts Signals** - the `Play Library Signal` loads and plays a signal from the global Syntacts Library when it is pressed. The signal to be loaded is determined from the string `signalName` found inside of the `LibraryButton.cs` component. The string can be changed from the editor before or during play.
 
 ![Demo](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/tut-unity/ball.gif)
 
 ## Getting Started
 
-Adding Syntacts to a new or existing Unity project is simple. From the Release folder, import `unity/syntacts.unitypackage` into your project either by 1) dragging it into the project window of the editor, or 2) from the Editor menu **Assets -> Import Package -> Custom Package ...**. Click **Import** and the Syntacts assets will be added to the top level of your project:
+Adding Syntacts to a new or existing Unity project is simple. From the Release folder, import `unity/syntacts.unitypackage` into your project either by 1) dragging it into the project window of the editor, or 2) from the editor menu **Assets -> Import Package -> Custom Package ...**. Click **Import** and the Syntacts assets will be added to the top level of your project:
 
 ![Import](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/tut-unity/import.png)
 
@@ -37,7 +37,7 @@ The plugin folder contains `syntacts_c.dll`, the compiled Syntacts dynamic libra
 
 ## SyntactsHub
 
-Although not required, the `SyntactsHub` component is useful for opening and managing the lifetime of a Syntacts device Session. Simply attach this component to an existing or empty GameObject in your scene:
+Although not required, the `SyntactsHub` component is useful for opening and managing the lifetime of a Syntacts device session. Simply attach this component to an existing or empty GameObject in your scene:
 
 ![SyntactsHub](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/tut-unity/hub1.png)
 
@@ -90,8 +90,8 @@ public class MyComponent : MonoBehaviour
 
 First, we find the `SyntactsHub` in the scene inside of `Start` and save a local reference to `hub`. From here, we can access `hub`s' `Session` object and use it as we would in the standard C# API. A few important notes:
 
-- Prefer initializing in `Start` over `Awake`. It's okay to *find* the `SyntactsHub` in `Awake`, but don't attempt to call any of `SyntactsHub.session`'s member functions from there. Unity does not guarantee the order of each component's `Awake` call, and since the device is opened inside of `SyntactsHub.Awake`, it may not be opened before `MyComponent.Awake`. Initializing in `Start` solves this since `Start` is always called after `Awake`.
-- If you have multiple `SyntactsHubs` in the scene (i.e. you are outputting to multiple devices), you will need to use an approach different from `FindObjectOfType`. The simplest fix is to make my `hub` public and assign it from the Unity Editor.
+- Prefer initializing in `Start` over `Awake`. It's okay to *find* the `SyntactsHub` in `Awake`, but don't attempt to call any of `SyntactsHub.session`s' member functions from there. Unity does not guarantee the order of each components' `Awake` call, and since the device is opened inside of `SyntactsHub.Awake`, it may not be opened before `MyComponent.Awake`. Initializing in `Start` solves this since `Start` is always called after `Awake`.
+- If you have multiple `SyntactsHubs` in the scene (i.e. you are outputting to multiple devices), you will need to use an approach different from `FindObjectOfType`. The simplest fix is to make my `hub` public and assign it from the Unity editor.
 
 ## Using Syntacts GUI with Unity
 
