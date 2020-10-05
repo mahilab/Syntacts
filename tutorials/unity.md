@@ -17,7 +17,7 @@ In this tutorial, we will learn how to integrate Syntacts into Unity projects. S
 The Syntacts Release folder contains a Unity demo you may choose to explore. Navigate to `unity/SyntactsDemo/Assets/Demo` and open `Demo.unity`. When Unity finishes loading, press the play button in the editor. You should see a ball bouncing on the screen, and a `Play Library Signal` button in the top-left corner. You should also hear various sound effects. The demo uses Syntacts to generate these sounds in the same way we might use Syntacts to generate haptic vibrations. The only difference is that we have chosen base frequencies in the hearing range. Although this demo is quite simple, three key features are on display:
 
 1. **Discrete Syntacts Signals** - when the ball collides with the floor, a procedural signal is generated and played. The signal is generated in the  `BouncyBall.cs` component, and its parameters can be changed from the Unity editor.  
-2. **Continuos Syntacts Signals** - the ball emits a continuous signal, also defined in `BouncyBall.cs`. The pitch of the signal is altered in realtime based on the balls' height above the ground.
+2. **Continuos Syntacts Signals** - the ball emits a continuous signal, also defined in `BouncyBall.cs`. The pitch of the signal is altered in real time based on the balls' height above the ground.
 3. **Loading Syntacts Signals** - the `Play Library Signal` loads and plays a signal from the global Syntacts Library when it is pressed. The signal to be loaded is determined from the string `signalName` found inside of the `LibraryButton.cs` component. The string can be changed from the editor before or during play.
 
 ![Demo](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/tut-unity/ball.gif)
