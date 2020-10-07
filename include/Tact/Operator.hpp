@@ -30,7 +30,7 @@ namespace tact {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// A signal which is the result of operating on two other Signals
+/// A signal which is the result of operating on two other Signals.
 struct IOperator {
     IOperator() = default;
     IOperator(Signal lhs, Signal rhs);
@@ -42,7 +42,7 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// A Signal which is the sum or difference of two other signals
+/// A Signal which is the sum or difference of two other signals.
 struct Sum : public IOperator {
     using IOperator::IOperator;
     double sample(double t) const;
@@ -53,7 +53,7 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// A Signal which is the product of two other signals
+/// A Signal which is the product of two other signals.
 struct Product : public IOperator {
     using IOperator::IOperator;
     double sample(double t) const;
@@ -64,21 +64,34 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/// Multiply two Signals.
 inline Signal operator*(Signal lhs, Signal rhs);
+/// Multiply a scalar and a Signal.
 inline Signal operator*(double lhs, Signal rhs);
+/// Multiply a Signal and a scalar.
 inline Signal operator*(Signal lhs, double rhs);
+/// Multiply a Signal and a scalar.
 inline Signal& operator*=(Signal& lhs, double rhs);
 
+/// Add two Signals.
 inline Signal operator+(Signal lhs, Signal rhs);
+/// Add a scalar and a Signal.
 inline Signal operator+(double lhs, Signal rhs);
+/// Add a Signal and a scalar.
 inline Signal operator+(Signal lhs, double rhs);
+/// Add a Signal and a scalar.
 inline Signal& operator+=(Signal& lhs, double rhs);
 
+/// Subtract two Signals.
 inline Signal operator-(Signal lhs, Signal rhs);
+/// Subtract a Signal from a scalar.
 inline Signal operator-(double lhs, Signal rhs);
+/// Subtract a scalar from a Signal.
 inline Signal operator-(Signal lhs, double rhs);
+/// Subtract a scalar from a Signal.
 inline Signal& operator-=(Signal& lhs, double rhs);
 
+/// Negate a Signal.
 inline Signal operator-(Signal lhs);
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -12,7 +12,7 @@
 
 class Gui : public mahi::gui::Application {
 public:
-    Gui();
+    Gui(const Application::Config config);
     void update() override;
     void positionWindows();
     const std::string& saveDir();

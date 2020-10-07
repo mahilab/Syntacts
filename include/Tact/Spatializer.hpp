@@ -29,6 +29,7 @@
 namespace tact
 {
 
+/// Syntacts Spatializer interface.
 class SYNTACTS_API Spatializer {
 public:
 
@@ -42,9 +43,9 @@ public:
     /// Destructor.
     ~Spatializer();
 
-    /// Binds this Spatializer to a session.
+    /// Binds this Spatializer to a Session.
     void bind(Session* session);
-    /// Unbinds the Spatializer from its current session.
+    /// Unbinds the Spatializer from its current Session.
     void unbind();
 
     /// Set the position of a channel. The channel will be added if it's not already in the Spatializer.

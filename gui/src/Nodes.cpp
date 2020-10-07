@@ -252,7 +252,7 @@ void NodeList::update()
     }
     // node slot
     if (m_nodes.size() == 0 || SignalHeld() || PaletteHeld())
-        NodeSlot("##EmpySlot", ImVec2(-1, 0));
+        NodeSlot("##EmptySlot", ImVec2(-1, 0));
     // check for incoming palette items
     if (PaletteTarget())
     {

@@ -118,8 +118,10 @@ bool SignalTarget()
     bool ret = false;
     if (ImGui::BeginDragDropTarget())
     {
-        if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("DND_LITEM"))
+        const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("DND_LITEM");
+        if (payload != NULL && g_signalHeld)
         {
+            g_signalHeld = false;
             ret = true;
         }
         ImGui::EndDragDropTarget();

@@ -35,36 +35,36 @@ namespace tact
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// An object that returns time variant samples for a length of time
+/// An object that returns time variant samples for a length of time.
 class SYNTACTS_API Signal {
 public:
-    /// Default constructor
+    /// Default Constructor.
     Signal();
-    /// Type Erasing Constructor
+    /// Type Erasing Constructor.
     template<typename T> inline Signal(T signal);   
 
-    /// Samples the Signal at time t in seconds
+    /// Samples the Signal at time t in seconds.
     inline double sample(double t) const;
-    /// Samples the Signal at n times give by t into output buffer b
+    /// Samples the Signal at n times give by t into output buffer b.
     inline void sample(const double* t, double* b, int n) const;
-    /// Returns the length of the Signal in seconds or infinity
+    /// Returns the length of the Signal in seconds or infinity.
     inline double length() const;
 
-    /// Returns the type_index of the underlying type-erased Signal
+    /// Returns the type_index of the underlying type-erased Signal.
     std::type_index typeId() const;
-    /// Returns true if the underlying type-erased Signal is type T
+    /// Returns true if the underlying type-erased Signal is type T.
     template <typename T> inline bool isType() const;
-    /// Gets a pointer to the underlying type-erased Signal type (use with caution)
+    /// Gets a pointer to the underlying type-erased Signal type (use with caution).
     void* get() const;
-    /// Gets a pointer to the underlying type-erased Signal, cast as type T (use with caution and only if you know the Signal is a T!)
+    /// Gets a pointer to the underlying type-erased Signal, cast as type T (use with caution and only if you know the Signal is a T!).
     template <typename T> inline T* getAs() const;
     
-    /// Returns the current count of Signals in this process
+    /// Returns the current count of Signals allocated in this process.
     static inline int count();
 
 public:
-    double gain;  ///< the Signal will be scaled by this amount when sampled
-    double bias;  ///< the Signal will be offset by this amount when sampled
+    double gain;  ///< the Signal will be scaled by this amount when sampled.
+    double bias;  ///< the Signal will be offset by this amount when sampled.
 
     /// NOT MUCH TO SEE BELOW THIS POINT EXCEPT NASTY IMPLEMENTATION DETAILS :)
 

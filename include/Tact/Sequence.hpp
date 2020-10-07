@@ -31,65 +31,65 @@ namespace tact {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// A Signal formed by the sequencing of other Signals at various time points
+/// A Signal formed by the sequencing of other Signals at various time points.
 class Sequence {
 public:
 
-    /// A Key in the Sequence
+    /// A Key in the Sequence.
     struct Key { 
         double t; 
         Signal signal; 
         TACT_SERIALIZE(TACT_MEMBER(t), TACT_MEMBER(signal));
     };
 
-    /// Default constructor
+    /// Default constructor.
     Sequence();
-    /// Moves the insertion head forward/backward by t
+    /// Moves the insertion head forward/backward by t.
     Sequence& push(double t);
-    /// Pushes a Signal at the head position and then moves the head forward
+    /// Pushes a Signal at the head position and then moves the head forward.
     Sequence& push(Signal signal);
-    /// Pushes another Sequence at the head position and then moves the head forward
+    /// Pushes another Sequence at the head position and then moves the head forward.
     Sequence& push(Sequence sequence);
-    /// Inserts a Signal at position t in this Sequence but does NOT move head
+    /// Inserts a Signal at position t in this Sequence but does NOT move head.
     Sequence& insert(Signal signal, double t);
-    /// Inserts another Sequence at position t in this Sequence but does NOT move head
+    /// Inserts another Sequence at position t in this Sequence but does NOT move head.
     Sequence& insert(Sequence sequence, double t);
     /// Clears the Sequence
     void clear();
 
-    /// Samples and sums all overlapping signals in the sequence at time t
+    /// Samples and sums all overlapping signals in the sequence at time t.
     double sample(double t) const;
-    /// Returns the length of the Sequence
+    /// Returns the length of the Sequence.
     double length() const;
 
-    /// Returns the number of keys in the sequence
+    /// Returns the number of keys in the sequence.
     int keyCount() const;
     /// Returns a key in the sequence.
     const Key& getKey(int idx) const;
 
-    /// Moves the insertion head of this Sequence by the specified amount
+    /// Moves the insertion head of this Sequence by the specified amount.
     inline Sequence& operator<<(double rhs);
-    /// Pushes a Signal into this Sequence at the current insertion head
+    /// Pushes a Signal into this Sequence at the current insertion head.
     inline Sequence& operator<<(Signal rhs);
-    /// Pushes another Sequence into this Sequence at the current insertion head
+    /// Pushes another Sequence into this Sequence at the current insertion head.
     inline Sequence& operator<<(Sequence rhs);
 
 public:
-    double head; ///< the current insertion head position/time
+    double head; ///< the current insertion head position/time.
 private:
     std::vector<Key> m_keys; ///< all keys
-    double m_length;
+    double m_length;         ///< accumulated length
 private:
     TACT_SERIALIZE(TACT_MEMBER(head), TACT_MEMBER(m_keys), TACT_MEMBER(m_length));
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// Creates a new Sequence from two Signals
+/// Creates a new Sequence from two Signals.
 inline Sequence operator<<(Signal lhs, Signal rhs);
-/// Creates a new Sequence from a Signal and moves the head forward
+/// Creates a new Sequence from a Signal and moves the head forward.
 inline Sequence operator<<(Signal lhs, double rhs);
-/// Creates a new Sequence, moves the head forward, then inserts a Signal
+/// Creates a new Sequence, moves the head forward, then inserts a Signal.
 inline Sequence operator<<(double lhs, Signal rhs);
 
 ///////////////////////////////////////////////////////////////////////////////

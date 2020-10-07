@@ -6,7 +6,17 @@
 
 int main(int argc, char const *argv[])
 {    
-    Gui gui;
+    mahi::gui::Application::Config config;
+
+    config.title     = "Syntacts";
+    config.width     = 960;
+    config.height    = 540;
+    config.resizable = false;
+    config.msaa      = true;
+    config.center    = true;
+    // config.decorated = false;
+
+    Gui gui(config);
     gui.run();
     return 0;
 }

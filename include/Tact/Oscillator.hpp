@@ -31,31 +31,31 @@ namespace tact
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// Interface class for objects which produce a periodic, oscillating signal
+/// Interface class for objects which produce a periodic, oscillating signal.
 class SYNTACTS_API IOscillator 
 {
 public:
-    /// Default constructor
+    /// Default constructor.
     IOscillator();
-    /// Constucts an Oscillator with a signal based input
+    /// Constucts an Oscillator with a signal based input.
     IOscillator(Signal x);
-    /// Constructs an Oscillator with a scalar frequency in hertz
+    /// Constructs an Oscillator with a scalar frequency in hertz.
     IOscillator(double hertz);
-    /// Constructs a "chirp" Oscillator with an initial frequency and ramp rate in hertx
+    /// Constructs a "chirp" Oscillator with an initial frequency and ramp rate in hertz.
     IOscillator(double initial, double rate);
-    /// Constructs frequency modulated (FM) Oscillator 
+    /// Constructs frequency modulated (FM) Oscillator.
     IOscillator(double hertz, Signal modulation, double index = 2.0);
     /// Returns infinity
     inline double length() const;
 public:
-    Signal x; ///< the Oscillator's input       
+    Signal x; ///< the Oscillator's input.    
 private:
     TACT_SERIALIZE(TACT_MEMBER(x));
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// A sine wave Oscillator
+/// A sine wave Oscillator.
 class SYNTACTS_API Sine : public IOscillator
 {
 public:
@@ -67,7 +67,7 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// A square wave Oscillator
+/// A square wave Oscillator.
 class SYNTACTS_API Square : public IOscillator
 {
 public:
@@ -79,7 +79,7 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// A saw wave Oscillator
+/// A saw wave Oscillator.
 class SYNTACTS_API Saw : public IOscillator
 {
 public:
@@ -91,7 +91,7 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// A triangle wave Oscillator
+/// A triangle wave Oscillator.
 class SYNTACTS_API Triangle : public IOscillator
 {
 public:
@@ -103,7 +103,7 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// A PWM square wave with adjustable frequency and duty cycle
+/// A PWM square wave with adjustable frequency and duty cycle.
 class SYNTACTS_API Pwm
 {
 public:

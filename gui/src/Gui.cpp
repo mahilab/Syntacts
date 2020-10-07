@@ -6,23 +6,21 @@ using namespace mahi::gui;
 
 namespace fs = std::filesystem;
 
-Gui::Gui() : Application(960, 540, "Syntacts", false),
-             theme(*this),
-             status(*this),
-             device(*this),
-             player(*this),
-             workspace(*this),
-             library(*this),
-             visualizer(*this),
-             debug(*this)
+Gui::Gui(const Application::Config config) :
+    Application(config),
+    theme(*this),
+    status(*this),
+    device(*this),
+    player(*this),
+    workspace(*this),
+    library(*this),
+    visualizer(*this),
+    debug(*this)
 {
     fs::create_directories(saveDir());
     static auto inifile = saveDir() + "imgui.ini";
     ImGui::GetIO().IniFilename = inifile.c_str();
-    // ImGui::DisableViewports();
-    positionWindows();
-    
-    // ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_ViewportsEnable;
+    positionWindows();    
     ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_DockingEnable;
 }
 

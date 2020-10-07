@@ -31,7 +31,7 @@ namespace tact
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// A Signal which repeats another Signal for a number of repetitions
+/// A Signal which repeats another Signal for a number of repetitions.
 class SYNTACTS_API Repeater
 {
 public:
@@ -51,7 +51,7 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// A Signal which stretches or compresses another Signal temporally by a factor
+/// A Signal which stretches or compresses another Signal temporally by a factor.
 class SYNTACTS_API Stretcher
 {
 public:
@@ -70,7 +70,7 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// A Signal which reverses the input Signal
+/// A Signal which reverses the input Signal.
 class SYNTACTS_API Reverser {
 public:
     Reverser();

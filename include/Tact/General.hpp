@@ -37,7 +37,7 @@ namespace tact
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// A signal that simple returns the time passed to it
+/// A signal that simple returns the time passed to it.
 struct Time {
     inline double sample(double t) const { return t; };
     constexpr double length() const { return INF; }
@@ -47,7 +47,7 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// A Signal that emits a constant value over time
+/// A Signal that emits a constant value over time.
 class SYNTACTS_API Scalar
 {
 public:
@@ -62,7 +62,7 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// A Signal that increases or decreases over time
+/// A Signal that increases or decreases over time.
 class SYNTACTS_API Ramp 
 {
 public:
@@ -80,7 +80,7 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// A signal that generates white noise
+/// A signal that generates white noise.
 class SYNTACTS_API Noise
 {
 public:
@@ -93,6 +93,7 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/// A signal that returns the evaluation of an expression f(t).
 class SYNTACTS_API Expression {
 public:
     Expression(const std::string& expr = "sin(2*pi*100*t)");
@@ -163,7 +164,7 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// A Signal defined by an array of recorded samples (use internally for Library::importSignal)
+/// A Signal defined by an array of recorded samples (used internally for Library::importSignal).
 class SYNTACTS_API Samples {
 public:
     Samples();

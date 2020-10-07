@@ -35,7 +35,7 @@ namespace tact
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// A basic envelope, providing a duration and constant amplitude
+/// A basic envelope, providing a duration and constant amplitude.
 class SYNTACTS_API Envelope
 {
 public:
@@ -53,7 +53,7 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// Envelope with time sequenced amplitudes and curves
+/// Envelope with time sequenced amplitudes and curves.
 class SYNTACTS_API KeyedEnvelope
 {
 public:
@@ -71,7 +71,7 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// Attack-Sustain-Release Envelope
+/// Attack-Sustain-Release Envelope.
 class SYNTACTS_API ASR : public KeyedEnvelope
 {
 public:
@@ -86,7 +86,7 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// Attack-Decay-Sustain-Release Envelope
+/// Attack-Decay-Sustain-Release Envelope.
 class SYNTACTS_API ADSR : public KeyedEnvelope
 {
 public:
@@ -104,7 +104,7 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// Exponential decay according to the law y = A*e^(-Bt)
+/// Exponential decay according to the law y = A*e^(-Bt).
 class SYNTACTS_API ExponentialDecay {
 public:
     /// Default constructor
@@ -120,7 +120,7 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// Constructs an Envelope from a Signal
+/// Constructs an Envelope from a Signal.
 class SYNTACTS_API SignalEnvelope
 {
 public:
