@@ -39,8 +39,8 @@ _tact = cdll.LoadLibrary(_lib_name)
 ## DEVICE
 ###############################################################################
 
-""" Lists all supported audio device drivers APIs. """
 class API(Enum):
+    """ Lists all supported audio device drivers APIs. """
     Unknown         = 0
     DirectSound     = 1
     MME             = 2
@@ -56,8 +56,8 @@ class API(Enum):
     WASAPI          = 13
     AudioScienceHPI = 14
 
-""" Contains information about a specific audio device. """
 class Device:
+    """ Contains information about a specific audio device. """
     def __init__(self, session_handle, index):
         self.index = index
         if (index != -1):
@@ -85,10 +85,10 @@ class Device:
 ## SESSION
 ###############################################################################
 
-""" Encapsulates a Syntacts device Session. """
 class Session:
-    """ Constructor """
+    """ Encapsulates a Syntacts device Session. """
     def __init__(self):
+        """ Constructor """
         self._handle = _tact.Session_create()
         n = _tact.Session_getAvailableDevicesCount(self._handle)
         indices = (c_int * n)()
@@ -96,12 +96,12 @@ class Session:
         self.available_devices = []
         for d in indices:
             self.available_devices.append(Device(self._handle, d))
-    """ Destructor """
     def __del__(self):
+         """ Destructor """
         _tact.Session_delete(self._handle)
 
-    """ Opens a device with the specified input parameters. """"
     def open(self, index=None, channelCount=0, sampleRate=0, name=None, api=None):
+        """ Opens a device with the specified input parameters. """"
         if index:
             if isinstance(index, API):
                 return _tact.Session_open4(self._handle, index.value)
@@ -113,177 +113,177 @@ class Session:
         else:
             return _tact.Session_open1(self._handle)
     
-    """ Closes the currently opened device. """
     def close(self):
+        """ Closes the currently opened device. """
         return _tact.Session_close(self._handle)
     
-    """ Returns true if a device is open. """
     def is_open(self):
+        """ Returns true if a device is open. """
         return _tact.Session_isOpen(self._handle)
     
-    """ Plays a signal on the specified channel of the current device. """
     def play(self, channel, signal):
+        """ Plays a signal on the specified channel of the current device. """
         return _tact.Session_play(self._handle, channel, signal._handle)
    
-    """ Plays a signal on all channels. """
     def play_all(self, signal):
+        """ Plays a signal on all channels. """
         return _tact.Session_playAll(self._handle, signal._handle)
     
-    """ Stops playing signals on the specified channel of the current device. """
     def stop(self, channel):
+        """ Stops playing signals on the specified channel of the current device. """
         return _tact.Session_stop(self._handle, channel)
     
-    """ Stops playing signals on all channels. """
     def stop_all(self, signal):
+        """ Stops playing signals on all channels. """
         return _tact.Session_stopAll(self._handle)
     
-    """ Pauses playing signals on the specified channel of the current device. """
     def pause(self, channel):
+        """ Pauses playing signals on the specified channel of the current device. """
         return _tact.Session_pause(self._handle, channel)
     
-    """ Pauses playing signals on all channels. """
     def pause_all(self, signal):
+        """ Pauses playing signals on all channels. """
         return _tact.Session_pauseAll(self._handle)   
  
-    """ Resumes playing signals on the specified channel of the current device. """
     def resume(self, channel):
+        """ Resumes playing signals on the specified channel of the current device. """
         return _tact.Session_resume(self._handle, channel)
     
-    """ Resumes playing signals on all channels. """
     def resume_all(self, signal):
+        """ Resumes playing signals on all channels. """
         return _tact.Session_resumeAll(self._handle)
  
-    """ Returns true if a signal is playing on the specified channel. """
     def is_playing(self, channel):
+        """ Returns true if a signal is playing on the specified channel. """
         return _tact.Session_isPlaying(self._handle, channel)
     
-    """ Returns true if the specified channel is in a paused state. """
     def is_paused(self, channel):
+        """ Returns true if the specified channel is in a paused state. """
         return _tact.Session_isPaused(self._handle, channel)
 
-    """ Sets the volume on the specified channel of the current device. """
     def set_volume(self, channel, volume):
+        """ Sets the volume on the specified channel of the current device. """
         return _tact.Session_setVolume(self._handle, channel, volume)
 
-    """  Gets the volume on the specified channel of the current device. """
     def get_volume(self, channel):
+         """  Gets the volume on the specified channel of the current device. """
         return _tact.Session_getVolume(self._handle, channel)
 
-    """ Sets the pitch on the specified channel of the current device. """
     def set_pitch(self, channel, pitch):
+        """ Sets the pitch on the specified channel of the current device. """
         return _tact.Session_setPitch(self._handle, channel, pitch)
 
-    """ Gets the pitch on the specified channel of the current device. """
     def get_pitch(self, channel):
+         """ Gets the pitch on the specified channel of the current device. """
         return _tact.Session_getPitch(self._handle, channel)
 
-    """ Gets the max output level between 0 and 1 for the most recent buffer (useful for visualizations). """
     def get_level(self, channel):
+        """ Gets the max output level between 0 and 1 for the most recent buffer (useful for visualizations). """
         return _tact.Session_getLevel(self._handle, channel)
 
-    """ Gets info for the currently opened device. """
     @property
     def current_device(self):
+        """ Gets info for the currently opened device. """
         idx = _tact.Session_getCurrentDevice(self._handle)
         return Device(self._handle, idx)
 
-    """ Gets info for the default device. """
     @property
     def default_device(self):
+         """ Gets info for the default device. """
         idx = _tact.Session_getDefaultDevice(self._handle)
         return Device(self._handle, idx)
 
-    """ The number of available channels (0 if not open). """
     @property
     def channel_count(self):
+        """ The number of available channels (0 if not open). """
         return _tact.Session_getChannelCount(self._handle)
 
-    """ The current sampling rate in Hz. """
     @property
     def sample_rate(self):
+        """ The current sampling rate in Hz. """
         return _tact.Session_getSampleRate(self._handle)
 
-    """ The CPU core load (0 to 1) of the Session. """
     @property
     def cpu_load(self):
+        """ The CPU core load (0 to 1) of the Session. """
         return _tact.Session_getCpuLoad(self._handle)
 
-    """ The number of currently open Sessions. """
     @staticmethod
     def count():
+        """ The number of currently open Sessions. """
         return _tact.Session_count()
 
 ###############################################################################
 ## SPATIALIZER
 ###############################################################################
 
-""" Syntacts Spatializer interface. """
 class Spatializer:
-    """ Constructor """
+    """ Syntacts Spatializer interface. """
     def __init__(self, session=None):
+        """ Constructor """
         if (session):
             self._handle = _tact.Spatializer_create(session._handle)
         else:
             self._handle = _tact.Spatializer_create(None)
 
-    """ Destructor """
     def __del__(self):
+        """ Destructor """
         _tact.Spatializer_delete(self._handle)
 
-    """ Binds this Spatializer to a Session. """
     def bind(self, session):
+         """ Binds this Spatializer to a Session. """
         _tact.Spatializer_bind(self._handle, session._handle)
 
-    """ Unbinds the Spatializer from its current Session. """
     def unbind(self):
+        """ Unbinds the Spatializer from its current Session. """
         _tact.Spatializer_unbind(self._handle)
 
-    """ Set the position of a channel. The channel will be added if it's not already in the Spatializer. """
     def set_position(self, channel, p):
+        """ Set the position of a channel. The channel will be added if it's not already in the Spatializer. """
         _tact.Spatializer_setPosition(self._handle, channel, p[0], p[1])
 
-    """ Gets the position of a channel if it is in the Spatializer. """
     def get_position(self, channel):
+        """ Gets the position of a channel if it is in the Spatializer. """
         x = c_double()
         y = c_double()
         _tact.Spatializer_getPosition(self._handle, channel, byref(x), byref(y))
         return [x.value,y.value]
 
-    """ Quickly create a grid of channels. """
     def create_grid(self, rows, cols):
+        """ Quickly create a grid of channels. """
         return _tact.Spatializer_createGrid(self._handle, rows, cols)
 
-    """ Remove all channels from the Spatializer. """
     def clear(self):
+        """ Remove all channels from the Spatializer. """
         _tact.Spatializer_clear(self._handle)
 
-    """ Remove a channel from the Spatializer. """
     def remove(self, channel):
+        """ Remove a channel from the Spatializer. """
         _tact.Spatializer_remove(self._handle, channel)
  
-    """ Returns true if a channel is in the Spatializer. """
     def has_channel(self, channel):
+        """ Returns true if a channel is in the Spatializer. """
         return _tact.Spatializer_hasChannel(self._handle, channel)
 
-    """ Play a Signal on the Spatializer. """
     def play(self, signal):
+         """ Play a Signal on the Spatializer. """
         _tact.Spatializer_play(self._handle, signal._handle)
 
-    """ Stop all Signals playing in the Spatializer. """
     def stop(self):
+        """ Stop all Signals playing in the Spatializer. """
         _tact.Spatializer_stop(self._handle)
 
-    """ Explicitly update the pitch/volume of all channels in the Spatializer. """
     def update(self):
+         """ Explicitly update the pitch/volume of all channels in the Spatializer. """
         _tact.Spatializer_update(self._handle)
 
-    """ Enable/disable automatic updating of pitch/volume of all channels when Spatializer target or channels change (enabled by default). """
     def auto_update(self, enable):
+        """ Enable/disable automatic updating of pitch/volume of all channels when Spatializer target or channels change (enabled by default). """
         _tact.Spatializer_autoUpdate(self._handle, enable)
 
-    """ The Spatializer target position. """
     @property
     def target(self):
+        """ The Spatializer target position. """
         x = c_double()
         y = c_double()
         _tact.Spatializer_getTarget(self._handle, byref(x), byref(y))
@@ -293,23 +293,23 @@ class Spatializer:
     def target(self, p):
         _tact.Spatializer_setTarget(self._handle, p[0], p[1])
     
-    """ The Spatializer target radius. """
     @property
     def radius(self):
+        """ The Spatializer target radius. """
         return _tact.Spatializer_getRadius(self._handle)
 
     @radius.setter
     def radius(self, r):
         _tact.Spatializer_setRadius(self._handle, r)
 
-    """ The Spatializer target roll-off method. """
     @property
     def roll_off(self):
+        """ The Spatializer target roll-off method. """
         return None # TODO!
 
-    """ Types of supported interpolation curves for Spatializer dropoff. """
     @roll_off.setter
     def roll_off(self, str):
+        """ Types of supported interpolation curves for Spatializer dropoff. """
         if str == 'linear':
             _tact.Spatializer_setRollOff(self._handle, 0)
         elif str == 'smoothstep':
@@ -323,9 +323,9 @@ class Spatializer:
         elif str == 'exp':
             _tact.Spatializer_setRollOff(self._handle, 5)
 
-    """ Spatializer wrapping interval for x and y axes. A value of 0 disables wrapping on that axis. """
     @property
     def wrap(self):
+        """ Spatializer wrapping interval for x and y axes. A value of 0 disables wrapping on that axis. """
         x = c_double()
         y = c_double()
         _tact.Spatializer_getWrap(self._handle, byref(x), byref(y))
@@ -335,59 +335,59 @@ class Spatializer:
     def wrap(self, p):
         _tact.Spatializer_setWrap(self._handle, p[0], p[1])
 
-    """ The number of channels in the Spatializer. """
     @property
     def channel_count(self):
+        """ The number of channels in the Spatializer. """
         return _tact.Spatializer_getChannelCount(self._handle)
 
-    """ The global volume of the Spatializer. """
     @property
     def volume(self):
+        """ The global volume of the Spatializer. """
         return _tact.Spatializer_getVolume(self._handle)
 
     @volume.setter
     def volume(self, v):
         _tact.Spatializer_setVolume(self._handle, v)
     
-    """ The global pitch of the Spatializer. """
     @property
     def pitch(self):
+        """ The global pitch of the Spatializer. """
         return _tact.Spatializer_getPitch(self._handle)
 
     @pitch.setter
     def pitch(self, p):
         _tact.Spatializer_setPitch(self._handle, p)
 
-    """ True if the Spatializer Handle is currently valid. """
     @property
     def valid(self):
+         """ True if the Spatializer Handle is currently valid. """
         return _tact.Spatializer_valid(self._handle)
 
 ###############################################################################
 ## SIGNAL
 ###############################################################################
 
-""" An object that returns time variant samples for a length of time. """
 class Signal:    
-    """ Constructor """
+    """ An object that returns time variant samples for a length of time. """
     def __init__(self, handle):
+        """ Constructor """
         self._handle = handle
 
-    """ Destructor """
     def __del__(self):
+        """ Destructor """
         _tact.Signal_delete(self._handle)
 
-    """ Samples the Signal at time t in seconds. """
     def sample(self, t):
+        """ Samples the Signal at time t in seconds. """
         return _tact.Signal_sample(self._handle, t)
 
-    """ The length of the Signal in seconds or infinity. """
     @property
     def length(self):
+        """ The length of the Signal in seconds or infinity. """
         return _tact.Signal_length(self._handle)
 
-    """ Multiply two signals / signal and a scalar. """
     def __mul__(self, other):
+        """ Multiply two signals / signal and a scalar. """
         if isinstance(other, Signal):
             return Product(self, other)
         elif isinstance(other, (int, float)):
@@ -395,15 +395,15 @@ class Signal:
         else:
             raise TypeError("other must be Signal, int, or float")
 
-    """ Multiply a signal and a scalar. """
     def __rmul__(self, other):
+        """ Multiply a signal and a scalar. """
         if isinstance(other, (int, float)):
             return Signal(_tact.Mul_FltSig(other, self._handle))
         else:
             raise TypeError("other must be int or float")
 
-    """ Add two signals / signal and a scalar. """
     def __add__(self, other):
+        """ Add two signals / signal and a scalar. """
         if isinstance(other, Signal):
             return Sum(self, other)
         elif isinstance(other, (int, float)):
@@ -411,29 +411,29 @@ class Signal:
         else:
             raise TypeError("other must be Signal, int, or float")  
 
-    """ Add a signal and a scalar. """
     def __radd__(self, other):
+        """ Add a signal and a scalar. """
         if isinstance(other, (int, float)):
             return Signal(_tact.Add_FltSig(other, self._handle))
         else:
             raise TypeError("other must be int or float")
 
-    """ Subtract a signal from a signal / scalar from a signal. """
     def __sub__(self, other):
+         """ Subtract a signal from a signal / scalar from a signal. """
         if isinstance(other, (int, float)):
             return Signal(_tact.Sub_SigFlt(self._handle, other))
         else:
             raise TypeError("other must be Signal, int, or float")  
 
-    """ Subtract a scalar from a Signal. """
     def __rsub__(self, other):
+        """ Subtract a scalar from a Signal. """
         if isinstance(other, (int, float)):
             return Signal(_tact.Sub_FltSig(other, self._handle))
         else:
             raise TypeError("other must be int or float")         
 
-    """ Left shift the signal. """"
     def __lshift__(self, other):
+        """ Left shift the signal. """"
         if isinstance(other, Signal):
             return Sequence(_tact.Sequence_SigSig(self._handle, other._handle))
         elif isinstance(other, (int, float)):
@@ -441,29 +441,29 @@ class Signal:
         else:
             raise TypeError("other must be Signal, int, or float")
 
-    """ Right shift the signal. """"
     def __rlshift__(self, other):
+        """ Right shift the signal. """"
         if isinstance(other, (int, float)):
             return Sequence(_tact.Sequence_FltSig(other, self._handle))
         else:
             raise TypeError("other must be int or float")
 
-    """ The current count of Signals allocated in this process. """
     @staticmethod
     def count():
+        """ The current count of Signals allocated in this process. """
         return _tact.Signal_count()
 
 ###############################################################################
 # OPERATORS
 ###############################################################################
 
-""" A Signal which is the product of two other signals. """
 class Product(Signal):
+    """ A Signal which is the product of two other signals. """
     def __init__(self, lhs, rhs):
         self._handle = _tact.Product_create(lhs._handle, rhs._handle)
 
-""" A Signal which is the sum or difference of two other signals. """
 class Sum(Signal):
+    """ A Signal which is the sum or difference of two other signals. """
     def __init__(self, lhs, rhs):
         self._handle = _tact.Sum_create(lhs._handle, rhs._handle)
 
@@ -471,26 +471,26 @@ class Sum(Signal):
 # SEQUENCE
 ###############################################################################
 
-""" A Signal formed by the sequencing of other Signals at various time points. """
 class Sequence(Signal):
-    """ Constructor """
+    """ A Signal formed by the sequencing of other Signals at various time points. """
     def __init__(self, handle = None):
+        """ Constructor """
         if handle:
             self._handle = handle
         else:
             self._handle =  _tact.Sequence_create()
     
-    """ The current insertion head position/time. """
     @property
     def head(self):
+        """ The current insertion head position/time. """
         return _tact.Sequence_getHead(self._handle)
 
     @head.setter
     def head(self, newHead):
         _tact.Sequence_setHead(self._handle, newHead)
 
-    """ Pushes a sequence, signal or value at the head position and moves the head forward. """
     def push(self, other):
+         """ Pushes a sequence, signal or value at the head position and moves the head forward. """
         if isinstance(other, Sequence):
             _tact.Sequence_SeqSeq(self._handle, other._handle)
         elif isinstance(other, Signal):
@@ -501,8 +501,8 @@ class Sequence(Signal):
             raise TypeError("other must be Sequence, Signal, int, or float")
         return self
 
-    """ Inserts a sequence or signal at position t in this sequence but does NOT move head. """
     def insert(self, other, t):
+        """ Inserts a sequence or signal at position t in this sequence but does NOT move head. """
         if isinstance(other, Sequence):
             _tact.Sequence_insertSeq(self._handle, other._handle, t)
         elif isinstance(other, Signal):
@@ -511,12 +511,12 @@ class Sequence(Signal):
             raise TypeError("other must be Sequence or Signal")
         return self
 
-    """ Clears a sequence. """
     def clear(self):
+        """ Clears a sequence. """
         _tact.Sequence_clear(self._handle)
 
-    """ Creates a new sequence from a sequence, signal or value and moves the head forward (a.k.a "<<" in C++ and Python APIs). """
     def __lshift__(self, other):
+         """ Creates a new sequence from a sequence, signal or value and moves the head forward (a.k.a "<<" in C++ and Python APIs). """
         if isinstance(other, Sequence):
             _tact.Sequence_SeqSeq(self._handle, other._handle)
         elif isinstance(other, Signal):
@@ -531,31 +531,31 @@ class Sequence(Signal):
 # GENERAL
 ###############################################################################
 
-""" A signal that simple returns the time passed to it. """
 class Time(Signal):
+    """ A signal that simple returns the time passed to it. """
     def __init__(self):
         self._handle = _tact.Time_create()
 
-""" A Signal that emits a constant value over time. """
 class Scalar(Signal):
+    """ A Signal that emits a constant value over time. """
     def __init__(self, value):
         self._handle = _tact.Scalar_create(value)
 
-""" A Signal that increases or decreases over time. """
 class Ramp(Signal):
+    """ A Signal that increases or decreases over time. """
     def __init__(self, initial, arg1, arg2=None):
         if arg2:
             self._handle = _tact.Ramp_create2(initial, arg2, arg1)
         else:
             self._handle = _tact.Ramp_create1(initial, arg1)
 
-""" A signal that generates white noise. """
 class Noise(Signal):
+    """ A signal that generates white noise. """
     def __init__(self):
         self._handle = _tact.Noise_create()
 
-""" A signal that returns the evaluation of an expression f(t). """
 class Expression(Signal):
+    """ A signal that returns the evaluation of an expression f(t). """
     def __init__(self, expr):
         self._handle = _tact.Expression_create(c_char_p(expr.encode()))
 
@@ -565,18 +565,18 @@ class Expression(Signal):
 # PROCESS
 ###############################################################################
 
-""" A Signal which repeats another Signal for a number of repetitions. """
 class Repeater(Signal):
+    """ A Signal which repeats another Signal for a number of repetitions. """
     def __init__(self, signal, repetitions, delay):
         self._handle = _tact.Repeater_create(signal._handle, repetitions, delay)
 
-""" A Signal which stretches or compresses another Signal temporally by a factor. """
 class Stretcher(Signal):
+    """ A Signal which stretches or compresses another Signal temporally by a factor. """
     def __init__(self, signal, factor):
         self._handle = _tact.Stretcher_create(signal._handle, factor)
 
-""" A Signal which reverses the input Signal. """
 class Reverser(Signal):
+    """ A Signal which reverses the input Signal. """
     def __init__(self, signal):
         self._handle = _tact.Reverser_create(signal._handle)
 
@@ -584,23 +584,23 @@ class Reverser(Signal):
 # ENVELOPE
 ###############################################################################
 
-""" A basic envelope, providing a duration and constant amplitude. """
 class Envelope(Signal):
+    """ A basic envelope, providing a duration and constant amplitude. """
     def __init__(self, duration, amplitude=1):
         self._handle = _tact.Envelope_create(duration, amplitude)
 
-""" Attack-Sustain-Release Envelope. """
 class ASR(Signal):
+    """ Attack-Sustain-Release Envelope. """
     def __init__(self, a, s, r, amplitude=1):
         self._handle = _tact.ASR_create(a,s,r,amplitude)
 
-""" Attack-Decay-Sustain-Release Envelope. """
 class ADSR(Signal):
+    """ Attack-Decay-Sustain-Release Envelope. """
     def __init__(self, a, d, s, r, amp1=1, amp2=0.5):
         self._handle = _tact.ADSR_create(a,d,s,r,amp1,amp2)
 
-""" Exponential decay according to the law y = A*e^(-Bt). """
 class ExponentialDecay(Signal):
+    """ Exponential decay according to the law y = A*e^(-Bt). """
     def __init__(self, amplitude=1, decay=6.907755):
         self._handle = _tact.ExponentialDecay_create(amplitude, decay)
 
@@ -608,8 +608,8 @@ class ExponentialDecay(Signal):
 # OSCILLATOR
 ###############################################################################
 
-""" A sine wave Oscillator. """
 class Sine(Signal):
+    """ A sine wave Oscillator. """
     def __init__(self, arg1, arg2=None, arg3=None):
         if arg3:
             self._handle = _tact.Sine_create4(arg1,arg2._handle,arg3)
@@ -622,8 +622,8 @@ class Sine(Signal):
         else:
             raise TypeError("Invalid arguments passed to Sine")
 
-""" A square wave Oscillator. """
 class Square(Signal):
+    """ A square wave Oscillator. """
     def __init__(self, arg1, arg2=None, arg3=None):
         if arg3:
             self._handle = _tact.Square_create4(arg1,arg2._handle,arg3)
@@ -636,8 +636,8 @@ class Square(Signal):
         else:
             raise TypeError("Invalid arguments passed to Sine")
 
-""" A saw wave Oscillator. """
 class Saw(Signal):
+    """ A saw wave Oscillator. """
     def __init__(self, arg1, arg2=None, arg3=None):
         if arg3:
             self._handle = _tact.Saw_create4(arg1,arg2._handle,arg3)
@@ -650,8 +650,8 @@ class Saw(Signal):
         else:
             raise TypeError("Invalid arguments passed to Sine")
 
-""" A triangle wave Oscillator. """
 class Triangle(Signal):
+    """ A triangle wave Oscillator. """
     def __init__(self, arg1, arg2=None, arg3=None):
         if arg3:
             self._handle = _tact.Triangle_create4(arg1,arg2._handle,arg3)
@@ -664,41 +664,41 @@ class Triangle(Signal):
         else:
             raise TypeError("Invalid arguments passed to Sine")
 
-""" A PWM square wave with adjustable frequency and duty cycle. """
 class Pwm(Signal):
+    """ A PWM square wave with adjustable frequency and duty cycle. """
     def __init__(self, frequency, dutyCycle=0.5):
         self._handle = _tact.Pwm_create(frequency, dutyCycle)
 
 ###############################################################################
 
-""" Contains Syntacts Library functions. """
 class Library:
-    """ Saves a serialized Signal to the global Syntacts Signal library. """
+    """ Contains Syntacts Library functions. """
     @staticmethod
     def save_signal(signal, name):
+        """ Saves a serialized Signal to the global Syntacts Signal library. """
         return _tact.Library_saveSignal(signal._handle, c_char_p(name.encode()))
 
-    """ Loads a serialized Signal from the global Syntacts Signal library. """
     @staticmethod
     def load_signal(name):
+        """ Loads a serialized Signal from the global Syntacts Signal library. """
         handle = _tact.Library_loadSignal(c_char_p(name.encode()))
         if handle:
             return Signal(handle)
         return None
 
-    """ Erases a Signal from the global Syntacts Signal library if it exists. """
     @staticmethod
     def delete_signal(name):
+        """ Erases a Signal from the global Syntacts Signal library if it exists. """
         return _tact.Library_deleteSignal(c_char_p(name.encode()))
 
-    """ Saves a Signal as a specified file format."""
     @staticmethod
     def export_signal(signal, filePath, format=0, sampleRate=48000, maxLength=60):
+        """ Saves a Signal as a specified file format."""
         return _tact.Library_exportSignal(signal._handle, c_char_p(filePath.encode()), format, sampleRate, maxLength)
 
-    """ Imports a Signal of a specific file format. """
     @staticmethod
     def import_signal(filePath, format=0, sampleRate=48000):
+         """ Imports a Signal of a specific file format. """
         handle = _tact.Library_importSignal(c_char_p(filePath.encode()), format, sampleRate)
         if handle:
             return Signal(handle)
