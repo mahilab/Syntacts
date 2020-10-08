@@ -1,6 +1,6 @@
 ---
 layout: page
-title: VR Bracelet Case Study
+title: VR Bracelet Example Project
 permalink: /tutorials/bracelet/
 ---
 
