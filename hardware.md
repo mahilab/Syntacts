@@ -38,7 +38,7 @@ Below you fill find simple tactile displays that you can create or learn from as
 |**Image**|<img src="https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/array.png" width="200">|<img src="https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/bracelet.png" width="200">|
 |**Description**|High density 2D tactile array|Tactile bracelet|
 |**Actuators**|24x 10mm LRAs|8x 10mm LRAs|
-|**CAD/BOM**|[syntacts_array_v1.0.zip](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/displays/syntacts_array_v1.0.zip)|*Comming Soon*|
+|**CAD/BOM**|[syntacts_array_v1.0.zip](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/displays/syntacts_array_v1.0.zip)|*Coming Soon*|
 |**License**|[TAPR Open Hardware License](https://tapr.org/the-tapr-open-hardware-license/)|[TAPR Open Hardware License](https://tapr.org/the-tapr-open-hardware-license/)|
 
 ## Actuators
