@@ -29,6 +29,9 @@ permalink: /faq/
 ### Who maintains Syntacts?
 - Syntacts is developed and maintained by the [Mechatronics and Haptic Interfaces Lab](https://mahilab.rice.edu/) at Rice University in Houston, TX.
 
+### Is there a Syntacts email address?
+- info@syntacts.org
+
 ### How can I get involved?
 - The easiest way to get involved is to head over to the [GitHub repository](https://github.com/mahilab/Syntacts). Here, you can submit a new issue or feature request. Better yet, consider submitting a pull request that fixes a problem you found in Syntacts or adds a cool new feature!
 
