@@ -331,6 +331,25 @@ void Spatializer_setRollOff(Handle spat, int type) {
     }
 } 
 
+int Spatializer_getRollOff(Handle spat) {
+    auto sp = static_cast<Spatializer*>(spat);
+    auto cv = sp->getRollOff();
+    // TODO: make this not bad
+    if (cv.name() == "Linear")
+        return 0;
+    if (cv.name() == "Smoothstep")
+        return 1;
+    if (cv.name() == "Smootherstep")
+        return 2;
+    if (cv.name() == "Smootheststep")
+        return 3;
+    if (cv.name() == "Exponential::In")
+        return 4;
+    if (cv.name() == "Exponential::Out")
+        return 5;
+    return -1;    
+}
+
 void Spatializer_setWrap(Handle spat, double x, double y) {
     auto sp = static_cast<Spatializer*>(spat);
     sp->setWrap(x,y);
@@ -617,6 +636,10 @@ Handle ADSR_create(double a, double d, double s, double r, double amp1, double a
 
 Handle ExponentialDecay_create(double amplitude, double decay) {
     return store(ExponentialDecay(amplitude, decay));
+}
+
+Handle SignalEnvelope_create(Handle signal, double duration, double amplitude) {
+    return store(SignalEnvelope(g_sigs.at(signal), duration, amplitude));
 }
 
 ///////////////////////////////////////////////////////////////////////////////

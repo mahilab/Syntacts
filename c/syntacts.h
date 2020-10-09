@@ -101,6 +101,7 @@ EXPORT void Spatializer_getTarget(Handle spat, double* x, double* y);
 EXPORT void Spatializer_setRadius(Handle spat, double r);
 EXPORT double Spatializer_getRadius(Handle spat);
 EXPORT void Spatializer_setRollOff(Handle spat, int type); 
+EXPORT int Spatializer_getRollOff(Handle spat);
 EXPORT void Spatializer_setWrap(Handle spat, double x, double y);
 EXPORT void Spatializer_getWrap(Handle spat, double* x, double* y);
 
@@ -205,8 +206,9 @@ EXPORT Handle Envelope_create(double duration, double amp);
 EXPORT Handle ASR_create(double a, double s, double r, double amp);
 EXPORT Handle ADSR_create(double a, double d, double s, double r, double amp1, double amp2);
 EXPORT Handle ExponentialDecay_create(double amplitude, double decay);
+EXPORT Handle SignalEnvelope_create(Handle signal, double duration, double amplitude);
 
-// TODO: KeyedEnvelope, Curves, SignalEnvelope 
+// TODO: KeyedEnvelope, ASR/ADSR curves
 
 ///////////////////////////////////////////////////////////////////////////////
 // OSCILLATOR

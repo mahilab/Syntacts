@@ -346,12 +346,12 @@ namespace Syntacts
 
     /// <summary>Types of supported interpolatin curves for Spatializer dropoff.</summary>
     public enum Curve {
-        Linear = 0,
-        Smoothstep = 1,
-        Smootherstep = 2,
+        Linear        = 0,
+        Smoothstep    = 1,
+        Smootherstep  = 2,
         Smootheststep = 3,
-        Lograthmic = 4,
-        Exponential = 5
+        Lograthmic    = 4,
+        Exponential   = 5
     }
 
     /// <summary>Syntacts Spatializer interface.</summary>
@@ -469,6 +469,7 @@ namespace Syntacts
 
         /// <summary>The Spatializer target roll-off method.</summary>
         public Curve rollOff {
+            get { return (Curve)Dll.Spatializer_getRollOff(handle); }
             set { Dll.Spatializer_setRollOff(handle, (int)value); }
         }
 
@@ -852,7 +853,14 @@ namespace Syntacts
         { }
     }
 
-    // TODO: KeyedEnvelope, SignalEnvelope, ASR/ADSR curves
+    /// <summary>Constructs an Envelope from a Signal.</summary>
+    public class SignalEnvelope : Signal {
+        public SignalEnvelope(Signal signal, double duration = 1, double amplitude = 1) :
+            base(Dll.SignalEnvelope_create(signal.handle, duration, amplitude))
+        { }
+    }
+
+    // TODO: KeyedEnvelope, ASR/ADSR curves
 
     ///////////////////////////////////////////////////////////////////////////
     // OSCILLATOR
@@ -1126,6 +1134,8 @@ namespace Syntacts
         [DllImport("syntacts_c")]
         public static extern void Spatializer_setRollOff(Handle spat, int type);
         [DllImport("syntacts_c")]
+        public static extern int Spatializer_getRollOff(Handle spat);
+        [DllImport("syntacts_c")]
         public static extern void Spatializer_setWrap(Handle spat, double x, double y);
         [DllImport("syntacts_c")]
         public static extern void Spatializer_getWrap(Handle spat, ref double x, ref double y);
@@ -1260,6 +1270,8 @@ namespace Syntacts
         public static extern Handle ADSR_create(double a, double d, double s, double r, double amp1, double amp2);
         [DllImport("syntacts_c")]
         public static extern Handle ExponentialDecay_create(double amplitude, double decay);
+        [DllImport("syntacts_c")]
+        public static extern Handle SignalEnvelope_create(Handle signal, double duration, double amplitude);
 
         [DllImport("syntacts_c")]
         public static extern Handle Sine_create1(Handle x);
