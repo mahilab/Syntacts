@@ -27,6 +27,7 @@ All designs are licensed under the [TAPR Open Hardware License](https://tapr.org
 |**3D Model**| [syntacts_amp_v1.2.step](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/amps/syntacts_amp_v1.2.step) | [syntacts_amp_v3.1.step](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/amps/syntacts_amp_v3.1.step) | 
 |**Manual**| [syntacts_amp_v1.2.pdf](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/amps/syntacts_amp_v1.2.pdf) | [syntacts_amp_v3.1.pdf](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/amps/syntacts_amp_v3.1.pdf) | 
 |**Case**| *N/A* | [syntacts_case_v3.x.zip](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/amps/syntacts_case_v3.x.zip) | 
+|**Kit**| *N/A* | [syntacts_kit_v3.x.pdf](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/amps/syntacts_kit_v3.x.pdf) |
 |**License**|[TAPR Open Hardware License](https://tapr.org/the-tapr-open-hardware-license/)|[TAPR Open Hardware License](https://tapr.org/the-tapr-open-hardware-license/)|
 
 ## Tactile Displays
@@ -36,9 +37,9 @@ Below you fill find simple tactile displays that you can create or learn from as
 |Display|Syntacts Array|Syntacts Bracelet|
 |---|:-:|:-:|
 |**Image**|<img src="https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/array.png" width="200">|<img src="https://raw.githubusercontent.com/wiki/mahilab/Syntacts/images/bracelet.png" width="200">|
-|**Description**|High density 2D tactile array|Tactile bracelet|
+|**Description**|High density 2D tactile array|Tactile bracelet with integrated tensioner|
 |**Actuators**|24x 10mm LRAs|8x 10mm LRAs|
-|**CAD/BOM**|[syntacts_array_v1.0.zip](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/displays/syntacts_array_v1.0.zip)|*Coming Soon*|
+|**CAD/BOM**|[syntacts_array_v1.0.zip](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/displays/syntacts_array_v1.0.zip)|[syntacts_bracelet_v1.0.zip](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/displays/syntacts_bracelet_v1.0.zip)|
 |**License**|[TAPR Open Hardware License](https://tapr.org/the-tapr-open-hardware-license/)|[TAPR Open Hardware License](https://tapr.org/the-tapr-open-hardware-license/)|
 
 ## Actuators
