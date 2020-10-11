@@ -61,7 +61,8 @@ const std::string& signalName(const Signal& signal) {
         // Process.hpp
         {typeid(Repeater),         "Repeater"},
         {typeid(Stretcher),        "Stretcher"},
-        {typeid(Reverser),         "Reverser"}};
+        {typeid(Reverser),         "Reverser"},
+        {typeid(Filter),           "Filter"}};
     if (names.count(id))
         return names[id];
     else
@@ -90,7 +91,12 @@ void recurseSignalPriv(const Signal& sig, std::function<void(const Signal&, int 
     else if (id == typeid(Stretcher))
         recurseSignalPriv(sig.getAs<Stretcher>()->signal,func,depth+1);
     else if (id == typeid(Reverser))
-        recurseSignalPriv(sig.getAs<Reverser>()->signal,func,depth+1);   
+        recurseSignalPriv(sig.getAs<Reverser>()->signal,func,depth+1); 
+    else if (id == typeid(Filter)) {
+        recurseSignalPriv(sig.getAs<Filter>()->input,func,depth+1); 
+        recurseSignalPriv(sig.getAs<Filter>()->cutoff,func,depth+1); 
+        recurseSignalPriv(sig.getAs<Filter>()->resonance,func,depth+1); 
+    }  
     else if (id == typeid(Sine))
          recurseSignalPriv(sig.getAs<Sine>()->x,func,depth+1);
     else if (id == typeid(Square))

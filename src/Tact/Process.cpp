@@ -74,4 +74,47 @@ double Reverser::length() const
     return signal.length();
 }
 
+
+Filter::Filter() :
+    Filter(Mode::LowPass,Signal(),Scalar(0.5),Scalar(0))
+{ }
+
+
+Filter::Filter(Mode mode, Signal input, double cutoff, double resonance) :
+    Filter(mode, input, Scalar(cutoff), Scalar(resonance))
+{ }
+
+Filter::Filter(Mode _mode, Signal _input, Signal _cutoff, Signal _resonance) :
+    mode(_mode),
+    input(std::move(_input)),
+    cutoff(std::move(_cutoff)),
+    resonance(std::move(_resonance)),
+    m_buff({})
+{ }
+
+double Filter::sample(double t) const {
+    double in = input.sample(t);
+    double cut = clamp(cutoff.sample(t), 0.01, 0.99);
+    double res = resonance.sample(t);
+    double feedback = res + res / (1.0 - cut);
+    m_buff[0] += cut * (in - m_buff[0] + feedback * (m_buff[0] - m_buff[1]));
+    m_buff[1] += cut * (m_buff[0] - m_buff[1]);
+    m_buff[2] += cut * (m_buff[1] - m_buff[2]);
+    m_buff[3] += cut * (m_buff[2] - m_buff[3]);
+    switch (mode) {
+        case Mode::LowPass:
+            return m_buff[3];
+        case Mode::HighPass:
+            return in - m_buff[3];
+        case Mode::BandPass:
+            return m_buff[0] - m_buff[3];
+        default:
+            return 0.0;
+    }
+}
+
+double Filter::length() const {
+    return input.length();
+}
+
 } // namespace tact

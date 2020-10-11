@@ -25,6 +25,7 @@
 #pragma once
 
 #include <Tact/Signal.hpp>
+#include <array>
 
 namespace tact
 {
@@ -84,5 +85,37 @@ private:
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+
+/// A Simple Filter
+class SYNTACTS_API Filter {
+public:
+
+    enum Mode : int {
+        LowPass  = 0, 
+        HighPass = 1,
+        BandPass = 2
+    };
+
+    Filter();
+    Filter(Mode mode, Signal input, double cutoff, double resonance = 0);
+    Filter(Mode mode, Signal input, Signal cutoff, Signal resonance = Scalar(0));
+
+    double sample(double t) const;
+    double length() const;
+
+    Mode   mode;
+    Signal input;
+    Signal cutoff;
+    Signal resonance;
+
+    TACT_SERIALIZE(TACT_MEMBER(mode), TACT_MEMBER(input), TACT_MEMBER(cutoff), TACT_MEMBER(resonance));
+
+private:
+    mutable std::array<double,4> m_buff;
+    mutable double buf0;
+    mutable double buf1;
+    mutable double buf2;
+    mutable double buf3;
+};
 
 } // namespace tact

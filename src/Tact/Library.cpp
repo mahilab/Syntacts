@@ -59,6 +59,7 @@ CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::SignalEnvelope>);
 CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Repeater>);
 CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Stretcher>);
 CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Reverser>);
+CEREAL_REGISTER_TYPE(tact::Signal::Model<tact::Filter>);
 
 CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Instant>);
 CEREAL_REGISTER_TYPE(tact::Curve::Model<tact::Curves::Delayed>);
