@@ -853,7 +853,14 @@ namespace Syntacts
         { }
     }
 
-    // TODO: KeyedEnvelope, SignalEnvelope, ASR/ADSR curves
+    /// <summary>Constructs an Envelope from a Signal.</summary>
+    public class SignalEnvelope : Signal {
+        public SignalEnvelope(Signal signal, double duration = 1, double amplitude = 1) :
+            base(Dll.SignalEnvelope_create(signal.handle, duration, amplitude))
+        { }
+    }
+
+    // TODO: KeyedEnvelope, ASR/ADSR curves
 
     ///////////////////////////////////////////////////////////////////////////
     // OSCILLATOR
@@ -1263,6 +1270,8 @@ namespace Syntacts
         public static extern Handle ADSR_create(double a, double d, double s, double r, double amp1, double amp2);
         [DllImport("syntacts_c")]
         public static extern Handle ExponentialDecay_create(double amplitude, double decay);
+        [DllImport("syntacts_c")]
+        public static extern Handle SignalEnvelope_create(Handle signal, double duration, double amplitude);
 
         [DllImport("syntacts_c")]
         public static extern Handle Sine_create1(Handle x);
