@@ -15,6 +15,7 @@ enum class PItem {
     Stretcher,
     Reverser,
     Sequencer,
+    Filter,
     Sine,
     Square,
     Saw,

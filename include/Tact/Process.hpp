@@ -103,6 +103,8 @@ public:
     double sample(double t) const;
     double length() const;
 
+    void reset();
+
     Mode   mode;
     Signal input;
     Signal cutoff;
@@ -112,10 +114,6 @@ public:
 
 private:
     mutable std::array<double,4> m_buff;
-    mutable double buf0;
-    mutable double buf1;
-    mutable double buf2;
-    mutable double buf3;
 };
 
 } // namespace tact

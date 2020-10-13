@@ -94,7 +94,7 @@ Filter::Filter(Mode _mode, Signal _input, Signal _cutoff, Signal _resonance) :
 
 double Filter::sample(double t) const {
     double in = input.sample(t);
-    double cut = clamp(cutoff.sample(t), 0.01, 0.99);
+    double cut = clamp(cutoff.sample(t), 0.000001, 0.999999);
     double res = resonance.sample(t);
     double feedback = res + res / (1.0 - cut);
     m_buff[0] += cut * (in - m_buff[0] + feedback * (m_buff[0] - m_buff[1]));
@@ -115,6 +115,10 @@ double Filter::sample(double t) const {
 
 double Filter::length() const {
     return input.length();
+}
+
+void Filter::reset() {
+    m_buff = {0,0,0,0};
 }
 
 } // namespace tact

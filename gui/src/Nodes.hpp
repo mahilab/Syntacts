@@ -96,6 +96,14 @@ struct ReverserNode : public SignalNode<tact::Reverser> {
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+
+struct FilterNode : public SignalNode<tact::Filter> {
+    void update() override;
+    std::shared_ptr<Node> inputRoot  = std::make_shared<ProductNode>();
+    std::shared_ptr<Node> cutoffRoot = std::make_shared<ProductNode>();
+};
+
+///////////////////////////////////////////////////////////////////////////////
 struct SequencerNode : public Node {
     SequencerNode();
     SequencerNode(tact::Sequence _seq);
