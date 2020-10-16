@@ -4,7 +4,7 @@ title: VR Bracelet Example Project
 permalink: /tutorials/bracelet/
 ---
 
-### This page is under construction! In the meantime, feel free to download the [project files](https://github.com/mahilab/SyntactsVR).
+### This page is under construction! In the meantime, feel free to download the [project files](https://github.com/mahilab/SyntactsBracelet).
 
 ## Resources
 
