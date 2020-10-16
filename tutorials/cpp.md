@@ -33,6 +33,20 @@ add_executable(myApp main.cpp)
 target_link_libraries(myApp syntacts)
 ```
 
+> If you don't want to install Syntacts to your computer, you can alternatively use CMake's `FetchContent` function. This will clone Syntacts in your project directory, build it, and then link your application. 
+> ```cmake
+> # create a new CMake project
+> cmake_minimum_required(VERSION 3.13.0)
+> project(MySyntactsProject VERSION 1.0.0)
+> # clone Syntacts in-place and build
+> include(FetchContent) 
+> FetchContent_Declare(syntacts GIT_REPOSITORY https://github.com/mahilab/Syntacts.git)
+> FetchContent_MakeAvailable(syntacts)
+> # create an executable from main.cpp and link it against Syntacts
+> add_executable(myApp main.cpp)
+> target_link_libraries(myApp syntacts)
+> ```
+
 - Add a C++ source file `main.cpp` with the following contents:
 
 ```cpp
