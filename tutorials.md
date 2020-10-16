@@ -36,4 +36,4 @@ Below you can find a list of Syntacts tutorials related to both the software and
 |Tutorial|Description|
 |---|---|
 |[Syntacts Draw](/tutorials/draw)|Develop a 2D tactile "drawing" GUI for the Syntacts Array (C++).|
-|[VR Bracelet](/tutorials/bracelet)|Develop VR hand interactions for a virtual fan and the Syntacts Bracelet (Unity).|
+|[Syntacts Bracelet](/tutorials/bracelet)|Develop VR hand interactions for a virtual fan and the Syntacts Bracelet (Unity).|
