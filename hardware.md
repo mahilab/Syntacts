@@ -41,6 +41,7 @@ Below you fill find simple tactile displays that you can create or learn from as
 |**Actuators**|24x 10mm LRAs|8x 10mm LRAs|
 |**CAD/BOM**|[syntacts_array_v1.0.zip](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/displays/syntacts_array_v1.0.zip)|[syntacts_bracelet_v1.0.zip](https://raw.githubusercontent.com/wiki/mahilab/Syntacts/displays/syntacts_bracelet_v1.0.zip)|
 |**License**|[TAPR Open Hardware License](https://tapr.org/the-tapr-open-hardware-license/)|[TAPR Open Hardware License](https://tapr.org/the-tapr-open-hardware-license/)|
+|**Designer**|Brandon Cambio|Roderico Garcia|
 
 ## Actuators
 
