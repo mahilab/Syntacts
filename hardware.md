@@ -59,7 +59,7 @@ The following table lists actuators that have been tested and are known to run w
 
 We have tested the following audio interfaces with Syntacts. As above, this is not an exhaustive list and in general Syntacts will work with virtually any audio interface on the market. 
 
-> On Windows, you may want to look for audio devices that implement the [ASIO](https://en.wikipedia.org/wiki/Audio_Stream_Input/Output) driver protocol. ASIO drivers usually provide lower latency performance than standard Windows driver protocols (e.g. MME, WASAPI, DirectSound, and WDM-KS). High-end or professional-grade audio devices usually do a better job at implementing the ASIO standard for ultra-low latency performance. 
+> On Windows, you may want to look for audio devices that implement the [ASIO](https://en.wikipedia.org/wiki/Audio_Stream_Input/Output) driver protocol. ASIO drivers typically provide lower latency performance than standard Windows driver protocols (i.e. MME, WASAPI, DirectSound, and WDM-KS). High-end or professional-grade audio devices usually do a better job at implementing the ASIO standard for ultra-low latency performance. 
 
 |Manufacturer|Product Name|Interface|Max Channels|ASIO Driver|Approx. Cost|
 |---|---|---|---|---|---|
