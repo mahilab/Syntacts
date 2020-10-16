@@ -12,7 +12,7 @@ Below you can find a list of Syntacts tutorials related to both the software and
 
 |Tutorial|Description|
 |---|---|
-|[Syntacts Workshop](https://www.youtube.com/watch?v=AkguBlHozPk)|Learn about the Syntacts amplifiers, APIs, GUI, and VR applications (presented at IROS 2020).|
+|[IROS Workshop](https://www.youtube.com/watch?v=AkguBlHozPk)|Learn about the Syntacts amplifiers, APIs, GUI, and VR applications.|
 
 ### Programming
 
