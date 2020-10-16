@@ -1,6 +1,6 @@
 ---
 layout: page
-title: VR Bracelet Example Project
+title: Syntacts Bracelet Example Project
 permalink: /tutorials/bracelet/
 ---
 
