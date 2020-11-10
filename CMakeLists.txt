@@ -119,6 +119,7 @@ set(PA_DLL_LINK_WITH_STATIC_RUNTIME ON CACHE BOOL "" FORCE)
 set(PA_BUILD_SHARED OFF CACHE BOOL "" FORCE)
 add_subdirectory(3rdparty/portaudio)
 set_target_properties(portaudio_static PROPERTIES DEBUG_POSTFIX -d)
+set_target_properties(portaudio_static PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 #===============================================================================
 # Syntacts Static C++ Library
@@ -127,6 +128,7 @@ set_target_properties(portaudio_static PROPERTIES DEBUG_POSTFIX -d)
 add_library(syntacts "")
 add_library(syntacts::syntacts ALIAS syntacts)
 set_target_properties(syntacts PROPERTIES CXX_STANDARD 17 DEBUG_POSTFIX -d)
+set_target_properties(syntacts PROPERTIES POSITION_INDEPENDENT_CODE ON)
 target_compile_features(syntacts PUBLIC cxx_std_17)
 if (MSVC)
     set_target_properties(syntacts PROPERTIES COMPILE_FLAGS "/bigobj")
