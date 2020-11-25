@@ -372,7 +372,7 @@ void ReverserNode::update()
 ///////////////////////////////////////////////////////////////////////////////
 
 void FilterNode::update() {
-    static std::vector<std::string> modeNames = {"Low Pass", "High Pass", "Band Pass"};
+    static std::vector<std::string> modeNames = {"LP", "HP", "BP1","BP2","N","AP","P","LS","HS"};
     auto cast = sig.getAs<tact::Filter>();
     int mode = cast->mode;
     ImGui::ModeSelector(&mode, modeNames);
@@ -381,6 +381,8 @@ void FilterNode::update() {
     cutoffRoot->update();
     cast->input  = inputRoot->signal();
     cast->cutoff = cutoffRoot->signal();
+    ImGui::DragDouble("Q Factor",&cast->q,1,0.0001,1000);
+    ImGui::DragDouble("Gain (dB)",&cast->gain,1,-40,40);
     cast->reset();
 }
 

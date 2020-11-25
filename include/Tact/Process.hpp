@@ -86,34 +86,43 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/// A Simple Filter
+/// RBJ Biquad Filter
 class SYNTACTS_API Filter {
 public:
 
     enum Mode : int {
-        LowPass  = 0, 
-        HighPass = 1,
-        BandPass = 2
+        LowPass   = 0, 
+        HighPass  = 1,
+        BandPass1 = 2,
+        BandPass2 = 3,
+        Notch     = 4,
+        AllPass   = 5,
+        Peaking   = 6,
+        LowShelf  = 7,
+        HighShelf = 8
     };
 
     Filter();
-    Filter(Mode mode, Signal input, double cutoff, double resonance = 0);
-    Filter(Mode mode, Signal input, Signal cutoff, Signal resonance = Scalar(0));
+    Filter(Mode mode, Signal input, double cutoff, double fs = 44100, double q = 1, double gain = 0);
+    Filter(Mode mode, Signal input, Signal cutoff, double fs = 44100, double q = 1, double gain = 0);
 
     double sample(double t) const;
     double length() const;
-
     void reset();
 
     Mode   mode;
     Signal input;
     Signal cutoff;
-    Signal resonance;
-
-    TACT_SERIALIZE(TACT_MEMBER(mode), TACT_MEMBER(input), TACT_MEMBER(cutoff), TACT_MEMBER(resonance));
+    double fs;
+    double q;
+    double gain;
 
 private:
-    mutable std::array<double,4> m_buff;
+    void updateCoefficients(double frequency) const;
+    TACT_SERIALIZE(TACT_MEMBER(mode), TACT_MEMBER(input), TACT_MEMBER(cutoff), TACT_MEMBER(q));
+private:
+    mutable double b0a0,b1a0,b2a0,a1a0,a2a0;
+    mutable double ou1,ou2,in1,in2;
 };
 
 } // namespace tact
