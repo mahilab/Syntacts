@@ -119,6 +119,9 @@ set(PA_DLL_LINK_WITH_STATIC_RUNTIME ON CACHE BOOL "" FORCE)
 set(PA_BUILD_SHARED OFF CACHE BOOL "" FORCE)
 add_subdirectory(3rdparty/portaudio)
 set_target_properties(portaudio_static PROPERTIES DEBUG_POSTFIX -d)
+if (CMAKE_SYSTEM_NAME MATCHES "Linux")
+    set_target_properties(portaudio_static PROPERTIES POSITION_INDEPENDENT_CODE ON)
+endif()
 
 #===============================================================================
 # Syntacts Static C++ Library
@@ -142,6 +145,8 @@ target_compile_definitions(syntacts
 if (WIN32 AND PA_USE_ASIO)
     message("Building Syntacts with ASIO support")
     target_compile_definitions(syntacts PUBLIC PA_USE_ASIO)
+elseif (CMAKE_SYSTEM_NAME MATCHES "Linux")
+    set_target_properties(syntacts PROPERTIES POSITION_INDEPENDENT_CODE ON)
 endif()
 target_include_directories(syntacts
 	PUBLIC

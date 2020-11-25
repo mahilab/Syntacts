@@ -77,3 +77,35 @@ elif platform == 'darwin':
     copytree("../unity/SyntactsDemo/ProjectSettings",output_dir+"/unity/SyntactsDemo/ProjectSettings",ignore=ignore_patterns(".gitignore"))
     # create zip
     make_archive(output_dir, 'zip', output_dir)
+elif platform == 'linux':
+    unity_exe = "$HOME/Unity/Hub/Editor/2019.4.11f1/Editor/Unity"
+    version    = sys.argv[1]
+    output_dir = sys.argv[2] + "/" + "syntacts_v" + version + "_linux"
+    # delete existing
+    if os.path.exists(output_dir) and os.path.isdir(output_dir):
+        rmtree(output_dir)
+    # make release folder
+    os.mkdir(output_dir)
+    # package license
+    copy2("../LICENSE", output_dir)
+    copy2("../README.md", output_dir)
+    # package GUI
+    copy2("../build/gui/syntacts_gui",output_dir)
+    # package c
+    os.mkdir(output_dir + "/c")
+    copy2("../c/syntacts.h",output_dir + "/c")
+    copy2("../build/c/libsyntacts_c.so",output_dir + "/c")
+    # package csharp
+    copytree("../csharp",output_dir+"/csharp",ignore=ignore_patterns(".gitignore","*-d.dll","bin","obj"))
+    # package python
+    copytree("../python",output_dir+"/python",ignore=ignore_patterns(".gitignore","*-d.dll","__pycache__"))
+    # make unitypackage
+    os.mkdir(output_dir + "/unity")
+    unity_cmd = ' -quit -batchmode -nographics -projectPath "../unity/SyntactsDemo" -exportPackage "Assets/Syntacts" "' + output_dir + '/unity/syntacts.unitypackage"'
+    os.system(unity_exe + unity_cmd)
+    # package unity demo
+    copytree("../unity/SyntactsDemo/Assets",output_dir+"/unity/SyntactsDemo/Assets",ignore=ignore_patterns(".gitignore"))
+    copytree("../unity/SyntactsDemo/Packages",output_dir+"/unity/SyntactsDemo/Packages",ignore=ignore_patterns(".gitignore"))
+    copytree("../unity/SyntactsDemo/ProjectSettings",output_dir+"/unity/SyntactsDemo/ProjectSettings",ignore=ignore_patterns(".gitignore"))
+    # create zip
+    make_archive(output_dir, 'zip', output_dir)

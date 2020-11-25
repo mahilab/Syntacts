@@ -32,6 +32,8 @@ if platform.uname()[0] == "Windows":
     _lib_name = "./syntacts_c.dll"
 elif platform.uname()[0] == "Darwin":
     _lib_name = "./libsyntacts_c.dylib"
+elif platform.uname()[0] == "Linux":
+    _lib_name = "./libsyntacts_c.so"
 
 _tact = cdll.LoadLibrary(_lib_name)
 

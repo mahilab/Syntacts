@@ -46,6 +46,9 @@ const std::string &Gui::saveDir()
 #elif __APPLE__
     static fs::path p = std::string(getenv("HOME")) + "/Library/Syntacts/GUI/";
     static std::string dir = p.generic_string();
+#elif __linux__
+    static fs::path p = std::string(std::getenv("HOME")) + "/Syntacts/GUI/";
+    static std::string dir = p.generic_string();
 #else
     static std::string dir = "";
 #endif

@@ -159,6 +159,8 @@ const std::string &getLibraryDirectory()
     static fs::path dirPath = std::string(std::getenv("APPDATA")) + std::string("\\Syntacts\\Library\\");
 #elif __APPLE__
     static fs::path dirPath = std::string(getenv("HOME")) + "/Library/Syntacts/Library/";
+#elif __linux__
+    static fs::path dirPath = std::string(std::getenv("HOME")) + "/Syntacts/Library/";
 #else
     static fs::path dirPath = "";
 #endif
