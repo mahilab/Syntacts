@@ -52,3 +52,17 @@ cmake --build . --target install --config Release
 > sudo cmake --build . --target install
 ```
 - When the build completes, **Syntacts**  will be installed to `/user/local/...`.
+
+## Building on Linux
+
+- Both the Clang and GNU C++ compilers should work on Linux. Syntacts has been tested on Debian Bullseye with GCC 10.2 and with Clang 9.0 and 11.0.
+- Note that you'll need to install additional development files for any features you want to support (e.g., GTK+3, JACK).
+- Open the terminal of your choice and run the following commands:
+```shell
+> git clone --recurse-submodules https://github.com/mahilab/Syntacts
+> cd Syntacts
+> mkdir build && cd build
+> cmake .. -DCMAKE_BUILD_TYPE="Release"
+> sudo cmake --build . --target install
+```
+- When the build completes, **Syntacts** will be installed to `/usr/local/...`.
