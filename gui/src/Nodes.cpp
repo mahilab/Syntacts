@@ -62,6 +62,8 @@ std::shared_ptr<Node> makeNode(PItem id) {
         return std::make_shared<ReverserNode>();
     if (id == PItem::Sequencer)
         return std::make_shared<SequencerNode>();
+    if (id == PItem::Filter)
+        return std::make_shared<FilterNode>();
     if (id == PItem::Pwm)
         return std::make_shared<PwmNode>();
     if (id == PItem::FM)
@@ -365,6 +367,23 @@ void ReverserNode::update()
     auto cast = (tact::Repeater *)sig.get();
     root->update();
     cast->signal = root->signal();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void FilterNode::update() {
+    static std::vector<std::string> modeNames = {"LP", "HP", "BP1","BP2","N","AP","P","LS","HS"};
+    auto cast = sig.getAs<tact::Filter>();
+    int mode = cast->mode;
+    ImGui::ModeSelector(&mode, modeNames);
+    cast->mode = (tact::Filter::Mode)mode;
+    inputRoot->update();
+    cutoffRoot->update();
+    cast->input  = inputRoot->signal();
+    cast->cutoff = cutoffRoot->signal();
+    ImGui::DragDouble("Q Factor",&cast->q,1,0.0001,1000);
+    ImGui::DragDouble("Gain (dB)",&cast->gain,1,-40,40);
+    cast->reset();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -95,7 +95,6 @@ void recurseSignalPriv(const Signal& sig, std::function<void(const Signal&, int 
     else if (id == typeid(Filter)) {
         recurseSignalPriv(sig.getAs<Filter>()->input,func,depth+1); 
         recurseSignalPriv(sig.getAs<Filter>()->cutoff,func,depth+1); 
-        recurseSignalPriv(sig.getAs<Filter>()->resonance,func,depth+1); 
     }  
     else if (id == typeid(Sine))
          recurseSignalPriv(sig.getAs<Sine>()->x,func,depth+1);

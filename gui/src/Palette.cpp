@@ -21,6 +21,7 @@ const std::string &paletteName(PItem id)
         {PItem::Stretcher, "Stretcher"},
         {PItem::Reverser, "Reverser"},
         {PItem::Sequencer, "Sequencer"},
+        {PItem::Filter, "Filter"},
         {PItem::Sine, "Sine"},
         {PItem::Square, "Square"},
         {PItem::Saw, "Saw"},
@@ -55,6 +56,7 @@ const std::string& paletteDescription(PItem id) {
         {PItem::Stretcher, "Stretches or compresses a Signal in time"},
         {PItem::Reverser, "Reverses a Signal"},
         {PItem::Sequencer, "Sequences multiple Signals in time"},
+        {PItem::Filter, "Filters out undesired frequencies in a Signal"},
         {PItem::Sine, "Creates a basic sine wave oscillator"},
         {PItem::Square, "Creates a basic square wave oscillator"},
         {PItem::Saw, "Creates a basic saw wave oscillator"},
@@ -83,7 +85,7 @@ void Palette::update()
     static std::vector<std::pair<std::string, std::vector<PItem>>> signals = {
         {"Oscillators", {PItem::Sine, PItem::Square, PItem::Saw, PItem::Triangle, PItem::Chirp, PItem::FM, PItem::Pwm, PItem::Noise}},
         {"Envelopes", {PItem::Envelope, PItem::KeyedEnvelope, PItem::ASR, PItem::ADSR, PItem::ExponentialDecay, PItem::PolyBezier, PItem::SignalEnvelope}},
-        {"Processes", {PItem::Sum, PItem::Product, PItem::Repeater, PItem::Stretcher, PItem::Reverser, PItem::Sequencer}},
+        {"Processes", {PItem::Sum, PItem::Product, PItem::Repeater, PItem::Stretcher, PItem::Reverser, PItem::Sequencer, PItem::Filter}},
         {"General", {PItem::Expression, PItem::Ramp, PItem::Scalar}}};
     for (auto &section : signals)
     {
