@@ -59,6 +59,7 @@ endif()
 
 # gather public includes
 set(SYNTACTS_INCLUDE 
+    "include/Filesystem.hpp"
     "include/Tact/Envelope.hpp"
     "include/Tact/Oscillator.hpp"
     "include/Tact/Signal.hpp"
