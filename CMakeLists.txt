@@ -59,7 +59,6 @@ endif()
 
 # gather public includes
 set(SYNTACTS_INCLUDE 
-    "include/Filesystem.hpp"
     "include/Tact/Envelope.hpp"
     "include/Tact/Oscillator.hpp"
     "include/Tact/Signal.hpp"
@@ -81,6 +80,7 @@ set(SYNTACTS_INCLUDE
 
 # gather private sources
 set(SYNTACTS_SRC 
+    "src/Filesystem.hpp"
     "src/Tact/Envelope.cpp"
     "src/Tact/Oscillator.cpp"
     "src/Tact/Signal.cpp"
