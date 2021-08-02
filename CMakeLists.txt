@@ -80,6 +80,7 @@ set(SYNTACTS_INCLUDE
 
 # gather private sources
 set(SYNTACTS_SRC 
+    "src/Filesystem.hpp"
     "src/Tact/Envelope.cpp"
     "src/Tact/Oscillator.cpp"
     "src/Tact/Signal.cpp"
