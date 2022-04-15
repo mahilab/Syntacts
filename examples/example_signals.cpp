@@ -19,7 +19,7 @@ int main(int argc, char const *argv[])
 
     // Now we can pair those oscillators with an envelope to give them shape
 
-    // This is a basic envelope that specifies amplitude (0.9), and duration (0.5 sec)
+    // This is a basic envelope that specifies duration (0.9), and amplitude (0.5 sec)
     Signal bas = Envelope(0.9, 0.5);
     // This is an attack (1 sec), sustain (3 sec), release (1 sec) envelope. The sustain amplitude is 1.0. 
     // Envelopes can interpolate between amplitudes with different curves, this example uses a smooth s-curve and linear.
